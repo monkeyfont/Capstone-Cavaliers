@@ -1,0 +1,44 @@
+<html>    
+    <head>
+        <title>Pandemic!</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="stylesheet"  type="text/css" href="layoutCSS.css">
+        <script language="JavaScript">
+            function readText(form){
+                var city = form.inputbox.value;
+                alert ("You typed: " + city);
+            }
+            function helpText(form){
+                form.inputbox.value = "eg: Milan = 6.";
+            }
+        </script>
+    </head>
+    <body>
+        <div class="cityList">
+            <p>
+                Rio de Janeiro: 1 <br>
+                Cape Town: 2 <br>
+                Melbourne: 3 <br>
+                Tokyo: 4 <br>
+                Paris: 5 <br>
+                Madrid: 6 <br>
+                St Petersburg: 7 <br>
+                New York: 8 <br>
+            </p>
+        </div>
+        <div class="citySelector">
+            <h1>Welcome to Pandemic!</h1>
+            <form name="citySelector" action="" method="POST">
+                Enter the id of the city you wish to travel to: <br>
+                <input type="text" name="inputbox" value="">
+                <input type="button" name="b1" value="Submit" onClick="readText(this.form)">
+                <input type="button" name="b2" value="Help?" onClick="helpText(this.form)">
+            </form>
+        </div>
+        <div class="display">
+            
+        </div>
+    </body>
+</html>

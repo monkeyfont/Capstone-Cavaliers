@@ -1,0 +1,9 @@
+.cityList{
+    float: right;
+    width: 45%;
+}
+
+body{
+    background-image: url("worldMapBackground.png");
+    background-color: #B3E8FF;
+}
