@@ -11,24 +11,73 @@
                 alert ("You typed: " + city);
             }
             function helpText(form){
-                form.inputbox.value = "eg: Milan = 6.";
+                form.inputbox.value = 'eg: Tokyo = "9".';
             }
+            var canvas,context;
+            canvas = document.getElementById('myCanvas');
+            context = canvas.getContext('2d');
+     
+            var circles = [];
+            var draw = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext) {
+                context.beginPath();
+                context.arc(x, y, radius, 0, 2 * Math.PI, false);
+                context.fillStyle = fillcolor;
+                context.fill();
+                context.lineWidth = linewidth;
+                context.strokeStyle = strokestyle;
+                context.stroke();
+
+                context.fillStyle = fontcolor;
+                context.textAlign = textalign;
+                context.font = fonttype;
+
+                context.fillText(filltext, x, y);    
+            };
+            
+            var Circle = function(x,y,radius){
+                this.left = x-radius;
+                this.top = y-radius;
+                this.right = x+radius;
+                this.bottom = y+radius;
+            };
+            
+            var drawCircle = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext, circles) {
+                draw(context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext);
+                var circle = new Circle(x, y, radius);
+                circles.push(circle);  
+            };
+            
+            drawCircle(context, 300, canvas.height / 2, "green", 10, 5, "#003300", "white", "center", "bold 32px Arial", "1", circles);
+            drawCircle(context, 600, canvas.height / 3, "blue", 10, 5, "#003300", "white", "center", "bold 32px Arial", "2", circles);
+            
+            canvas.addEventListener('click', function(e){
+                var clickedX = e.pageX - this.offsetLeft;
+                var clickedY = e.pageY - this.offsetTop;
+
+                for (var i = 0; i < circles.length; i++) {
+                    if (clickedX < circles[i].right && clickedX > circles[i].left && clickedY > circles[i].top && clickedY < circles[i].bottom) {
+                        alert ('clicked number ' + (i + 1));
+                    }
+                }
+            });
         </script>
     </head>
-    <body>
+    
         <div class="cityList">
             <p>
-                Rio de Janeiro: 1 <br>
-                Cape Town: 2 <br>
-                Melbourne: 3 <br>
-                Tokyo: 4 <br>
-                Paris: 5 <br>
-                Madrid: 6 <br>
-                St Petersburg: 7 <br>
-                New York: 8 <br>
+                1: Los Angeles <br>
+                2: Arizona <br>
+                3: New York <br>
+                4: Rio De Janeiro <br>
+                5: London <br>
+                6: Johannesburg <br>
+                7: Moscow <br>
+                8: Hong Kong <br>
+                9: Tokyo <br>
+                10: Sydney<br>
             </p>
         </div>
-        <div class="citySelector">
+        <div>
             <h1>Welcome to Pandemic!</h1>
             <form name="citySelector" action="" method="POST">
                 Enter the id of the city you wish to travel to: <br>
@@ -37,8 +86,8 @@
                 <input type="button" name="b2" value="Help?" onClick="helpText(this.form)">
             </form>
         </div>
-        <div class="display">
-            
-        </div>
-    </body>
+        <canvas id="myCanvas" width="600" height="298">
+            Your browser does not support canvas.
+        </canvas>
+    
 </html>

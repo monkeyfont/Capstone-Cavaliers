@@ -4,6 +4,8 @@
 }
 
 body{
-    background-image: url("worldMapBackground.png");
     background-color: #B3E8FF;
 }
+
+canvas, img { display:block; margin:1em auto; border:1px solid black; }
+canvas { background:url('worldmap_cities.jpg') }
