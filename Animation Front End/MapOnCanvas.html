@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Image to use:</p>
+<input class = "btn" id="clickMe" type="button" value="Up" />
+<input class = "btn" id="clickMe" type="button" value="Down" />
+<input class = "btn" id="clickMe" type="button" value="Left" />
+<input class = "btn" id="clickMe" type="button" value="Right" />
+<input class = "btn" id="clickMe" type="button" value="Stop" />
+<!-- <img id="scream" 
+src="WorldMap.jpg" alt="The Scream"> -->
+
+<p>Canvas:</p>
+
+<canvas id="myCanvas" width="1920" height="1080"
+style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+
+<script src="jquery-3.2.1.slim.js"></script>
+<script>
+
+
+	$('.btn').on('click', function(e){
+		alert("Button clicked with value: "+e.currentTarget.value);
+	});	
+	
+</script>
+<script src="spriteAnimate.js"></script>
+</body>
+</html>
