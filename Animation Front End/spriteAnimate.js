@@ -13,6 +13,7 @@ var screenWidthPercentage = scrnWidth/optimalScreenWidth;
 
 var scaleSize = 1;
 
+// sets the scalesize to the lower of height or width
 if (screenHeightPercentage<screenWidthPercentage){
 	scaleSize = screenHeightPercentage;
 }else{
@@ -23,63 +24,67 @@ var canvas = document.getElementById("myCanvas");
 canvas.getContext("2d").scale(scaleSize,scaleSize);
 console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
 console.log("scale Size:"+scaleSize);
+
 function gameLoop(){
 	window.requestAnimationFrame(gameLoop);
 	// map.update();
 	// map.render();
 	canvas.getContext("2d").drawImage(mapImage,0,0)// quick workaround because loading the map as a sprite is broken
+	console.log("coin3"+coin3.tickCount);
+	console.log("coin2"+coin2.tickCount);
 	coin.update();
 	coin.render();
 	coin2.update();
 	coin2.render();
+	coin3.update();
+	coin3.render();
+
 	//console.log("gameloop");
 }
 
 
 
-function sprite (options) {
+function sprite(options) {
 				
-    var that = {};
-		frameIndex = 0, //current frame being rendered
-		tickCount = 0,	// number of updates since the last render 
-		ticksPerFrame = options.ticksPerFrame || 0; //by having ticks per frame, it allows us to slow the animation down, and still fun a game at 60fps, 
-		that.context = options.context;
-		that.width = options.width;
-		that.height = options.height;
-		that.image = options.image;
-		that.loop = options.loop || true; // do we loop the sprite, or just play it once
-		that.yPos = options.yPos || 0;
-		that.xPos = options.yPos || 0;
-		numberOfFrames = options.numberOfFrames || 1;
-	that.update = function(){ //update the frame every x ticks 
-		//console.log("updated",that.image.src);
-		tickCount +=1;
-		if (tickCount > ticksPerFrame){
-			tickCount = 0;
-			if (frameIndex<numberOfFrames-1){
-				frameIndex +=1;
-			}else if (that.loop){
-				frameIndex=0
+	this.frameIndex = 0, //current frame being rendered
+	this.tickCount = 0,	// number of updates since the last render 
+	this.ticksPerFrame = options.ticksPerFrame || 0; //by having ticks per frame, it allows us to slow the animation down, and still fun a game at 60fps, 
+	this.context = options.context;
+	this.width = options.width;
+	this.height = options.height;
+	this.image = options.image;
+	this.loop = options.loop || true; // do we loop the sprite, or just play it once
+	this.yPos = options.yPos || 0;
+	this.xPos = options.yPos || 0;
+	this.numberOfFrames = options.numberOfFrames || 1;
+	
+	this.update = function(){ //update the frame every x ticks 
+		//console.log("updated",this.image.src);
+		this.tickCount +=1;
+		if (this.tickCount > this.ticksPerFrame){
+			this.tickCount = 0;
+			if (this.frameIndex<this.numberOfFrames-1){
+				this.frameIndex +=1;
+			}else if (this.loop){
+				this.frameIndex=0
 			}
 			
 		}
 	}
-	that.render = function () {
+	this.render = function () {
         // Draw the animation
-		//console.log("image render",that.image.src)
-		that.context.drawImage(
-		that.image, //image to use
-		frameIndex * that.width, // x position to start clipping 
+		//console.log("image render",this.image.src)
+		this.context.drawImage(
+		this.image, //image to use
+		this.frameIndex * this.width, // x position to start clipping 
 		0, // y position to start clipping
-		that.width, //width of clipped image
-		that.height, // height of clipped image
-		that.xPos, //x position for image on canvas
-		that.yPos, // y position for image on canvas
-		that.width, // width of image to use 
-		that.height); // height of image to use
+		this.width, //width of clipped image
+		this.height, // height of clipped image
+		this.xPos, //x position for image on canvas
+		this.yPos, // y position for image on canvas
+		this.width, // width of image to use 
+		this.height); // height of image to use
     };
-	
-    return that;
 }
 
 
@@ -97,18 +102,18 @@ function sprite (options) {
 	// image: mapImage
 	// });	
 	
-var coin = sprite({
+var coin3 = new sprite({
     context: canvas.getContext("2d"),
     width: 100,
     height: 100,
 	numberOfFrames: 10,
-	ticksPerFrame: 100,
-	xPos:100,
-	yPos:100,
+	ticksPerFrame: 3,
+	xPos:300,
+	yPos:300,
     image: coinImage	
 	});	
 
-var coin = sprite({
+var coin = new sprite({
     context: canvas.getContext("2d"),
     width: 100,
     height: 100,
@@ -119,7 +124,7 @@ var coin = sprite({
     image: coinImage	
 	});		
 	
-var coin2 = sprite({
+var coin2 = new sprite({
     context: canvas.getContext("2d"),
     width: 100,
     height: 100,
