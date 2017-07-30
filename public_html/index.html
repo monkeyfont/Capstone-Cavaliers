@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="stylesheet"  type="text/css" href="layoutCSS.css">
+        <script src="jquery-3.2.1.min.js"></script>
         <script language="JavaScript">
             function readText(form){
                 var city = form.inputbox.value;
@@ -61,6 +62,31 @@
                 }
             });
         </script>
+        
+        <script>
+			$(document).ready(function(){
+			    $("#send").click(function(){
+			    	var dummyJson="{pandemic:game}"
+			    	$.ajax({
+			    	     /* url:"http://localhost:8080", */
+			    	     type: "POST",
+			    	     data: dummyJson,
+			    	     dataType: "json",
+			    	     contentType: "application/json",
+			    	        
+			    	     success: function (data) {
+			    	    	 var data = JSON.parse(json);
+			    	    	 
+			    	    	 //then read json as needed
+            				}
+			    	})
+			    	     
+			    });
+			});
+			
+		
+</script>
+        
     </head>
     
         <div class="cityList">
@@ -83,6 +109,7 @@
                 Enter the id of the city you wish to travel to: <br>
                 <input type="text" name="inputbox" value="">
                 <input type="button" name="b1" value="Submit" onClick="readText(this.form)">
+                 <input type="button" id="send" value="SendAjax">
                 <input type="button" name="b2" value="Help?" onClick="helpText(this.form)">
             </form>
         </div>
