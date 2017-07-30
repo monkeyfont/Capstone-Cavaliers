@@ -2,16 +2,37 @@ var coinImage = new Image();
 coinImage.src = "coin-sprite-animation.png";
 var mapImage = new Image();
 mapImage.src = 'WorldMap.jpg';
+var scrnWidth = window.innerWidth;//screen.width;
+var scrnHeight = window.innerHeight;//screen.height;
+console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
+var optimalScreenWidth = 1920;
+var optimalScreenHeight = 1080;
+
+var screenHeightPercentage = scrnHeight/optimalScreenHeight;
+var screenWidthPercentage = scrnWidth/optimalScreenWidth;
+
+var scaleSize = 1;
+
+if (screenHeightPercentage<screenWidthPercentage){
+	scaleSize = screenHeightPercentage;
+}else{
+	scaleSize = screenWidthPercentage;
+}
+
+var canvas = document.getElementById("myCanvas");
+canvas.getContext("2d").scale(scaleSize,scaleSize);
+console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
+console.log("scale Size:"+scaleSize);
 function gameLoop(){
 	window.requestAnimationFrame(gameLoop);
-	map.update();
-	map.render();
+	// map.update();
+	// map.render();
 	canvas.getContext("2d").drawImage(mapImage,0,0)// quick workaround because loading the map as a sprite is broken
 	coin.update();
 	coin.render();
 	coin2.update();
 	coin2.render();
-	console.log("gameloop");
+	//console.log("gameloop");
 }
 
 
@@ -30,9 +51,8 @@ function sprite (options) {
 		that.yPos = options.yPos || 0;
 		that.xPos = options.yPos || 0;
 		numberOfFrames = options.numberOfFrames || 1;
-		
 	that.update = function(){ //update the frame every x ticks 
-		console.log("updated",that.image.src);
+		//console.log("updated",that.image.src);
 		tickCount +=1;
 		if (tickCount > ticksPerFrame){
 			tickCount = 0;
@@ -46,7 +66,7 @@ function sprite (options) {
 	}
 	that.render = function () {
         // Draw the animation
-		console.log("image render",that.image.src)
+		//console.log("image render",that.image.src)
 		that.context.drawImage(
 		that.image, //image to use
 		frameIndex * that.width, // x position to start clipping 
@@ -62,20 +82,20 @@ function sprite (options) {
     return that;
 }
 
-var canvas = document.getElementById("myCanvas");
+
 // canvas.width = 1000;
 // canvas.height = 1000;
 
 
 
-var map = sprite({
-	context: canvas.getContext("2d"),
-    width: 1920,
-    height: 1080,
-	numberOfFrames: 1,
-	ticksPerFrame: 10,
-	image: mapImage
-	});	
+// var map = sprite({
+	// context: canvas.getContext("2d"),
+    // width: 1920,
+    // height: 1080,
+	// numberOfFrames: 1,
+	// ticksPerFrame: 10,
+	// image: mapImage
+	// });	
 	
 var coin = sprite({
     context: canvas.getContext("2d"),
@@ -93,7 +113,7 @@ var coin = sprite({
     width: 100,
     height: 100,
 	numberOfFrames: 10,
-	ticksPerFrame: 300,
+	ticksPerFrame: 16,
 	xPos:100,
 	yPos:100,
     image: coinImage	
@@ -104,7 +124,7 @@ var coin2 = sprite({
     width: 100,
     height: 100,
 	numberOfFrames: 10,
-	ticksPerFrame: 300,
+	ticksPerFrame: 16,
 	xPos:400,
 	yPos:400,
     image: coinImage	
