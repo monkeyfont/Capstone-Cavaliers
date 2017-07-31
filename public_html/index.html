@@ -7,17 +7,18 @@
         <link rel="stylesheet"  type="text/css" href="layoutCSS.css">
         <script src="jquery-3.2.1.min.js"></script>
         <script language="JavaScript">
-            function readText(form){
-                var city = form.inputbox.value;
-                alert ("You typed: " + city);
-            }
+            
             function helpText(form){
                 form.inputbox.value = 'eg: Tokyo = "9".';
             }
-            var canvas,context;
-            canvas = document.getElementById('myCanvas');
-            context = canvas.getContext('2d');
-     
+            
+            function readText(form){
+                var city = form.inputbox.value;
+                alert ("You typed: " + city);
+                var canvas,context;
+                canvas = document.getElementById('myCanvas');
+                context = canvas.getContext('2d');
+
             var circles = [];
             var draw = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext) {
                 context.beginPath();
@@ -49,7 +50,6 @@
             };
             
             drawCircle(context, 300, canvas.height / 2, "green", 10, 5, "#003300", "white", "center", "bold 32px Arial", "1", circles);
-            drawCircle(context, 600, canvas.height / 3, "blue", 10, 5, "#003300", "white", "center", "bold 32px Arial", "2", circles);
             
             canvas.addEventListener('click', function(e){
                 var clickedX = e.pageX - this.offsetLeft;
@@ -61,9 +61,7 @@
                     }
                 }
             });
-        </script>
-        
-        <script>
+        }
 			$(document).ready(function(){
 			    $("#send").click(function(){
 			    	var dummyJson="{pandemic:game}"
