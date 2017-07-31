@@ -8,6 +8,16 @@
         <script src="jquery-3.2.1.min.js"></script>
         <script language="JavaScript">
             
+            function updateBoard(){
+                var canvas,context;
+                canvas = document.getElementById('myCanvas');
+                context = canvas.getContext('2d');
+                var rect = canvas.getBoundingClientRect();
+                var x = event.clientX - rect.left;
+                var y = event.clientY - rect.top;
+                console.log("x: " + x + " y: " + y);
+            }
+            
             function helpText(form){
                 form.inputbox.value = 'eg: Tokyo = "9".';
             }
@@ -18,71 +28,83 @@
                 canvas = document.getElementById('myCanvas');
                 context = canvas.getContext('2d');
 
-            var circles = [];
-            var draw = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext) {
-                context.beginPath();
-                context.arc(x, y, radius, 0, 2 * Math.PI, false);
-                context.fillStyle = fillcolor;
-                context.fill();
-                context.lineWidth = linewidth;
-                context.strokeStyle = strokestyle;
-                context.stroke();
+                var circles = [];
+                var draw = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext) {
+                    context.beginPath();
+                    context.arc(x, y, radius, 0, 2 * Math.PI, false);
+                    context.fillStyle = fillcolor;
+                    context.fill();
+                    context.lineWidth = linewidth;
+                    context.strokeStyle = strokestyle;
+                    context.stroke();
 
-                context.fillStyle = fontcolor;
-                context.textAlign = textalign;
-                context.font = fonttype;
+                    context.fillStyle = fontcolor;
+                    context.textAlign = textalign;
+                    context.font = fonttype;
 
-                context.fillText(filltext, x, y);    
-            };
-            
-            var Circle = function(x,y,radius){
-                this.left = x-radius;
-                this.top = y-radius;
-                this.right = x+radius;
-                this.bottom = y+radius;
-            };
-            
-            var drawCircle = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext, circles) {
-                draw(context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext);
-                var circle = new Circle(x, y, radius);
-                circles.push(circle);  
-            };
-            
-            drawCircle(context, 300, canvas.height / 2, "green", 10, 5, "#003300", "white", "center", "bold 32px Arial", "1", circles);
-            
-            canvas.addEventListener('click', function(e){
-                var rect = canvas.getBoundingClientRect();
+                    context.fillText(filltext, x, y);    
+                };
+
+                var Circle = function(x,y,radius){
+                    this.left = x-radius;
+                    this.top = y-radius;
+                    this.right = x+radius;
+                    this.bottom = y+radius;
+                };
+
+                var drawCircle = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext, circles) {
+                    draw(context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext);
+                    var circle = new Circle(x, y, radius);
+                    circles.push(circle);  
+                };
+
+                drawCircle(context, canvas.width / 2, canvas.height / 2, "green", 10, 5, "#003300", "white", "center", "bold 32px Arial", "1", circles);
+
+                canvas.addEventListener('click', function(e){
                 var clickedX = e.pageX - this.offsetLeft;
                 var clickedY = e.pageY - this.offsetTop;
-                var x = e.clientX - rect.left;
-                var y = e.clientY - rect.top;
+                var rect = canvas.getBoundingClientRect();
+                var x = event.clientX - rect.left;
+                var y = event.clientY - rect.top;
 
                 for (var i = 0; i < circles.length; i++) {
                     if (clickedX < circles[i].right && clickedX > circles[i].left && clickedY > circles[i].top && clickedY < circles[i].bottom) {
-                       console.log("x: " + x + " y: " + y);
+                       console.log("Player wants to move to x: " + x + " y: " + y);
+                       /* City values
+                        1) x: 126.5 y: 83
+                        2) x: 139.5 y: 85
+                        3) x: 199.5 y: 75
+                        4) x: 238.5 y: 190
+                        5) x: 307.5 y: 56
+                        6) x: 354.5 y: 199
+                        7) x: 361.5 y: 48
+                        8) x: 490.5 y: 106
+                        9) x: 520.5 y: 84
+                        10) x: 541.5 y: 207
+                        */
                     }
                 }
             });
         };
-			$(document).ready(function(){
-			    $("#send").click(function(){
-			    	var dummyJson="{pandemic:game}"
-			    	$.ajax({
-			    	     /* url:"http://localhost:8080", */
-			    	     type: "POST",
-			    	     data: dummyJson,
-			    	     dataType: "json",
-			    	     contentType: "application/json",
-			    	        
-			    	     success: function (data) {
-			    	    	 var data = JSON.parse(json);
-			    	    	 
-			    	    	 //then read json as needed
-            				}
-			    	})
-			    	     
-			    });
-			});
+        $(document).ready(function(){
+            $("#send").click(function(){
+                var dummyJson="{pandemic:game}"
+                $.ajax({
+                     /* url:"http://localhost:8080", */
+                     type: "POST",
+                     data: dummyJson,
+                     dataType: "json",
+                     contentType: "application/json",
+
+                     success: function (data) {
+                         var data = JSON.parse(json);
+
+                         //then read json as needed
+                        }
+                });
+
+            });
+        });
 			
 		
 </script>
@@ -109,11 +131,11 @@
                 Enter the id of the city you wish to travel to: <br>
                 <input type="text" name="inputbox" value="">
                 <input type="button" name="b1" value="Submit" onClick="readText(this.form)">
-                 <input type="button" id="send" value="SendAjax">
+                <input type="button" id="send" value="SendAjax">
                 <input type="button" name="b2" value="Help?" onClick="helpText(this.form)">
             </form>
         </div>
-        <canvas id="myCanvas" width="600" height="298">
+        <canvas id="myCanvas" width="600" height="298" onclick="updateBoard()">
             Your browser does not support canvas.
         </canvas>
     
