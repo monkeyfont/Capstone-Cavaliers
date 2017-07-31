@@ -22,44 +22,44 @@
                 form.inputbox.value = 'eg: Tokyo = "9".';
             }
             
+            var circles = [];
+            var draw = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext) {
+                context.beginPath();
+                context.arc(x, y, radius, 0, 2 * Math.PI, false);
+                context.fillStyle = fillcolor;
+                context.fill();
+                context.lineWidth = linewidth;
+                context.strokeStyle = strokestyle;
+                context.stroke();
+
+                context.fillStyle = fontcolor;
+                context.textAlign = textalign;
+                context.font = fonttype;
+
+                context.fillText(filltext, x, y);    
+            };
+            
+            var drawCircle = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext, circles) {
+                draw(context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext);
+                var circle = new Circle(x, y, radius);
+                circles.push(circle);  
+            };
+            
+            var Circle = function(x,y,radius){
+                this.left = x-radius;
+                this.top = y-radius;
+                this.right = x+radius;
+                this.bottom = y+radius;
+            };
+            
             function readText(form){
                 var city = form.inputbox.value;
                 var canvas,context;
                 canvas = document.getElementById('myCanvas');
                 context = canvas.getContext('2d');
 
-                var circles = [];
-                var draw = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext) {
-                    context.beginPath();
-                    context.arc(x, y, radius, 0, 2 * Math.PI, false);
-                    context.fillStyle = fillcolor;
-                    context.fill();
-                    context.lineWidth = linewidth;
-                    context.strokeStyle = strokestyle;
-                    context.stroke();
-
-                    context.fillStyle = fontcolor;
-                    context.textAlign = textalign;
-                    context.font = fonttype;
-
-                    context.fillText(filltext, x, y);    
-                };
-
-                var Circle = function(x,y,radius){
-                    this.left = x-radius;
-                    this.top = y-radius;
-                    this.right = x+radius;
-                    this.bottom = y+radius;
-                };
-
-                var drawCircle = function (context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext, circles) {
-                    draw(context, x, y, fillcolor, radius, linewidth, strokestyle, fontcolor, textalign, fonttype, filltext);
-                    var circle = new Circle(x, y, radius);
-                    circles.push(circle);  
-                };
-
-                drawCircle(context, canvas.width / 2, canvas.height / 2, "green", 10, 5, "#003300", "white", "center", "bold 32px Arial", "1", circles);
-
+                drawCircle(context, canvas.width / 2, canvas.height / 2, "green", 6, 3, "#003300", "black", "center", "bold 26px Arial", "P1", circles);
+                
                 canvas.addEventListener('click', function(e){
                 var clickedX = e.pageX - this.offsetLeft;
                 var clickedY = e.pageY - this.offsetTop;
@@ -70,22 +70,28 @@
                 for (var i = 0; i < circles.length; i++) {
                     if (clickedX < circles[i].right && clickedX > circles[i].left && clickedY > circles[i].top && clickedY < circles[i].bottom) {
                        console.log("Player wants to move to x: " + x + " y: " + y);
-                       /* City values
-                        1) x: 126.5 y: 83
-                        2) x: 139.5 y: 85
-                        3) x: 199.5 y: 75
-                        4) x: 238.5 y: 190
-                        5) x: 307.5 y: 56
-                        6) x: 354.5 y: 199
-                        7) x: 361.5 y: 48
-                        8) x: 490.5 y: 106
-                        9) x: 520.5 y: 84
-                        10) x: 541.5 y: 207
-                        */
                     }
                 }
-            });
+            });  
         };
+            
+            function createCities(){
+                var canvas,context;
+                canvas = document.getElementById('myCanvas');
+                context = canvas.getContext('2d')
+                drawCircle(context, 126.5, 83, "red", 3, 2, "#003300", "black", "center", "16px Arial", "1", circles);
+                drawCircle(context, 139, 85, "red", 3, 2, "#003300", "black", "center", "16px Arial", "2", circles);
+                drawCircle(context, 199.5, 75, "red", 3, 2, "#003300", "black", "center", "16px Arial", "3", circles);
+                drawCircle(context, 238.5, 190, "red", 3, 2, "#003300", "black", "center", "16px Arial", "4", circles);
+                drawCircle(context, 307.5, 55, "red", 3, 2, "#003300", "black", "center", "16px Arial", "5", circles);
+                drawCircle(context, 354.5, 199, "red", 3, 2, "#003300", "black", "center", "16px Arial", "6", circles);
+                drawCircle(context, 361.5, 45, "red", 3, 2, "#003300", "black", "center", "16px Arial", "7", circles);
+                drawCircle(context, 490.5, 106, "red", 3, 2, "#003300", "black", "center", "16px Arial", "8", circles);
+                drawCircle(context, 520.5, 84, "red", 3, 2, "#003300", "black", "center", "16px Arial", "9", circles);
+                drawCircle(context, 541.5, 207, "red", 3, 2, "#003300", "black", "center", "16px Arial", "10", circles);
+                
+            }
+        
         $(document).ready(function(){
             $("#send").click(function(){
                 var dummyJson="{pandemic:game}"
@@ -105,12 +111,9 @@
 
             });
         });
-			
 		
-</script>
-        
+</script>  
     </head>
-    
         <div class="cityList">
             <p>
                 1: Los Angeles <br>
@@ -137,6 +140,6 @@
         </div>
         <canvas id="myCanvas" width="600" height="298" onclick="updateBoard()">
             Your browser does not support canvas.
+            <script> createCities(); </script>
         </canvas>
-    
 </html>
