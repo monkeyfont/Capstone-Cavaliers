@@ -1,0 +1,21 @@
+Instructions to run the server scripts on a local installation
+
+-- Use python 2.7
+
+-- Ensure pip is for python 2.7
+To check this type "pip -V"
+if it says python 2, ignore the block below
+
+If the default pip version is for python 3, we need to force it to use python27:
+	prefix all pip commands with:
+		"py -2.7 -m"
+	so for "pip install flask" it should look like "py -2.7 -m pip install flask"
+
+
+2. Install libraries:
+	pip install flask
+	pip install flask-socketio
+	pip install eventlet
+
+
+
