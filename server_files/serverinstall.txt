@@ -2,20 +2,34 @@ Instructions to run the server scripts on a local installation
 
 -- Use python 2.7
 
+-- open cmd prompt/terminal >
+
 -- Ensure pip is for python 2.7
-To check this type "pip -V"
+
+To check this type 
+	> "pip -V"
 if it says python 2, ignore the block below
 
-If the default pip version is for python 3, we need to force it to use python27:
+If the default pip version is for python 3, we need to force commands to use python27:
 	prefix all pip commands with:
 		"py -2.7 -m"
-	so for "pip install flask" it should look like "py -2.7 -m pip install flask"
+	so for 
+		>"pip install flask" 
+	it should look like 
+		>"py -2.7 -m pip install flask"
 
 
 2. Install libraries:
-	pip install flask
-	pip install flask-socketio
-	pip install eventlet
+	> pip install flask
+	> pip install flask-socketio
+	> pip install eventlet
 
 
+3. pull latest server files from github
+   navigate to /server_files
+    
+   open __init__.py in pycharm as a FLASK project and run it
+   or alternatively, use cmd.
+	> "python __init__.py" 
+	> or if you need to force python27 "py -2.7 __init__.py"
 
