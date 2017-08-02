@@ -22,7 +22,14 @@ $('.Audio').on('click', function(e){
 		
 	});
 	
+// $('.btn').on('click', function(changePlayer){
+	// if (changePlayer.currentTarget.id == )
 	
+	
+	
+	// alert("Button clicked with value: "+changePlayer.currentTarget.value);
+		
+	// });		
 
 	
 var coinImage = new Image();
