@@ -205,6 +205,8 @@ function gameLoop(){
 	coin3.render();
 	player.update();
 	player.render();
+	card.update();
+	card.render();
 	
 
 	//console.log("gameloop");
@@ -223,7 +225,7 @@ function sprite(options) {
 	this.image = options.image;
 	this.loop = options.loop || true; // do we loop the sprite, or just play it once
 	this.yPos = options.yPos || 0;
-	this.xPos = options.yPos || 0;
+	this.xPos = options.xPos || 0;
 	this.numberOfFrames = options.numberOfFrames || 1;
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
@@ -324,7 +326,24 @@ var player = new sprite({
 	
 })
 
-spriteList = [coin,coin2,coin3,player];
+var CardImage = new Image();
+CardImage.src = 'static/images/infection-Cards.png';
+var card = new sprite({
+	id:"Infection Deck",
+	context: canvas.getContext("2d"),
+    width: 584,
+    height: 800,
+	numberOfFrames: 1,
+	ticksPerFrame: 1,
+	xPos:1600,
+	yPos:30,
+	xScale:0.5,
+	yScale:0.5,
+    image: CardImage
+	
+})
+
+spriteList = [coin,coin2,coin3,player,card];
 	
 mapImage.addEventListener("load", gameLoop);	
 // coinImage.addEventListener("load", gameLoop);
