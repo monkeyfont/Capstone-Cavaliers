@@ -1,24 +1,39 @@
 <!DOCTYPE html>
 <html>
+<head>
+</head>
 <body>
 
 <p>Image to use:</p>
-<input class = "btn" id="clickMe" type="button" value="Up" />
-<input class = "btn" id="clickMe" type="button" value="Down" />
-<input class = "btn" id="clickMe" type="button" value="Left" />
-<input class = "btn" id="clickMe" type="button" value="Right" />
-<input class = "btn" id="clickMe" type="button" value="Stop" />
+
+<table>
+	<tr>
+		<td><input class = "btn" id="up-left" type="button" value="&#x2196" /></td>
+		<td><input class = "btn" id="up" type="button" value="&#x2191" /></td>
+		<td><input class = "btn" id="up-right" type="button" value="&#x2197" /></td>
+	</tr>
+	<tr>		
+		<td><input class = "btn" id="left" type="button" value="&#x2190" /></td>
+		<td><input class = "btn" id="stop" type="button" value="&#x25A0" /></td>
+		<td><input class = "btn" id="right" type="button" value="&#x2192" /></td>
+	</tr>
+	<tr>		
+		<td><input class = "btn" id="down-left" type="button" value="&#x2199" /></td>
+		<td><input class = "btn" id="down" type="button" value="&#x2193" /></td>
+		<td><input class = "btn" id="down-right" type="button" value="&#x2198" /></td>
+	</tr>
+</table>
 <p />
 <input class = "Audio" id = "Mute" type="button" value="Mute" />
 <input class = "Audio" id = "Play" type="button" value="Play/Pause" />
 <!-- <img id="scream" 
-src="WorldMap.jpg" alt="The Scream"> -->
+src="WorldMap.jpg" alt="tde Scream"> -->
 
 <p>Canvas:</p>
 
-<canvas id="myCanvas" width="1920" height="1080"
+<canvas id="myCanvas" widtd="1920" height="1080"
 style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.
+Your browser does not support tde HTML5 canvas tag.
 </canvas>
 
 
@@ -26,9 +41,7 @@ Your browser does not support the HTML5 canvas tag.
 <script>
 
 
-	$('.btn').on('click', function(e){
-		alert("Button clicked with value: "+e.currentTarget.value);
-	});	
+
 	
 	
 </script>
