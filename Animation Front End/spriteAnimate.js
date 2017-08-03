@@ -49,7 +49,7 @@ $('.btn').on('click', function(changePlayer){
 		player.yStart=160;
 	}
 	if (changePlayer.currentTarget.id == 'up-right'){
-		
+		player.yStart=280;
 	}
 	if (changePlayer.currentTarget.id == 'left'){
 		player.yStart=80;
@@ -58,7 +58,7 @@ $('.btn').on('click', function(changePlayer){
 		
 	}
 	if (changePlayer.currentTarget.id == 'right'){
-		
+		player.yStart=240;
 	}
 	if (changePlayer.currentTarget.id == 'down-left'){
 		player.yStart=40;
@@ -67,7 +67,7 @@ $('.btn').on('click', function(changePlayer){
 		player.yStart=0;
 	}
 	if (changePlayer.currentTarget.id == 'down-right'){
-		
+		player.yStart=200;
 	}
 	
 	
