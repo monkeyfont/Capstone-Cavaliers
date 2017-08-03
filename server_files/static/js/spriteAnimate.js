@@ -5,6 +5,17 @@ var socket;
 
 socket = io.connect('http://' + document.domain + ':' + location.port);
 
+socket.on('connect', function () {
+        socket.emit('joinGame', {});
+    });
+
+
+socket.on('joined', function (data) {
+        console.log(data.msg + '\n');
+    });
+
+
+
 $('.Audio').on('click', function(e){
 		alert("Button clicked with value: "+e.currentTarget.value);
 		if (e.currentTarget.id == "Play"){
@@ -18,16 +29,20 @@ $('.Audio').on('click', function(e){
     function myFunction(data){
 //$("#clickTest").click(function(){
         // get the value from the movement box
-        var value = data+" was clicked";
+        var value = " has clicked " + data;
         // clear the field
         // submit that value
         socket.emit('click', {mess:value})
 
     };
 
+    // Console output now shows which player has clicked which coin
+
+
 socket.on('clicked', function (data) {
-        alert(data.msg);
-//        $('#log').val($('#log').val() + data.msg + '\n');
+
+        console.log(data.msg);
+
     });
 	
 	

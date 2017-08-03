@@ -141,10 +141,10 @@ canvas.addEventListener('click', function(evt) {
 // <<<<<<< mergeAnimation
 // 				myFunction(spriteList[i].id);
 // 			}
-		
-		
+
+
 // // =======
-// 			}		
+// 			}
 // 	}
 // 	// is the click on a city?
 // 	for (var i in cities){

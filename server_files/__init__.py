@@ -15,8 +15,10 @@ def home():
     print(session["username"])
     return render_template("home.html")
 
+#testing sending messages from game to server
 @app.route('/game')
 def game():
+    session["username"] = "Player " + str(random.randrange(1000))
     return render_template("MapOnCanvas.html")
 
 @socketio.on('join')
@@ -25,6 +27,18 @@ def joined(msg):
     player = session["username"]
     join_room(room)
     emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
+
+
+
+
+@socketio.on('joinGame')
+def joined(msg):
+    room = "1" # room = session.get('room')
+    player = session["username"]
+    join_room(room)
+    emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
+
+
 
 @socketio.on('move')
 def handleMessage(msg):
@@ -35,10 +49,12 @@ def handleMessage(msg):
 
 @socketio.on('click')
 def handleclick(msg):
+    room = "1"
+    player = session["username"]
     messg= msg["mess"]
     print(messg)
 
-    emit('clicked', {'msg' : messg })
+    emit('clicked', {'msg' : player + messg },room=room)
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
