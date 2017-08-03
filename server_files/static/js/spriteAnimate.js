@@ -45,6 +45,40 @@ socket.on('clicked', function (data) {
 
     });
 	
+$('.btn').on('click', function(changePlayer){
+	if (changePlayer.currentTarget.id == 'up-left'){
+		player.yStart=120;
+	}
+	if (changePlayer.currentTarget.id == 'up'){
+		player.yStart=160;
+	}
+	if (changePlayer.currentTarget.id == 'up-right'){
+		player.yStart=280;
+	}
+	if (changePlayer.currentTarget.id == 'left'){
+		player.yStart=80;
+	}
+	if (changePlayer.currentTarget.id == 'stop'){
+		
+	}
+	if (changePlayer.currentTarget.id == 'right'){
+		player.yStart=240;
+	}
+	if (changePlayer.currentTarget.id == 'down-left'){
+		player.yStart=40;
+	}
+	if (changePlayer.currentTarget.id == 'down'){
+		player.yStart=0;
+	}
+	if (changePlayer.currentTarget.id == 'down-right'){
+		player.yStart=200;
+	}
+	
+	
+	
+	// alert("Button clicked with value: "+changePlayer.currentTarget.id);
+		
+	});		
 	
 
 	
@@ -68,7 +102,12 @@ var screenWidthPercentage = scrnWidth/optimalScreenWidth;
 
 var scaleSize = 1;
 
-var cities = {city1:{x:100,y:100},city2:{x:400,y:400},city3:{x:630,y:720}};
+var cities = {
+	city1:{connections:['city2','city3'],x:100,y:100},
+	city2:{connections:['city1','city4'],x:400,y:400},
+	city3:{connections:['city1','city4'],x:630,y:720},
+	city4:{connections:['city2','city3'],x:802,y:605}
+};
 
 
 
@@ -82,7 +121,8 @@ if (screenHeightPercentage<screenWidthPercentage){
 var canvas = document.getElementById("myCanvas");
 canvas.width = 1920*scaleSize;
 canvas.height = 1080*scaleSize;
-canvas.getContext("2d").scale(scaleSize,scaleSize);
+var context = canvas.getContext("2d");
+context.scale(scaleSize,scaleSize);
 
 // console.log(canvas.getContext("2d").getScale())
 console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
@@ -122,6 +162,29 @@ function gameLoop(){
 	for (var i in cities){
 		canvas.getContext("2d").drawImage(cityImage,cities[i].x,cities[i].y);
 	}
+	for (var start in cities){
+		// console.log("start",start);
+		// console.log("connections",cities[start].connections);
+		for (var end in cities[start].connections){
+			var endCity = cities[cities[start].connections[end]];
+			// console.log("end",end);
+			// console.log("end city", cities[start].connections[end]);
+			// console.log("actual end city", cities[cities[start].connections[end]])
+
+		
+		
+		context.beginPath(); 
+		// Staring point (10,45)
+		context.moveTo(cities[start].x+12.5,cities[start].y+12.5);
+		// End point (180,47)
+		context.lineTo(endCity.x+12.5,endCity.y+12.5);
+		// Make the line visible		  
+		context.lineWidth = 5;
+		// set line color
+		context.strokeStyle = 'red';
+		context.stroke();
+		}
+	}
 	
 	coin.update();
 	coin.render();
@@ -153,6 +216,7 @@ function sprite(options) {
 	this.numberOfFrames = options.numberOfFrames || 1;
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
+	this.yStart = options.yStart || 0;
 	
 	this.update = function(){ //update the frame every x ticks 
 		//console.log("updated",this.image.src);
@@ -173,7 +237,7 @@ function sprite(options) {
 		this.context.drawImage(
 		this.image, //image to use
 		this.frameIndex * this.width, // x position to start clipping 
-		0, // y position to start clipping
+		this.yStart, // y position to start clipping
 		this.width, //width of clipped image
 		this.height, // height of clipped image
 		this.xPos, //x position for image on canvas
