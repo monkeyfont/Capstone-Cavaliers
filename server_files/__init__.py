@@ -11,8 +11,13 @@ socketio = SocketIO(app)
 def home():
     # Quick session testing code.
     session["username"] = "Player " + str(random.randrange(1000))
+
     print(session["username"])
     return render_template("home.html")
+
+@app.route('/game')
+def game():
+    return render_template("MapOnCanvas.html")
 
 @socketio.on('join')
 def joined(msg):
@@ -27,6 +32,13 @@ def handleMessage(msg):
     player = session["username"]
     location = msg["move_location"]
     emit('moved', {'msg' : player + " moved to " + location}, room=room)
+
+@socketio.on('click')
+def handleclick(msg):
+    messg= msg["mess"]
+    print(messg)
+
+    emit('clicked', {'msg' : messg })
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):

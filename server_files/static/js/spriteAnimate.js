@@ -1,5 +1,9 @@
 var snd = new Audio("A Instrumental Masterpiece.mp3"); // buffers automatically when created
+
 snd.play();
+var socket;
+
+socket = io.connect('http://' + document.domain + ':' + location.port);
 
 $('.Audio').on('click', function(e){
 		alert("Button clicked with value: "+e.currentTarget.value);
@@ -10,18 +14,34 @@ $('.Audio').on('click', function(e){
 		}
 		
 	});
+
+    function myFunction(data){
+//$("#clickTest").click(function(){
+        // get the value from the movement box
+        var value = data+" was clicked";
+        // clear the field
+        // submit that value
+        socket.emit('click', {mess:value})
+
+    };
+
+socket.on('clicked', function (data) {
+        alert(data.msg);
+//        $('#log').val($('#log').val() + data.msg + '\n');
+    });
 	
 	
 
 	
 var coinImage = new Image();
-coinImage.src = "coin-sprite-animation.png";
+
+coinImage.src = "static/images/coin-sprite-animation.png";
 var playerImage = new Image();
-playerImage.src = 'player6.png';
+playerImage.src = 'static/images/player6.png';
 var mapImage = new Image();
-mapImage.src = 'WorldMap.jpg';
+mapImage.src = 'static/images/WorldMap.jpg';
 var cityImage = new Image();
-cityImage.src = 'city token.png';
+cityImage.src = "static/images/city token.png";
 var scrnWidth = window.innerWidth;//screen.width;
 var scrnHeight = window.innerHeight;//screen.height;
 console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
@@ -68,6 +88,7 @@ canvas.addEventListener('click', function(evt) {
 		if (mousePos.x >= spriteList[i].xPos && mousePos.x <= spriteList[i].xPos+(spriteList[i].width*spriteList[i].xScale) &&
 			mousePos.y >= spriteList[i].yPos && mousePos.y <= spriteList[i].yPos+(spriteList[i].height*spriteList[i].yScale)){
 				console.log(spriteList[i].id,"was clicked");
+				myFunction(spriteList[i].id);
 			}
 		
 		
