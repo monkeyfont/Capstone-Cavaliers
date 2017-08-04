@@ -1,6 +1,7 @@
 var snd = new Audio("static/A Instrumental Masterpiece.mp3"); // buffers automatically when created
 
 snd.play();
+var cardNumber = 0;
 var socket;
 
 socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -158,8 +159,19 @@ canvas.addEventListener('click', function(evt) {
 				if (spriteList[i].id == 'Infection Card'){
 					spriteList[i].flip();
 				}
+				if (spriteList[i].id == 'Infection Deck'){
+					createCard(cardNumber);
+					cardNumber ++;
+				}
 			}
-		
+	}
+	for (var i in cardList){
+		if (mousePos.x >= cardList[i].xPos && mousePos.x <= cardList[i].xPos+(cardList[i].width*cardList[i].xScale) &&
+			mousePos.y >= cardList[i].yPos && mousePos.y <= cardList[i].yPos+(cardList[i].height*cardList[i].yScale)){
+			console.log(cardList[i].id,"was clicked------------------");	
+			console.log(cardList[i].toFlip,"was clicked------------------");
+			cardList[i].flip();
+	}
 		
 		
 	}
@@ -208,10 +220,14 @@ function gameLoop(){
 	coin3.render();
 	player.update();
 	player.render();
-	Deck.render();
+	deck.render();
 	card.render();
-	console.log(card.flipping,card.width);
-	console.log("-----------------------",card.toFlip);
+	for (var i in cardList){
+		cardList[i].render();
+	}
+	
+	// console.log(card.flipping,card.width);
+	// console.log("-----------------------",card.toFlip);
 	
 
 	//console.log("gameloop");
@@ -350,7 +366,7 @@ var card = new flippable({
 	imageFront: cardFront
 })
 
-var Deck = new sprite({
+var deck = new sprite({
 	id:"Infection Deck",
 	context: canvas.getContext("2d"),
     width: 584,
@@ -364,6 +380,25 @@ var Deck = new sprite({
     image: CardImage	
 
 })
+var cardList = [];
+function createCard(id) {
+	this.cardListing = cardList.push(new flippable({
+	id:"Infection Card "+id,
+	context: canvas.getContext("2d"),
+    width: 584,
+    height: 800,
+	numberOfFrames: 1,
+	ticksPerFrame: 1,
+	xPos:1600,
+	yPos:40,
+	xScale:0.5,
+	yScale:0.5,
+    imageBack: CardImage,	
+	imageFront: cardFront
+}))
+}
+
+
 
 function flippable(options) {
 	this.id = options.id,			
@@ -446,7 +481,7 @@ function flippable(options) {
 
 
 
-spriteList = [coin,coin2,coin3,player,card];
+spriteList = [coin,coin2,coin3,player,card,deck];
 	
 mapImage.addEventListener("load", gameLoop);	
 // coinImage.addEventListener("load", gameLoop);
