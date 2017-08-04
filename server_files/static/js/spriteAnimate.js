@@ -155,7 +155,7 @@ canvas.addEventListener('click', function(evt) {
 			mousePos.y >= spriteList[i].yPos && mousePos.y <= spriteList[i].yPos+(spriteList[i].height*spriteList[i].yScale)){
 				console.log(spriteList[i].id,"was clicked");
 				myFunction(spriteList[i].id);
-				if (spriteList[i].id == 'Infection Deck'){
+				if (spriteList[i].id == 'Infection Card'){
 					spriteList[i].flip();
 				}
 			}
@@ -208,8 +208,10 @@ function gameLoop(){
 	coin3.render();
 	player.update();
 	player.render();
+	Deck.render();
 	card.render();
 	console.log(card.flipping,card.width);
+	console.log("-----------------------",card.toFlip);
 	
 
 	//console.log("gameloop");
@@ -334,6 +336,21 @@ CardImage.src = 'static/images/infection-Cards.png';
 var cardFront = new Image();
 cardFront.src = 'static/images/infection-Front.png';
 var card = new flippable({
+	id:"Infection Card",
+	context: canvas.getContext("2d"),
+    width: 584,
+    height: 800,
+	numberOfFrames: 1,
+	ticksPerFrame: 1,
+	xPos:1600,
+	yPos:40,
+	xScale:0.5,
+	yScale:0.5,
+    imageBack: CardImage,	
+	imageFront: cardFront
+})
+
+var Deck = new sprite({
 	id:"Infection Deck",
 	context: canvas.getContext("2d"),
     width: 584,
@@ -344,8 +361,8 @@ var card = new flippable({
 	yPos:40,
 	xScale:0.5,
 	yScale:0.5,
-    image1: CardImage,	
-	image2: cardFront
+    image: CardImage	
+
 })
 
 function flippable(options) {
@@ -355,8 +372,8 @@ function flippable(options) {
 	this.height = options.height;
 	this.widthDraw = options.width;
 	this.heightDraw = options.height;
-	this.image1 = options.image1;
-	this.image2 = options.image2;
+	this.imageBack = options.imageBack;
+	this.imageFront = options.imageFront;
 	this.loop = options.loop || true; // do we loop the sprite, or just play it once
 	this.yPos = options.yPos || 0;
 	this.xPos = options.xPos || 0;
@@ -365,19 +382,37 @@ function flippable(options) {
 	this.flipping = false;
 	this.flipSpeed = options.flipSpeed || 10;
 	this.flipStage = 0;
-	this.currentImage = this.image1;
+	this.currentImage = this.imageBack;
+	this.toFlip = false;
 	this.flip = function() {
+		// if the card is on its back flip to its front
+		// scale the card down
+		// swap the card
+		// scale the card up
 		this.flipping = true;
 		if (this.flipStage == 10){
 			
 		}else{
 			this.widthDraw -= this.width/this.flipSpeed;
 		}
-		if(this.widthDraw <=3 || this.widthDraw >=3){
-			this.currentImage=this.image2;
+		if (this.widthDraw <0.1 && this.widthDraw > -0.1){
+			this.toFlip=true;
 		}
+		
+		if (this.toFlip == true){
+			if (this.currentImage==this.imageBack){
+				this.currentImage = this.imageFront;
+			}else{
+				this.currentImage=this.imageBack;
+			}
+			this.toFlip = false;
+		}
+			
+		
 		if (this.widthDraw <= -this.width){
 			this.flipping = false;
+			this.widthDraw = this.width;
+			this.xPos = this.xPos-(this.width*this.xScale);
 		}
 	}
 	
