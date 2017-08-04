@@ -155,6 +155,9 @@ canvas.addEventListener('click', function(evt) {
 			mousePos.y >= spriteList[i].yPos && mousePos.y <= spriteList[i].yPos+(spriteList[i].height*spriteList[i].yScale)){
 				console.log(spriteList[i].id,"was clicked");
 				myFunction(spriteList[i].id);
+				if (spriteList[i].id == 'Infection Deck'){
+					spriteList[i].flip();
+				}
 			}
 		
 		
@@ -205,8 +208,8 @@ function gameLoop(){
 	coin3.render();
 	player.update();
 	player.render();
-	card.update();
 	card.render();
+	console.log(card.flipping,card.width);
 	
 
 	//console.log("gameloop");
@@ -328,7 +331,9 @@ var player = new sprite({
 
 var CardImage = new Image();
 CardImage.src = 'static/images/infection-Cards.png';
-var card = new sprite({
+var cardFront = new Image();
+cardFront.src = 'static/images/infection-Front.png';
+var card = new flippable({
 	id:"Infection Deck",
 	context: canvas.getContext("2d"),
     width: 584,
@@ -336,12 +341,75 @@ var card = new sprite({
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
 	xPos:1600,
-	yPos:30,
+	yPos:40,
 	xScale:0.5,
 	yScale:0.5,
-    image: CardImage
-	
+    image1: CardImage,	
+	image2: cardFront
 })
+
+function flippable(options) {
+	this.id = options.id,			
+	this.context = options.context;
+	this.width = options.width;
+	this.height = options.height;
+	this.widthDraw = options.width;
+	this.heightDraw = options.height;
+	this.image1 = options.image1;
+	this.image2 = options.image2;
+	this.loop = options.loop || true; // do we loop the sprite, or just play it once
+	this.yPos = options.yPos || 0;
+	this.xPos = options.xPos || 0;
+	this.xScale = options.xScale || 1;
+	this.yScale = options.yScale || 1;
+	this.flipping = false;
+	this.flipSpeed = options.flipSpeed || 10;
+	this.flipStage = 0;
+	this.currentImage = this.image1;
+	this.flip = function() {
+		this.flipping = true;
+		if (this.flipStage == 10){
+			
+		}else{
+			this.widthDraw -= this.width/this.flipSpeed;
+		}
+		if(this.widthDraw <=3 || this.widthDraw >=3){
+			this.currentImage=this.image2;
+		}
+		if (this.widthDraw <= -this.width){
+			this.flipping = false;
+		}
+	}
+	
+	// take image 1, shrink into middle, show image 2 grow from middle
+	
+	this.render = function () {
+		if (this.flipping == true){
+			this.flip();
+		}
+        // Draw the animation
+		//console.log("image render",this.image.src)
+		this.context.drawImage(
+		this.currentImage, //image to use
+		0, // x position to start clipping 
+		0, // y position to start clipping
+		this.width, //width of clipped image
+		this.height, // height of clipped image
+		this.xPos, //x position for image on canvas
+		this.yPos, // y position for image on canvas
+		this.widthDraw*this.xScale, // width of image to use 
+		this.heightDraw*this.yScale); // height of image to use
+    };
+}
+
+
+
+
+
+
+
+
+
 
 spriteList = [coin,coin2,coin3,player,card];
 	
