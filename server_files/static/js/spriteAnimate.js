@@ -116,9 +116,10 @@ var scaleSize = 1;
 
 var cities = {
 	city1:{connections:['city2','city3'],x:100,y:100},
-	city2:{connections:['city1','city4'],x:400,y:400},
-	city3:{connections:['city1','city4'],x:630,y:720},
-	city4:{connections:['city2','city3'],x:802,y:605}
+	city2:{connections:['city1','city4','city5'],x:400,y:400},
+	city3:{connections:['city1','city4','city5'],x:630,y:720},
+	city4:{connections:['city2','city3'],x:802,y:605},
+	city5:{connections:['city2','city3'],x:1824,y:950}
 };
 
 
@@ -171,10 +172,17 @@ canvas.addEventListener('click', function(evt) {
 			console.log(cardList[i].id,"was clicked------------------");	
 			console.log(cardList[i].toFlip,"was clicked------------------");
 			cardList[i].flip();
+		}
+	}
+
+	for (var i in cities){
+		if (mousePos.x >= cities[i].x && mousePos.x <= (cities[i].x + 25) &&
+			mousePos.y >= cities[i].y && mousePos.y <= (cities[i].y + 25)){
+				console.log(i,'was clicked');
+		}
 	}
 		
 		
-	}
 })
 
 
@@ -187,6 +195,9 @@ function gameLoop(){
 	
 	for (var i in cities){
 		canvas.getContext("2d").drawImage(cityImage,cities[i].x,cities[i].y);
+		// context.font="30px Verdana";
+		// context.fillStyle = 'red';
+		// context.fillText(i,cities[i].x,cities[i].y);
 	}
 	for (var start in cities){
 		// console.log("start",start);
@@ -195,10 +206,7 @@ function gameLoop(){
 			var endCity = cities[cities[start].connections[end]];
 			// console.log("end",end);
 			// console.log("end city", cities[start].connections[end]);
-			// console.log("actual end city", cities[cities[start].connections[end]])
-
-		
-		
+			// console.log("actual end city", cities[cities[start].connections[end]])		
 		context.beginPath(); 
 		// Staring point (10,45)
 		context.moveTo(cities[start].x+12.5,cities[start].y+12.5);
@@ -209,6 +217,7 @@ function gameLoop(){
 		// set line color
 		context.strokeStyle = 'red';
 		context.stroke();
+
 		}
 	}
 	
@@ -225,6 +234,14 @@ function gameLoop(){
 	for (var i in cardList){
 		cardList[i].render();
 	}
+	for (var i in cities){
+
+		context.font="30px Verdana";
+		context.fillStyle = 'orange';
+		context.fillText(i,cities[i].x,cities[i].y);
+	}
+	
+	
 	
 	// console.log(card.flipping,card.width);
 	// console.log("-----------------------",card.toFlip);
@@ -415,7 +432,7 @@ function flippable(options) {
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
 	this.flipping = false;
-	this.flipSpeed = options.flipSpeed || 10;
+	this.flipSpeed = options.flipSpeed || 20;
 	this.flipStage = 0;
 	this.currentImage = this.imageBack;
 	this.toFlip = false;
