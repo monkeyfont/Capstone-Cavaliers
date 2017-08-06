@@ -1,6 +1,7 @@
 var snd = new Audio("static/A Instrumental Masterpiece.mp3"); // buffers automatically when created
 
 snd.play();
+var cardNumber = 0;
 var socket;
 
 socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -115,9 +116,10 @@ var scaleSize = 1;
 
 var cities = {
 	city1:{connections:['city2','city3'],x:100,y:100},
-	city2:{connections:['city1','city4'],x:400,y:400},
-	city3:{connections:['city1','city4'],x:630,y:720},
-	city4:{connections:['city2','city3'],x:802,y:605}
+	city2:{connections:['city1','city4','city5'],x:400,y:400},
+	city3:{connections:['city1','city4','city5'],x:630,y:720},
+	city4:{connections:['city2','city3'],x:802,y:605},
+	city5:{connections:['city2','city3'],x:1824,y:950}
 };
 
 
@@ -155,11 +157,32 @@ canvas.addEventListener('click', function(evt) {
 			mousePos.y >= spriteList[i].yPos && mousePos.y <= spriteList[i].yPos+(spriteList[i].height*spriteList[i].yScale)){
 				console.log(spriteList[i].id,"was clicked");
 				myFunction(spriteList[i].id);
+				if (spriteList[i].id == 'Infection Card'){
+					spriteList[i].flip();
+				}
+				if (spriteList[i].id == 'Infection Deck'){
+					createCard(cardNumber);
+					cardNumber ++;
+				}
 			}
-		
-		
-		
 	}
+	for (var i in cardList){
+		if (mousePos.x >= cardList[i].xPos && mousePos.x <= cardList[i].xPos+(cardList[i].width*cardList[i].xScale) &&
+			mousePos.y >= cardList[i].yPos && mousePos.y <= cardList[i].yPos+(cardList[i].height*cardList[i].yScale)){
+			console.log(cardList[i].id,"was clicked------------------");	
+			console.log(cardList[i].toFlip,"was clicked------------------");
+			cardList[i].flip();
+		}
+	}
+
+	for (var i in cities){
+		if (mousePos.x >= cities[i].x && mousePos.x <= (cities[i].x + 25) &&
+			mousePos.y >= cities[i].y && mousePos.y <= (cities[i].y + 25)){
+				console.log(i,'was clicked');
+		}
+	}
+		
+		
 })
 
 
@@ -172,6 +195,9 @@ function gameLoop(){
 	
 	for (var i in cities){
 		canvas.getContext("2d").drawImage(cityImage,cities[i].x,cities[i].y);
+		// context.font="30px Verdana";
+		// context.fillStyle = 'red';
+		// context.fillText(i,cities[i].x,cities[i].y);
 	}
 	for (var start in cities){
 		// console.log("start",start);
@@ -180,10 +206,7 @@ function gameLoop(){
 			var endCity = cities[cities[start].connections[end]];
 			// console.log("end",end);
 			// console.log("end city", cities[start].connections[end]);
-			// console.log("actual end city", cities[cities[start].connections[end]])
-
-		
-		
+			// console.log("actual end city", cities[cities[start].connections[end]])		
 		context.beginPath(); 
 		// Staring point (10,45)
 		context.moveTo(cities[start].x+12.5,cities[start].y+12.5);
@@ -194,6 +217,7 @@ function gameLoop(){
 		// set line color
 		context.strokeStyle = 'red';
 		context.stroke();
+
 		}
 	}
 	
@@ -205,8 +229,22 @@ function gameLoop(){
 	coin3.render();
 	player.update();
 	player.render();
-	card.update();
+	deck.render();
 	card.render();
+	for (var i in cardList){
+		cardList[i].render();
+	}
+	for (var i in cities){
+
+		context.font="30px Verdana";
+		context.fillStyle = 'orange';
+		context.fillText(i,cities[i].x,cities[i].y);
+	}
+	
+	
+	
+	// console.log(card.flipping,card.width);
+	// console.log("-----------------------",card.toFlip);
 	
 
 	//console.log("gameloop");
@@ -328,7 +366,24 @@ var player = new sprite({
 
 var CardImage = new Image();
 CardImage.src = 'static/images/infection-Cards.png';
-var card = new sprite({
+var cardFront = new Image();
+cardFront.src = 'static/images/infection-Front.png';
+var card = new flippable({
+	id:"Infection Card",
+	context: canvas.getContext("2d"),
+    width: 584,
+    height: 800,
+	numberOfFrames: 1,
+	ticksPerFrame: 1,
+	xPos:1600,
+	yPos:40,
+	xScale:0.5,
+	yScale:0.5,
+    imageBack: CardImage,	
+	imageFront: cardFront
+})
+
+var deck = new sprite({
 	id:"Infection Deck",
 	context: canvas.getContext("2d"),
     width: 584,
@@ -336,14 +391,114 @@ var card = new sprite({
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
 	xPos:1600,
-	yPos:30,
+	yPos:40,
 	xScale:0.5,
 	yScale:0.5,
-    image: CardImage
-	
-})
+    image: CardImage	
 
-spriteList = [coin,coin2,coin3,player,card];
+})
+var cardList = [];
+function createCard(id) {
+	this.cardListing = cardList.push(new flippable({
+	id:"Infection Card "+id,
+	context: canvas.getContext("2d"),
+    width: 584,
+    height: 800,
+	numberOfFrames: 1,
+	ticksPerFrame: 1,
+	xPos:1600,
+	yPos:40,
+	xScale:0.5,
+	yScale:0.5,
+    imageBack: CardImage,	
+	imageFront: cardFront
+}))
+}
+
+
+
+function flippable(options) {
+	this.id = options.id,			
+	this.context = options.context;
+	this.width = options.width;
+	this.height = options.height;
+	this.widthDraw = options.width;
+	this.heightDraw = options.height;
+	this.imageBack = options.imageBack;
+	this.imageFront = options.imageFront;
+	this.loop = options.loop || true; // do we loop the sprite, or just play it once
+	this.yPos = options.yPos || 0;
+	this.xPos = options.xPos || 0;
+	this.xScale = options.xScale || 1;
+	this.yScale = options.yScale || 1;
+	this.flipping = false;
+	this.flipSpeed = options.flipSpeed || 20;
+	this.flipStage = 0;
+	this.currentImage = this.imageBack;
+	this.toFlip = false;
+	this.flip = function() {
+		// if the card is on its back flip to its front
+		// scale the card down
+		// swap the card
+		// scale the card up
+		this.flipping = true;
+		if (this.flipStage == 10){
+			
+		}else{
+			this.widthDraw -= this.width/this.flipSpeed;
+		}
+		if (this.widthDraw <0.1 && this.widthDraw > -0.1){
+			this.toFlip=true;
+		}
+		
+		if (this.toFlip == true){
+			if (this.currentImage==this.imageBack){
+				this.currentImage = this.imageFront;
+			}else{
+				this.currentImage=this.imageBack;
+			}
+			this.toFlip = false;
+		}
+			
+		
+		if (this.widthDraw <= -this.width){
+			this.flipping = false;
+			this.widthDraw = this.width;
+			this.xPos = this.xPos-(this.width*this.xScale);
+		}
+	}
+	
+	// take image 1, shrink into middle, show image 2 grow from middle
+	
+	this.render = function () {
+		if (this.flipping == true){
+			this.flip();
+		}
+        // Draw the animation
+		//console.log("image render",this.image.src)
+		this.context.drawImage(
+		this.currentImage, //image to use
+		0, // x position to start clipping 
+		0, // y position to start clipping
+		this.width, //width of clipped image
+		this.height, // height of clipped image
+		this.xPos, //x position for image on canvas
+		this.yPos, // y position for image on canvas
+		this.widthDraw*this.xScale, // width of image to use 
+		this.heightDraw*this.yScale); // height of image to use
+    };
+}
+
+
+
+
+
+
+
+
+
+
+spriteList = [coin,coin2,coin3,player,card,deck];
 	
 mapImage.addEventListener("load", gameLoop);	
 // coinImage.addEventListener("load", gameLoop);
