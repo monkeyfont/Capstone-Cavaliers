@@ -32,6 +32,7 @@ class Player:
         self.role = 0
         self.hand = []
         self.location = 1
+        self.host = 0
 
 class GameBoard:
     """ Game class definition """
