@@ -41,7 +41,7 @@ class City:
 
 class Player:
     """ Player class def """
-    def __init__(self, id, name="Player"):
+    def __init__(self, id, name = "Player"):
         """ init def """
         self.id = id
         self.name = name
@@ -55,7 +55,7 @@ class GameBoard:
     def __init__(self):
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
-        self.cities = self.__generateCities()
+        self.cities = self.__generateCities() # {id : City}
         self.infectionDeck = []
         self.infectionDiscarded = []
         self.playerDeck = []
@@ -70,7 +70,7 @@ class GameBoard:
         self.yellowUsed = 0
         self.blackUsed = 0
         self.yellowCure = 0
-        self.redCure = 0
+        self.redCure = 0 # 0 = undiscovered, 1 = cured, 2 = eradicated
         self.blueCure = 0
         self.blackCure = 0
         self.outBreakLevel = 0
@@ -84,15 +84,43 @@ class GameBoard:
         return citiesDict
 
     def __generatePlayerDeck(self):
-        """ """
-        pass
-
-    def __generateInfectionDeck(self):
-        """ """
+        """  """
         pass
 
     def __distributeHand(self):
         """ """
+        pass
+
+    def __shuffleEpidemicCards(self):
+        """ """
+        pass
+
+    def movePlayer(self):
+        """ Move to a connected city """
+        pass
+
+    def directFlight(self):
+        """ Discard a city card to move to the city named on the card """
+        pass
+
+    def charterFlight(self):
+        """ Discard the city card that matches the city you are in to move to any city """
+        pass
+
+    def shuttleFlight(self):
+        """ Move from a city with a research station to any other city that has a research station """
+        pass
+
+    def buildResearhStation(self):
+        """ Discard the city card that matches the city you are in to place a research station there """
+        pass
+
+    def shareKnowledge(self):
+        """ Either: give the card that matches the city you are in to another player, or take that card from another player. Both players must be in the same city. """
+        pass
+
+    def discoverCure(self):
+        """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
         pass
 
 
@@ -105,7 +133,7 @@ class PlayerCard:
         self.population = population
         self.area = area
         self.color = color
-
+        self.type = "player"
 
 class EventCard:
     """ Event Card Definition """
@@ -113,7 +141,16 @@ class EventCard:
         self.id = id
         self.name = name
         self.description = description
+        self.type = "event"
 
+class EpidemicCard:
+    """ Infection Card Definition """
+    def __init__(self, id, name, country, color):
+        self.id = id
+        self.name = name
+        self.country = country
+        self.color = color
+        self.type = "epidemic"
 
 class InfectionCard:
     """ Infection Card Definition """
@@ -122,3 +159,7 @@ class InfectionCard:
         self.name = name
         self.country = country
         self.color = color
+        self.type = "infection"
+
+
+
