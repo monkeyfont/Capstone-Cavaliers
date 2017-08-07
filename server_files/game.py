@@ -1,3 +1,5 @@
+from random import shuffle
+
 # temp cities dictionary. id : {name: string, connections : [id], x:int, y:int}
 CITIES_TEMPLATE = {
     1:{"connections":[2,3], "name": "city1", "x":100, "y":100},
@@ -10,6 +12,7 @@ CITIES_TEMPLATE = {
 INFECTION_CARDS = {
     1:{"city":"Atlanta", "country":"United States"},
     2:{"city":"London", "country":"United Kingdom"}
+
 }
 
 PLAYER_CARDS = {
@@ -19,7 +22,11 @@ PLAYER_CARDS = {
 
 EVENT_CARDS = {
     1:{"name":"Government Grant", "description":"Add 1 research station to any city ( no city card needed )"},
-    2:{"name":"Airlift", "description":"Move any 1 pawn to any city, get permission before moving another player's pawn"}
+    2:{"name":"Airlift", "description":"Move any 1 pawn to any city, get permission before moving another player's pawn"},
+    3: {"name": "testEvent", "description": "testEvent"},
+    4: {"name": "testEvent", "description": "testEvent"},
+    5: {"name": "testEvent", "description": "testEvent"},
+    6: {"name": "testEvent", "description": "testEvent"}
 }
 
 class City:
@@ -33,11 +40,20 @@ class City:
         self.red = 0
         self.yellow = 0
         self.researchStation = 0
-        self.player1 = 0
-        self.player2 = 0
-        self.player3 = 0
-        self.player4 = 0
-        self.connections = connections
+        self.connections = connections # [id]
+
+    def setResearchStation(self):
+        self.researchStation = 1
+
+    def removeResearchStation(self):
+        self.researchStation = 0
+
+    def getResearchStation(self):
+        return self.researchStation
+
+    def getConnections(self):
+        return self.connections
+
 
 class Player:
     """ Player class def """
@@ -50,21 +66,24 @@ class Player:
         self.location = 1
         self.host = 0
 
+    def setLocation(self, id):
+        self.id = id
+
+    def getLocation(self):
+        return self.id
+
+
 class GameBoard:
     """ Game class definition """
     def __init__(self):
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         self.cities = self.__generateCities() # {id : City}
-        self.infectionDeck = []
+        self.infectionDeck = self.__generateInfectionDeck() # [InfectionCard]
+        self.playerDeck = self.__generatePlayerDeck() # [PlayerCard]
         self.infectionDiscarded = []
-        self.playerDeck = []
         self.playerDiscarded = []
-        self.researchStations = [1] # city ids where research stations are. Atlanta always has a research station.
-        self.player1 = Player(1)
-        self.player2 = Player(2)
-        self.player3 = Player(3)
-        self.player4 = Player(4)
+        self.players = {1:Player(1), 2:Player(2)}
         self.blueUsed = 0 # disease cubes used
         self.redUsed = 0
         self.yellowUsed = 0
@@ -76,6 +95,12 @@ class GameBoard:
         self.outBreakLevel = 0
         self.infectionLevel = 0
 
+        # start player at cityId1 (normally atlanta)
+        self.players[1].setLocation(1)
+        # place a research station at cityId1
+        self.cities[1].setResearchStation()
+
+
     def __generateCities(self):
         """ Function generates a dictionary that contains all cities, and links between them. """
         citiesDict = {}
@@ -84,20 +109,52 @@ class GameBoard:
         return citiesDict
 
     def __generatePlayerDeck(self):
-        """  """
-        pass
+        """ Returns a list containing player card objects. Epidemic cards are NOT added."""
+        cards = []
+        for k in PLAYER_CARDS:
+            cards.append(PlayerCard(k, PLAYER_CARDS[k]["name"], PLAYER_CARDS[k]["name"], PLAYER_CARDS[k]["description"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["color"]))
+        return cards
+
+    def __generateInfectionDeck(self):
+        """ Returns a list containing infection card objects """
+        cards = []
+        for k in INFECTION_CARDS: #id,name,country,color
+            cards.append(InfectionCard(k, INFECTION_CARDS[k]["name"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
+        return cards
+
 
     def __distributeHand(self):
         """ """
         pass
 
-    def __shuffleEpidemicCards(self):
+    def __infectCitiesStage(self):
+        """ """
+        # First shuffle the infection cards
+        shuffle(self.infectionDeck)
+        # draw first 3 cards, place 3 disease markers
+        # draw next 3 cards, place 2 disease markers
+        # draw final 3 cards, place 1 disease marker
+
+    def __placeEpidemicCards(self):
         """ """
         pass
 
-    def movePlayer(self):
-        """ Move to a connected city """
-        pass
+    def movePlayer(self, playerId, cityId):
+        """
+        card desc: Move to a connected city
+        Move the player to the city that matches that cityID, only if they are connected.
+        This sets the player object to that city, and the city object to know that the player is there.
+        Returns: True if successful, False if unsuccessful.
+        """
+        # get current player city
+        currentCityId = self.players[playerId].getLocation()
+        currentCity = self.cities[currentCityId]
+        if cityId in currentCity.getConnections():
+            self.players[playerId].setLocation(cityId)
+            return True
+        else:
+            return False
+
 
     def directFlight(self):
         """ Discard a city card to move to the city named on the card """
