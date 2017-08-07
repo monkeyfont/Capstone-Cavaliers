@@ -6,6 +6,22 @@ CITIES_TEMPLATE = {
     4:{"connections":[2,3], "name": "city4", "x":802, "y":605}
 }
 
+# id : {name, description}
+INFECTION_CARDS = {
+    1:{"city":"Atlanta", "country":"United States"},
+    2:{"city":"London", "country":"United Kingdom"}
+}
+
+PLAYER_CARDS = {
+    1: {"city": "Atlanta", "country": "United States", "population":"0", "area":"0", "color":"blue"},
+    2: {"city": "London", "country": "United Kingdom", "population":"0", "area":"0", "color":"blue"}
+}
+
+EVENT_CARDS = {
+    1:{"name":"Government Grant", "description":"Add 1 research station to any city ( no city card needed )"},
+    2:{"name":"Airlift", "description":"Move any 1 pawn to any city, get permission before moving another player's pawn"}
+}
+
 class City:
     """ City class definition """
     def __init__(self, id, name, connections):
@@ -36,18 +52,29 @@ class Player:
 
 class GameBoard:
     """ Game class definition """
-    def __init__(self, infection_deck, player_deck):
+    def __init__(self):
         """ init def """
+        self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         self.cities = self.__generateCities()
-        self.infectionDeck = infection_deck
+        self.infectionDeck = []
         self.infectionDiscarded = []
-        self.playerDeck = player_deck
+        self.playerDeck = []
         self.playerDiscarded = []
-        self.researchStations = [1] #city ids where research stations are
+        self.researchStations = [1] # city ids where research stations are. Atlanta always has a research station.
         self.player1 = Player(1)
         self.player2 = Player(2)
         self.player3 = Player(3)
         self.player4 = Player(4)
+        self.blueUsed = 0 # disease cubes used
+        self.redUsed = 0
+        self.yellowUsed = 0
+        self.blackUsed = 0
+        self.yellowCure = 0
+        self.redCure = 0
+        self.blueCure = 0
+        self.blackCure = 0
+        self.outBreakLevel = 0
+        self.infectionLevel = 0
 
     def __generateCities(self):
         """ Function generates a dictionary that contains all cities, and links between them. """
@@ -55,3 +82,43 @@ class GameBoard:
         for k in CITIES_TEMPLATE:
             citiesDict[k] = City(k, CITIES_TEMPLATE[k]["name"], CITIES_TEMPLATE[k]["connections"])
         return citiesDict
+
+    def __generatePlayerDeck(self):
+        """ """
+        pass
+
+    def __generateInfectionDeck(self):
+        """ """
+        pass
+
+    def __distributeHand(self):
+        """ """
+        pass
+
+
+class PlayerCard:
+    """ Player City Card Definition """
+    def __init__(self, id, name, description, population, area, color):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.population = population
+        self.area = area
+        self.color = color
+
+
+class EventCard:
+    """ Event Card Definition """
+    def __init__(self, id, name, description):
+        self.id = id
+        self.name = name
+        self.description = description
+
+
+class InfectionCard:
+    """ Infection Card Definition """
+    def __init__(self, id, name, country, color):
+        self.id = id
+        self.name = name
+        self.country = country
+        self.color = color
