@@ -7,6 +7,9 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -
 app.secret_key = 'development' # change when out of development!
 socketio = SocketIO(app)
 room_ID = 1
+playerID = 0
+
+player = Player
 @app.route('/')
 def home():
     # Quick session testing code.
@@ -25,9 +28,17 @@ def game():
 def joined(msg):
     global room_ID
     room = str(room_ID + 1)
-    room_ID = room_ID + 1
+
+    global playerID
+    player_id = str(playerID+1)
+
     join_room(room)
-    print(session["username"] + " created room " + room )
+    player = Player(player_id,"Vicente")
+    player.id = playerID
+    player.room = room
+    print(session["username"] + " created room " + player.room + " and his id is " + str(player.getRoom() ))
+    room_ID = room_ID + 1
+    playerID = playerID + 1
 
 
 
@@ -75,7 +86,7 @@ def room():
 # this is the page were users go to after they have decided to either start a game or join a game
 @app.route('/user')
 def user():
-    session["username"] = "Player " + str(random.randrange(1000))
+    session["username"] = playerID
     return render_template("userpage.html")
 ####################################################################################
 ##############      fUNCTIONS WORKING ON       #####################################
@@ -86,18 +97,28 @@ def user():
 # can add more functionalities in the future.
 @socketio.on('newroom')
 def handleMessage(msg):
+    global playerID
     global room_ID
-    player = session["username"]
-    print ("User " +session["username"] +" has created a new game." )
-
+    player = Player(playerID,"Vicente")
+    player.setRoom(playerID)
+    join_room(playerID)
+    player.setid(playerID)
+    print ("User " + str(player.getid()) +" created a new room "+ str(player.getRoom ()))
+    playerID = playerID + 1
 # test for connecting to new room
 # can add more functionalities in the future.
 @socketio.on('joinexistingroom')
 def handleMessage(msg):
+    global playerID
+    player = Player(playerID,"Vicente")
+    player.room = room
     new_room_id = msg["roomName"]
-    player = session["username"]
-    print ("User " +session["username"] +" wants to join room "+new_room_id )
-playerID = 0
+    join_room(new_room_id)
+    player.setRoom(new_room_id)
+    playerusername = session["username"]
+    print ("User " + str(session["username"]) +" wants to join room "+ str(player.getRoom()))
+    playerID = playerID + 1
+
 @socketio.on('createUserObject')
 def userobj(msg):
     player = session["username"]

@@ -25,15 +25,23 @@ class City:
 
 class Player:
     """ Player class def """
-    def __init__(self, id, name="Player"):
+    def __init__(self, playerid, name="Player"):
         """ init def """
-        self.id = id
+        self.id = playerid
         self.name = name
         self.role = 0
         self.hand = []
         self.location = 1
         self.host = 0
-
+        self.room = 0
+    def getRoom(self):
+        return self.room
+    def setRoom(self,roomid):
+        self.room = roomid
+    def getid(self):
+        return self.id
+    def setid(self,playerid):
+        self.id = playerid
 class GameBoard:
     """ Game class definition """
     def __init__(self, infection_deck, player_deck):
