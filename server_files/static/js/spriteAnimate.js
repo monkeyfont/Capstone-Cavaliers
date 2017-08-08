@@ -151,6 +151,8 @@ canvas.addEventListener('click', function(evt) {
 	}	
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 	console.log(message);
+
+	player.move(mousePos.x,mousePos.y);
 	for (var i in spriteList){
 		// is the click on the image?
 		if (mousePos.x >= spriteList[i].xPos && mousePos.x <= spriteList[i].xPos+(spriteList[i].width*spriteList[i].xScale) &&
@@ -268,8 +270,33 @@ function sprite(options) {
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
 	this.yStart = options.yStart || 0;
+	this.moveX = this.xPos;
+	this.moveY = this.yPos;
+	this.speed = options.speed || 10;
 	
-	this.update = function(){ //update the frame every x ticks 
+	this.move = function (x, y){
+		this.moveX = x;
+		this.moveY = y;		
+	}
+	
+	this.update = function(){ 
+		if (this.moveX != this.xPos){
+			if (this.moveX <= this.xPos){
+				this.xPos = this.xPos - this.speed
+			}else{
+				this.xPos = this.xPos + this.speed
+			}
+		}
+		if (this.moveY != this.yPos){
+			if (this.moveY <= this.yPos){
+				this.yPos = this.yPos - this.speed
+			}else{
+				this.yPos = this.yPos + this.speed
+			}
+			
+		}
+	
+		//update the frame every x ticks 
 		//console.log("updated",this.image.src);
 		this.tickCount +=1;
 		if (this.tickCount > this.ticksPerFrame){
@@ -488,15 +515,6 @@ function flippable(options) {
 		this.heightDraw*this.yScale); // height of image to use
     };
 }
-
-
-
-
-
-
-
-
-
 
 spriteList = [coin,coin2,coin3,player,card,deck];
 	
