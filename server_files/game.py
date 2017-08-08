@@ -58,7 +58,6 @@ class City:
 class Player:
     """ Player class def """
     def __init__(self, id, name = "Player"):
-        """ init def """
         self.id = id
         self.name = name
         self.role = 0
@@ -66,12 +65,18 @@ class Player:
         self.location = 1
         self.host = 0
 
-    def setLocation(self, id):
-        self.id = id
-
+    def setLocation(self, location):
+        self.location = location
     def getLocation(self):
+        return self.location
+    def getRoom(self):
+        return self.room
+    def setRoom(self,roomid):
+        self.room = roomid
+    def getid(self):
         return self.id
-
+    def setid(self,id):
+        self.id = id
 
 class GameBoard:
     """ Game class definition """
