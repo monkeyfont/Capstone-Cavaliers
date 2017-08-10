@@ -4,16 +4,23 @@ snd.play();
 var cardNumber = 0;
 var socket;
 
+
 socket = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('connect', function () {
         socket.emit('joinGame', {});
+
     });
 
 
 socket.on('joined', function (data) {
         console.log(data.msg + '\n');
+
+
     });
+
+
+
 
 
 
@@ -48,7 +55,12 @@ $('.Audio').on('click', function(e){
 
     };
 
-    // Console output now shows which player has clicked which coin
+function checkMove(x,y){
+
+
+    socket.emit('checkMove', {xpos:x,ypos:y})
+
+    };
 
 
 socket.on('clicked', function (data) {
@@ -56,6 +68,27 @@ socket.on('clicked', function (data) {
         console.log(data.msg);
 
     });
+
+
+socket.on('checked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        xpos=data.xpos
+        ypos=data.ypos
+        if (check =='true'){
+
+
+	player.move(xpos,ypos);
+	}
+	else{
+	    alert("Sorry invalid move");
+	}
+
+
+
+    });
+
+
 	
 $('.btn').on('click', function(changePlayer){
 	if (changePlayer.currentTarget.id == 'up-left'){
@@ -150,9 +183,10 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}	
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	console.log(message);
 
-	player.move(mousePos.x,mousePos.y);
+    checkMove(mousePos.x,mousePos.y);
+    //changed move function call from here to inside socket.on when the response is checked
+
 	for (var i in spriteList){
 		// is the click on the image?
 		if (mousePos.x >= spriteList[i].xPos && mousePos.x <= spriteList[i].xPos+(spriteList[i].width*spriteList[i].xScale) &&
@@ -287,6 +321,7 @@ function sprite(options) {
 		var deltaX = this.xPos - this.moveX;
 		var deltaY = this.yPos - this.moveY;
 		if ( deltaX != 0  && deltaY != 0){
+
 			// work out the distance a^2 + b^2 = c^2 where deltaX and DeltaY are a and b
 			
 			var distance = Math.sqrt((deltaX**2)+(deltaY**2));
@@ -549,3 +584,4 @@ mapImage.addEventListener("load", gameLoop);
 // coin.render();
 // console.log("pie");
 // };
+

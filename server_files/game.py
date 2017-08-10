@@ -10,8 +10,8 @@ CITIES_TEMPLATE = {
 
 # id : {name, description}
 INFECTION_CARDS = {
-    1:{"city":"Atlanta", "country":"United States"},
-    2:{"city":"London", "country":"United Kingdom"}
+    1:{"city":"Atlanta", "country":"United States", "color":"blue"},
+    2:{"city":"London", "country":"United Kingdom", "color":"blue"}
 
 }
 
@@ -124,7 +124,7 @@ class GameBoard:
         """ Returns a list containing infection card objects """
         cards = []
         for k in INFECTION_CARDS: #id,name,country,color
-            cards.append(InfectionCard(k, INFECTION_CARDS[k]["name"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
+            cards.append(InfectionCard(k, INFECTION_CARDS[k]["city"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
         return cards
 
 

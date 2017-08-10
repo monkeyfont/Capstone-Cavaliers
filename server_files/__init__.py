@@ -1,6 +1,7 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from game import Player
+
+from game import *
 import random
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
@@ -46,6 +47,7 @@ def joined(msg):
 def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
+    
     join_room(room)
     emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
 
@@ -57,7 +59,7 @@ def handleMessage(msg):
     player = session["username"]
     location = msg["move_location"]
     emit('moved', {'msg' : player + " moved to " + location}, room=room)
-    user();
+
 
 
 @socketio.on('click')
@@ -68,6 +70,19 @@ def handleclick(msg):
     print(messg)
 
     emit('clicked', {'msg' : player + messg },room=room)
+
+@socketio.on('checkMove')
+def handleclick(msg):
+    room = "1"
+    x= msg["xpos"]
+    y = msg["ypos"]
+    print(msg)
+    response= "true"
+    #set to false to test invalid move
+    # response = "false"
+
+    emit('checked', {'msg':response,'xpos':x,'ypos':y},room=room)
+
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
