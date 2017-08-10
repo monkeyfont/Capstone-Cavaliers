@@ -7,7 +7,12 @@ $(document).ready(function () {
 
     $("#create_room_button").click(function(){
         // submit request for new room
-        socket.emit('newroom', "")
+
+        var value = $('#new_room_id').val();
+        // clear the field
+        $('#new_room_id').val("");
+        // submit that value
+        socket.emit('newroom', {roomName:value})
         location.href = "user"
 
     });

@@ -83,9 +83,13 @@ class GameBoard:
     def __init__(self):
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
+        '''
+        #just for now while testing the GameBoard init function
         self.cities = self.__generateCities() # {id : City}
         self.infectionDeck = self.__generateInfectionDeck() # [InfectionCard]
         self.playerDeck = self.__generatePlayerDeck() # [PlayerCard]
+        '''
+        self.boardId = 0
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.players = {1:Player(1), 2:Player(2)}
@@ -100,6 +104,13 @@ class GameBoard:
         self.outBreakLevel = 0
         self.infectionLevel = 0
 
+    def getboardid(self):
+        return self.boardId
+    def setboardid(self,boardId):
+            self.boardId = boardId
+
+'''
+#Just temporary comment everything
         # start player at cityId1 (normally atlanta)
         self.players[1].setLocation(1)
         # place a research station at cityId1
@@ -184,7 +195,7 @@ class GameBoard:
     def discoverCure(self):
         """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
         pass
-
+'''
 
 class PlayerCard:
     """ Player City Card Definition """
