@@ -1,14 +1,16 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from game import Player
+from game import GameBoard
+from game import *
 import random
+import unittest
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
 app.secret_key = 'development' # change when out of development!
 socketio = SocketIO(app)
 room_ID = 1
 playerID = 0
-
+games = {} # in here we will store the game objects
 player = Player
 @app.route('/')
 def home():
@@ -46,6 +48,7 @@ def joined(msg):
 def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
+    
     join_room(room)
     emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
 
@@ -57,7 +60,7 @@ def handleMessage(msg):
     player = session["username"]
     location = msg["move_location"]
     emit('moved', {'msg' : player + " moved to " + location}, room=room)
-    user();
+
 
 
 @socketio.on('click')
@@ -68,6 +71,19 @@ def handleclick(msg):
     print(messg)
 
     emit('clicked', {'msg' : player + messg },room=room)
+
+@socketio.on('checkMove')
+def handleclick(msg):
+    room = "1"
+    x= msg["xpos"]
+    y = msg["ypos"]
+    print(msg)
+    response= "true"
+    #set to false to test invalid move
+    # response = "false"
+
+    emit('checked', {'msg':response,'xpos':x,'ypos':y},room=room)
+
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
@@ -93,31 +109,54 @@ def user():
 
 # used to create a new room
 
-# test for the create new room button
-# can add more functionalities in the future.
+
 @socketio.on('newroom')
 def handleMessage(msg):
     global playerID
     global room_ID
-    player = Player(playerID,"Vicente")
-    player.setRoom(playerID)
-    join_room(playerID)
-    player.setid(playerID)
-    print ("User " + str(player.getid()) +" created a new room "+ str(player.getRoom ()))
+    new_game_id = room_ID
+    player_name = msg["playerName"]
+
+    gameobject = GameBoard()
+    gameobject.gameID = new_game_id
+
+    gamePlayer = Player(playerID,player_name)
+    gameobject.playerCount = 1
+    gameobject.players[gameobject.playerCount] = gamePlayer
+
+    games[new_game_id] = gameobject
     playerID = playerID + 1
-# test for connecting to new room
-# can add more functionalities in the future.
+
+
+    join_room(new_game_id)
+    room_ID = new_game_id + 1
+
+
 @socketio.on('joinexistingroom')
 def handleMessage(msg):
     global playerID
-    player = Player(playerID,"Vicente")
-    player.room = room
-    new_room_id = msg["roomName"]
-    join_room(new_room_id)
-    player.setRoom(new_room_id)
-    playerusername = session["username"]
-    print ("User " + str(session["username"]) +" wants to join room "+ str(player.getRoom()))
-    playerID = playerID + 1
+    new_room_id = int(msg["roomName"])
+    #get the gameboard called
+    gameCalled = games[new_room_id]
+    numberOfPlayers = gameCalled.playerCount
+
+    if numberOfPlayers == 4:
+        print "Too many players"
+    else:
+        player_name = msg["playerName"]
+        player = Player(playerID,player_name)
+
+        gameobject = games[new_room_id]
+        numberOfPlayers = gameobject.playerCount + 1
+
+        gameobject.players[numberOfPlayers] = player
+        gameobject.playerCount = gameobject.playerCount + 1
+        join_room(new_room_id)
+
+
+
+
+
 
 @socketio.on('createUserObject')
 def userobj(msg):
