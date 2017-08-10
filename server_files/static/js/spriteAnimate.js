@@ -122,6 +122,17 @@ var cities = {
 	city5:{connections:['city2','city3'],x:1824,y:950}
 };
 
+function city(options){
+	this.id = options.id;
+	this.colour = options.colour;
+	this.xPos = options.xPos;
+	this.yPos = options.yPos;
+	this.researchStation = options.researchStation || false;
+	this.infectionStatus = options.infectionStatus || {black:0,blue:0,yellow:0,red:0}
+	this.connections = options.connections || []
+}
+
+var SanFrancisco = new city({id:'San-Francisco',colour:'blue',xPos:260,yPos:410})
 
 
 // sets the scalesize to the lower of height or width
@@ -290,12 +301,12 @@ function sprite(options) {
 			// work out the distance a^2 + b^2 = c^2 where deltaX and DeltaY are a and b
 			
 			var distance = Math.sqrt((deltaX**2)+(deltaY**2));
-			console.log("distance",distance);
+			// console.log("distance",distance);
 			this.tempSpeed = distance / Math.ceil(distance / this.speed);
-			console.log("temp speed",this.tempSpeed)
+			// console.log("temp speed",this.tempSpeed)
 			var incrementX = deltaX/(distance/this.tempSpeed);
 			var incrementY = deltaY/(distance/this.tempSpeed);
-			console.log("increment",incrementX,incrementY);
+			// console.log("increment",incrementX,incrementY);
 			
 			if (this.moveX == this.xPos){
 				this.tempSpeed = 10;
