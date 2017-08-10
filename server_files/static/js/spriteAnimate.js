@@ -142,8 +142,8 @@ function city(options){
 	
 }
 
-var SANFRANSISCO = new city({id:'SANFRANSISCO',colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
-var CHICAGO = new city({id:'CHICAGO',colour:'blue',xPos:390,yPos:330,connections:['SANFRANSISCO','LOSANGELES','MEXICOCITY','ATLANTA','MONTREAL']});
+var SANFRANCISCO = new city({id:'SANFRANCISCO',colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
+var CHICAGO = new city({id:'CHICAGO',colour:'blue',xPos:390,yPos:330,connections:['SANFRANCISCO','LOSANGELES','MEXICOCITY','ATLANTA','MONTREAL']});
 var MONTREAL = new city({id:'MONTREAL',colour:'blue',xPos:520,yPos:350,connections:['CHICAGO','WASHINGTON','NEWYORK']});
 var NEWYORK = new city({id:'NEWYORK',colour:'blue',xPos:590,yPos:400,connections:['MONTREAL','WASHINGTON','MADRID','LONDON']});
 var ATLANTA = new city({id:'ATLANTA',colour:'blue',xPos:400,yPos:444,connections:['CHICAGO','MIAMI','WASHINGTON']});
@@ -155,7 +155,7 @@ var MADRID = new city({id:'MADRID',colour:'blue',xPos:832,yPos:470,connections:[
 var PARIS = new city({id:'PARIS',colour:'blue',xPos:856,yPos:434,connections:['LONDON','MADRID','ALGIERS','MILAN','ESSEN']});
 var MILAN = new city({id:'MILAN',colour:'blue',xPos:890,yPos:420,connections:['ESSEN','PARIS','ISTANBUL']});
 
-var LOSANGELES = new city ({id:'LOSANGELES',colour:'yellow',xPos:258,yPos:508,connections:['SANFRANSISCO','CHICAGO','MEXICOCITY','SYDNEY',]});
+var LOSANGELES = new city ({id:'LOSANGELES',colour:'yellow',xPos:258,yPos:508,connections:['SANFRANCISCO','CHICAGO','MEXICOCITY','SYDNEY',]});
 var MEXICOCITY = new city ({id:'MEXICOCITY',colour:'yellow',xPos:325,yPos:590,connections:['LOSANGELES','LIMA','BOGOTA','MIAMI','CHICAGO']});
 var MIAMI = new city ({id:'MIAMI',colour:'yellow',xPos:430,yPos:530,connections:['ATLANTA','MEXICOCITY','BOGOTA','WASHINGTON']});
 var BOGOTA = new city ({id:'BOGOTA',colour:'yellow',xPos:444,yPos:668,connections:['MIAMI','MEXICOCITY','LIMA','BUENOSAIRES','SAOPAULO']});
@@ -173,7 +173,7 @@ var JAKARTA= new city({id:'JAKARTA', colour:'red', xPos:1430, yPos:700, connecti
 var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','LOSANGELES']});
 var HOCHIMINCITY = new city({id:'HOCHIMINCITY', colour:'red', xPos:1430, yPos:630, connections:['MANILA','JAKARTA','BANGKOK','HONGKONG']});
 var BANGKOK = new city({id:'BANGKOK', colour:'red', xPos:1360, yPos:570, connections:['KOULKATA','HONGKONG','HOCHIMINCITY','JAKARTA','CHENNAI']});
-var TAIPEI  = new city({id:'TAIPEI', colour:'red', xPos:1490, yPos:540, connections:['OSAKA','SHANGHAI','HONGKONG','MANILA','']});
+var TAIPEI  = new city({id:'TAIPEI', colour:'red', xPos:1490, yPos:540, connections:['OSAKA','SHANGHAI','HONGKONG','MANILA']});
 var OSAKA = new city({id:'OSAKA', colour:'red', xPos:1546, yPos:480, connections:['TOKYO','TAIPEI']});
 var TOKYO = new city({id:'TOKYO', colour:'red', xPos:1560, yPos:400, connections:['SEOUL','OSAKA','SANFRANCISCO']});
 var HONGKONG = new city({id:'HONGKONG', colour:'red', xPos:1430, yPos:520, connections:['SHANGHAI','TAIPEI','MANILA','HOCHIMINCITY','BANGKOK','KOULKATA']});
@@ -195,11 +195,11 @@ var ISTANBUL = new city({id:'ISTANBUL', colour:'black', xPos:980, yPos:460, conn
 var ALGIERS = new city({id:'ALGEIRS', colour:'black', xPos:900, yPos:500, connections:['PARIS','ISTANBUL','CAIRO','MADRID']});
 // var LOSANGELES = new city ({id:,colour:'yellow',xPos:0,yPos:0,connections:[]});
 
-var locations = [SANFRANSISCO,CHICAGO,MONTREAL,NEWYORK,ATLANTA,WASHINGTON,LONDON,ESSEN,STPETERSBURG,MADRID,PARIS,MILAN,
+var locations = {SANFRANCISCO,CHICAGO,MONTREAL,NEWYORK,ATLANTA,WASHINGTON,LONDON,ESSEN,STPETERSBURG,MADRID,PARIS,MILAN,
 LOSANGELES,MEXICOCITY,MIAMI,BOGOTA,LIMA,SANTIAGO,BUENOSAIRES,SAOPAULO,LAGOS,KHARTOUM,KINSHASA,JOHANNESBURG,
 SYDNEY,JAKARTA,MANILA,HOCHIMINCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,SEOUL,BEIJING,
 KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYAOH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS
-];
+};
 
 
 // sets the scalesize to the lower of height or width
@@ -280,20 +280,23 @@ function gameLoop(){
 		// context.font="30px Verdana";
 		// context.fillStyle = 'red';
 		// context.fillText(i,cities[i].x,cities[i].y);
-	}
-	for (var start in cities){
-		// console.log("start",start);
-		// console.log("connections",cities[start].connections);
-		for (var end in cities[start].connections){
-			var endCity = cities[cities[start].connections[end]];
-			// console.log("end",end);
-			// console.log("end city", cities[start].connections[end]);
-			// console.log("actual end city", cities[cities[start].connections[end]])		
+	} */
+	console.log("city",locations['TOKYO'])
+	for (var start in locations){
+		console.log("start",locations[start].id);
+		console.log("connections",locations[start].connections);
+		for (var end in locations[start].connections){			
+			console.log("end",end);
+			console.log("end city", locations[locations[start].connections[end]]);
+			var endCity = locations[locations[start].connections[end]];
+			
+			
+			//console.log("actual end city", locations[locations[start].connections[end]].id)		
 		context.beginPath(); 
 		// Staring point (10,45)
-		context.moveTo(cities[start].x+12.5,cities[start].y+12.5);
+		context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
 		// End point (180,47)
-		context.lineTo(endCity.x+12.5,endCity.y+12.5);
+		context.lineTo(endCity.xPos+12.5,endCity.yPos+12.5);
 		// Make the line visible		  
 		context.lineWidth = 5;
 		// set line color
@@ -301,7 +304,7 @@ function gameLoop(){
 		context.stroke();
 
 		}
-	} */
+	}
 	
 	// coin.update();
 	// coin.render();
