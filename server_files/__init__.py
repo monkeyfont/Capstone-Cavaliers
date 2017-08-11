@@ -25,19 +25,10 @@ def game():
 
 @socketio.on('join')
 def joined(msg):
-    global room_ID
-    room = str(room_ID + 1)
-
-    global playerID
-    player_id = str(playerID+1)
-
+    room = "1" # room = session.get('room')
+    player = session["username"]
     join_room(room)
-    player = Player(player_id,"Vicente")
-    player.id = playerID
-    player.room = room
-    print(session["username"] + " created room " + player.room + " and his id is " + str(player.getRoom() ))
-    room_ID = room_ID + 1
-    playerID = playerID + 1
+    emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
 
 
 
@@ -45,9 +36,8 @@ def joined(msg):
 def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
-
     join_room(room)
-    emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
+    emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
 
 
 
@@ -145,18 +135,6 @@ def handleMessage(msg):
         gameobject.playerCount = gameobject.playerCount + 1
         join_room(new_room_id)
 
-
-
-@socketio.on('createUserObject')
-def userobj(msg):
-    player = session["username"]
-    global playerID
-    playerone = Player(playerID,"Jorge")
-    print ("User "+ player +" has joined and it has created a user object with the values.")
-    print ("Player id: "+ str(playerone.id))
-    print ("Player name: "+playerone.name)
-    idincrease =  playerID + 1
-    playerID = idincrease
 
 
 ####################################################################################
