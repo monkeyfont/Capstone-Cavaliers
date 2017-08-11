@@ -55,10 +55,10 @@ $('.Audio').on('click', function(e){
 
     };
 
-function checkMove(x,y){
+function checkMove(city){
 
 
-    socket.emit('checkMove', {xpos:x,ypos:y})
+    socket.emit('checkMove', {cityName:city})
 
     };
 
@@ -73,12 +73,10 @@ socket.on('clicked', function (data) {
 socket.on('checked', function (data) {
         //alert(data.msg);
         check=data.msg;
-        xpos=data.xpos
-        ypos=data.ypos
+        var city=eval(data.city);
+
         if (check =='true'){
-
-
-	player.move(xpos,ypos);
+            player.move(city.xPos,city.yPos);
 	}
 	else{
 	    alert("Sorry invalid move");
@@ -264,7 +262,7 @@ canvas.addEventListener('click', function(evt) {
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
     xp=CHICAGO.xPos;
     yp=CHICAGO.yPos;
-    checkMove(xp,yp);
+    //checkMove(xp,yp);
     //changed move function call from here to inside socket.on when the response is checked
 
 	for (var i in spriteList){
@@ -301,6 +299,8 @@ canvas.addEventListener('click', function(evt) {
 		if (mousePos.x >= locations[i].xPos && mousePos.x <= (locations[i].xPos + 25) &&
 			mousePos.y >= locations[i].yPos && mousePos.y <= (locations[i].yPos + 25)){
 				console.log('city ', i ,' was clicked');
+				checkMove(i);
+
 			}
 			
 	}

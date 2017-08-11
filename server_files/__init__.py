@@ -72,14 +72,13 @@ def handleclick(msg):
 @socketio.on('checkMove')
 def handleclick(msg):
     room = "1"
-    x= msg["xpos"]
-    y = msg["ypos"]
-    print(msg)
+    cityToMove= msg["cityName"]
+    print(cityToMove)
     response= "true"
     #set to false to test invalid move
     # response = "false"
 
-    emit('checked', {'msg':response,'xpos':x,'ypos':y},room=room)
+    emit('checked', {'msg':response,'city':cityToMove},room=room)
 
 
 @socketio.on('message') # use for testing client side messages.
