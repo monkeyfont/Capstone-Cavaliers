@@ -317,9 +317,7 @@ function gameLoop(){
 	// map.update();
 	// map.render();
 	canvas.getContext("2d").drawImage(mapImage,0,0)// quick workaround because loading the map as a sprite is broken
-	for (var i in locations){
-		locations[i].render();
-	}
+
 /* 	for (var i in cities){
 		canvas.getContext("2d").drawImage(cityImage,cities[i].x,cities[i].y);
 		// context.font="30px Verdana";
@@ -347,9 +345,9 @@ function gameLoop(){
 					context.lineTo(0,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
 				}
 				// Make the line visible		  
-				context.lineWidth = 5;
+				context.lineWidth = 4;
 				// set line color
-				context.strokeStyle = 'red';
+				context.strokeStyle = 'rgba(225,225,225,0.5)';
 				context.stroke();
 			}else{			
 			//console.log("actual end city", locations[locations[start].connections[end]].id)		
@@ -359,15 +357,18 @@ function gameLoop(){
 				// End point (180,47)
 				context.lineTo(endCity.xPos+12.5,endCity.yPos+12.5);
 				// Make the line visible		  
-				context.lineWidth = 5;
+				context.lineWidth = 4;
 				// set line color
-				context.strokeStyle = 'red';
+				
+				context.strokeStyle = 'rgba(225,225,225,0.5)';
 				context.stroke();
 			}
 
 		}
 	}
-	
+	for (var i in locations){
+		locations[i].render();
+	}
 	// coin.update();
 	// coin.render();
 	// coin2.update();
