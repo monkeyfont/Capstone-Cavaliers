@@ -304,6 +304,8 @@ canvas.addEventListener('click', function(evt) {
 
 function gameLoop(){
 	window.requestAnimationFrame(gameLoop);
+
+
 	// map.update();
 	// map.render();
 	canvas.getContext("2d").drawImage(mapImage,0,0)// quick workaround because loading the map as a sprite is broken

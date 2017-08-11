@@ -2,4 +2,10 @@
 /server_files/.idea
 .idea
 *.mp3
+<<<<<<< HEAD
 /.idea
+=======
+.idea/.name
+.idea/Capstone-Cavaliers.iml
+>>>>>>> Jorge
+.idea/workspace.xml
