@@ -23,8 +23,6 @@ def game():
     return render_template("MapOnCanvas.html")
 
 
-<<<<<<< HEAD
-=======
 @socketio.on('join')
 def joined(msg):
     global room_ID
@@ -62,7 +60,6 @@ def handleMessage(msg):
 
 
 
->>>>>>> d6581b3da195ede32a414b22bf83c1b484349e78
 @socketio.on('click')
 def handleclick(msg):
     room = "1"
