@@ -3,6 +3,17 @@ $(document).ready(function () {
 
     socket = io.connect('http://' + document.domain + ':' + location.port);
 
+<<<<<<< HEAD
+=======
+    socket.on('connect', function () {
+
+        socket.emit('join', {});
+    });
+
+    socket.on('joined', function (data) {
+        $('#log').val($('#log').val() + data.msg + '\n');
+    });
+>>>>>>> d6581b3da195ede32a414b22bf83c1b484349e78
 
     $("#movement_button").click(function(){
         // get the value from the movement box

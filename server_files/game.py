@@ -11,6 +11,7 @@ CITIES_TEMPLATE = {
 INFECTION_CARDS = {
     1:{"city":"Atlanta", "country":"United States", "color":"blue"},
     2:{"city":"London", "country":"United Kingdom", "color":"blue"}
+
 }
 
 PLAYER_CARDS = {
@@ -123,7 +124,10 @@ class GameBoard:
         """ Returns a list containing infection card objects """
         cards = []
         for k in INFECTION_CARDS: #id,name,country,color
+<<<<<<< HEAD
 
+=======
+>>>>>>> d6581b3da195ede32a414b22bf83c1b484349e78
             cards.append(InfectionCard(k, INFECTION_CARDS[k]["city"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
         return cards
 

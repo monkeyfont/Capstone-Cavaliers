@@ -1,6 +1,5 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from game import GameBoard
 from game import *
 import random
 import unittest
@@ -24,6 +23,46 @@ def game():
     return render_template("MapOnCanvas.html")
 
 
+<<<<<<< HEAD
+=======
+@socketio.on('join')
+def joined(msg):
+    global room_ID
+    room = str(room_ID + 1)
+
+    global playerID
+    player_id = str(playerID+1)
+
+    join_room(room)
+    player = Player(player_id,"Vicente")
+    player.id = playerID
+    player.room = room
+    print(session["username"] + " created room " + player.room + " and his id is " + str(player.getRoom() ))
+    room_ID = room_ID + 1
+    playerID = playerID + 1
+
+
+
+@socketio.on('joinGame')
+def joined(msg):
+    room = "1" # room = session.get('room')
+    player = session["username"]
+    
+    join_room(room)
+    emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
+
+
+
+@socketio.on('move')
+def handleMessage(msg):
+    room = "1"
+    player = session["username"]
+    location = msg["move_location"]
+    emit('moved', {'msg' : player + " moved to " + location}, room=room)
+
+
+
+>>>>>>> d6581b3da195ede32a414b22bf83c1b484349e78
 @socketio.on('click')
 def handleclick(msg):
     room = "1"
