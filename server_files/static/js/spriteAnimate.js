@@ -297,6 +297,13 @@ canvas.addEventListener('click', function(evt) {
 				console.log(i,'was clicked');
 		}
 	}
+	for (var i in locations){
+		if (mousePos.x >= locations[i].xPos && mousePos.x <= (locations[i].xPos + 25) &&
+			mousePos.y >= locations[i].yPos && mousePos.y <= (locations[i].yPos + 25)){
+				console.log('city ', i ,' was clicked');
+			}
+			
+	}
 		
 		
 })
@@ -319,13 +326,13 @@ function gameLoop(){
 		// context.fillStyle = 'red';
 		// context.fillText(i,cities[i].x,cities[i].y);
 	} */
-	console.log("city",locations['TOKYO'])
+	// console.log("city",locations['TOKYO'])
 	for (var start in locations){
-		console.log("start",locations[start].id);
-		console.log("connections",locations[start].connections);
+		// console.log("start",locations[start].id);
+		// console.log("connections",locations[start].connections);
 		for (var end in locations[start].connections){			
-			console.log("end",end);
-			console.log("end city", locations[locations[start].connections[end]]);
+			// console.log("end",end);
+			// console.log("end city", locations[locations[start].connections[end]]);
 			var endCity = locations[locations[start].connections[end]];
 			
 			if (Math.abs(locations[start].xPos-endCity.xPos) > 800){
