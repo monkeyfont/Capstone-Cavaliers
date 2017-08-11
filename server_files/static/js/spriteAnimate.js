@@ -261,8 +261,9 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}	
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-
-    checkMove(mousePos.x,mousePos.y);
+    xp=CHICAGO.xPos;
+    yp=CHICAGO.yPos;
+    checkMove(xp,yp);
     //changed move function call from here to inside socket.on when the response is checked
 
 	for (var i in spriteList){
@@ -526,8 +527,8 @@ var player = new sprite({
     height: 40,
 	numberOfFrames: 4,
 	ticksPerFrame: 16,
-	xPos:600,
-	yPos:600,
+	xPos:ATLANTA.xPos,
+	yPos:ATLANTA.yPos,
 	xScale:2,
 	yScale:2,
     image: playerImage

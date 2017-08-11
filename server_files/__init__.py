@@ -47,7 +47,7 @@ def joined(msg):
 def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
-    
+
     join_room(room)
     emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
 
