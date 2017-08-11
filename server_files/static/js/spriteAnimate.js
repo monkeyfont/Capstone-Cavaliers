@@ -159,10 +159,11 @@ function city(options){
 	this.id = options.id;
 	this.colour = options.colour;
 	this.xPos = options.xPos;
-	this.yPos = options.yPos;
+	this.yPos = options.yPos; 
 	this.researchStation = options.researchStation || false;
 	this.infectionStatus = options.infectionStatus || {black:0,blue:0,yellow:0,red:0};
 	this.connections = options.connections || [];
+	this.validMove = false;
 	
 	this.render = function(){
 		canvas.getContext("2d").drawImage(cityImage,this.xPos,this.yPos);
@@ -201,9 +202,9 @@ var KHARTOUM = new city ({id:'KHARTOUM',colour:'yellow',xPos:1000,yPos:640,conne
 var KINSHASA = new city ({id:'KINSHASA',colour:'yellow',xPos:924,yPos:700,connections:['LAGOS','JOHANNESBURG','KHARTOUM']});
 var JOHANNESBURG = new city ({id:'JOHANNESBURG',colour:'yellow',xPos:980,yPos:850,connections:['KINSHASA','KHARTOUM']});
 
-var SYDNEY = new city({id:'SYDNEY', colour:'red', xPos:1670, yPos:904, connections:['MANILA','JAKARTA','SANFRANCISCO']});
+var SYDNEY = new city({id:'SYDNEY', colour:'red', xPos:1670, yPos:904, connections:['MANILA','JAKARTA','LOSANGELES']});
 var JAKARTA= new city({id:'JAKARTA', colour:'red', xPos:1430, yPos:700, connections:['SYDNEY','HOCHIMINCITY','BANGKOK','CHENNAI']});
-var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','LOSANGELES']});
+var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','SANFRANCISCO']});
 var HOCHIMINCITY = new city({id:'HOCHIMINCITY', colour:'red', xPos:1430, yPos:630, connections:['MANILA','JAKARTA','BANGKOK','HONGKONG']});
 var BANGKOK = new city({id:'BANGKOK', colour:'red', xPos:1360, yPos:570, connections:['KOULKATA','HONGKONG','HOCHIMINCITY','JAKARTA','CHENNAI']});
 var TAIPEI  = new city({id:'TAIPEI', colour:'red', xPos:1490, yPos:540, connections:['OSAKA','SHANGHAI','HONGKONG','MANILA']});
@@ -327,18 +328,35 @@ function gameLoop(){
 			console.log("end city", locations[locations[start].connections[end]]);
 			var endCity = locations[locations[start].connections[end]];
 			
-			
+			if (Math.abs(locations[start].xPos-endCity.xPos) > 800){
+				context.beginPath(); 
+				// Staring point (10,45)
+				context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
+				// End point (180,47)
+				if (locations[start].xPos >800){
+					((locations[start].yPos-endCity.yPos)/2)
+					context.lineTo(1920,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
+				}else{
+					context.lineTo(0,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
+				}
+				// Make the line visible		  
+				context.lineWidth = 5;
+				// set line color
+				context.strokeStyle = 'red';
+				context.stroke();
+			}else{			
 			//console.log("actual end city", locations[locations[start].connections[end]].id)		
-		context.beginPath(); 
-		// Staring point (10,45)
-		context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
-		// End point (180,47)
-		context.lineTo(endCity.xPos+12.5,endCity.yPos+12.5);
-		// Make the line visible		  
-		context.lineWidth = 5;
-		// set line color
-		context.strokeStyle = 'red';
-		context.stroke();
+				context.beginPath(); 
+				// Staring point (10,45)
+				context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
+				// End point (180,47)
+				context.lineTo(endCity.xPos+12.5,endCity.yPos+12.5);
+				// Make the line visible		  
+				context.lineWidth = 5;
+				// set line color
+				context.strokeStyle = 'red';
+				context.stroke();
+			}
 
 		}
 	}
