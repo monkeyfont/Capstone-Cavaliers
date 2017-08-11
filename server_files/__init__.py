@@ -1,6 +1,5 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from game import GameBoard
 from game import *
 import random
 import unittest
@@ -9,14 +8,12 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -
 app.secret_key = 'development' # change when out of development!
 socketio = SocketIO(app)
 room_ID = 1
-playerID = 0
+playerID = 1
 games = {} # in here we will store the game objects
-player = Player
 @app.route('/')
 def home():
     # Quick session testing code.
     session["username"] = "Player " + str(random.randrange(1000))
-
     print(session["username"])
     return render_template("home.html")
 
@@ -28,19 +25,10 @@ def game():
 
 @socketio.on('join')
 def joined(msg):
-    global room_ID
-    room = str(room_ID + 1)
-
-    global playerID
-    player_id = str(playerID+1)
-
+    room = "1" # room = session.get('room')
+    player = session["username"]
     join_room(room)
-    player = Player(player_id,"Vicente")
-    player.id = playerID
-    player.room = room
-    print(session["username"] + " created room " + player.room + " and his id is " + str(player.getRoom() ))
-    room_ID = room_ID + 1
-    playerID = playerID + 1
+    emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
 
 
 
@@ -48,9 +36,8 @@ def joined(msg):
 def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
-    
     join_room(room)
-    emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
+    emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
 
 
 
@@ -75,14 +62,13 @@ def handleclick(msg):
 @socketio.on('checkMove')
 def handleclick(msg):
     room = "1"
-    x= msg["xpos"]
-    y = msg["ypos"]
-    print(msg)
+    cityToMove= msg["cityName"]
+    print(cityToMove)
     response= "true"
     #set to false to test invalid move
     # response = "false"
 
-    emit('checked', {'msg':response,'xpos':x,'ypos':y},room=room)
+    emit('checked', {'msg':response,'city':cityToMove},room=room)
 
 
 @socketio.on('message') # use for testing client side messages.
@@ -106,10 +92,6 @@ def user():
     return render_template("userpage.html")
 ####################################################################################
 ##############      fUNCTIONS WORKING ON       #####################################
-
-# used to create a new room
-
-
 @socketio.on('newroom')
 def handleMessage(msg):
     global playerID
@@ -153,21 +135,6 @@ def handleMessage(msg):
         gameobject.playerCount = gameobject.playerCount + 1
         join_room(new_room_id)
 
-
-
-
-
-
-@socketio.on('createUserObject')
-def userobj(msg):
-    player = session["username"]
-    global playerID
-    playerone = Player(playerID,"Jorge")
-    print ("User "+ player +" has joined and it has created a user object with the values.")
-    print ("Player id: "+ str(playerone.id))
-    print ("Player name: "+playerone.name)
-    idincrease =  playerID + 1
-    playerID = idincrease
 
 
 ####################################################################################

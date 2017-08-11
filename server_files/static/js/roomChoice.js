@@ -16,6 +16,14 @@ $(document).ready(function () {
         socket.emit('newroom', {playerName:name})
 
         // submit request for new room
+
+
+        var value = $('#new_room_id').val();
+        // clear the field
+        $('#new_room_id').val("");
+        // submit that value
+        socket.emit('newroom', {roomName:value})
+
         location.href = "user"
 
     });

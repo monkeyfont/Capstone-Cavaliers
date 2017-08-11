@@ -1,5 +1,8 @@
 /nbproject/private/
 /server_files/.idea
+.idea
 *.mp3
+/.idea
 .idea/.name
 .idea/Capstone-Cavaliers.iml
+.idea/workspace.xml

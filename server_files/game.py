@@ -7,7 +7,6 @@ CITIES_TEMPLATE = {
     3:{"connections":[1,4], "name": "city3", "x":630, "y":720},
     4:{"connections":[2,3], "name": "city4", "x":802, "y":605}
 }
-
 # id : {name, description}
 INFECTION_CARDS = {
     1:{"city":"Atlanta", "country":"United States", "color":"blue"},
@@ -69,7 +68,6 @@ class Player:
         self.location = location
     def getLocation(self):
         return self.location
-
     def getid(self):
         return self.id
     def setid(self,id):
@@ -81,6 +79,7 @@ class GameBoard:
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         '''
+        #just for now while testing the GameBoard init function
         self.cities = self.__generateCities() # {id : City}
         self.infectionDeck = self.__generateInfectionDeck() # [InfectionCard]
         self.playerDeck = self.__generatePlayerDeck() # [PlayerCard]
@@ -125,6 +124,7 @@ class GameBoard:
         """ Returns a list containing infection card objects """
         cards = []
         for k in INFECTION_CARDS: #id,name,country,color
+
             cards.append(InfectionCard(k, INFECTION_CARDS[k]["city"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
         return cards
 
@@ -185,8 +185,9 @@ class GameBoard:
     def discoverCure(self):
         """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
         pass
-
 '''
+
+
 class PlayerCard:
     """ Player City Card Definition """
     def __init__(self, id, name, description, population, area, color):
