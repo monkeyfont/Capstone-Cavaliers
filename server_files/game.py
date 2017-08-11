@@ -7,12 +7,10 @@ CITIES_TEMPLATE = {
     3:{"connections":[1,4], "name": "city3", "x":630, "y":720},
     4:{"connections":[2,3], "name": "city4", "x":802, "y":605}
 }
-
 # id : {name, description}
 INFECTION_CARDS = {
-    1:{"city":"Atlanta", "country":"United States"},
-    2:{"city":"London", "country":"United Kingdom"}
-
+    1:{"city":"Atlanta", "country":"United States", "color":"blue"},
+    2:{"city":"London", "country":"United Kingdom", "color":"blue"}
 }
 
 PLAYER_CARDS = {
@@ -69,10 +67,6 @@ class Player:
         self.location = location
     def getLocation(self):
         return self.location
-    def getRoom(self):
-        return self.room
-    def setRoom(self,roomid):
-        self.room = roomid
     def getid(self):
         return self.id
     def setid(self,id):
@@ -89,10 +83,10 @@ class GameBoard:
         self.infectionDeck = self.__generateInfectionDeck() # [InfectionCard]
         self.playerDeck = self.__generatePlayerDeck() # [PlayerCard]
         '''
-        self.boardId = 0
         self.infectionDiscarded = []
         self.playerDiscarded = []
-        self.players = {1:Player(1), 2:Player(2)}
+        self.playerCount = 0
+        self.players = {1:Player(1), 2:Player(2),3:Player(3), 4:Player(4)}
         self.blueUsed = 0 # disease cubes used
         self.redUsed = 0
         self.yellowUsed = 0
@@ -103,14 +97,8 @@ class GameBoard:
         self.blackCure = 0
         self.outBreakLevel = 0
         self.infectionLevel = 0
-
-    def getboardid(self):
-        return self.boardId
-    def setboardid(self,boardId):
-            self.boardId = boardId
-
+        self.gameID = 0
 '''
-#Just temporary comment everything
         # start player at cityId1 (normally atlanta)
         self.players[1].setLocation(1)
         # place a research station at cityId1
@@ -135,7 +123,8 @@ class GameBoard:
         """ Returns a list containing infection card objects """
         cards = []
         for k in INFECTION_CARDS: #id,name,country,color
-            cards.append(InfectionCard(k, INFECTION_CARDS[k]["name"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
+
+            cards.append(InfectionCard(k, INFECTION_CARDS[k]["city"], INFECTION_CARDS[k]["country"], INFECTION_CARDS[k]["color"]))
         return cards
 
 
@@ -196,6 +185,7 @@ class GameBoard:
         """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
         pass
 '''
+
 
 class PlayerCard:
     """ Player City Card Definition """

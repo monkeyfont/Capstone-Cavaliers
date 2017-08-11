@@ -1,15 +1,16 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from game import GameBoard
+from game import *
 import random
+import unittest
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
 app.secret_key = 'development' # change when out of development!
 socketio = SocketIO(app)
 room_ID = 1
 playerID = 1
-board_increase = 1
-boardgameobject = GameBoard
+games = {} # in here we will store the game objects
 @app.route('/')
 def home():
     # Quick session testing code.
@@ -22,41 +23,6 @@ def game():
     session["username"] = "Player " + str(random.randrange(1000))
     return render_template("MapOnCanvas.html")
 
-'''
-@socketio.on('join')
-def joined(msg):
-    global room_ID
-    room = str(room_ID + 1)
-
-    global playerID
-    player_id = str(playerID+1)
-
-    join_room(room)
-    player = Player(player_id,"Vicente")
-    player.id = playerID
-    player.room = room
-    print(session["username"] + " created room " + str(player.room) + " and his id is " + str(player.getRoom()))
-    room_ID = room_ID + 1
-    playerID = playerID + 1
-'''
-
-
-@socketio.on('joinGame')
-def joined(msg):
-    room = "1" # room = session.get('room')
-    player = session["username"]
-    join_room(room)
-    emit('joined', {'msg' : str(player + " joined room " + room)}, room=room)
-
-
-
-@socketio.on('move')
-def handleMessage(msg):
-    player = session["username"]
-    location = msg["move_location"]
-    print ("Player " + str(playerID) + " wants to move to "+ location)
-    #emit('move', {'msg' : str(player + " joined room " + room)}, room=room_ID)
-
 
 @socketio.on('click')
 def handleclick(msg):
@@ -66,6 +32,19 @@ def handleclick(msg):
     print(messg)
 
     emit('clicked', {'msg' : player + messg },room=room)
+
+@socketio.on('checkMove')
+def handleclick(msg):
+    room = "1"
+    x= msg["xpos"]
+    y = msg["ypos"]
+    print(msg)
+    response= "true"
+    #set to false to test invalid move
+    # response = "false"
+
+    emit('checked', {'msg':response,'xpos':x,'ypos':y},room=room)
+
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
@@ -88,29 +67,50 @@ def user():
     return render_template("userpage.html")
 ####################################################################################
 ##############      fUNCTIONS WORKING ON       #####################################
-
-# used to create a new room
-# test for the create new room button
-# can add more functionalities in the future.
 @socketio.on('newroom')
 def handleMessage(msg):
     global playerID
-    new_room_id = msg["roomName"]
-    join_room(new_room_id)
-    playerusername = session["username"]
-    playerID = playerID + 1
-    print ("WOrking")
+    global room_ID
+    new_game_id = room_ID
+    player_name = msg["playerName"]
 
-# test for connecting to new room
-# can add more functionalities in the future.
+    gameobject = GameBoard()
+    gameobject.gameID = new_game_id
+
+    gamePlayer = Player(playerID,player_name)
+    gameobject.playerCount = 1
+    gameobject.players[gameobject.playerCount] = gamePlayer
+
+    games[new_game_id] = gameobject
+    playerID = playerID + 1
+
+
+    join_room(new_game_id)
+    room_ID = new_game_id + 1
+
+
 @socketio.on('joinexistingroom')
 def handleMessage(msg):
     global playerID
-    new_room_id = msg["roomName"]
-    join_room(new_room_id)
-    playerusername = session["username"]
-    playerID = playerID + 1
-    print ("WOrking")
+    new_room_id = int(msg["roomName"])
+    #get the gameboard called
+    gameCalled = games[new_room_id]
+    numberOfPlayers = gameCalled.playerCount
+
+    if numberOfPlayers == 4:
+        print "Too many players"
+    else:
+        player_name = msg["playerName"]
+        player = Player(playerID,player_name)
+
+        gameobject = games[new_room_id]
+        numberOfPlayers = gameobject.playerCount + 1
+
+        gameobject.players[numberOfPlayers] = player
+        gameobject.playerCount = gameobject.playerCount + 1
+        join_room(new_room_id)
+
+
 
 @socketio.on('createUserObject')
 def userobj(msg):
