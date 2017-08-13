@@ -1,5 +1,7 @@
 /nbproject/private/
 /server_files/.idea
+/server_files/__pycache__
+/server_files/game.pyc
 .idea
 *.mp3
 /.idea
