@@ -32,7 +32,7 @@ def joined(msg):
 
 @socketio.on('joinGame')
 def joined(msg):
-    room = "1" # room = session.get('room')
+    room = session["room"]
     player = session["username"]
     join_room(room)
     emit('joined', {'msg' : "Player " + str(player + " joined room " + room)}, room=room)
@@ -41,7 +41,7 @@ def joined(msg):
 
 @socketio.on('move')
 def handleMessage(msg):
-    room = "1"
+    room = session["room"]
     player = session["username"]
     location = msg["move_location"]
     emit('moved', {'msg' : str(player) + " moved to " + location}, room=room)
@@ -99,6 +99,7 @@ def handleMessage(msg):
 
     room = str(room_ID)
     session["username"] = msg["playerName"]
+    session["room"] = room
     player = session["username"]
     gameobject = GameBoard()
     gameobject.gameID = room
@@ -130,6 +131,7 @@ def handleMessage(msg):
     else:
         session["username"] = msg["playerName"]
         player = session["username"]
+        session["room"] = room
         player = Player(playerID,player)
         numberOfPlayers = gameCalled.playerCount + 1
 
