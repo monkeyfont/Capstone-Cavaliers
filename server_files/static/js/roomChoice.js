@@ -18,14 +18,13 @@ $(document).ready(function () {
         // submit request for new room
     });
 
-<<<<<<< HEAD
         var value = $('#new_room_id').val();
-=======
+
  $("#create_room_button").click(function(){
 
         // get the value from the join room box
         var name = $('#new_user_name').val();
->>>>>>> origin/master
+
         // clear the field
         $('#new_user_name').val("");
         // submit that value

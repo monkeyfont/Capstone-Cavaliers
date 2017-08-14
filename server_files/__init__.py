@@ -13,6 +13,7 @@ playerID = 1
 games = {} # in here we will store the game objects
 
 userTable = {} # this will be changed later on to be a database storing the user details
+game=GameBoard()
 
 @app.route('/')
 def home():
@@ -38,7 +39,11 @@ def joined(msg):
 
 @socketio.on('joinGame')
 def joined(msg):
-    room = session["room"]
+    #room = session["room"]
+    room="1"
+    global game
+    game = GameBoard()
+
     player = session["username"]
     join_room(room)
     emit('joined', {'msg' : "Player " + str(player + " joined room " + room)}, room=room)
@@ -47,7 +52,7 @@ def joined(msg):
 
 @socketio.on('move')
 def handleMessage(msg):
-    room = session["room"]
+    room = "1"
     player = session["username"]
     location = msg["move_location"]
     emit('moved', {'msg' : str(player) + " moved to " + location}, room=room)
@@ -65,10 +70,8 @@ def handleclick(msg):
 def handleclick(msg):
     room = "1"
     cityToMove= msg["cityName"]
-    print(cityToMove)
-    response= "true"
-    #set to false to test invalid move
-    # response = "false"
+    response=game.movePlayer(1,cityToMove)
+    #response will be either true or false
 
     emit('checked', {'msg':response,'city':cityToMove},room=room)
 

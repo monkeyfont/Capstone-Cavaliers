@@ -74,12 +74,12 @@ socket.on('checked', function (data) {
         //alert(data.msg);
         check=data.msg;
         var city=eval(data.city);
-
-        if (check =='true'){
+        console.log(check+" "+ city)
+        if (check ==true){
             player.move(city.xPos,city.yPos);
 	}
 	else{
-	    alert("Sorry invalid move");
+	    console.log("Sorry invalid move");
 	}
 
 
