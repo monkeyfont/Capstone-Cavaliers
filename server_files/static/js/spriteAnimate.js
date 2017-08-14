@@ -20,10 +20,6 @@ socket.on('joined', function (data) {
     });
 
 
-
-
-
-
 $('.Audio').on('click', function(e){
 		// alert("Button clicked with value: "+e.currentTarget.value);
 		if (e.currentTarget.id == "Play"){
@@ -153,6 +149,35 @@ var cities = {
 	city5:{connections:['city2','city3'],x:1824,y:950}
 };
 
+var outbreakCount = 0;
+var blueInfection = new Image(); blueInfection.src = 'static/images/InfectionStatusBlue.png';
+var blackInfection = new Image(); blackInfection.src = 'static/images/InfectionStatusBlack.png';
+var redInfection = new Image(); redInfection.src = 'static/images/InfectionStatusRed.png';
+var yellowInfection = new Image(); yellowInfection.src = 'static/images/InfectionStatusYellow.png';
+
+//function infect(infectionColour, cityToInfect, amount){
+function infect(){
+    
+    var infectionColour, cityToInfect, amount;
+    cityToInfect = locations.SANFRANCISCO;
+    amount  = 3;
+    
+    var blue = cityToInfect.infectionStatus.blue;
+    var red = cityToInfect.infectionStatus.red;
+    var yellow = cityToInfect.infectionStatus.yellow;
+    var black = cityToInfect.infectionStatus.black;
+    
+    infectionColour = blue;
+    infectionColour += amount;
+    
+    if(infectionColour == 0){console.log('0');}
+    else if(infectionColour == 1){console.log('1');}
+    else if(infectionColour == 2){console.log('2');}
+    else if(infectionColour == 3){console.log('3');}
+    else if(infectionColour == 4){console.log('OUTBREAK'); outbreakCount += 1;}
+    
+}
+
 function city(options){
 	this.id = options.id;
 	this.colour = options.colour;
@@ -174,7 +199,7 @@ function city(options){
 	
 }
 
-var SANFRANCISCO = new city({id:'SANFRANCISCO',colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
+var SANFRANCISCO = new city({id:'SANFRANCISCO', infectionStatus:{black:0,blue:0,yellow:0,red:0}, colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
 var CHICAGO = new city({id:'CHICAGO',colour:'blue',xPos:390,yPos:330,connections:['SANFRANCISCO','LOSANGELES','MEXICOCITY','ATLANTA','MONTREAL']});
 var MONTREAL = new city({id:'MONTREAL',colour:'blue',xPos:520,yPos:350,connections:['CHICAGO','WASHINGTON','NEWYORK']});
 var NEWYORK = new city({id:'NEWYORK',colour:'blue',xPos:590,yPos:400,connections:['MONTREAL','WASHINGTON','MADRID','LONDON']});
