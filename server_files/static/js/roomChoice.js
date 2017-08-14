@@ -17,7 +17,6 @@ $(document).ready(function () {
 
         // submit request for new room
 
-
         var value = $('#new_room_id').val();
         // clear the field
         $('#new_room_id').val("");

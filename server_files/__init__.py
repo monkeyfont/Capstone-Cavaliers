@@ -10,6 +10,7 @@ socketio = SocketIO(app)
 room_ID = 1
 playerID = 1
 games = {} # in here we will store the game objects
+
 @app.route('/')
 def home():
     # Quick session testing code.
@@ -28,8 +29,7 @@ def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
     join_room(room)
-    emit('joined', {'msg' : str(player + " joined room" + room)}, room=room)
-
+    emit('joined', {'msg': str(player + " joined room" + room)}, room=room)
 
 
 @socketio.on('joinGame')
@@ -134,6 +134,8 @@ def handleMessage(msg):
         gameobject.players[numberOfPlayers] = player
         gameobject.playerCount = gameobject.playerCount + 1
         join_room(new_room_id)
+
+
 
 
 

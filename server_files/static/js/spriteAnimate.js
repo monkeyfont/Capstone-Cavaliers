@@ -260,10 +260,8 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}	
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-    xp=CHICAGO.xPos;
-    yp=CHICAGO.yPos;
-    //checkMove(xp,yp);
-    //changed move function call from here to inside socket.on when the response is checked
+
+
 
 	for (var i in spriteList){
 		// is the click on the image?
