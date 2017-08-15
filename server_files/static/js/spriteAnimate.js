@@ -177,7 +177,8 @@ function city(options){
 		canvas.getContext("2d").fill();
 		canvas.getContext("2d").font="16px Verdana";
 		canvas.getContext("2d").fillStyle = this.colour;
-		canvas.getContext("2d").fillText(this.id,this.xPos,this.yPos-18);
+		textWidth = canvas.getContext("2d").measureText(this.id).width;
+		canvas.getContext("2d").fillText(this.id,this.xPos-(textWidth/2),this.yPos-18);
 		// for rendering city connections check the distance, and if more than  500, then x is off the board, and y is halfway
 		
 	}
