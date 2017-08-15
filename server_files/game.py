@@ -24,12 +24,12 @@ CITIES_TEMPLATE = {
     "BUENOSAIRES": {"colour": "yellow", "connections": ['BOGOTA','SAOPAULO']},
     "SAOPAULO": {"colour": "yellow", "connections": ['BOGOTA','BUENOSAIRES','LAGOS','MADRID']},
     "LAGOS": {"colour": "yellow", "connections": ['SAOPAULO','KINSHASA','KHARTOUM']},
-    "KHARTOUM": {"colour": "yellow", "connections": ['LAGOS','KHARTOUM','JOHANNESBURG','CAIRO']},
+    "KHARTOUM": {"colour": "yellow", "connections": ['LAGOS','JOHANNESBURG','CAIRO']},
     "KINSHASA": {"colour": "yellow", "connections": ['LAGOS','JOHANNESBURG','KHARTOUM']},
     "JOHANNESBURG": {"colour": "yellow", "connections": ['KINSHASA','KHARTOUM']},
     "SYDNEY": {"colour": "red", "connections": ['MANILA','JAKARTA','LOSANGELES']},
     "JAKARTA": {"colour": "red", "connections": ['SYDNEY','HOCHIMINCITY','BANGKOK','CHENNAI']},
-    "MANILA": {"colour": "red", "connections": ['SYDNEY','SANFRANCISCO']},
+    "MANILA": {"colour": "red", "connections": ['SYDNEY','SANFRANCISCO','HOCHIMINCITY']},
     "HOCHIMINCITY": {"colour": "red", "connections": ['MANILA','JAKARTA','BANGKOK','HONGKONG']},
     "BANGKOK": {"colour": "red", "connections": ['KOULKATA','HONGKONG','HOCHIMINCITY','JAKARTA','CHENNAI']},
     "TAIPEI": {"colour": "red", "connections": ['OSAKA','SHANGHAI','HONGKONG','MANILA']},
@@ -48,7 +48,7 @@ CITIES_TEMPLATE = {
     "TEHRAN": {"colour": "black", "connections": ['DELHI','KARACHI','BAGHDAD','MOSCOW']},
     "MOSCOW": {"colour": "black", "connections": ['TEHRAN','ISTANBUL','STPETERSBURG']},
     "BAGHDAD": {"colour": "black", "connections": ['TEHRAN','KARACHI','RIYAOH','CAIRO','ISTANBUL']},
-    "CAIRO": {"colour": "black", "connections": ['ISTANBUL','BAGHDAD','RIYAOH','ALGIERS']},
+    "CAIRO": {"colour": "black", "connections": ['ISTANBUL','BAGHDAD','RIYAOH','ALGIERS','KHARTOUM']},
     "ISTANBUL": {"colour": "black", "connections": ['STPETERSBURG','MOSCOW','BAGHDAD','CAIRO','ALGIERS','MILAN']},
     "ALGIERS": {"colour": "black", "connections": ['PARIS','ISTANBUL','CAIRO','MADRID']}
 }
@@ -229,7 +229,8 @@ class Player:
         return self.id
     def setid(self,id):
         self.id = id
-#
+
+
 class GameBoard:
     """ Game class definition """
     def __init__(self):
@@ -284,9 +285,16 @@ class GameBoard:
         return cards
 
 
-    def __distributeHand(self):
+    def __distributeHand(self,playerId):
         """ """
-        pass
+
+        # not sure about this just a base implementation can be changed if wrong
+        playerhand=self.players[playerId].hand
+        shuffle(self.playerDeck)
+        for i in range(3):
+            playerhand.append(self.playerDeck[0])
+            self.playerDeck.remove(self.playerDeck[0])
+
 
     def __infectCitiesStage(self):
         """ """
@@ -327,33 +335,101 @@ class GameBoard:
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             return True
         else:
-            print("PlayerID " + str(playerId) + " FAILED to move to " + nextCityName)
+            print("PlayerID " + str(playerId) + " FAILED to move to move from  "+currentCityName+" to " + nextCityName)
             return False
 
 
-    def directFlight(self):
+    def directFlight(self,playerId,nextCityName):
         """ Discard a city card to move to the city named on the card """
-        pass
 
-    def charterFlight(self):
+        playerhand = self.players[playerId].hand
+        currentlocation=self.players[playerId].getLocation()
+        for card in playerhand:
+
+            if(card.name==nextCityName): #check that the card is in their hand if so set location
+                self.players[playerId].setLocation(nextCityName)
+                playerhand.remove(card)
+                self.playerDiscarded.append(card)
+
+                print "player has successfuly moved from",currentlocation," to",self.players[playerId].getLocation()
+                return True
+
+        return False
+
+
+
+    def charterFlight(self,playerId,curCityCard,destinationCity):
         """ Discard the city card that matches the city you are in to move to any city """
-        pass
 
-    def shuttleFlight(self):
+        playerhand = self.players[playerId].hand
+        currentLocation = self.players[playerId].getLocation()
+
+        for card in playerhand:
+            if(card.name==curCityCard and currentLocation==curCityCard):
+                #if the city card is where you are, set cur city to the destination
+                self.players[playerId].setLocation(destinationCity)
+                playerhand.remove(card)
+                self.playerDiscarded.append(card)
+                return True
+
+            else:
+
+                return False
+
+
+    def shuttleFlight(self,playerId,destinationCity):
         """ Move from a city with a research station to any other city that has a research station """
-        pass
+        currentCityName = self.players[playerId].getLocation()
+        curCityObj = self.cities[currentCityName]
+        destCityObj = self.cities[destinationCity]
+        if (curCityObj.getResearchStation()==1 and destCityObj.getResearchStation()==1):
+            self.players[playerId].setLocation(destinationCity)
+            return True
 
-    def buildResearhStation(self):
+        else:
+            return False
+
+
+
+    def buildResearchStation(self,playerId,cityCard):
         """ Discard the city card that matches the city you are in to place a research station there """
-        pass
+
+        playerhand = self.players[playerId].hand
+        currentLocation = self.players[playerId].getLocation()
+        curCityObj = self.cities[currentLocation]
+        for card in playerhand:
+            if card.name==cityCard:
+                if cityCard == currentLocation and curCityObj.getResearchStation==0 :
+                    # if the city card is where you are then create research station
+                    curCityObj.addResearchStation()
+                    playerhand.remove(card)
+                    self.playerDiscarded.append(card)
+                    return True
+                else:
+                    return False
+        return False
+
+
 
     def shareKnowledge(self):
         """ Either: give the card that matches the city you are in to another player, or take that card from another player. Both players must be in the same city. """
-        pass
 
-    def discoverCure(self):
+
+    def discoverCure(self,playerId):
         """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
-        pass
+
+        #not sure about this one so didnt do it all yet
+        playerhand = self.players[playerId].hand
+        blueCount=0
+        for card in playerhand:
+            if card.colour=="blue":
+                blueCount+=1
+
+        if blueCount >=5:
+            self.blueCure=1
+
+
+        # etc etc still need to implement rest of colours
 #
 #
 #

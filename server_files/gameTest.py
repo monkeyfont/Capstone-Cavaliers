@@ -33,4 +33,7 @@ print(game.movePlayer(1, "NEWYORK"))
 
 print(game.movePlayer(1, "WASHINGTON"))
 
+
+#print(game.directFlight(1,"KARACHI"))
+
 print(game.movePlayer(1, "some random city...."))
