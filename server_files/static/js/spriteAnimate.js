@@ -1,4 +1,44 @@
+var scrnWidth = window.innerWidth;//screen.width;
+var scrnHeight = window.innerHeight;//screen.height;
+console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
+var optimalScreenWidth = 1920;
+var optimalScreenHeight = 1080;
 
+var screenHeightPercentage = scrnHeight/optimalScreenHeight;
+var screenWidthPercentage = scrnWidth/optimalScreenWidth;
+
+var scaleSize = 1;
+
+// sets the scalesize to the lower of height or width
+if (screenHeightPercentage<screenWidthPercentage){
+	scaleSize = screenHeightPercentage;
+}else{
+	scaleSize = screenWidthPercentage;
+}
+
+var canvas = document.getElementById("myCanvas");
+canvas.width = optimalScreenWidth*scaleSize;
+canvas.height = optimalScreenHeight*scaleSize;
+var context = canvas.getContext("2d");
+context.scale(scaleSize,scaleSize);
+
+// console.log(canvas.getContext("2d").getScale())
+console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
+console.log("scale Size:"+scaleSize);
+
+
+
+
+// window.addEventListener('resize',canvasResize);
+
+// function canvasResize(){
+	// context.scale(scaleSize,scaleSize);
+	// canvas.width = optimalScreenWidth*scaleSize;
+	// canvas.height = optimalScreenHeight*scaleSize;
+	// console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
+	// console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
+	// console.log("scale Size:"+scaleSize);
+// }
 
 
 var cardNumber = 0;
@@ -111,16 +151,7 @@ var mapImage = new Image();
 mapImage.src = 'static/images/WorldMap.jpg';
 var cityImage = new Image();
 cityImage.src = "static/images/city token.png";
-var scrnWidth = window.innerWidth;//screen.width;
-var scrnHeight = window.innerHeight;//screen.height;
-console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
-var optimalScreenWidth = 1920;
-var optimalScreenHeight = 1080;
 
-var screenHeightPercentage = scrnHeight/optimalScreenHeight;
-var screenWidthPercentage = scrnWidth/optimalScreenWidth;
-
-var scaleSize = 1;
 
 var cities = {
 	city1:{connections:['city2','city3'],x:100,y:100},
@@ -245,22 +276,7 @@ KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYAOH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBU
 };
 
 
-// sets the scalesize to the lower of height or width
-if (screenHeightPercentage<screenWidthPercentage){
-	scaleSize = screenHeightPercentage;
-}else{
-	scaleSize = screenWidthPercentage;
-}
 
-var canvas = document.getElementById("myCanvas");
-canvas.width = 1920*scaleSize;
-canvas.height = 1080*scaleSize;
-var context = canvas.getContext("2d");
-context.scale(scaleSize,scaleSize);
-
-// console.log(canvas.getContext("2d").getScale())
-console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
-console.log("scale Size:"+scaleSize);
 
 
 
@@ -407,24 +423,29 @@ function gameLoop(){
 	//console.log("gameloop");
 }
 
+// canvas.width = 1000;
+// canvas.height = 1000;
 
 
-function sprite(options) {
+
+// var map = sprite({
+	// context: canvas.getContext("2d"),
+    // width: 1920,
+    // height: 1080,
+	// numberOfFrames: 1,
+	// ticksPerFrame: 10,
+	// image: mapImage
+	// });	
+function player(options) {
 	this.id = options.id,			
-	this.frameIndex = 0, //current frame being rendered
-	this.tickCount = 0,	// number of updates since the last render 
-	this.ticksPerFrame = options.ticksPerFrame || 0; //by having ticks per frame, it allows us to slow the animation down, and still fun a game at 60fps, 
-	this.context = options.context;
+	this.context = options.context || canvas.getContext("2d");
 	this.width = options.width;
 	this.height = options.height;
 	this.image = options.image;
-	this.loop = options.loop || true; // do we loop the sprite, or just play it once
 	this.yPos = options.yPos || 0;
 	this.xPos = options.xPos || 0;
-	this.numberOfFrames = options.numberOfFrames || 1;
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
-	this.yStart = options.yStart || 0;
 	this.moveX = this.xPos;
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
@@ -434,11 +455,8 @@ function sprite(options) {
 	this.move = function (x, y){
 		this.moveX = x;
 		this.moveY = y;		
-	}
-	
-	
+	}	
 	this.update = function(){		
-		
 		var deltaX = this.xPos - this.moveX;
 		var deltaY = this.yPos - this.moveY;
 		if ( deltaX != 0  || deltaY != 0){
@@ -452,14 +470,6 @@ function sprite(options) {
 			var incrementX = deltaX/(distance/this.tempSpeed);
 			var incrementY = deltaY/(distance/this.tempSpeed);
 			// console.log("increment",incrementX,incrementY);
-			
-			// if (this.moveX == this.xPos){
-				// this.tempSpeed = 10;
-			// }else if (this.moveY == this.yPos){
-				// this.tempSpeed = 10;
-			// }else{
-				
-			// }
 			
 			if (this.moveX != this.xPos){
 				if (this.moveX <= this.xPos){
@@ -477,26 +487,14 @@ function sprite(options) {
 				
 			}
 		}
-		//update the frame every x ticks 
-		//console.log("updated",this.image.src);
-		this.tickCount +=1;
-		if (this.tickCount > this.ticksPerFrame){
-			this.tickCount = 0;
-			if (this.frameIndex<this.numberOfFrames-1){
-				this.frameIndex +=1;
-			}else if (this.loop){
-				this.frameIndex=0
-			}
-			
-		}
 	}
 	this.render = function () {
         // Draw the animation
 		//console.log("image render",this.image.src)
 		this.context.drawImage(
 		this.image, //image to use
-		this.frameIndex * this.width, // x position to start clipping 
-		this.yStart, // y position to start clipping
+		0, // x position to start clipping 
+		0, // y position to start clipping
 		this.width, //width of clipped image
 		this.height, // height of clipped image
 		this.xPos, //x position for image on canvas
@@ -505,21 +503,7 @@ function sprite(options) {
 		this.height*this.yScale); // height of image to use
     };
 }
-
-
-// canvas.width = 1000;
-// canvas.height = 1000;
-
-
-
-// var map = sprite({
-	// context: canvas.getContext("2d"),
-    // width: 1920,
-    // height: 1080,
-	// numberOfFrames: 1,
-	// ticksPerFrame: 10,
-	// image: mapImage
-	// });	
+	
 	
 var coin3 = new sprite({
 	id:"coin3",
@@ -557,7 +541,7 @@ var coin2 = new sprite({
     image: coinImage	
 	});	
 	
-var player = new sprite({
+var player = new player({
 	id:"player",
 	context: canvas.getContext("2d"),
     width: 32,
