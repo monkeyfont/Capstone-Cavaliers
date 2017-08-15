@@ -1,6 +1,6 @@
-var snd = new Audio("static/A Instrumental Masterpiece.mp3"); // buffers automatically when created
 
-snd.play();
+
+
 var cardNumber = 0;
 var socket;
 
@@ -20,26 +20,7 @@ socket.on('joined', function (data) {
     });
 
 
-$('.Audio').on('click', function(e){
-		// alert("Button clicked with value: "+e.currentTarget.value);
-		if (e.currentTarget.id == "Play"){
-			if (snd.paused){
-				snd.play();
-			}else{
-				snd.pause();
-			}
-			
-			alert("play");
-		}else if(e.currentTarget.id == "Mute"){
-			if (snd.muted == true){
-				snd.muted = false;
-			}else{
-				snd.muted = true;
-			}
-			alert("Mute");
-		}
-		
-	});
+
 
     function myFunction(data){
 //$("#clickTest").click(function(){
@@ -227,12 +208,12 @@ var JOHANNESBURG = new city ({id:'JOHANNESBURG',colour:'yellow',xPos:980,yPos:85
 
 var SYDNEY = new city({id:'SYDNEY', colour:'red', xPos:1670, yPos:904, connections:['MANILA','JAKARTA','LOSANGELES']});
 var JAKARTA= new city({id:'JAKARTA', colour:'red', xPos:1430, yPos:700, connections:['SYDNEY','HOCHIMINCITY','BANGKOK','CHENNAI']});
-var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','SANFRANCISCO']});
+var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','SANFRANCISCO','HOCHIMINCITY','HONGKONG']});
 var HOCHIMINCITY = new city({id:'HOCHIMINCITY', colour:'red', xPos:1430, yPos:630, connections:['MANILA','JAKARTA','BANGKOK','HONGKONG']});
 var BANGKOK = new city({id:'BANGKOK', colour:'red', xPos:1360, yPos:570, connections:['KOULKATA','HONGKONG','HOCHIMINCITY','JAKARTA','CHENNAI']});
 var TAIPEI  = new city({id:'TAIPEI', colour:'red', xPos:1490, yPos:540, connections:['OSAKA','SHANGHAI','HONGKONG','MANILA']});
 var OSAKA = new city({id:'OSAKA', colour:'red', xPos:1546, yPos:480, connections:['TOKYO','TAIPEI']});
-var TOKYO = new city({id:'TOKYO', colour:'red', xPos:1560, yPos:400, connections:['SEOUL','OSAKA','SANFRANCISCO']});
+var TOKYO = new city({id:'TOKYO', colour:'red', xPos:1560, yPos:400, connections:['SEOUL','OSAKA','SANFRANCISCO','SHANGHAI']});
 var HONGKONG = new city({id:'HONGKONG', colour:'red', xPos:1430, yPos:520, connections:['SHANGHAI','TAIPEI','MANILA','HOCHIMINCITY','BANGKOK','KOULKATA']});
 var SHANGHAI = new city({id:'SHANGHAI', colour:'red', xPos:1440, yPos:460, connections:['BEIJING','SEOUL','TOKYO','TAIPEI','HONGKONG']});
 var SEOUL = new city({id:'SEOUL', colour:'red', xPos:1485, yPos:405, connections:['TOKYO','SHANGHAI','BEIJING']});
@@ -455,7 +436,7 @@ function sprite(options) {
 		
 		var deltaX = this.xPos - this.moveX;
 		var deltaY = this.yPos - this.moveY;
-		if ( deltaX != 0  && deltaY != 0){
+		if ( deltaX != 0  || deltaY != 0){
 
 			// work out the distance a^2 + b^2 = c^2 where deltaX and DeltaY are a and b
 			
@@ -467,13 +448,13 @@ function sprite(options) {
 			var incrementY = deltaY/(distance/this.tempSpeed);
 			// console.log("increment",incrementX,incrementY);
 			
-			if (this.moveX == this.xPos){
-				this.tempSpeed = 10;
-			}else if (this.moveY == this.yPos){
-				this.tempSpeed = 10;
-			}else{
+			// if (this.moveX == this.xPos){
+				// this.tempSpeed = 10;
+			// }else if (this.moveY == this.yPos){
+				// this.tempSpeed = 10;
+			// }else{
 				
-			}
+			// }
 			
 			if (this.moveX != this.xPos){
 				if (this.moveX <= this.xPos){
