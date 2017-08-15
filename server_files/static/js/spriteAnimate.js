@@ -164,16 +164,20 @@ function city(options){
 	this.colour = options.colour;
 	this.xPos = options.xPos;
 	this.yPos = options.yPos; 
+	this.radius = options.radius || 12;
 	this.researchStation = options.researchStation || false;
 	this.infectionStatus = options.infectionStatus || {black:0,blue:0,yellow:0,red:0};
 	this.connections = options.connections || [];
 	this.validMove = false;
 	
 	this.render = function(){
-		canvas.getContext("2d").drawImage(cityImage,this.xPos,this.yPos);
+		canvas.getContext("2d").beginPath();
+		canvas.getContext("2d").arc(this.xPos, this.yPos, this.radius, 0,Math.PI*2);
+		canvas.getContext("2d").fillStyle = this.colour;
+		canvas.getContext("2d").fill();
 		canvas.getContext("2d").font="16px Verdana";
 		canvas.getContext("2d").fillStyle = this.colour;
-		canvas.getContext("2d").fillText(this.id,this.xPos,this.yPos);
+		canvas.getContext("2d").fillText(this.id,this.xPos,this.yPos-18);
 		// for rendering city connections check the distance, and if more than  500, then x is off the board, and y is halfway
 		
 	}
@@ -340,13 +344,13 @@ function gameLoop(){
 			if (Math.abs(locations[start].xPos-endCity.xPos) > 800){
 				context.beginPath(); 
 				// Staring point (10,45)
-				context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
+				context.moveTo(locations[start].xPos,locations[start].yPos);
 				// End point (180,47)
 				if (locations[start].xPos >800){
 					((locations[start].yPos-endCity.yPos)/2)
-					context.lineTo(1920,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
+					context.lineTo(1920,endCity.yPos+((locations[start].yPos-endCity.yPos)/2));
 				}else{
-					context.lineTo(0,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
+					context.lineTo(0,endCity.yPos+((locations[start].yPos-endCity.yPos)/2));
 				}
 				// Make the line visible		  
 				context.lineWidth = 4;
@@ -357,9 +361,9 @@ function gameLoop(){
 			//console.log("actual end city", locations[locations[start].connections[end]].id)		
 				context.beginPath(); 
 				// Staring point (10,45)
-				context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
+				context.moveTo(locations[start].xPos,locations[start].yPos);
 				// End point (180,47)
-				context.lineTo(endCity.xPos+12.5,endCity.yPos+12.5);
+				context.lineTo(endCity.xPos,endCity.yPos);
 				// Make the line visible		  
 				context.lineWidth = 4;
 				// set line color
