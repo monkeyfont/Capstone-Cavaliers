@@ -298,15 +298,15 @@ canvas.addEventListener('click', function(evt) {
 		}
 	}
 
-	for (var i in cities){
-		if (mousePos.x >= cities[i].x && mousePos.x <= (cities[i].x + 25) &&
-			mousePos.y >= cities[i].y && mousePos.y <= (cities[i].y + 25)){
-				console.log(i,'was clicked');
-		}
-	}
+	// for (var i in cities){
+		// if (mousePos.x >= cities[i].x && mousePos.x <= (cities[i].x + 25) &&
+			// mousePos.y >= cities[i].y && mousePos.y <= (cities[i].y + 25)){
+				// console.log(i,'was clicked');
+		// }
+	// }
 	for (var i in locations){
-		if (mousePos.x >= locations[i].xPos && mousePos.x <= (locations[i].xPos + 25) &&
-			mousePos.y >= locations[i].yPos && mousePos.y <= (locations[i].yPos + 25)){
+		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
+			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
 				console.log('city ', i ,' was clicked');
 				checkMove(i);
 
