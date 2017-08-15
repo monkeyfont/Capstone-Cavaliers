@@ -27,12 +27,18 @@ def joined(msg):
     room = "1" # room = session.get('room')
     player = session["username"]
     join_room(room)
+
+    emit('joined', {'msg': str(player + " joined room" + room)}, room=room)
+
     emit('joined', {'msg' : "Player " + str(player) + " joined room " + room}, room=room)
 
 
 @socketio.on('joinGame')
 def joined(msg):
-    room = session["room"]
+    room="1"
+    global game
+    game = GameBoard()
+
     player = session["username"]
     join_room(room)
     emit('joined', {'msg' : "Player " + str(player + " joined room " + room)}, room=room)
@@ -41,11 +47,10 @@ def joined(msg):
 
 @socketio.on('move')
 def handleMessage(msg):
-    room = session["room"]
+    room = "1"
     player = session["username"]
     location = msg["move_location"]
     emit('moved', {'msg' : str(player) + " moved to " + location}, room=room)
-
 @socketio.on('click')
 def handleclick(msg):
     room = "1"
@@ -82,12 +87,6 @@ def room():
     return render_template("room.html")
 
 
-# this is the page were users go to after they have decided to either start a game or join a game
-@app.route('/user')
-def user():
-    session["username"] = playerID
-    return render_template("userpage.html")
-####################################################################################
 ##############      fUNCTIONS WORKING ON       #####################################
 
 @socketio.on('newroom')
@@ -109,11 +108,13 @@ def handleMessage(msg):
     gameobject.players[gameobject.playerCount] = gamePlayer
 
     games[room] = gameobject
-    playerID = playerID + 1
 
     join_room(room)
-    emit('created', {'msg' : "Player " + str(player) + " created room " + room}, room=room)
+    emit('created', {'msg' : ("Player " + str(player) + " created room " + room),'username':session["username"], 'userroom':str(room)}, room=room)
+
     room_ID = room_ID + 1
+    playerID = playerID + 1
+
 
 
 
@@ -139,6 +140,7 @@ def handleMessage(msg):
         gameCalled.playerCount = gameCalled.playerCount + 1
         join_room(room)
         emit('joined', {'msg' : "Player " + str(session["username"]) + " joined room " + str(room)}, room=room)
+        emit('putUserDetails',{'username':session["username"], 'userroom':str(room)})
 
 
 
