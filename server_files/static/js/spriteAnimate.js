@@ -176,6 +176,8 @@ function infecting(){
 		console.log("colour",locations[i].colour)
 		console.log("infection array",locations[i].infectionStatus)
 		console.log("infections",locations[i].infectionStatus[locations[i].colour][0])
+		console.log("___checking__")
+		// locations[i].renderCheck()
 	};
     
     
@@ -393,13 +395,13 @@ function gameLoop(){
 		// context.fillStyle = 'orange';
 		// context.fillText(i,cities[i].x,cities[i].y);
 	// }
-	for (i in locations){
-		console.log(locations[i])
+	// for (i in locations){
+		// console.log(locations[i])
 		// locations[i].infect({})
-		console.log("colour",locations[i].colour)
-		console.log("infection array",locations[i].infectionStatus)
-		console.log("infections",locations[i].infectionStatus[locations[i].colour][0].render())
-	};
+		// console.log("colour",locations[i].colour)
+		// console.log("infection array",locations[i].infectionStatus)
+		// console.log("infections",locations[i].infectionStatus[locations[i].colour][0].render())
+	// };
 	
 	
 	// console.log(card.flipping,card.width);

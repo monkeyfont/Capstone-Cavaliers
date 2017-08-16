@@ -14,6 +14,18 @@ function city(options){
 	this.connections = options.connections || [];
 	this.validMove = false;
 	
+	// this.renderCheck = function(){
+		// console.log("___________infection status",this.infectionStatus)
+		// for (var i in this.infectionStatus){
+			// console.log("i",i);
+			// console.log("infection status i",this.infectionStatus[i])
+			// for (var x in this.infectionStatus[i]){
+				// this.infectionStatus[i][x].render()
+				// console.log("x",this.infectionStatus[i][x])
+			// }
+		// }
+	// }
+	
 	this.infect = function(options){
 		console.log("infecting",this.id);
 		infectionColour = options.colour || this.colour;
@@ -50,6 +62,9 @@ function city(options){
 		//TODO
 	}
 	
+	
+	
+	
 	this.render = function(){
 		canvas.getContext("2d").beginPath();
 		canvas.getContext("2d").arc(this.xPos, this.yPos, this.radius, 0,Math.PI*2);
@@ -64,9 +79,9 @@ function city(options){
 		for (var i in this.infectionStatus){
 			// console.log("i",i);
 			// console.log("infection status i",this.infectionStatus.i)
-			for (var x in this.infectionStatus.i){
+			for (var x in this.infectionStatus[i]){
 				this.infectionStatus[i][x].render()
-				console.log("x",this.infectionStatus.i.x)
+				console.log("x",this.infectionStatus[i][x])
 			}
 		}
 		
