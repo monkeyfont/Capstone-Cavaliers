@@ -28,20 +28,19 @@ function city(options){
 		}else (
 		console.log("____________UNKNOWN INFECTION COLOUR____________________")
 		)	
-		console.log(infectionColour)
-		console.log("length",this.infectionStatus[infectionColour].length)
+		console.log("__________________________________",this.infectionStatus[infectionColour].length)
+		// console.log(infectionColour)
+		// console.log("length",this.infectionStatus[infectionColour].length)
 		// create a new infection with the city, it belongs to, x and y coresponding to the city its created in, and movex,movey that the infection belongs to
 		this.infectionStatus[infectionColour].push(new infection({
-			id:"player",
+			id:this.id+" "+ infectionColour+" "+this.infectionStatus[infectionColour].length,
 			context: canvas.getContext("2d"),
-			width: 32,
-			height: 40,
-			numberOfFrames: 4,
-			ticksPerFrame: 16,
+			width: 80,
+			height: 80,
 			xPos:this.xPos,
 			yPos:this.yPos,
-			xScale:2,
-			yScale:2,
+			xScale:0.5,
+			yScale:0.5,
 			image: infectionImage			
 			// options.colour || this.colour
 		}));
@@ -66,7 +65,7 @@ function city(options){
 			// console.log("i",i);
 			// console.log("infection status i",this.infectionStatus.i)
 			for (var x in this.infectionStatus.i){
-				this.infectionStatus.i.x.render()
+				this.infectionStatus[i][x].render()
 				console.log("x",this.infectionStatus.i.x)
 			}
 		}

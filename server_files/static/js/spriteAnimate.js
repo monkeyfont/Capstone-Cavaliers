@@ -173,10 +173,14 @@ function infecting(){
 	for (i in locations){
 		console.log(locations[i])
 		locations[i].infect({})
+		console.log("colour",locations[i].colour)
+		console.log("infection array",locations[i].infectionStatus)
+		console.log("infections",locations[i].infectionStatus[locations[i].colour][0])
 	};
     
     
 }
+
 
 
 
@@ -239,7 +243,18 @@ SYDNEY,JAKARTA,MANILA,HOCHIMINCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,
 KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYAOH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS
 };
 
-
+infectionImage = new Image(); infectionImage.src = 'static/images/InfectionStatusYellow.png';
+AtlantaInfection = new infection({
+	id:"player",
+			context: canvas.getContext("2d"),
+			width: 32,
+			height: 40,
+			xPos:ATLANTA.xPos,
+			yPos:ATLANTA.yPos,
+			xScale:2,
+			yScale:2,
+			image: infectionImage		
+})
 
 
 
@@ -371,13 +386,20 @@ function gameLoop(){
 	for (var i in cardList){
 		cardList[i].render();
 	}
+	// AtlantaInfection.render()
 	// for (var i in cities){
 
 		// context.font="30px Verdana";
 		// context.fillStyle = 'orange';
 		// context.fillText(i,cities[i].x,cities[i].y);
 	// }
-	
+	for (i in locations){
+		console.log(locations[i])
+		// locations[i].infect({})
+		console.log("colour",locations[i].colour)
+		console.log("infection array",locations[i].infectionStatus)
+		console.log("infections",locations[i].infectionStatus[locations[i].colour][0].render())
+	};
 	
 	
 	// console.log(card.flipping,card.width);
