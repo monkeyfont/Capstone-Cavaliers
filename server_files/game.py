@@ -261,6 +261,7 @@ class GameBoard:
         self.players[1].setLocation("ATLANTA")
         self.cities["ATLANTA"].addResearchStation()
         self.__infectCitiesStage()
+        self.__distributeHand()
 
 
     def __generateCities(self):
@@ -285,15 +286,18 @@ class GameBoard:
         return cards
 
 
-    def __distributeHand(self,playerId):
+    def __distributeHand(self):
         """ """
-
-        # not sure about this just a base implementation can be changed if wrong
-        playerhand=self.players[playerId].hand
         shuffle(self.playerDeck)
-        for i in range(3):
-            playerhand.append(self.playerDeck[0])
-            self.playerDeck.remove(self.playerDeck[0])
+        for id in self.players:
+            playerhand = self.players[id].hand
+            for i in range(3):
+                playerhand.append(self.playerDeck[0])
+                self.playerDeck.remove(self.playerDeck[0])
+                print("Player id is",id,"cards are ",playerhand[i].name)
+
+
+
 
 
     def __infectCitiesStage(self):
