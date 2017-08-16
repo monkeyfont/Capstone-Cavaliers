@@ -52,7 +52,7 @@ function infection(options) {
 	}
 	this.render = function () {
         // Draw the animation
-		console.log("rendering infection")
+		// console.log("rendering infection")
 		//console.log("image render",this.image.src)
 		this.context.drawImage(
 		this.image, //image to use

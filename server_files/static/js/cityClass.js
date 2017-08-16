@@ -40,7 +40,7 @@ function city(options){
 		}else (
 		console.log("____________UNKNOWN INFECTION COLOUR____________________")
 		)	
-		console.log("__________________________________",this.infectionStatus[infectionColour].length)
+		// console.log("__________________________________",this.infectionStatus[infectionColour].length)
 		// console.log(infectionColour)
 		// console.log("length",this.infectionStatus[infectionColour].length)
 		// create a new infection with the city, it belongs to, x and y coresponding to the city its created in, and movex,movey that the infection belongs to
@@ -81,7 +81,7 @@ function city(options){
 			// console.log("infection status i",this.infectionStatus.i)
 			for (var x in this.infectionStatus[i]){
 				this.infectionStatus[i][x].render()
-				console.log("x",this.infectionStatus[i][x])
+				// console.log("x",this.infectionStatus[i][x])
 			}
 		}
 		
