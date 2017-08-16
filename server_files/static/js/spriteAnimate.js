@@ -153,13 +153,13 @@ var cityImage = new Image();
 cityImage.src = "static/images/city token.png";
 
 
-var cities = {
-	city1:{connections:['city2','city3'],x:100,y:100},
-	city2:{connections:['city1','city4','city5'],x:400,y:400},
-	city3:{connections:['city1','city4','city5'],x:630,y:720},
-	city4:{connections:['city2','city3'],x:802,y:605},
-	city5:{connections:['city2','city3'],x:1824,y:950}
-};
+// var cities = {
+	// city1:{connections:['city2','city3'],x:100,y:100},
+	// city2:{connections:['city1','city4','city5'],x:400,y:400},
+	// city3:{connections:['city1','city4','city5'],x:630,y:720},
+	// city4:{connections:['city2','city3'],x:802,y:605},
+	// city5:{connections:['city2','city3'],x:1824,y:950}
+// };
 
 var outbreakCount = 0;
 var blueInfection = new Image(); blueInfection.src = 'static/images/InfectionStatusBlue.png';
@@ -168,55 +168,19 @@ var redInfection = new Image(); redInfection.src = 'static/images/InfectionStatu
 var yellowInfection = new Image(); yellowInfection.src = 'static/images/InfectionStatusYellow.png';
 
 //function infect(infectionColour, cityToInfect, amount){
-function infect(){
+function infecting(){
+	ATLANTA.infect({});
+	for (i in locations){
+		console.log(locations[i])
+		locations[i].infect({})
+	};
     
-    var infectionColour, cityToInfect, amount;
-    cityToInfect = locations.SANFRANCISCO;
-    amount  = 3;
-    
-    var blue = cityToInfect.infectionStatus.blue;
-    var red = cityToInfect.infectionStatus.red;
-    var yellow = cityToInfect.infectionStatus.yellow;
-    var black = cityToInfect.infectionStatus.black;
-    
-    infectionColour = blue;
-    infectionColour += amount;
-    
-    if(infectionColour == 0){console.log('0');}
-    else if(infectionColour == 1){console.log('1');}
-    else if(infectionColour == 2){console.log('2');}
-    else if(infectionColour == 3){console.log('3');}
-    else if(infectionColour == 4){console.log('OUTBREAK'); outbreakCount += 1;}
     
 }
 
-function city(options){
-	this.id = options.id;
-	this.colour = options.colour;
-	this.xPos = options.xPos;
-	this.yPos = options.yPos; 
-	this.radius = options.radius || 12;
-	this.researchStation = options.researchStation || false;
-	this.infectionStatus = options.infectionStatus || {black:0,blue:0,yellow:0,red:0};
-	this.connections = options.connections || [];
-	this.validMove = false;
-	
-	this.render = function(){
-		canvas.getContext("2d").beginPath();
-		canvas.getContext("2d").arc(this.xPos, this.yPos, this.radius, 0,Math.PI*2);
-		canvas.getContext("2d").fillStyle = this.colour;
-		canvas.getContext("2d").fill();
-		canvas.getContext("2d").font="16px Verdana";
-		canvas.getContext("2d").fillStyle = this.colour;
-		textWidth = canvas.getContext("2d").measureText(this.id).width;
-		canvas.getContext("2d").fillText(this.id,this.xPos-(textWidth/2),this.yPos-18);
-		// for rendering city connections check the distance, and if more than  500, then x is off the board, and y is halfway
-		
-	}
-	
-}
 
-var SANFRANCISCO = new city({id:'SANFRANCISCO', infectionStatus:{black:0,blue:0,yellow:0,red:0}, colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
+
+var SANFRANCISCO = new city({id:'SANFRANCISCO', colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
 var CHICAGO = new city({id:'CHICAGO',colour:'blue',xPos:390,yPos:330,connections:['SANFRANCISCO','LOSANGELES','MEXICOCITY','ATLANTA','MONTREAL']});
 var MONTREAL = new city({id:'MONTREAL',colour:'blue',xPos:520,yPos:350,connections:['CHICAGO','WASHINGTON','NEWYORK']});
 var NEWYORK = new city({id:'NEWYORK',colour:'blue',xPos:590,yPos:400,connections:['MONTREAL','WASHINGTON','MADRID','LONDON']});
@@ -440,41 +404,41 @@ function gameLoop(){
 
 
 	
-var coin3 = new sprite({
-	id:"coin3",
-    context: canvas.getContext("2d"),
-    width: 100,
-    height: 100,
-	numberOfFrames: 10,
-	ticksPerFrame: 3,
-	xPos:300,
-	yPos:300,
-    image: coinImage	
-	});	
+// var coin3 = new sprite({
+	// id:"coin3",
+    // context: canvas.getContext("2d"),
+    // width: 100,
+    // height: 100,
+	// numberOfFrames: 10,
+	// ticksPerFrame: 3,
+	// xPos:300,
+	// yPos:300,
+    // image: coinImage	
+	// });	
 
-var coin = new sprite({
-	id:"coin",
-    context: canvas.getContext("2d"),
-    width: 100,
-    height: 100,
-	numberOfFrames: 10,
-	ticksPerFrame: 16,
-	xPos:100,
-	yPos:100,
-    image: coinImage	
-	});		
+// var coin = new sprite({
+	// id:"coin",
+    // context: canvas.getContext("2d"),
+    // width: 100,
+    // height: 100,
+	// numberOfFrames: 10,
+	// ticksPerFrame: 16,
+	// xPos:100,
+	// yPos:100,
+    // image: coinImage	
+	// });		
 	
-var coin2 = new sprite({
-	id:"coin2",
-    context: canvas.getContext("2d"),
-    width: 100,
-    height: 100,
-	numberOfFrames: 10,
-	ticksPerFrame: 16,
-	xPos:400,
-	yPos:400,
-    image: coinImage	
-	});	
+// var coin2 = new sprite({
+	// id:"coin2",
+    // context: canvas.getContext("2d"),
+    // width: 100,
+    // height: 100,
+	// numberOfFrames: 10,
+	// ticksPerFrame: 16,
+	// xPos:400,
+	// yPos:400,
+    // image: coinImage	
+	// });	
 	
 var player = new player({
 	id:"player",
@@ -614,8 +578,8 @@ function flippable(options) {
 		this.heightDraw*this.yScale); // height of image to use
     };
 }
-
-spriteList = [coin,coin2,coin3,player,card,deck];
+// coin,coin2,coin3,
+spriteList = [player,card,deck];
 	
 mapImage.addEventListener("load", gameLoop);	
 // coinImage.addEventListener("load", gameLoop);
