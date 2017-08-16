@@ -1,6 +1,46 @@
-var snd = new Audio("static/A Instrumental Masterpiece.mp3"); // buffers automatically when created
+var scrnWidth = window.innerWidth;//screen.width;
+var scrnHeight = window.innerHeight;//screen.height;
+console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
+var optimalScreenWidth = 1920;
+var optimalScreenHeight = 1080;
 
-snd.play();
+var screenHeightPercentage = scrnHeight/optimalScreenHeight;
+var screenWidthPercentage = scrnWidth/optimalScreenWidth;
+
+var scaleSize = 1;
+
+// sets the scalesize to the lower of height or width
+if (screenHeightPercentage<screenWidthPercentage){
+	scaleSize = screenHeightPercentage;
+}else{
+	scaleSize = screenWidthPercentage;
+}
+
+var canvas = document.getElementById("myCanvas");
+canvas.width = optimalScreenWidth*scaleSize;
+canvas.height = optimalScreenHeight*scaleSize;
+var context = canvas.getContext("2d");
+context.scale(scaleSize,scaleSize);
+
+// console.log(canvas.getContext("2d").getScale())
+console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
+console.log("scale Size:"+scaleSize);
+
+
+
+
+// window.addEventListener('resize',canvasResize);
+
+// function canvasResize(){
+	// context.scale(scaleSize,scaleSize);
+	// canvas.width = optimalScreenWidth*scaleSize;
+	// canvas.height = optimalScreenHeight*scaleSize;
+	// console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
+	// console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
+	// console.log("scale Size:"+scaleSize);
+// }
+
+
 var cardNumber = 0;
 var socket;
 
@@ -20,26 +60,7 @@ socket.on('joined', function (data) {
     });
 
 
-$('.Audio').on('click', function(e){
-		// alert("Button clicked with value: "+e.currentTarget.value);
-		if (e.currentTarget.id == "Play"){
-			if (snd.paused){
-				snd.play();
-			}else{
-				snd.pause();
-			}
-			
-			alert("play");
-		}else if(e.currentTarget.id == "Mute"){
-			if (snd.muted == true){
-				snd.muted = false;
-			}else{
-				snd.muted = true;
-			}
-			alert("Mute");
-		}
-		
-	});
+
 
     function myFunction(data){
 //$("#clickTest").click(function(){
@@ -130,16 +151,7 @@ var mapImage = new Image();
 mapImage.src = 'static/images/WorldMap.jpg';
 var cityImage = new Image();
 cityImage.src = "static/images/city token.png";
-var scrnWidth = window.innerWidth;//screen.width;
-var scrnHeight = window.innerHeight;//screen.height;
-console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
-var optimalScreenWidth = 1920;
-var optimalScreenHeight = 1080;
 
-var screenHeightPercentage = scrnHeight/optimalScreenHeight;
-var screenWidthPercentage = scrnWidth/optimalScreenWidth;
-
-var scaleSize = 1;
 
 var cities = {
 	city1:{connections:['city2','city3'],x:100,y:100},
@@ -183,16 +195,21 @@ function city(options){
 	this.colour = options.colour;
 	this.xPos = options.xPos;
 	this.yPos = options.yPos; 
+	this.radius = options.radius || 12;
 	this.researchStation = options.researchStation || false;
 	this.infectionStatus = options.infectionStatus || {black:0,blue:0,yellow:0,red:0};
 	this.connections = options.connections || [];
 	this.validMove = false;
 	
 	this.render = function(){
-		canvas.getContext("2d").drawImage(cityImage,this.xPos,this.yPos);
+		canvas.getContext("2d").beginPath();
+		canvas.getContext("2d").arc(this.xPos, this.yPos, this.radius, 0,Math.PI*2);
+		canvas.getContext("2d").fillStyle = this.colour;
+		canvas.getContext("2d").fill();
 		canvas.getContext("2d").font="16px Verdana";
 		canvas.getContext("2d").fillStyle = this.colour;
-		canvas.getContext("2d").fillText(this.id,this.xPos,this.yPos);
+		textWidth = canvas.getContext("2d").measureText(this.id).width;
+		canvas.getContext("2d").fillText(this.id,this.xPos-(textWidth/2),this.yPos-18);
 		// for rendering city connections check the distance, and if more than  500, then x is off the board, and y is halfway
 		
 	}
@@ -227,12 +244,12 @@ var JOHANNESBURG = new city ({id:'JOHANNESBURG',colour:'yellow',xPos:980,yPos:85
 
 var SYDNEY = new city({id:'SYDNEY', colour:'red', xPos:1670, yPos:904, connections:['MANILA','JAKARTA','LOSANGELES']});
 var JAKARTA= new city({id:'JAKARTA', colour:'red', xPos:1430, yPos:700, connections:['SYDNEY','HOCHIMINCITY','BANGKOK','CHENNAI']});
-var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','SANFRANCISCO']});
+var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','SANFRANCISCO','HOCHIMINCITY','HONGKONG']});
 var HOCHIMINCITY = new city({id:'HOCHIMINCITY', colour:'red', xPos:1430, yPos:630, connections:['MANILA','JAKARTA','BANGKOK','HONGKONG']});
 var BANGKOK = new city({id:'BANGKOK', colour:'red', xPos:1360, yPos:570, connections:['KOULKATA','HONGKONG','HOCHIMINCITY','JAKARTA','CHENNAI']});
 var TAIPEI  = new city({id:'TAIPEI', colour:'red', xPos:1490, yPos:540, connections:['OSAKA','SHANGHAI','HONGKONG','MANILA']});
 var OSAKA = new city({id:'OSAKA', colour:'red', xPos:1546, yPos:480, connections:['TOKYO','TAIPEI']});
-var TOKYO = new city({id:'TOKYO', colour:'red', xPos:1560, yPos:400, connections:['SEOUL','OSAKA','SANFRANCISCO']});
+var TOKYO = new city({id:'TOKYO', colour:'red', xPos:1560, yPos:400, connections:['SEOUL','OSAKA','SANFRANCISCO','SHANGHAI']});
 var HONGKONG = new city({id:'HONGKONG', colour:'red', xPos:1430, yPos:520, connections:['SHANGHAI','TAIPEI','MANILA','HOCHIMINCITY','BANGKOK','KOULKATA']});
 var SHANGHAI = new city({id:'SHANGHAI', colour:'red', xPos:1440, yPos:460, connections:['BEIJING','SEOUL','TOKYO','TAIPEI','HONGKONG']});
 var SEOUL = new city({id:'SEOUL', colour:'red', xPos:1485, yPos:405, connections:['TOKYO','SHANGHAI','BEIJING']});
@@ -259,22 +276,7 @@ KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYAOH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBU
 };
 
 
-// sets the scalesize to the lower of height or width
-if (screenHeightPercentage<screenWidthPercentage){
-	scaleSize = screenHeightPercentage;
-}else{
-	scaleSize = screenWidthPercentage;
-}
 
-var canvas = document.getElementById("myCanvas");
-canvas.width = 1920*scaleSize;
-canvas.height = 1080*scaleSize;
-var context = canvas.getContext("2d");
-context.scale(scaleSize,scaleSize);
-
-// console.log(canvas.getContext("2d").getScale())
-console.log("Total Width Percent: "+screenWidthPercentage+" Total Height Percent: "+screenHeightPercentage);
-console.log("scale Size:"+scaleSize);
 
 
 
@@ -312,15 +314,15 @@ canvas.addEventListener('click', function(evt) {
 		}
 	}
 
-	for (var i in cities){
-		if (mousePos.x >= cities[i].x && mousePos.x <= (cities[i].x + 25) &&
-			mousePos.y >= cities[i].y && mousePos.y <= (cities[i].y + 25)){
-				console.log(i,'was clicked');
-		}
-	}
+	// for (var i in cities){
+		// if (mousePos.x >= cities[i].x && mousePos.x <= (cities[i].x + 25) &&
+			// mousePos.y >= cities[i].y && mousePos.y <= (cities[i].y + 25)){
+				// console.log(i,'was clicked');
+		// }
+	// }
 	for (var i in locations){
-		if (mousePos.x >= locations[i].xPos && mousePos.x <= (locations[i].xPos + 25) &&
-			mousePos.y >= locations[i].yPos && mousePos.y <= (locations[i].yPos + 25)){
+		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
+			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
 				console.log('city ', i ,' was clicked');
 				checkMove(i);
 
@@ -359,13 +361,13 @@ function gameLoop(){
 			if (Math.abs(locations[start].xPos-endCity.xPos) > 800){
 				context.beginPath(); 
 				// Staring point (10,45)
-				context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
+				context.moveTo(locations[start].xPos,locations[start].yPos);
 				// End point (180,47)
 				if (locations[start].xPos >800){
 					((locations[start].yPos-endCity.yPos)/2)
-					context.lineTo(1920,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
+					context.lineTo(1920,endCity.yPos+((locations[start].yPos-endCity.yPos)/2));
 				}else{
-					context.lineTo(0,endCity.yPos+12.5+((locations[start].yPos-endCity.yPos)/2));
+					context.lineTo(0,endCity.yPos+((locations[start].yPos-endCity.yPos)/2));
 				}
 				// Make the line visible		  
 				context.lineWidth = 4;
@@ -376,9 +378,9 @@ function gameLoop(){
 			//console.log("actual end city", locations[locations[start].connections[end]].id)		
 				context.beginPath(); 
 				// Staring point (10,45)
-				context.moveTo(locations[start].xPos+12.5,locations[start].yPos+12.5);
+				context.moveTo(locations[start].xPos,locations[start].yPos);
 				// End point (180,47)
-				context.lineTo(endCity.xPos+12.5,endCity.yPos+12.5);
+				context.lineTo(endCity.xPos,endCity.yPos);
 				// Make the line visible		  
 				context.lineWidth = 4;
 				// set line color
@@ -421,106 +423,6 @@ function gameLoop(){
 	//console.log("gameloop");
 }
 
-
-
-function sprite(options) {
-	this.id = options.id,			
-	this.frameIndex = 0, //current frame being rendered
-	this.tickCount = 0,	// number of updates since the last render 
-	this.ticksPerFrame = options.ticksPerFrame || 0; //by having ticks per frame, it allows us to slow the animation down, and still fun a game at 60fps, 
-	this.context = options.context;
-	this.width = options.width;
-	this.height = options.height;
-	this.image = options.image;
-	this.loop = options.loop || true; // do we loop the sprite, or just play it once
-	this.yPos = options.yPos || 0;
-	this.xPos = options.xPos || 0;
-	this.numberOfFrames = options.numberOfFrames || 1;
-	this.xScale = options.xScale || 1;
-	this.yScale = options.yScale || 1;
-	this.yStart = options.yStart || 0;
-	this.moveX = this.xPos;
-	this.moveY = this.yPos;
-	this.speed = options.speed || 10;
-	this.tempSpeed = 0;
-	
-	
-	this.move = function (x, y){
-		this.moveX = x;
-		this.moveY = y;		
-	}
-	
-	
-	this.update = function(){		
-		
-		var deltaX = this.xPos - this.moveX;
-		var deltaY = this.yPos - this.moveY;
-		if ( deltaX != 0  && deltaY != 0){
-
-			// work out the distance a^2 + b^2 = c^2 where deltaX and DeltaY are a and b
-			
-			var distance = Math.sqrt((deltaX**2)+(deltaY**2));
-			// console.log("distance",distance);
-			this.tempSpeed = distance / Math.ceil(distance / this.speed);
-			// console.log("temp speed",this.tempSpeed)
-			var incrementX = deltaX/(distance/this.tempSpeed);
-			var incrementY = deltaY/(distance/this.tempSpeed);
-			// console.log("increment",incrementX,incrementY);
-			
-			if (this.moveX == this.xPos){
-				this.tempSpeed = 10;
-			}else if (this.moveY == this.yPos){
-				this.tempSpeed = 10;
-			}else{
-				
-			}
-			
-			if (this.moveX != this.xPos){
-				if (this.moveX <= this.xPos){
-					this.xPos = this.xPos - incrementX
-				}else{
-					this.xPos = this.xPos - incrementX
-				}
-			}
-			if (this.moveY != this.yPos){
-				if (this.moveY <= this.yPos){
-					this.yPos = this.yPos - incrementY
-				}else{
-					this.yPos = this.yPos - incrementY
-				}
-				
-			}
-		}
-		//update the frame every x ticks 
-		//console.log("updated",this.image.src);
-		this.tickCount +=1;
-		if (this.tickCount > this.ticksPerFrame){
-			this.tickCount = 0;
-			if (this.frameIndex<this.numberOfFrames-1){
-				this.frameIndex +=1;
-			}else if (this.loop){
-				this.frameIndex=0
-			}
-			
-		}
-	}
-	this.render = function () {
-        // Draw the animation
-		//console.log("image render",this.image.src)
-		this.context.drawImage(
-		this.image, //image to use
-		this.frameIndex * this.width, // x position to start clipping 
-		this.yStart, // y position to start clipping
-		this.width, //width of clipped image
-		this.height, // height of clipped image
-		this.xPos, //x position for image on canvas
-		this.yPos, // y position for image on canvas
-		this.width*this.xScale, // width of image to use 
-		this.height*this.yScale); // height of image to use
-    };
-}
-
-
 // canvas.width = 1000;
 // canvas.height = 1000;
 
@@ -534,6 +436,9 @@ function sprite(options) {
 	// ticksPerFrame: 10,
 	// image: mapImage
 	// });	
+
+
+
 	
 var coin3 = new sprite({
 	id:"coin3",
@@ -571,7 +476,7 @@ var coin2 = new sprite({
     image: coinImage	
 	});	
 	
-var player = new sprite({
+var player = new player({
 	id:"player",
 	context: canvas.getContext("2d"),
     width: 32,
@@ -582,8 +487,7 @@ var player = new sprite({
 	yPos:ATLANTA.yPos,
 	xScale:2,
 	yScale:2,
-    image: playerImage
-	
+    image: playerImage	
 })
 
 var CardImage = new Image();
