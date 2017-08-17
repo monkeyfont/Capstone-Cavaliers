@@ -388,6 +388,9 @@ function gameLoop(){
 	for (var i in cardList){
 		cardList[i].render();
 	}
+	
+	outbreakCount.render();
+	infectRate.render();
 	// AtlantaInfection.render()
 	// for (var i in cities){
 
@@ -602,6 +605,11 @@ function flippable(options) {
 		this.heightDraw*this.yScale); // height of image to use
     };
 }
+
+outbreakCount = new outbreakCounter({})
+infectRate = new infectionRate({})
+
+
 // coin,coin2,coin3,
 spriteList = [player,card,deck];
 	
