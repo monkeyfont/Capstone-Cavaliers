@@ -77,11 +77,22 @@ function city(options){
 		// for rendering city connections check the distance, and if more than  500, then x is off the board, and y is halfway
 		
 		for (var i in this.infectionStatus){
+			
 			// console.log("i",i);
 			// console.log("infection status i",this.infectionStatus.i)
+			// console.log("infection status_______________________",this.infectionStatus[i])
 			for (var x in this.infectionStatus[i]){
 				this.infectionStatus[i][x].render()
 				// console.log("x",this.infectionStatus[i][x])
+			}
+			if (this.infectionStatus[i].length >0){
+				infectionSymbol = this.infectionStatus[i][0]
+				canvas.getContext("2d").font="30px Verdana";
+				canvas.getContext("2d").fillStyle = this.colour;
+				canvas.getContext("2d").fillText(this.infectionStatus[i].length,infectionSymbol.xPos+(infectionSymbol.width*infectionSymbol.xScale),infectionSymbol.yPos);
+				// console.log("length = ",this.infectionStatus[i].length)
+				// console.log("x = ",infectionSymbol.xPos)
+				// console.log("y =", infectionSymbol.yPos)
 			}
 		}
 		
