@@ -623,7 +623,13 @@ infectRate = new infectionRate({})
 // coin,coin2,coin3,
 spriteList = [player,card,deck];
 	
-mapImage.addEventListener("load", gameLoop);	
+mapImage.addEventListener("load", gameLoop);
+
+
+moveInfection = function(){
+	
+}
+	
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();

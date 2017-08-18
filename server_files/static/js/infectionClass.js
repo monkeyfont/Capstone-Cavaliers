@@ -12,6 +12,28 @@ function infection(options) {
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
 	this.tempSpeed = 0;
+	this.cityTravel = options.infectionPath || [];
+	
+	this.moveCity = function(){
+		if (this.cityTravel.length>0){
+			if (locations[this.cityTravel.length-1].xPos == this.xPos && 
+			locations[this.cityTravel.length-1].yPos == this.yPos){
+				this.cityTravel.pop()
+				if (this.cityTravel.length>0){
+					this.move(locations[this.cityTravel.length-1].xPos,locations[this.cityTravel.length-1].yPos)
+				}
+			}else{
+				if(locations[this.cityTravel.length-1].xPos != this.moveX || 
+				locations[this.cityTravel.length-1].yPos != this.moveY){
+					this.move(locations[this.cityTravel.length-1].xPos,locations[this.cityTravel.length-1].yPos)
+				}
+			}
+			this.update();
+			
+			// are we on the last city? if yes, pop it off and go for the next one 
+			// are we already aiming for the last city, if yes, its unchanged. 
+		}
+	}
 	
 	
 	this.move = function (x, y){

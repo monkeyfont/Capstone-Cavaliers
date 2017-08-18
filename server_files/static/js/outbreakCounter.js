@@ -21,7 +21,8 @@ function outbreakCounter(options) {
 		this.context.fill();
 		canvas.getContext("2d").font="60px Verdana";
 		canvas.getContext("2d").fillStyle = 'black';
-		canvas.getContext("2d").fillText(i,this.xPos+(this.radius*2*i),this.yPos+(this.radius));
+		textWidth = canvas.getContext("2d").measureText(i).width;
+		canvas.getContext("2d").fillText(i,this.xPos+(this.radius*2*i)-(textWidth/2),this.yPos+(this.radius));
 	   }
 	canvas.getContext("2d").font="60px Verdana";
 	canvas.getContext("2d").fillStyle = 'green';
