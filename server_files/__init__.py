@@ -14,7 +14,7 @@ playerID = 1
 games = {} # in here we will store the game objects
 
 userTable = {} # this will be changed later on to be a database storing the user details
-
+game=GameBoard()
 
 @app.route('/')
 def home():
@@ -29,9 +29,6 @@ def game():
         username = session['username']
         roomname = session['roomname']
         roomtype = session['roomtype']
-        print "User: "+ username
-        print "Room name: " +roomname
-        print "roomtype: " + roomtype
         return (render_template("MapOnCanvas.html"))
 
     return "You are not logged in <br><a href = '/lobby'></b>" + \
@@ -46,6 +43,20 @@ def joined(msg):
     emit('joined', {'msg': str(player + " joined room" + room)}, room=room)
 
     emit('joined', {'msg' : "Player " + str(player) + " joined room " + room}, room=room)
+
+
+
+@socketio.on('joinGame')
+def joined(msg):
+
+    #room = session["room"]
+    room="1"
+    global game
+    game = GameBoard()
+
+    player = session["username"]
+    join_room(room)
+    emit('joined', {'msg' : "Player " + str(player + " joined room " + room)}, room=room)
 
 
 
@@ -152,7 +163,7 @@ def lobby():
 
 
 ##############      fUNCTIONS WORKING ON       #####################################
-'''
+
 @socketio.on('/newroom')
 def handleMessage(msg):
     global playerID
@@ -208,7 +219,7 @@ def handleMessage(msg):
 
 
 
-'''
+
 
 ####################################################################################
 # DO NOT MOVE ANYTHING IN BETWEEN HERE
