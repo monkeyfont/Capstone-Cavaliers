@@ -167,6 +167,16 @@ var blackInfection = new Image(); blackInfection.src = 'static/images/InfectionS
 var redInfection = new Image(); redInfection.src = 'static/images/InfectionStatusRed.png';
 var yellowInfection = new Image(); yellowInfection.src = 'static/images/InfectionStatusYellow.png';
 
+function displayOutbreaks(outbreakCount){
+    //if(outbreakCount >= 8){//player has lost}
+    //if odd outbreakCount / (outbreakCount%2 != 0){move up and right}
+    //else {move down and right}
+  
+    //based upon outbreak counter looking like: -_-_-_-_o
+    //  1   3   5   7   [Lost]
+    //    2   4    6   8
+}
+
 //function infect(infectionColour, cityToInfect, amount){
 function infecting(){
 	ATLANTA.infect({});
