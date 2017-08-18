@@ -161,11 +161,11 @@ cityImage.src = "static/images/city token.png";
 	// city5:{connections:['city2','city3'],x:1824,y:950}
 // };
 
-var outbreakCount = 0;
-var blueInfection = new Image(); blueInfection.src = 'static/images/InfectionStatusBlue.png';
-var blackInfection = new Image(); blackInfection.src = 'static/images/InfectionStatusBlack.png';
-var redInfection = new Image(); redInfection.src = 'static/images/InfectionStatusRed.png';
-var yellowInfection = new Image(); yellowInfection.src = 'static/images/InfectionStatusYellow.png';
+// var outbreakCount = 0;
+// var blueInfection = new Image(); blueInfection.src = 'static/images/InfectionStatusBlue.png';
+// var blackInfection = new Image(); blackInfection.src = 'static/images/InfectionStatusBlack.png';
+// var redInfection = new Image(); redInfection.src = 'static/images/InfectionStatusRed.png';
+// var yellowInfection = new Image(); yellowInfection.src = 'static/images/InfectionStatusYellow.png';
 
 function displayOutbreaks(outbreakCount){
     //if(outbreakCount >= 8){//player has lost}
@@ -255,18 +255,18 @@ SYDNEY,JAKARTA,MANILA,HOCHIMINCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,
 KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYAOH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS
 };
 
-infectionImage = new Image(); infectionImage.src = 'static/images/InfectionStatusYellow.png';
-AtlantaInfection = new infection({
-	id:"player",
-			context: canvas.getContext("2d"),
-			width: 32,
-			height: 40,
-			xPos:ATLANTA.xPos,
-			yPos:ATLANTA.yPos,
-			xScale:2,
-			yScale:2,
-			image: infectionImage		
-})
+// infectionImage = new Image(); infectionImage.src = 'static/images/InfectionStatusYellow.png';
+// AtlantaInfection = new infection({
+	// id:"player",
+			// context: canvas.getContext("2d"),
+			// width: 32,
+			// height: 40,
+			// xPos:ATLANTA.xPos,
+			// yPos:ATLANTA.yPos,
+			// xScale:2,
+			// yScale:2,
+			// image: infectionImage		
+// })
 
 
 

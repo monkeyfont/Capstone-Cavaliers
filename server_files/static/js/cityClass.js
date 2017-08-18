@@ -1,7 +1,7 @@
-var blueInfection = new Image(); blueInfection.src = 'static/images/InfectionStatusBlue.png';
-var blackInfection = new Image(); blackInfection.src = 'static/images/InfectionStatusBlack.png';
-var redInfection = new Image(); redInfection.src = 'static/images/InfectionStatusRed.png';
-var yellowInfection = new Image(); yellowInfection.src = 'static/images/InfectionStatusYellow.png';
+var blueInfection = new Image(); blueInfection.src = 'static/images/Infections/InfectionStatusBlue.png';
+var blackInfection = new Image(); blackInfection.src = 'static/images/Infections/InfectionStatusBlack.png';
+var redInfection = new Image(); redInfection.src = 'static/images/Infections/InfectionStatusRed.png';
+var yellowInfection = new Image(); yellowInfection.src = 'static/images/Infections/InfectionStatusYellow.png';
 
 function city(options){
 	this.id = options.id;
