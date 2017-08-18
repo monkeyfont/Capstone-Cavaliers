@@ -190,26 +190,44 @@ class City:
     def getConnections(self):
         return self.connections
 
+    def getInfections(self, color):
+        """
+        Returns the cities current infection count for a colour.
+        """
+        if colour == "blue":
+            return self.blue
+        elif colour == "yellow":
+            return self.yellow
+        elif colour == "red":
+            return self.red
+        elif colour == "black":
+            return self.black
+
     def infectCity(self, colour, amount):
-        # maybe return true if there is an outbreak? need to think about this ...
+        """ 
+        Infects the city with the coloured cube, and the amount specified.
+        """
         if colour == "blue":
             self.blue += amount
         elif colour == "yellow":
             self.yellow += amount
         elif colour == "red":
             self.red += amount
-        elif colour =="black":
+        elif colour == "black":
             self.black += amount
     
     def cureCity(self, colour, amount):
+        """ 
+        Cures a colour by the amount specified. If the amount is too much, it clamps color to 0.
+        """
         if colour == "blue":
-            self.blue -= amount
+            self.blue -= amount if self.blue -= amount > 0 else self.blue = 0
         elif colour == "yellow":
-            self.yellow -= amount
+            self.yellow -= amount if self.yellow -= amount > 0 else self.yellow = 0
         elif colour == "red":
-            self.red -= amount
-        elif colour =="black":
-            self.black -= amount
+            self.red -= amount if self.red -= amount > 0 else self.red = 0
+        elif colour == "black":
+            self.black -= amount if self.black -= amount > 0 else self.black = 0
 
 class Player:
     """ Player class def """
@@ -294,14 +312,18 @@ class GameBoard:
             for i in range(3):
                 playerhand.append(self.playerDeck[0])
                 self.playerDeck.remove(self.playerDeck[0])
-                print("Player id is",id,"cards are ",playerhand[i].name)
-
-
-
+                print("Player id is ", id, " cards are ", playerhand[i].name)
 
 
     def __infectCitiesStage(self):
-        """ """
+        """ 
+        Infect cities stage occurs during the initalization.
+        The infection deck is shuffled, then  
+            1. 3 cards are drawn, infected with 3 markers
+            2. 3 cards are drawn, infected with 2 markers
+            3. 3 cards are drawn, infected with 1 marker       
+        These cards are then added to the discard pile
+         """
         # First shuffle the infection cards
         shuffle(self.infectionDeck)
         # draw first 3 cards, place 3 disease markers
@@ -355,7 +377,7 @@ class GameBoard:
                 playerhand.remove(card)
                 self.playerDiscarded.append(card)
 
-                print "player has successfuly moved from",currentlocation," to",self.players[playerId].getLocation()
+                print "player has successfuly moved from", currentlocation," to", self.players[playerId].getLocation()
                 return True
 
         return False
@@ -375,9 +397,7 @@ class GameBoard:
                 playerhand.remove(card)
                 self.playerDiscarded.append(card)
                 return True
-
             else:
-
                 return False
 
 
@@ -415,8 +435,52 @@ class GameBoard:
 
 
 
-    def shareKnowledge(self):
-        """ Either: give the card that matches the city you are in to another player, or take that card from another player. Both players must be in the same city. """
+    def shareKnowledgeTake(self, playerId, targetPlayerId, targetCity):
+        """ 
+        Take the card that matches the city you are in from another player. Both players must be in that same city.
+
+        playerId takes the city card from targetPlayerId if they have the card, and both players are in the same city.
+        """
+        player = self.players[playerId]
+        targetPlayer = self.players[targetPlayerId]
+        playerHand = player.hand
+        targetPlayerHand = targetPlayerHand 
+        # Check both players are in the same city
+        if player.getLocation() != targetPlayer.getLocation():
+            return False
+        # If targetPlayer has that city card, move it to players hand.
+        for card in targetPlayerHand:
+            if card.name == targetCity:
+                targerPlayerHand.remove(card)
+                playerHand.append(card)
+                return True
+        #fall through
+        return False
+        #TODO - not sure if 'permission' logic should be added here, or elsewhere.
+
+
+    def shareKnowledgeGive(self, playerId, targetPlayerId, targetCity):
+        """ 
+        Give the card that matches the city you are in to another player. Both players must be in that same city.
+
+        if has the city card, playerId gives the city card to targetPlayerId. Both players must be in the same city.
+        """
+        player = self.players[playerId]
+        targetPlayer = self.players[targetPlayerId]
+        playerHand = player.hand
+        targetPlayerHand = targetPlayerHand 
+        # Check both players are in the same city
+        if player.getLocation() != targetPlayer.getLocation():
+            return False
+        # If player has that city card, move it to players hand.
+        for card in playerHand:
+            if card.name == targetCity:
+                playerHand.remove(card)
+                targetPlayerHand.append(card)
+                return True
+        #fall through
+        return False
+        #TODO - not sure if 'permission' logic should be added here, or elsewhere.
 
 
     def discoverCure(self,playerId):
@@ -432,11 +496,8 @@ class GameBoard:
         if blueCount >=5:
             self.blueCure=1
 
-
         # etc etc still need to implement rest of colours
-#
-#
-#
+
 class PlayerCard:
     """ Player City Card Definition """
     def __init__(self, name, colour, population, area, country):
