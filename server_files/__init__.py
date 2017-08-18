@@ -1,8 +1,9 @@
-from flask import Flask, render_template, session, request, make_response
+from flask import Flask, render_template, session, make_response,redirect, url_for, escape, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 
 from game import *
 import random
+from flask import Flask, redirect, url_for
 import unittest
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
@@ -20,10 +21,18 @@ def home():
     # Quick session testing code.
     return render_template("home.html")
 
+
+
 @app.route('/game')
 def game():
-    session["username"] = "Player " + str(random.randrange(1000))
-    return render_template("MapOnCanvas.html")
+    if 'username' in session:
+        username = session['username']
+        roomname = session['roomname']
+        roomtype = session['roomtype']
+        return (render_template("MapOnCanvas.html"))
+
+    return "You are not logged in <br><a href = '/lobby'></b>" + \
+      "click here to log in</b></a>"
 
 @socketio.on('join')
 def joined(msg):
@@ -87,13 +96,75 @@ def handle_message(msg):
 
 @app.route('/room')
 def room():
-    session["username"] = "Player " + str(random.randrange(1000))
-    return render_template("room.html")
+    if 'username' in session:
+        username = str(session['username'])
+        roomname = str(session['roomname'])
+        roomtype = str(session['roomtype'])
+
+        print('Logged in as ' + username )
+        print("Redirecting to the board game")
+        print("User requested to " + roomtype + " room named " + roomname+".")
+
+        room = roomname
+        if (roomtype == "create"):
+            print ("Created")
+            global playerID
+            global room_ID
+
+
+            player = username
+            gameobject = GameBoard()
+            gameobject.gameID = room
+
+            gamePlayer = Player(playerID,player)
+            gameobject.playerCount = 1
+            gameobject.players[gameobject.playerCount] = gamePlayer
+
+            games[room] = gameobject
+
+            #join_room("1")
+            #emit('created', {'msg' : ("Player " + str(player) + " created room " + room),'username':session["username"], 'userroom':str(room)}, room=room)
+
+            room_ID = room_ID + 1
+            playerID = playerID + 1
+
+
+        else:
+            #get the gameboard called
+            gameCalled = games[room]
+            numberOfPlayers = gameCalled.playerCount
+
+            if numberOfPlayers == 4:
+                print "Too many players"
+            else:
+                player = session["username"]
+                session["room"] = room
+                player = Player(playerID,player)
+                numberOfPlayers = gameCalled.playerCount + 1
+
+                gameCalled.players[numberOfPlayers] = player
+                gameCalled.playerCount = gameCalled.playerCount + 1
+                join_room(room)
+                #emit('joined', {'msg' : "Player " + str(session["username"]) + " joined room " + str(room)}, room=room)
+               # emit('putUserDetails',{'username':session["username"], 'userroom':str(room)})
+        return (redirect(url_for('game')))
+    return "You are not logged in <br><a href = '/lobby'></b>" + \
+      "click here to log in</b></a>"
+
+@app.route('/lobby', methods = ['GET', 'POST'])
+def lobby():
+    if request.method == 'POST':
+            session['username'] = request.form['username']
+            session['roomname'] = request.form['roomname']
+            session['roomtype'] = request.form['roomtype']
+            return (redirect(url_for('room')))
+    return (render_template("lobby.html"))
+
 
 
 ##############      fUNCTIONS WORKING ON       #####################################
 
-@socketio.on('newroom')
+@socketio.on('/newroom')
 def handleMessage(msg):
     global playerID
     global room_ID

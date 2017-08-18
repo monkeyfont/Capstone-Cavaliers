@@ -28,6 +28,7 @@ $(document).ready(function () {
         // clear the field
         $('#new_user_name').val("");
         // submit that value
+
         socket.emit('newroom', {playerName:name})
 
         // submit request for new room
