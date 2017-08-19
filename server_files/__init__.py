@@ -25,7 +25,7 @@ def home():
 
 @app.route('/game')
 def game():
-    if 'username' in session:
+    if 'username'and "roomname" and "roomtype" in session:
         username = session['username']
         roomname = session['roomname']
         roomtype = session['roomtype']
