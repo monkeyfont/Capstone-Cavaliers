@@ -190,7 +190,7 @@ class City:
     def getConnections(self):
         return self.connections
 
-    def getInfections(self, color):
+    def getInfections(self, colour):
         """
         Returns the cities current infection count for a colour.
         """
@@ -203,7 +203,7 @@ class City:
         elif colour == "black":
             return self.black
 
-    def infectCity(self, colour, amount):
+    def infect(self, colour, amount):
         """ 
         Infects the city with the coloured cube, and the amount specified.
         """
@@ -216,18 +216,18 @@ class City:
         elif colour == "black":
             self.black += amount
     
-    def cureCity(self, colour, amount):
+    def cure(self, colour, amount):
         """ 
         Cures a colour by the amount specified. If the amount is too much, it clamps color to 0.
         """
         if colour == "blue":
-            self.blue -= amount if self.blue -= amount > 0 else self.blue = 0
+            self.blue -= amount if self.blue-amount > 0 else 0
         elif colour == "yellow":
-            self.yellow -= amount if self.yellow -= amount > 0 else self.yellow = 0
+            self.yellow -= amount if self.yellow - amount > 0 else  0
         elif colour == "red":
-            self.red -= amount if self.red -= amount > 0 else self.red = 0
+            self.red -= amount if self.red - amount > 0 else 0
         elif colour == "black":
-            self.black -= amount if self.black -= amount > 0 else self.black = 0
+            self.black -= amount if self.black - amount > 0 else 0
 
 class Player:
     """ Player class def """
@@ -336,7 +336,7 @@ class GameBoard:
             cityName = self.infectionDeck[i].name
             cityObj = self.cities[cityName] # get the city object with the key that matches card city name.
             colour = cityObj.colour
-            cityObj.infectCity(colour, infectionAmount)
+            cityObj.infect(colour, infectionAmount)
             print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
         # discard the 9 infection cards.
         for i in range(9):
@@ -444,14 +444,14 @@ class GameBoard:
         player = self.players[playerId]
         targetPlayer = self.players[targetPlayerId]
         playerHand = player.hand
-        targetPlayerHand = targetPlayerHand 
+        targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
         if player.getLocation() != targetPlayer.getLocation():
             return False
         # If targetPlayer has that city card, move it to players hand.
         for card in targetPlayerHand:
             if card.name == targetCity:
-                targerPlayerHand.remove(card)
+                targetPlayerHand.remove(card)
                 playerHand.append(card)
                 return True
         #fall through
@@ -468,7 +468,7 @@ class GameBoard:
         player = self.players[playerId]
         targetPlayer = self.players[targetPlayerId]
         playerHand = player.hand
-        targetPlayerHand = targetPlayerHand 
+        targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
         if player.getLocation() != targetPlayer.getLocation():
             return False
@@ -497,6 +497,14 @@ class GameBoard:
             self.blueCure=1
 
         # etc etc still need to implement rest of colours
+
+    def infectCity(self, targetCity):
+        """ called by the game to infect a certain city. """
+        cityObj = self.cities[targetCity]
+        # get the color of the city, and see what will happen if it is infected
+        color = cityObj.colour
+        cityObj.
+
 
 class PlayerCard:
     """ Player City Card Definition """
