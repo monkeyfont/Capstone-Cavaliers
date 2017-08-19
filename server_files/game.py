@@ -499,11 +499,39 @@ class GameBoard:
         # etc etc still need to implement rest of colours
 
     def infectCity(self, targetCity):
-        """ called by the game to infect a certain city. """
+        """
+        Called by the game to infect a certain city.
+        If the city already has 3 cubes of that colour, an outbreak will occur.
+        NOTE: this function does NOT require a colour param. Cities can only be infected with a colour other than own
+        by outbreaks.
+        """
         cityObj = self.cities[targetCity]
         # get the color of the city, and see what will happen if it is infected
-        color = cityObj.colour
-        cityObj.
+        colour = cityObj.colour
+        amount = cityObj.getInfections(colour)
+        if amount == 3:
+            pass # an outbreak will occur
+        else:
+            cityObj.infect(colour)
+
+    def cityOutBreak(self, targetCity):
+        """
+        Intended to be called when the city has 3 infections on it.
+        It will spread its colour of infection cubes to neighbouring cities.
+        It will return a list of the cities infected, in order of infection.
+        If another outbreak occurs, it will recursively call this function again.
+        """
+        #TODO
+        cityObj = self.cities[targetCity]
+        # get the color of the city, and see what will happen if it is infected
+        colour = cityObj.colour
+        amount = cityObj.getInfections(colour)
+        if amount == 3:
+            pass # an outbreak will occur
+        else:
+            cityObj.infect(colour)
+
+
 
 
 class PlayerCard:
