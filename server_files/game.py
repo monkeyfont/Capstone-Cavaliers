@@ -414,7 +414,6 @@ class GameBoard:
             return False
 
 
-
     def buildResearchStation(self,playerId,cityCard):
         """ Discard the city card that matches the city you are in to place a research station there """
 
@@ -432,7 +431,6 @@ class GameBoard:
                 else:
                     return False
         return False
-
 
 
     def shareKnowledgeTake(self, playerId, targetPlayerId, targetCity):
@@ -510,29 +508,79 @@ class GameBoard:
         colour = cityObj.colour
         amount = cityObj.getInfections(colour)
         if amount == 3:
-            pass # an outbreak will occur
+            self.__cityOutBreak(self, cityObj, colour)
         else:
             cityObj.infect(colour)
 
-    def cityOutBreak(self, targetCity):
+
+
+    def __cityOutBreak(self, targetCityObj, colour):
         """
         Intended to be called when the city has 3 infections on it.
         It will spread its colour of infection cubes to neighbouring cities.
         It will return a list of the cities infected, in order of infection.
         If another outbreak occurs, it will recursively call this function again.
+
+        Any city in the outBreakChain cannot be called twice.
         """
-        #TODO
-        cityObj = self.cities[targetCity]
-        # get the color of the city, and see what will happen if it is infected
-        colour = cityObj.colour
-        amount = cityObj.getInfections(colour)
-        if amount == 3:
-            pass # an outbreak will occur
-        else:
-            cityObj.infect(colour)
+        # get surrounding city objects
+        # connectedCityStrings = targetCityObj.getConnections()
+        # cityObjs = []
+        # for cityStr in connectedCityStrings:
+        #     cityObjs.append(self.cities[cityStr])
+        #
+        # # infect each city Obj with the infection colour
+        # for cityStr in connectedCityStrings:
+        #     cityObj = self.cities[cityStr]
+        #     amount = cityObj.getInfections(colour)
+        #     if amount == 3:
+        #         pass
+        #     else:
+        #         cityObj.infect(colour)
+        #
+        # cityObj = self.cities[targetCity]
+        # # get the color of the city, and see what will happen if it is infected
+        # colour = cityObj.colour
+        # amount = cityObj.getInfections(colour)
+        # if amount == 3:
+        #     pass # an outbreak will occur, need to call this function with this city.
+        #
+        # else:
+        #     cityObj.infect
 
+        # WHILE LOOP VERSION
 
+        # list holds cities to infect up the top.
+        # list holds cities that have had an outbreak.
 
+        # the target city object is grabbed, and placed in the list.
+
+        # while loop gets each city to infect.
+        # for each city, check the number of cubes for that colour
+        # if there less than 3, infect that city with one cube.
+        # else if there is more than 3:
+            # if the city is not present in the list of cities that have had an outbreak:
+                # the neighbours for that city are grabbed and placed in the cities to infect list
+                # the current target city is removed from the list.
+                # add one to the outbreak counter
+            # else ignore
+
+        citiesToInfect = [targetCityObj]
+        cityOutBreaks = []
+        while len(citiesToInfect) > 0:
+            city = citiesToInfect.pop(0) # take the first city. (removes from list)
+            amount = city.getInfections(colour)
+            if amount < 3:
+                city.infect(colour, 1)
+            else:
+                # another outbreak has occured.
+                # need to infect all of its neighbours.
+                self.outBreakLevel += 1
+                if city not in cityOutBreaks: # can't outbreak the same city more than once.
+                    cityOutBreaks.append(city)
+                    # retrieve neighbouring city objects and append to citiesToInfect
+                    for cityStr in city.getConnections():
+                        citiesToInfect.append(self.cities[cityStr])
 
 class PlayerCard:
     """ Player City Card Definition """
