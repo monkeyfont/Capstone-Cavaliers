@@ -216,9 +216,9 @@ class City:
         elif colour == "black":
             self.black += amount
     
-    def cure(self, colour, amount):
+    def treat(self, colour, amount):
         """ 
-        Cures a colour by the amount specified. If the amount is too much, it clamps color to 0.
+        treats a disease of colour by the amount specified. If the amount is too much, it clamps color to 0.
         """
         if colour == "blue":
             self.blue -= amount if self.blue-amount > 0 else 0
@@ -495,6 +495,7 @@ class GameBoard:
             self.blueCure=1
 
         # etc etc still need to implement rest of colours
+
 
     def infectCity(self, targetCity):
         """
