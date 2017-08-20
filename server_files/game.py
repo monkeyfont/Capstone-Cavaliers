@@ -491,10 +491,20 @@ class GameBoard:
             if card.colour=="blue":
                 blueCount+=1
 
-        if blueCount >=5:
+        if blueCount >= 5:
             self.blueCure=1
 
         # etc etc still need to implement rest of colours
+
+    def treatDisease(self, targetCity, colour, amount=1):
+        """
+        Treats a certain coloured disease within a city. An amount is defaults to 1.
+        Retrieve the city object, and call its treat() function.
+
+        """
+        # TODO potentially need to see if a disease can actually be treated. What if it has 0 of that coloured cube?
+        cityObj = self.cities[targetCity]
+        cityObj.treat(colour, amount)
 
 
     def infectCity(self, targetCity):
@@ -512,7 +522,6 @@ class GameBoard:
             self.__cityOutBreak(self, cityObj, colour)
         else:
             cityObj.infect(colour)
-
 
 
     def __cityOutBreak(self, targetCityObj, colour):
