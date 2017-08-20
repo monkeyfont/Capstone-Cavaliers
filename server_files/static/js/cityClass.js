@@ -27,6 +27,7 @@ function city(options){
 	// }
 	
 	this.infect = function(options){
+		// {colour:"yellow"||"red"||"black"||"blue",infectionPath:[{x:200,y:200},{x:300,y:300}]}
 		console.log("infecting",this.id);
 		infectionColour = options.colour || this.colour;
 		if (infectionColour == 'blue'){
@@ -44,16 +45,27 @@ function city(options){
 		// console.log(infectionColour)
 		// console.log("length",this.infectionStatus[infectionColour].length)
 		// create a new infection with the city, it belongs to, x and y coresponding to the city its created in, and movex,movey that the infection belongs to
+		if (typeof options.infectionPath == 'undefined'){
+			infectionX = this.xPos
+			infectionY = this.yPos
+		}else{
+			infectionX = options.infectionPath[options.infectionPath.length-1].x
+			infectionY = options.infectionPath[options.infectionPath.length-1].y
+		}
+		
+		
 		this.infectionStatus[infectionColour].push(new infection({
 			id:this.id+" "+ infectionColour+" "+this.infectionStatus[infectionColour].length,
+			colour: options.colour || this.colour,
 			context: canvas.getContext("2d"),
 			width: 80,
 			height: 80,
-			xPos:this.xPos,
-			yPos:this.yPos,
+			xPos:infectionX,
+			yPos:infectionY,
 			xScale:0.5,
 			yScale:0.5,
-			image: infectionImage			
+			image: infectionImage,
+			infectionPath:options.infectionPath || []
 			// options.colour || this.colour
 		}));
 		
@@ -88,7 +100,7 @@ function city(options){
 			if (this.infectionStatus[i].length >0){
 				infectionSymbol = this.infectionStatus[i][0]
 				canvas.getContext("2d").font="30px Verdana";
-				canvas.getContext("2d").fillStyle = this.colour;
+				canvas.getContext("2d").fillStyle = this.infectionStatus[i][0].colour;
 				canvas.getContext("2d").fillText(this.infectionStatus[i].length,infectionSymbol.xPos+(infectionSymbol.width*infectionSymbol.xScale),infectionSymbol.yPos);
 				// console.log("length = ",this.infectionStatus[i].length)
 				// console.log("x = ",infectionSymbol.xPos)
