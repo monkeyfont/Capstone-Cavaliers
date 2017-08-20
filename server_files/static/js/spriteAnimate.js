@@ -80,9 +80,105 @@ function checkMove(city){
     };
 
 
+function directFlight(city) {
+
+    var city = prompt("Enter name of city in your hand you would like to move to");
+    socket.emit('checkDirectFlight', {cityName:city})
+
+}
+
+
+
+function charterFlight() {
+
+    var city = prompt("Enter name of city in your hand you would like to move to");
+    socket.emit('checkCharterFlight', {cityName:city})
+
+}
+
+
+function shuttleFlight() {
+
+    var city = prompt("Enter name of city with research station you would like to move to");
+    socket.emit('checkShuttleFlight', {cityName:city})
+
+}
+
+function buildResearch() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('buildResearchStation', {cityName:city})
+
+}
+
+
 socket.on('clicked', function (data) {
 
         console.log(data.msg);
+
+    });
+
+
+
+
+
+socket.on('researchBuildChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Research station can be built here")
+	}
+	else{
+	    console.log("Sorry research station cannot be built here");
+	}
+
+    });
+
+
+
+socket.on('shuttleFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+
+    });
+
+
+socket.on('charterFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+
+    });
+
+
+socket.on('directFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
 
     });
 
@@ -98,8 +194,6 @@ socket.on('checked', function (data) {
 	else{
 	    console.log("Sorry invalid move");
 	}
-
-
 
     });
 
@@ -179,7 +273,7 @@ function displayOutbreaks(outbreakCount){
 
 //function infect(infectionColour, cityToInfect, amount){
 function infecting(){
-	ATLANTA.infect({});
+	ATLANTA.infect({});moveInfection
 	for (i in locations){
 		console.log(locations[i])
 		locations[i].infect({})

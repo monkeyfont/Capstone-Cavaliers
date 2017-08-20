@@ -85,6 +85,48 @@ def handleclick(msg):
     emit('checked', {'msg':response,'city':cityToMove},room=room)
 
 
+@socketio.on('checkDirectFlight')
+def handleclick(msg):
+    room = "1"
+    cityToMove= msg["cityName"]
+    #response=game.directFlight(1,cityToMove)
+    #response will be either true or false
+    response = True
+
+    emit('directFlightChecked', {'msg':response,'city':cityToMove},room=room)
+
+
+@socketio.on('checkCharterFlight')
+def handleclick(msg):
+    room = "1"
+    cityToMove= msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('charterFlightChecked', {'msg':response,'city':cityToMove},room=room)
+
+@socketio.on('checkShuttleFlight')
+def handleclick(msg):
+    room = "1"
+    cityToMove= msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('shuttleFlightChecked', {'msg':response,'city':cityToMove},room=room)
+
+@socketio.on('buildResearchStation')
+def handleclick(msg):
+    room = "1"
+    cityToBuildOn= msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('researchBuildChecked', {'msg':response,'city':cityToBuildOn},room=room)
+
+
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
     print('received message: ' + str(msg))
