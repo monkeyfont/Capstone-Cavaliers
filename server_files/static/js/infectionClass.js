@@ -74,6 +74,7 @@ function infection(options) {
 		}
 	}
 	this.render = function () {
+		this.moveCity();
         // Draw the animation
 		// console.log("rendering infection")
 		//console.log("image render",this.image.src)
