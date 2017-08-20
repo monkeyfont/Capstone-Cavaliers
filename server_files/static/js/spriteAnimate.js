@@ -721,7 +721,9 @@ mapImage.addEventListener("load", gameLoop);
 
 
 moveInfection = function(){
-	
+	ATLANTA.infect({colour:'black',infectionPath:[{x:ATLANTA.xPos,y:ATLANTA.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
+	SANFRANCISCO.infect({colour:'black',infectionPath:[{x:SANFRANCISCO.xPos,y:SANFRANCISCO.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
+	ATLANTA.infect({colour:'black',infectionPath:[{x:ATLANTA.xPos,y:ATLANTA.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
 }
 	
 // coinImage.addEventListener("load", gameLoop);
