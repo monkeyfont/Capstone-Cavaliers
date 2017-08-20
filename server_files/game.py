@@ -1,4 +1,4 @@
-from random import shuffle
+from random import shuffle, randint
 
 # temp cities dictionary. {CITYNAME* : {"colour" : string, "connections"[string]}}
 
@@ -273,6 +273,7 @@ class GameBoard:
         self.outBreakLevel = 0
         self.infectionLevel = 0
         self.gameID = 0
+        self.difficulty = 0
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
@@ -344,8 +345,29 @@ class GameBoard:
 
 
     def __placeEpidemicCards(self):
-        """ """
-        pass
+        """
+        This should only be called after cards are dealt to players.
+        Function created and places epidemic card objects into the deck.
+        The amount added to the deck depends on difficulty of the game.
+        easy (0) - 4 epidemic cards, medium(1) - 5 epidemics, hard(2) - 6 epidemics.
+        The epidemics are randomly distributed into N "piles".
+        It gets the valid range for each epidemic, then randomly places them.
+        """
+        # create the epidemic card objects
+        amount = {0:4, 1:5, 2:6}
+        numEpidemics = amount[self.difficulty]
+        epidemics = []
+        for i in range(numEpidemics):
+            epidemics.append(EpidemicCard())
+        # how many cards are in each pile?
+        spread = int(len(self.playerDeck) / self.difficulty) # rounded down.
+        #TODO - this could potentially miss the last card in the deck. Add logic in to deal with this.
+        displaced = 0 # When adding a card in, the insert location will change by 1. Increase displaced by 1 for each epidemic added.
+        for i in range(numEpidemics):
+            location = randint(i*spread + displaced, (i+1)*spread + displaced)
+            self.playerDeck.insert(epidemics.pop(i), location)
+            displaced += 1
+
 
     def movePlayer(self, playerId, nextCityName):
         """
@@ -519,9 +541,10 @@ class GameBoard:
         colour = cityObj.colour
         amount = cityObj.getInfections(colour)
         if amount == 3:
-            self.__cityOutBreak(self, cityObj, colour)
+            self.__cityOutBreak(cityObj, colour)
         else:
             cityObj.infect(colour)
+
 
 
     def __cityOutBreak(self, targetCityObj, colour):
@@ -611,15 +634,13 @@ class PlayerCard:
 #         self.description = description
 #         self.type = "event"
 #
-# class EpidemicCard:
-#     """ Infection Card Definition """
-#     def __init__(self, id, name, country, colouru):
-#         self.id = id
-#         self.name = name
-#         self.country = country
-#         self.colour = colour
-#         self.type = "epidemic"
-#
+class EpidemicCard:
+    """ Infection Card Definition """
+    def __init__(self):
+        self.name = "epidemic"
+        self.type = "epidemic"
+
+
 class InfectionCard:
     """ Infection Card Definition """
     def __init__(self, name, colour, country):
