@@ -144,7 +144,7 @@ def room():
 
                 gameCalled.players[numberOfPlayers] = player
                 gameCalled.playerCount = gameCalled.playerCount + 1
-                join_room(room)
+                #join_room(room)
                 #emit('joined', {'msg' : "Player " + str(session["username"]) + " joined room " + str(room)}, room=room)
                # emit('putUserDetails',{'username':session["username"], 'userroom':str(room)})
         return (redirect(url_for('game')))
