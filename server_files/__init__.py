@@ -21,18 +21,67 @@ def home():
     # Quick session testing code.
     return render_template("home.html")
 
-
-
 @app.route('/game')
 def game():
     if 'username'and "roomname" and "roomtype" in session:
-        username = session['username']
-        roomname = session['roomname']
-        roomtype = session['roomtype']
-        return (render_template("MapOnCanvas.html"))
+        username = str(session['username'])
+        roomname = str(session['roomname'])
+        roomtype = str(session['roomtype'])
 
+        print('Logged in as ' + username )
+        print("Redirecting to the board game")
+        print("User requested to " + roomtype + " room named " + roomname+".")
+
+
+        #print ("Number of players: " + currentGameBoard)
+        if (roomtype == "create"):
+            print ("Created")
+            global playerID
+
+
+            player = username
+            gameobject = GameBoard()
+            gameobject.gameID = roomname
+
+            gamePlayer = Player(playerID,player)
+            gameobject.playerCount = 1
+            gameobject.players[gameobject.playerCount] = gamePlayer
+
+            games[roomname] = gameobject
+
+
+            #join_room(roomname)
+            #emit('created', {'msg' : ("Player " + str(player) + " created room " + room),'username':session["username"], 'userroom':str(room)}, room=room)
+
+            playerID = playerID + 1
+
+
+        else:
+            #get the gameboard called
+            gameCalled = games[roomname]
+            numberOfPlayers = gameCalled.playerCount
+            print ("Board game properties:\n")
+
+            if numberOfPlayers == 4:
+                print "Too many players"
+            else:
+                player = session["username"]
+                session["room"] = roomname
+                player = Player(playerID,player)
+                numberOfPlayers = gameCalled.playerCount + 1
+
+                gameCalled.players[numberOfPlayers] = player
+                gameCalled.playerCount = gameCalled.playerCount + 1
+                print ("Number of players in this board game: " + str(gameCalled.playerCount))
+                #join_room(roomname)
+                #emit('joined', {'msg' : "Player " + str(session["username"]) + " joined room " + str(room)}, room=room)
+               # emit('putUserDetails',{'username':session["username"], 'userroom':str(room)})
+        return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
+
+
+
 
 @socketio.on('join')
 def joined(msg):
@@ -93,7 +142,7 @@ def handle_message(msg):
 
 
 ##############      PAGES WORKING ON       #####################################
-
+'''
 @app.route('/room')
 def room():
     if 'username' in session:
@@ -122,7 +171,7 @@ def room():
 
             games[room] = gameobject
 
-            #join_room("1")
+            #join_room(room)
             #emit('created', {'msg' : ("Player " + str(player) + " created room " + room),'username':session["username"], 'userroom':str(room)}, room=room)
 
             room_ID = room_ID + 1
@@ -151,13 +200,15 @@ def room():
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
 
+'''
+
 @app.route('/lobby', methods = ['GET', 'POST'])
 def lobby():
     if request.method == 'POST':
             session['username'] = request.form['username']
             session['roomname'] = request.form['roomname']
             session['roomtype'] = request.form['roomtype']
-            return (redirect(url_for('room')))
+            return (redirect(url_for('game')))
     return (render_template("lobby.html"))
 
 
