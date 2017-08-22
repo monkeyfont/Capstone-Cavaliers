@@ -48,7 +48,7 @@ var socket;
 socket = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('connect', function () {
-        socket.emit('joinGame', {});
+        socket.emit('join');
 
     });
 
@@ -635,6 +635,6 @@ moveInfection = function(){
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();
-// console.log("pie");
+ console.log("pie");
 // };
 
