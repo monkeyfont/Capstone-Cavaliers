@@ -1,8 +1,8 @@
 var scrnWidth = window.innerWidth;//screen.width;
 var scrnHeight = window.innerHeight;//screen.height;
 console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
-var optimalScreenWidth = 1920;
-var optimalScreenHeight = 1080;
+var optimalScreenWidth = 2560; //1920
+var optimalScreenHeight = 1440; //1080;
 
 var screenHeightPercentage = scrnHeight/optimalScreenHeight;
 var screenWidthPercentage = scrnWidth/optimalScreenWidth;
@@ -291,7 +291,7 @@ coinImage.src = "static/images/coin-sprite-animation.png";
 var playerImage = new Image();
 playerImage.src = 'static/images/player6.png';
 var mapImage = new Image();
-mapImage.src = 'static/images/WorldMap.jpg';
+mapImage.src = 'static/images/backgroundMap.jpg'//'static/images/WorldMap.jpg';
 var cityImage = new Image();
 cityImage.src = "static/images/city token.png";
 
