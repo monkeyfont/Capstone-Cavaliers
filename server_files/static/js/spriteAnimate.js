@@ -89,7 +89,7 @@ socket.on('checked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            player.move(city.xPos,city.yPos);
+            // player.move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -129,7 +129,7 @@ socket.on('charterFlightChecked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            player.move(city.xPos,city.yPos);
+            // player.move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -147,10 +147,11 @@ function shuttleFlight() {
 socket.on('shuttleFlightChecked', function (data) {
         //alert(data.msg);
         check=data.msg;
+		console.log("data",data);
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            player.move(city.xPos,city.yPos);
+            // player.move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -248,40 +249,40 @@ socket.on('clicked', function (data) {
     });
 
 	
-$('.btn').on('click', function(changePlayer){
-	if (changePlayer.currentTarget.id == 'up-left'){
-		player.yStart=120;
-	}
-	if (changePlayer.currentTarget.id == 'up'){
-		player.yStart=160;
-	}
-	if (changePlayer.currentTarget.id == 'up-right'){
-		player.yStart=280;
-	}
-	if (changePlayer.currentTarget.id == 'left'){
-		player.yStart=80;
-	}
-	if (changePlayer.currentTarget.id == 'stop'){
+// $('.btn').on('click', function(changePlayer){
+	// if (changePlayer.currentTarget.id == 'up-left'){
+		// player.yStart=120;
+	// }
+	// if (changePlayer.currentTarget.id == 'up'){
+		// player.yStart=160;
+	// }
+	// if (changePlayer.currentTarget.id == 'up-right'){
+		// player.yStart=280;
+	// }
+	// if (changePlayer.currentTarget.id == 'left'){
+		// player.yStart=80;
+	// }
+	// if (changePlayer.currentTarget.id == 'stop'){
 		
-	}
-	if (changePlayer.currentTarget.id == 'right'){
-		player.yStart=240;
-	}
-	if (changePlayer.currentTarget.id == 'down-left'){
-		player.yStart=40;
-	}
-	if (changePlayer.currentTarget.id == 'down'){
-		player.yStart=0;
-	}
-	if (changePlayer.currentTarget.id == 'down-right'){
-		player.yStart=200;
-	}
+	// }
+	// if (changePlayer.currentTarget.id == 'right'){
+		// player.yStart=240;
+	// }
+	// if (changePlayer.currentTarget.id == 'down-left'){
+		// player.yStart=40;
+	// }
+	// if (changePlayer.currentTarget.id == 'down'){
+		// player.yStart=0;
+	// }
+	// if (changePlayer.currentTarget.id == 'down-right'){
+		// player.yStart=200;
+	// }
 	
 	
 	
 	// alert("Button clicked with value: "+changePlayer.currentTarget.id);
 		
-	});		
+	// });		
 	
 
 	
@@ -534,8 +535,9 @@ function gameLoop(){
 	// coin2.render();
 	// coin3.update();
 	// coin3.render();
-	player.update();
-	player.render();
+	// player.update();
+	// player.render();
+	players.render();
 	deck.render();
 	card.render();
 	for (var i in cardList){
@@ -620,19 +622,19 @@ function gameLoop(){
     // image: coinImage	
 	// });	
 	
-var player = new player({
-	id:"player",
-	context: canvas.getContext("2d"),
-    width: 32,
-    height: 40,
-	numberOfFrames: 4,
-	ticksPerFrame: 16,
-	xPos:ATLANTA.xPos,
-	yPos:ATLANTA.yPos,
-	xScale:2,
-	yScale:2,
-    image: playerImage	
-})
+// var player = new player({
+	// id:"player",
+	// context: canvas.getContext("2d"),
+    // width: 32,
+    // height: 40,
+	// numberOfFrames: 4,
+	// ticksPerFrame: 16,
+	// xPos:ATLANTA.xPos,
+	// yPos:ATLANTA.yPos,
+	// xScale:2,
+	// yScale:2,
+    // image: playerImage	
+// })
 
 var CardImage = new Image();
 CardImage.src = 'static/images/infection-Cards.png';
@@ -762,9 +764,13 @@ function flippable(options) {
 outbreakCount = new outbreakCounter({})
 infectRate = new infectionRate({})
 
+players = new playerInitilization();
+players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 
-// coin,coin2,coin3,
-spriteList = [player,card,deck];
+
+
+// coin,coin2,coin3,player,
+spriteList = [card,deck];
 	
 mapImage.addEventListener("load", gameLoop);
 
