@@ -72,21 +72,14 @@ socket.on('joined', function (data) {
 
     };
 
+
+
+//-------------------------PLAYER ACTIONS WEB SOCKET FUNCTIONS----------------
+
+//CHECK MOVE TO NEIGHBOURING CITY
 function checkMove(city){
-
-
     socket.emit('checkMove', {cityName:city})
-
     };
-
-
-socket.on('clicked', function (data) {
-
-        console.log(data.msg);
-
-    });
-
-
 socket.on('checked', function (data) {
         //alert(data.msg);
         check=data.msg;
@@ -98,11 +91,158 @@ socket.on('checked', function (data) {
 	else{
 	    console.log("Sorry invalid move");
 	}
+});
+
+function directFlight(city) {
+
+    var city = prompt("Enter name of city in your hand you would like to move to");
+    socket.emit('checkDirectFlight', {cityName:city})
+}
+socket.on('directFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+});
 
 
+
+function charterFlight() {
+
+    var cityCard = prompt("Enter name of card you would like to use");
+    var citytoMoveTo = prompt("Enter name of city you would like to move to");
+    socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
+
+}
+socket.on('charterFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+ });
+
+
+function shuttleFlight() {
+
+    var city = prompt("Enter name of city with research station you would like to move to");
+    socket.emit('checkShuttleFlight', {cityName:city})
+
+}
+
+socket.on('shuttleFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+});
+
+function buildResearch() {
+    var city = prompt("Enter current city Name: ");
+    socket.emit('buildResearchStation', {cityName:city})
+
+}
+
+socket.on('researchBuildChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Research station can be built here")
+	}
+	else{
+	    console.log("Sorry research station cannot be built here");
+	}
+});
+
+function shareKnowledge() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('shareKnowledge', {cityName:city})
+
+}
+
+socket.on('knowledgeShared', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Cards have been swapped")
+	}
+	else{
+	    console.log("Sorry cannot share this card to the other player");
+	}
 
     });
 
+function treatDisease() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('treatDisease', {cityName:city})
+
+}
+
+socket.on('diseaseTreated', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Disease treated")
+	}
+	else{
+	    console.log("Sorry cannot treat this disease");
+	}
+
+    });
+
+
+function discoverCure() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('discoverCure', {cityName:city})
+
+}
+
+socket.on('cureDiscovered', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Cure has been discovered")
+	}
+	else{
+	    console.log("Sorry cure was not discovered");
+	}
+
+    });
+
+
+socket.on('clicked', function (data) {
+
+        console.log(data.msg);
+
+    });
 
 	
 $('.btn').on('click', function(changePlayer){
@@ -179,7 +319,7 @@ function displayOutbreaks(outbreakCount){
 
 //function infect(infectionColour, cityToInfect, amount){
 function infecting(){
-	ATLANTA.infect({});
+	ATLANTA.infect({});moveInfection
 	for (i in locations){
 		console.log(locations[i])
 		locations[i].infect({})
@@ -635,6 +775,6 @@ moveInfection = function(){
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();
- console.log("pie");
+// console.log("pie");
 // };
 

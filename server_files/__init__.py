@@ -24,56 +24,162 @@ def game():
         username = str(session['username'])
         roomname = str(session['roomname'])
         roomtype = str(session['roomtype'])
-        print('Logged in as ' + username )
-        print("Redirecting to the board game")
-        print("User requested to " + roomtype + " room named " + roomname+".")
+        # We need to check if the user is joining or creating a game
         if (roomtype == "create"):
-            print ("Created")
             global playerID
-            player = username
+            # Create the user
+            playerObject = Player(playerID,username)
+            # Create the gameboard
             gameobject = GameBoard()
             gameobject.gameID = roomname
-            gamePlayer = Player(playerID,player)
             gameobject.playerCount = 1
-            gameobject.players[gameobject.playerCount] = gamePlayer
+            session["playerid"] = gameobject.playerCount
+            gameobject.players[gameobject.playerCount] = playerObject
             games[roomname] = gameobject
             playerID = playerID + 1
         else:
-            #get the gameboard called
-            gameCalled = games[roomname]
-            numberOfPlayers = gameCalled.playerCount
-            print ("Board game properties:\n")
-
+            #get the gameboard onject requested
+            gameobject = games[roomname]
+            numberOfPlayers = gameobject.playerCount
+            # if the gameboard we are requesting has 4 players already, then we can't join that game
             if numberOfPlayers == 4:
                 print "Too many players"
             else:
-                player = session["username"]
-                session["room"] = roomname
-                player = Player(playerID,player)
-                numberOfPlayers = gameCalled.playerCount + 1
-
-                gameCalled.players[numberOfPlayers] = player
-                gameCalled.playerCount = gameCalled.playerCount + 1
-                print ("Number of players in this board game: " + str(gameCalled.playerCount))
+                # Create a user object and change its properties
+                playerObject = Player(playerID,username)
+                # Add the user to the gameboard
+                gameobject.playerCount = gameobject.playerCount + 1
+                numberOfPlayers = gameobject.playerCount
+                gameobject.players[numberOfPlayers] = playerObject
+                print ("Number of players in this board game: " + str(gameobject.playerCount))
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
+
 @socketio.on('join')
 def joined():
-    #room = "1" # room = session.get('room')
     player = session["username"]
     room = session["roomname"]
     print ("Player name: " + player)
     print ("Player room name: " + room)
     join_room(room)
     emit('joined', {'msg': str(player) + " joined room " + str(room)}, room=room)
+
 @socketio.on('move')
 def handleMessage(msg):
-    #room = "1"
     player = session["username"]
     room = session["roomname"]
     location = msg["move_location"]
-    emit('moved', {'msg' : str(player) + " moved to " + str(location)}, room=room)
+    emit('moved', {'msg' : str(player) + " moved to " + location}, room=room)
+
+@socketio.on('click')
+def handleclick(msg):
+    room = str(session['roomname'])
+    player = session["username"]
+    messg= msg["mess"]
+    print(messg)
+
+    emit('clicked', {'msg' : player + messg },room=room)
+
+@socketio.on('checkMove')
+def handleclick(msg):
+    #"Check move called"
+    room = str(session['roomname'])
+    username = str(session["username"])
+    cityToMove= msg["cityName"]
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            #Player found."
+            response=gameObject.movePlayer(playerObject.id,cityToMove)
+    #response will be either true or false
+    emit('checked', {'msg':response,'city':cityToMove},room=room)
+
+
+@socketio.on('checkDirectFlight')
+def handleclick(msg):
+    room = str(session['roomname'])
+    cityToMove= msg["cityName"]
+    #response=game.directFlight(1,cityToMove)
+    #response will be either true or false
+    response = True
+
+    emit('directFlightChecked', {'msg':response,'city':cityToMove},room=room)
+
+
+@socketio.on('checkCharterFlight')
+def handleclick(msg):
+    room = str(session['roomname'])
+
+    cityCardName=msg["cityName"]
+    cityToMove= msg["destination"]
+    print("Player wants to discard card '",cityCardName,"' and wants to move to '",cityToMove,"' ")
+    # IF USERS CURRENT CITY IS SAME AS THIS CITYTOMOVE TO VALUE THEN THEY CAN MOVE ANYWHERE
+    #response=game.charterFlight(1,cityCardName,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('charterFlightChecked', {'msg':response,'city':cityToMove},room=room)
+
+@socketio.on('checkShuttleFlight')
+def handleclick(msg):
+    room = str(session['roomname'])
+    cityToMove= msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('shuttleFlightChecked', {'msg':response,'city':cityToMove},room=room)
+
+@socketio.on('buildResearchStation')
+def handleclick(msg):
+    room = str(session['roomname'])
+    cityToBuildOn= msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('researchBuildChecked', {'msg':response,'city':cityToBuildOn},room=room)
+
+@socketio.on('shareKnowledge')
+def handleclick(msg):
+    room = str(session['roomname'])
+    playerCity= msg["cityName"]
+    secondPlayerCity = msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('knowledgeShared', {'msg':response,'city':playerCity},room=room)
+
+
+@socketio.on('treatDisease')
+def handleclick(msg):
+    room = str(session['roomname'])
+    playerCity= msg["cityName"]
+    secondPlayerCity = msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('diseaseTreated', {'msg':response,'city':playerCity},room=room)
+
+
+@socketio.on('discoverCure')
+def handleclick(msg):
+    room = str(session['roomname'])
+    playerCity= msg["cityName"]
+    secondPlayerCity = msg["cityName"]
+    #response=game.charterFlight(1,cityToMove)
+    response=True
+    #response will be either true or false
+
+    emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
+
+
+
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
     print('received message: ' + str(msg))
@@ -87,6 +193,7 @@ def lobby():
             session['roomtype'] = request.form['roomtype']
             return (redirect(url_for('game')))
     return (render_template("lobby.html"))
+
 @socketio.on('/joinroom')
 def handleMessage(msg):
     user = session["username"]
