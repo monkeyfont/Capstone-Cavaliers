@@ -396,40 +396,34 @@ class GameBoard:
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             return True
         else:
-            print("PlayerID " + str(playerId) + " FAILED to move to move from  "+currentCityName+" to " + nextCityName)
+            print("PlayerID " + str(playerId) + " FAILED to move to move from  " + currentCityName + " to " + nextCityName)
             return False
 
 
     def directFlight(self,playerId,nextCityName):
         """ Discard a city card to move to the city named on the card """
-
-        playerhand = self.players[playerId].hand
-        currentlocation=self.players[playerId].location
-        for card in playerhand:
-
-            if(card.name==nextCityName): #check that the card is in their hand if so set location
-                self.players[playerId].location = nextCityName
-                playerhand.remove(card)
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        currentLocation = playerObj.location
+        for card in playerHand:
+            if(card.name == nextCityName): #check that the card is in their hand if so set location
+                playerObj.location = nextCityName
+                playerHand.remove(card)
                 self.playerDiscarded.append(card)
-
-                print "player has successfuly moved from", currentlocation," to", self.players[playerId].location
                 return True
-
         return False
-
 
 
     def charterFlight(self,playerId,curCityCard,destinationCity):
         """ Discard the city card that matches the city you are in to move to any city """
-
-        playerhand = self.players[playerId].hand
-        currentLocation = self.players[playerId].location
-
-        for card in playerhand:
-            if(card.name==curCityCard and currentLocation==curCityCard):
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        currentLocation = playerObj.location
+        for card in playerHand:
+            if(card.name == curCityCard and currentLocation == curCityCard):
                 #if the city card is where you are, set cur city to the destination
-                self.players[playerId].location = destinationCity
-                playerhand.remove(card)
+                playerObj.location = destinationCity
+                playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 return True
             else:
@@ -438,29 +432,29 @@ class GameBoard:
 
     def shuttleFlight(self,playerId,destinationCity):
         """ Move from a city with a research station to any other city that has a research station """
-        currentCityName = self.players[playerId].location
+        playerObj = self.players[playerId]
+        currentCityName = playerObj.location
         curCityObj = self.cities[currentCityName]
         destCityObj = self.cities[destinationCity]
         if (curCityObj.getResearchStation()==1 and destCityObj.getResearchStation()==1):
             self.players[playerId].location = destinationCity
             return True
-
         else:
             return False
 
 
-    def buildResearchStation(self,playerId,cityCard):
+    def buildResearchStation(self, playerId, cityCardName):
         """ Discard the city card that matches the city you are in to place a research station there """
-
-        playerhand = self.players[playerId].hand
-        currentLocation = self.players[playerId].location
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        currentLocation = playerObj.location
         curCityObj = self.cities[currentLocation]
-        for card in playerhand:
-            if card.name==cityCard:
-                if cityCard == currentLocation and curCityObj.getResearchStation==0 :
+        for card in playerHand:
+            if card.name == cityCardName:
+                if cityCardName == currentLocation and curCityObj.getResearchStation == 0 :
                     # if the city card is where you are then create research station
                     curCityObj.addResearchStation()
-                    playerhand.remove(card)
+                    playerHand.remove(card)
                     self.playerDiscarded.append(card)
                     return True
                 else:
@@ -474,12 +468,12 @@ class GameBoard:
 
         playerId takes the city card from targetPlayerId if they have the card, and both players are in the same city.
         """
-        player = self.players[playerId]
+        playerObj = self.players[playerId]
         targetPlayer = self.players[targetPlayerId]
-        playerHand = player.hand
+        playerHand = playerObj.hand
         targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
-        if player.location != targetPlayer.location:
+        if playerObj.location != targetPlayer.location:
             return False
         # If targetPlayer has that city card, move it to players hand.
         for card in targetPlayerHand:
@@ -498,12 +492,12 @@ class GameBoard:
 
         if has the city card, playerId gives the city card to targetPlayerId. Both players must be in the same city.
         """
-        player = self.players[playerId]
+        playerObj = self.players[playerId]
         targetPlayer = self.players[targetPlayerId]
-        playerHand = player.hand
+        playerHand = playerObj.hand
         targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
-        if player.location != targetPlayer.location:
+        if playerObj.location != targetPlayer.location:
             return False
         # If player has that city card, move it to players hand.
         for card in playerHand:
@@ -547,24 +541,29 @@ class GameBoard:
             else:
                 if cityObj.colour != colour:
                     return
-        # all cards are of the same colour, so remove them from the user's hand.
+        # we now know all cards are of the same colour, so remove them from the user's hand.
         playerObj = self.players[playerId]
         for cityObj in cityObjs:
             playerObj.hand.remove(cityObj)
         # add that colour cure to the game board
         self.cures[colour] = 1
+        return True
 
 
-    def treatDisease(self, targetCity, colour, amount=1):
+    def treatDisease(self, playerId, targetCity, colour, amount = 1):
         """
         Treats a certain coloured disease within a city. An amount is defaults to 1.
         Retrieve the city object, and call its treat() function.
 
         """
-        # TODO potentially need to see if a disease can actually be treated. What if it has 0 of that coloured cube?
+        # TODO potentially need to see if a disease can actually be treated.
+        # Get player object
+        playerObj = self.players[playerId]
         # Retrieve cities colour
         cityObj = self.cities[targetCity]
         cityObj.treat(colour, amount)
+        # TODO need to implement logic that checks if the disease is cured.
+        return True
 
 
     def infectCity(self, targetCity):
