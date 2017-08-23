@@ -255,6 +255,7 @@ class GameBoard:
         self.outBreakLevel = 0
         self.infectionLevel = 0
         self.gameID = 0
+        self.visibility = "private"
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!

@@ -9,7 +9,10 @@
     <form action = "/lobby" method = "post">
         <h3>Create New Room</h3>
         <input  placeholder="ROOM NAME" name = "roomname">
-        <input type = "text"  placeholder= "YOUR NAME" name = "username" >
+        <input type = "text"  placeholder= "YOUR NAME" name = "username" ><br>
+        Room privacy<br>
+        <input type="radio" name="privacy" value="private" checked>Private<br>
+        <input type="radio" name="privacy" value="public"> Public<br>
         <input type="hidden" name="roomtype" value="create">
         <input type= "submit" value= "Create New Room">
     </form>
@@ -20,7 +23,9 @@
             <input type="hidden" name="roomtype" value="join">
             <input  type="submit" value= "Join" >
     </form>
+        <h2>Public Rooms</h2>
+        <textarea id="roomlog"></textarea>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-  <!--<script type="text/javascript" src="{{ url_for('static', filename='js/spriteAnimate.js') }}"></script>-->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
 </html>

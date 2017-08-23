@@ -24,6 +24,7 @@ def game():
         username = str(session['username'])
         roomname = str(session['roomname'])
         roomtype = str(session['roomtype'])
+        roomprivacy = str(session['roomprivacy'])
         # We need to check if the user is joining or creating a game
         if (roomtype == "create"):
             global playerID
@@ -33,6 +34,8 @@ def game():
             gameobject = GameBoard()
             gameobject.gameID = roomname
             gameobject.playerCount = 1
+            gameobject.visibility = roomprivacy
+            print (gameobject.visibility + " room created")
             session["playerid"] = gameobject.playerCount
             gameobject.players[gameobject.playerCount] = playerObject
             games[roomname] = gameobject
@@ -55,6 +58,22 @@ def game():
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
+
+
+@socketio.on('checkroomprivacy')
+def roomprivacy():
+    print ("Check room called")
+    #"Check move called"
+    join_room("1")
+    publicRooms = []
+    for gameobjectkey in games:
+        gameobject = games[gameobjectkey]
+        if gameobject.visibility == "public":
+            print("public room found with id " +gameobject.gameID )
+
+            publicRooms.append(gameobject.gameID)
+    print (publicRooms)
+    emit('publicRooms', {'rooms': publicRooms}, room="1")
 
 @socketio.on('join')
 def joined():
@@ -341,11 +360,15 @@ def handle_message(msg):
 
 @app.route('/lobby', methods = ['GET', 'POST'])
 def lobby():
+    session["username"] = (random.randint(0,100000000))
+
     if request.method == 'POST':
             session['username'] = request.form['username']
             session['roomname'] = request.form['roomname']
             session['roomtype'] = request.form['roomtype']
+            session['roomprivacy'] = request.form['privacy']
             return (redirect(url_for('game')))
+
     return (render_template("lobby.html"))
 
 @socketio.on('/joinroom')
