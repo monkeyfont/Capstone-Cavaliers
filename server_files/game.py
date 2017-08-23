@@ -410,6 +410,8 @@ class GameBoard:
                 playerObj.location = nextCityName
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                playerObj.actions -= 1
+                print("player has successfully moved from" + currentLocation + " to " + playerObj.location)
                 return True
         return False
 
@@ -425,6 +427,8 @@ class GameBoard:
                 playerObj.location = destinationCity
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                playerObj.actions -= 1
+                print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
                 return True
             else:
                 return False
@@ -438,6 +442,8 @@ class GameBoard:
         destCityObj = self.cities[destinationCity]
         if (curCityObj.getResearchStation()==1 and destCityObj.getResearchStation()==1):
             self.players[playerId].location = destinationCity
+            playerObj.actions -= 1
+            print('player ' + str(playerId) + ' has successfully shuttleFlight\'d from ' + currentCityName + ' to ' + destinationCity)
             return True
         else:
             return False
@@ -456,6 +462,8 @@ class GameBoard:
                     curCityObj.addResearchStation()
                     playerHand.remove(card)
                     self.playerDiscarded.append(card)
+                    playerObj.actions -= 1
+                    print('player ' + str(playerId) + ' has successfully built a research station at ' + currentLocation)
                     return True
                 else:
                     return False
@@ -480,6 +488,8 @@ class GameBoard:
             if card.name == targetCity:
                 targetPlayerHand.remove(card)
                 playerHand.append(card)
+                playerObj.actions -= 1
+                print('player ' + str(playerId) + ' used shareKnowledge (take) with ' + str(targetPlayerId) + ' for city ' + targetCity)
                 return True
         #fall through
         return False
@@ -504,6 +514,8 @@ class GameBoard:
             if card.name == targetCity:
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
+                playerObj.actions -= 1
+                print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
                 return True
         #fall through
         return False
@@ -547,6 +559,8 @@ class GameBoard:
             playerObj.hand.remove(cityObj)
         # add that colour cure to the game board
         self.cures[colour] = 1
+        print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
+        playerObj.actions -= 1
         return True
 
 
@@ -562,6 +576,8 @@ class GameBoard:
         # Retrieve cities colour
         cityObj = self.cities[targetCity]
         cityObj.treat(colour, amount)
+        playerObj.actions -= 1
+        print('player ' + playerId + ' successfully treated colour ' + colour + ' for ' + cityObj.name)
         # TODO need to implement logic that checks if the disease is cured.
         return True
 
@@ -580,6 +596,7 @@ class GameBoard:
         if amount == 3:
             self.__cityOutBreak(cityObj, colour)
         else:
+            print (targetCity + " has been infected.")
             cityObj.infect(colour)
 
 
@@ -593,6 +610,7 @@ class GameBoard:
 
         Any city in the outBreakChain cannot be called twice.
         """
+        print (" AN OUTBREAK HAS OCCURED AT " + targetCityObj.name)
         citiesToInfect = [targetCityObj]
         cityOutBreaks = []
         while len(citiesToInfect) > 0:
