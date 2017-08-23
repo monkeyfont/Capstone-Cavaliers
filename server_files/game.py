@@ -261,19 +261,16 @@ class GameBoard:
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.playerCount = 0
-        self.players = {1:Player(1), 2:Player(2),3:Player(3), 4:Player(4)}
-        self.blueUsed = 0 # disease cubes used
+        self.players = {1:Player(1), 2:Player(2), 3:Player(3), 4:Player(4)}
+        self.blueUsed = 0 # total disease cubes used?
         self.redUsed = 0
         self.yellowUsed = 0
         self.blackUsed = 0
-        self.yellowCure = 0
-        self.redCure = 0 # 0 = undiscovered, 1 = cured, 2 = eradicated
-        self.blueCure = 0
-        self.blackCure = 0
+        self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
         self.infectionLevel = 0
         self.gameID = 0
-        self.difficulty = 0
+        self.difficulty = 0 #easy 0, medium 1, hard 2.
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
@@ -503,20 +500,44 @@ class GameBoard:
         #TODO - not sure if 'permission' logic should be added here, or elsewhere.
 
 
-    def discoverCure(self,playerId):
+
+    def __isPlayerAtResearchStation(self, playerId):
+        # Check the user is currently at a research station.
+        playerObj = self.players[playerId]
+        playerCityObj = self.cities[playerObj.location]
+        if playerCityObj.researchStation == 1:
+            return True
+        else:
+            return False
+
+    def discoverCure(self,playerId,cities):
         """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
+        # TODO this code should probably be refactored.
+        # Check player is at a research station
+        if self.__isPlayerAtResearchStation(playerId) is False:
+            return
+        # Check there is 5 city cards.
+        if len(cities) != 5:
+            return
+        # retrieve city objects from strings.
+        cityObjs = []
+        colour = ""
+        for cityStr in cities:
+            cityObj = self.cities[cityStr]
+            cityObjs.append(cityObj)
+        # make sure all cards are cities of the same colour.
+            if colour == "": # retrieve colour
+                colour = cityObj.colour
+            else:
+                if cityObj.colour != colour:
+                    return
+        # all cards are of the same colour, so remove them from the user's hand.
+        playerObj = self.players[playerId]
+        for cityObj in cityObjs:
+            playerObj.hand.remove(cityObj)
+        # add that colour cure to the game board
+        self.cures[colour] = 1
 
-        #not sure about this one so didnt do it all yet
-        playerhand = self.players[playerId].hand
-        blueCount=0
-        for card in playerhand:
-            if card.colour=="blue":
-                blueCount+=1
-
-        if blueCount >= 5:
-            self.blueCure=1
-
-        # etc etc still need to implement rest of colours
 
     def treatDisease(self, targetCity, colour, amount=1):
         """
@@ -525,6 +546,7 @@ class GameBoard:
 
         """
         # TODO potentially need to see if a disease can actually be treated. What if it has 0 of that coloured cube?
+        # Retrieve cities colour
         cityObj = self.cities[targetCity]
         cityObj.treat(colour, amount)
 
