@@ -238,11 +238,8 @@ class Player:
         self.hand = []
         self.location = "ATLANTA"
         self.host = 0
+        self.actions = 4 # actions remaining for the turn.
 
-    def setLocation(self, location):
-        self.location = location
-    def getLocation(self):
-        return self.location
     def getid(self):
         return self.id
     def setid(self,id):
@@ -274,7 +271,7 @@ class GameBoard:
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
-        self.players[1].setLocation("ATLANTA")
+        self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].addResearchStation()
         self.__infectCitiesStage()
         self.__distributeHand()
@@ -366,6 +363,25 @@ class GameBoard:
             displaced += 1
 
 
+    def resetPlayerActions(self):
+        """
+        Resets all player object actions to 4.
+        """
+        for k in self.players:
+            self.players[k].actions = 4
+        return True
+
+
+    def totalPlayerActions(self):
+        """
+        Returns the total of all player actions remaining.
+        """
+        total = 0
+        for k in self.players:
+            total += self.players[k].actions
+        return total
+
+
     def movePlayer(self, playerId, nextCityName):
         """
         card desc: Move to a connected city
@@ -373,10 +389,10 @@ class GameBoard:
         This sets the player object to that city, and the city object to know that the player is there.
         Returns: True if successful, False if unsuccessful.
         """
-        currentCityName = self.players[playerId].getLocation()
+        currentCityName = self.players[playerId].location
         cityObj = self.cities[currentCityName]
         if nextCityName in cityObj.getConnections():
-            self.players[playerId].setLocation(nextCityName)
+            self.players[playerId].location = nextCityName
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             return True
         else:
@@ -388,15 +404,15 @@ class GameBoard:
         """ Discard a city card to move to the city named on the card """
 
         playerhand = self.players[playerId].hand
-        currentlocation=self.players[playerId].getLocation()
+        currentlocation=self.players[playerId].location
         for card in playerhand:
 
             if(card.name==nextCityName): #check that the card is in their hand if so set location
-                self.players[playerId].setLocation(nextCityName)
+                self.players[playerId].location = nextCityName
                 playerhand.remove(card)
                 self.playerDiscarded.append(card)
 
-                print "player has successfuly moved from", currentlocation," to", self.players[playerId].getLocation()
+                print "player has successfuly moved from", currentlocation," to", self.players[playerId].location
                 return True
 
         return False
@@ -407,12 +423,12 @@ class GameBoard:
         """ Discard the city card that matches the city you are in to move to any city """
 
         playerhand = self.players[playerId].hand
-        currentLocation = self.players[playerId].getLocation()
+        currentLocation = self.players[playerId].location
 
         for card in playerhand:
             if(card.name==curCityCard and currentLocation==curCityCard):
                 #if the city card is where you are, set cur city to the destination
-                self.players[playerId].setLocation(destinationCity)
+                self.players[playerId].location = destinationCity
                 playerhand.remove(card)
                 self.playerDiscarded.append(card)
                 return True
@@ -422,11 +438,11 @@ class GameBoard:
 
     def shuttleFlight(self,playerId,destinationCity):
         """ Move from a city with a research station to any other city that has a research station """
-        currentCityName = self.players[playerId].getLocation()
+        currentCityName = self.players[playerId].location
         curCityObj = self.cities[currentCityName]
         destCityObj = self.cities[destinationCity]
         if (curCityObj.getResearchStation()==1 and destCityObj.getResearchStation()==1):
-            self.players[playerId].setLocation(destinationCity)
+            self.players[playerId].location = destinationCity
             return True
 
         else:
@@ -437,7 +453,7 @@ class GameBoard:
         """ Discard the city card that matches the city you are in to place a research station there """
 
         playerhand = self.players[playerId].hand
-        currentLocation = self.players[playerId].getLocation()
+        currentLocation = self.players[playerId].location
         curCityObj = self.cities[currentLocation]
         for card in playerhand:
             if card.name==cityCard:
@@ -463,7 +479,7 @@ class GameBoard:
         playerHand = player.hand
         targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
-        if player.getLocation() != targetPlayer.getLocation():
+        if player.location != targetPlayer.location:
             return False
         # If targetPlayer has that city card, move it to players hand.
         for card in targetPlayerHand:
@@ -487,7 +503,7 @@ class GameBoard:
         playerHand = player.hand
         targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
-        if player.getLocation() != targetPlayer.getLocation():
+        if player.location != targetPlayer.location:
             return False
         # If player has that city card, move it to players hand.
         for card in playerHand:
