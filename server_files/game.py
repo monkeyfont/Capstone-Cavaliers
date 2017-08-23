@@ -578,48 +578,6 @@ class GameBoard:
 
         Any city in the outBreakChain cannot be called twice.
         """
-        # get surrounding city objects
-        # connectedCityStrings = targetCityObj.getConnections()
-        # cityObjs = []
-        # for cityStr in connectedCityStrings:
-        #     cityObjs.append(self.cities[cityStr])
-        #
-        # # infect each city Obj with the infection colour
-        # for cityStr in connectedCityStrings:
-        #     cityObj = self.cities[cityStr]
-        #     amount = cityObj.getInfections(colour)
-        #     if amount == 3:
-        #         pass
-        #     else:
-        #         cityObj.infect(colour)
-        #
-        # cityObj = self.cities[targetCity]
-        # # get the color of the city, and see what will happen if it is infected
-        # colour = cityObj.colour
-        # amount = cityObj.getInfections(colour)
-        # if amount == 3:
-        #     pass # an outbreak will occur, need to call this function with this city.
-        #
-        # else:
-        #     cityObj.infect
-
-        # WHILE LOOP VERSION
-
-        # list holds cities to infect up the top.
-        # list holds cities that have had an outbreak.
-
-        # the target city object is grabbed, and placed in the list.
-
-        # while loop gets each city to infect.
-        # for each city, check the number of cubes for that colour
-        # if there less than 3, infect that city with one cube.
-        # else if there is more than 3:
-            # if the city is not present in the list of cities that have had an outbreak:
-                # the neighbours for that city are grabbed and placed in the cities to infect list
-                # the current target city is removed from the list.
-                # add one to the outbreak counter
-            # else ignore
-
         citiesToInfect = [targetCityObj]
         cityOutBreaks = []
         while len(citiesToInfect) > 0:
