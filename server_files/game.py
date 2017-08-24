@@ -303,7 +303,7 @@ class GameBoard:
         """ """
         # determine the number of cards to deal
         # 2 players - 4 cards, 3 - 3, 4 - 2
-        cardsPerPlayer = {2:4, 3:3, 4:2}
+        cardsPerPlayer = {1:6, 2:4, 3:3, 4:2}
         nPlayers = len(self.players)
         nCardsToDeal = cardsPerPlayer[nPlayers]
         shuffle(self.playerDeck)
