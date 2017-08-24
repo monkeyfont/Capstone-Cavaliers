@@ -89,7 +89,10 @@ socket.on('checked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            // player.move(city.xPos,city.yPos);
+			console.log('moving',data.playerName)
+			// console.log('player k',players.players.k)
+			// console.log(players)
+			players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -783,7 +786,9 @@ moveInfection = function(){
 
 
 socket.on('playerJoined',function(data){
-	console.log("you've joined the room",data);
+	console.log('data is: ',data )
+	console.log("you've joined the room",data.playerName);
+	players.addPlayer({playerName:data['playerName'],playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
 
 
