@@ -301,13 +301,18 @@ class GameBoard:
 
     def __distributeHand(self):
         """ """
+        # determine the number of cards to deal
+        # 2 players - 4 cards, 3 - 3, 4 - 2
+        cardsPerPlayer = {2:4, 3:3, 4:2}
+        nPlayers = len(self.players)
+        nCardsToDeal = cardsPerPlayer[nPlayers]
         shuffle(self.playerDeck)
         for id in self.players:
-            playerhand = self.players[id].hand
-            for i in range(3):
-                playerhand.append(self.playerDeck[0])
+            playerHand = self.players[id].hand
+            for i in range(nCardsToDeal):
+                playerHand.append(self.playerDeck[0])
                 self.playerDeck.remove(self.playerDeck[0])
-                print("Player id is ", id, " cards are ", playerhand[i].name)
+                print("Player id is " + str(id) + " cards are ", playerHand[i].name)
 
 
     def __infectCitiesStage(self):
