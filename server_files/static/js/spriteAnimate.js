@@ -781,6 +781,14 @@ moveInfection = function(){
 	ATLANTA.infect({colour:'black',infectionPath:[{x:ATLANTA.xPos,y:ATLANTA.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
 }
 
+
+socket.on('playerJoined',function(data){
+	console.log("you've joined the room",data);
+});
+
+
+window.onload = function (){socket.emit('playerJoined') }
+
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();

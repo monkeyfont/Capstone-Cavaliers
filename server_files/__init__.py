@@ -75,6 +75,14 @@ def roomprivacy():
     print (publicRooms)
     emit('publicRooms', {'rooms': publicRooms}, room="1")
 
+@socketio.on('playerJoined')
+def playerJoined():
+    print("player joined",session["username"])
+    join_room(session["roomname"])
+    emit('playerJoined',{'playername':str(session['username'])},room=session["roomname"])
+
+
+
 @socketio.on('join')
 def joined():
     player = session["username"]
