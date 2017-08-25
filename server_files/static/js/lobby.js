@@ -6,12 +6,12 @@ $(document).ready(function () {
         socket.emit('checkroomprivacy');
     });
 
-    socket.on('publicRooms', function (data) {
+    socket.on('publicLobbies', function (data) {
     console.log(data);
     var i = 0;
-    for (roomID in data.rooms){
-        console.log(data.rooms[0]);
-        $('#roomlog').val($('#roomlog').val() + data.rooms[i] + '\n');
+    for (lobbyName in data.lobbies){
+        console.log(data.lobbies[0]);
+        $('#roomlog').val($('#roomlog').val() + data.lobbies[i] + '\n');
         i = i + 1;
     }
     i = 0;

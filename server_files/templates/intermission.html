@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="static/js/pregame.js"></script>
+    <meta charset="UTF-8">
+    <title>Intermission</title>
+</head>
+<body>
+
+<h1> INTERMISSION PAGE FOR {{ room }} </h1>
+
+    <!--{% for key, value in players.iteritems() %}-->
+        <!--<h2>{{ key }}</h2>-->
+        <!--<h2> {{ value.name }} </h2>-->
+    <!--{% endfor %}-->
+
+
+<div class="container">
+        <h3>Room Log</h3>
+    </div>
+    <div class="container">
+        <h3>Event log</h3>
+        <textarea id="log"></textarea>
+    </div>
+
+
+<input id="gameStarter" type="button" value= "START THE GAME! ">
+
+</body>
+</html>

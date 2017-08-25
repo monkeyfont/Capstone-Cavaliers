@@ -1,6 +1,7 @@
 from flask import Flask, render_template, session, make_response,redirect, url_for, escape, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from game import *
+from lobby import *
 import random
 from flask import Flask, redirect, url_for
 import unittest
@@ -10,13 +11,28 @@ app.secret_key = 'development' # change when out of development!
 socketio = SocketIO(app)
 room_ID = 1
 playerID = 1
+playerIDs = 1
 games = {} # in here we will store the game objects
+lobbies={}
 userTable = {} # this will be changed later on to be a database storing the user details
 game=GameBoard()
 @app.route('/')
 def home():
     # Quick session testing code.
     return render_template("home.html")
+
+@app.route('/pregame')
+def pregame():
+
+    if 'username' and "roomname" in session:
+        username = str(session['username'])
+        roomname = str(session['roomname'])
+
+    currentLobby=lobbies[roomname]
+    playerdict=currentLobby.players
+
+    return (render_template("intermission.html",room=roomname,players=playerdict))
+
 
 @app.route('/game')
 def game():
@@ -41,6 +57,7 @@ def game():
             games[roomname] = gameobject
             playerID = playerID + 1
         else:
+
             #get the gameboard onject requested
             gameobject = games[roomname]
             numberOfPlayers = gameobject.playerCount
@@ -65,21 +82,20 @@ def roomprivacy():
     print ("Check room called")
     #"Check move called"
     join_room("1")
-    publicRooms = []
-    for gameobjectkey in games:
-        gameobject = games[gameobjectkey]
-        if gameobject.visibility == "public":
-            print("public room found with id " +gameobject.gameID )
-
-            publicRooms.append(gameobject.gameID)
-    print (publicRooms)
-    emit('publicRooms', {'rooms': publicRooms}, room="1")
+    publicLobbies = []
+    for lobbyobjectkey in lobbies:
+        lobbyobj=lobbies[lobbyobjectkey]
+        if lobbyobj.privacy == "public":
+            print("public lobby found with id " +lobbyobj.name )
+            publicLobbies.append(lobbyobj.name)
+    emit('publicLobbies', {'lobbies': publicLobbies}, room="1")
 
 @socketio.on('playerJoined')
 def playerJoined():
     print("player joined",session["username"])
     join_room(session["roomname"])
-    emit('playerJoined',{'playerName':str(session['username'])},room=session["roomname"])
+
+    emit('playerJoined',{'msg': str(session['username']) + " has joined room " + str(session['roomname'])},room=session["roomname"])
 
 
 
@@ -128,13 +144,18 @@ def handleclick(msg):
 @socketio.on('checkDirectFlight')
 def handleclick(msg):
     room = str(session['roomname'])
+    username = str(session["username"])
     cityToMove= msg["cityName"]
-    #response=game.directFlight(1,cityToMove)
-    #response will be either true or false
-    response = True
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            # Player found."
+            print playerObject.id,"player id!"
+            response = gameObject.directFlight(playerObject.id, cityToMove)
 
-
-    emit('directFlightChecked', {'msg':response,'city':cityToMove},room=room)
+    emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
 
 
 @socketio.on('checkCharterFlight')
@@ -369,13 +390,39 @@ def handle_message(msg):
 @app.route('/lobby', methods = ['GET', 'POST'])
 def lobby():
     session["username"] = (random.randint(0,100000000))
+    global playerIDs
 
     if request.method == 'POST':
             session['username'] = request.form['username']
             session['roomname'] = request.form['roomname']
-            session['roomtype'] = request.form['roomtype']
-            session['roomprivacy'] = request.form['privacy']
-            return (redirect(url_for('game')))
+            if request.form['roomtype']=="create":
+
+                lobby=Lobby(str(session['roomname']))
+                lobby.privacy=request.form['privacy']
+                #add lobby to dictionary
+                lobbies[str(session['roomname'])] = lobby
+
+                newPlayer=Player(playerIDs,str(session['username']))
+                lobby.players[playerID]=newPlayer
+
+                playerIDs = playerIDs + 1
+
+            else: # if user is joining a game
+                try:
+                    lobby = lobbies[str(session['roomname'])]
+                    if len(lobby.players)==4:
+                        return (render_template("lobby.html",error="Sorry this room is full! Please join another"))
+                    newPlayer = Player(playerIDs, str(session['username']))
+                    lobby.players[playerIDs]=newPlayer
+                    playerIDs = playerIDs + 1
+                except:
+                    print"Lobby does not exist"
+                    return (render_template("lobby.html", error="Sorry this room does not exist try another room"))
+
+
+
+            return (redirect(url_for('pregame')))
+
 
     return (render_template("lobby.html"))
 
