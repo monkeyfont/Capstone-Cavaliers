@@ -768,7 +768,7 @@ outbreakCount = new outbreakCounter({})
 infectRate = new infectionRate({})
 
 players = new playerInitilization();
-players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+//players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 
 
 
@@ -785,14 +785,15 @@ moveInfection = function(){
 }
 
 
-socket.on('playerJoined',function(data){
+socket.on('gotPlayer',function(data){
 	console.log('data is: ',data )
-	console.log("you've joined the room",data.playerName);
-	players.addPlayer({playerName:data['playerName'],playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+	console.log("you are the player",data.playerName);
+	console.log("you are the player",data.playerType);
+	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
 
 
-window.onload = function (){socket.emit('playerJoined') }
+window.onload = function (){socket.emit('getPlayerObject') }
 
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {

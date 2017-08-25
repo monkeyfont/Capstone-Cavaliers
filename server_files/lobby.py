@@ -5,5 +5,6 @@ class Lobby:
         self.name=lobbyName
         self.players={}
         self.privacy=""
+        self.playerCount=0
 
 

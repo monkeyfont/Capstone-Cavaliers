@@ -10,6 +10,12 @@
         $('#log').val($('#log').val() + data.msg + '\n');
     });
 
+    socket.on('gameStarted', function (data) {
+
+        location.href ="/game";
+
+    });
+
 
     $("#gameStarter").click(function(){
         socket.emit('startGame')

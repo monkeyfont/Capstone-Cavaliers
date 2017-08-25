@@ -15,7 +15,6 @@ playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
 userTable = {} # this will be changed later on to be a database storing the user details
-game=GameBoard()
 @app.route('/')
 def home():
     # Quick session testing code.
@@ -31,50 +30,38 @@ def pregame():
     currentLobby=lobbies[roomname]
     playerdict=currentLobby.players
 
+
+
+
+
     return (render_template("intermission.html",room=roomname,players=playerdict))
 
 
 @app.route('/game')
 def game():
-    if 'username'and "roomname" and "roomtype" in session:
-        username = str(session['username'])
-        roomname = str(session['roomname'])
-        roomtype = str(session['roomtype'])
-        roomprivacy = str(session['roomprivacy'])
+    # if 'username'and "roomname" and "roomtype" in session:
+    username = str(session['username'])
+    roomname = str(session['roomname'])
         # We need to check if the user is joining or creating a game
-        if (roomtype == "create"):
-            global playerID
-            # Create the user
-            playerObject = Player(playerID,username)
-            # Create the gameboard
-            gameobject = GameBoard()
-            gameobject.gameID = roomname
-            gameobject.playerCount = 1
-            gameobject.visibility = roomprivacy
-            print (gameobject.visibility + " room created")
-            session["playerid"] = gameobject.playerCount
-            gameobject.players[gameobject.playerCount] = playerObject
-            games[roomname] = gameobject
-            playerID = playerID + 1
-        else:
+    print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
 
-            #get the gameboard onject requested
-            gameobject = games[roomname]
-            numberOfPlayers = gameobject.playerCount
-            # if the gameboard we are requesting has 4 players already, then we can't join that game
-            if numberOfPlayers == 4:
-                print "Too many players"
-            else:
-                # Create a user object and change its properties
-                playerObject = Player(playerID,username)
-                # Add the user to the gameboard
-                gameobject.playerCount = gameobject.playerCount + 1
-                numberOfPlayers = gameobject.playerCount
-                gameobject.players[numberOfPlayers] = playerObject
-                print ("Number of players in this board game: " + str(gameobject.playerCount))
+
+    currentLobby = lobbies[roomname]
+    playerdict = currentLobby.players
+
+    if roomname in games: # if game for this room has already been created then go to game
+        return(render_template("MapOnCanvas.html"))
+    else:
+          #otherwise create a new game for this room
+        gameobject = GameBoard(playerdict)
+        gameobject.gameID = roomname
+        games[roomname] = gameobject
+        print games
         return (render_template("MapOnCanvas.html"))
-    return "You are not logged in <br><a href = '/lobby'></b>" + \
-      "click here to log in</b></a>"
+
+
+    # return "You are not logged in <br><a href = '/lobby'></b>" + \
+    #   "click here to log in</b></a>"
 
 
 @socketio.on('checkroomprivacy')
@@ -92,11 +79,32 @@ def roomprivacy():
 
 @socketio.on('playerJoined')
 def playerJoined():
-    print("player joined",session["username"])
-    join_room(session["roomname"])
 
+    join_room(session["roomname"])
     emit('playerJoined',{'msg': str(session['username']) + " has joined room " + str(session['roomname'])},room=session["roomname"])
 
+
+@socketio.on('getPlayerObject')
+def getPlayerObject():
+    roomname=session["roomname"]
+    username=session["username"]
+    gameObj=games[roomname]
+    for playerkey in gameObj.players:
+        playerObj=gameObj.players[playerkey]
+        #print playerObj.name, "######"
+        if playerObj.name==username:
+            playerName = playerObj.name
+            playerRole = "contingencyPlanner"
+            emit('gotPlayer',{"playerName":playerName,"playerType":playerRole})
+
+
+@socketio.on('startGame')
+def startGame():
+    roomname = session["roomname"]
+    username = session["username"]
+    print"PLAYER NAME IS ", username, "ROOM NAME IS ", roomname," WOOOOOW"
+
+    emit('gameStarted',{},room=roomname)
 
 
 @socketio.on('join')
@@ -137,8 +145,8 @@ def handleclick(msg):
         if playerObject.name == username:
             #Player found."
             response=gameObject.movePlayer(playerObject.id,cityToMove)
-    #response will be either true or false
-    emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+            #       response will be either true or false
+            emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
 
 
 @socketio.on('checkDirectFlight')
@@ -397,24 +405,31 @@ def lobby():
             session['roomname'] = request.form['roomname']
             if request.form['roomtype']=="create":
 
+
+                if session['roomname'] in lobbies:
+                    return (render_template("lobby.html", error="Sorry this room name is already taken chose another"))
+
+
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
                 #add lobby to dictionary
                 lobbies[str(session['roomname'])] = lobby
+                lobby.playerCount=1
 
-                newPlayer=Player(playerIDs,str(session['username']))
-                lobby.players[playerID]=newPlayer
+                newPlayer=Player(lobby.playerCount,str(session['username']))
+                lobby.players[1]=newPlayer
 
                 playerIDs = playerIDs + 1
 
             else: # if user is joining a game
                 try:
                     lobby = lobbies[str(session['roomname'])]
-                    if len(lobby.players)==4:
+
+                    if lobby.playerCount==4:
                         return (render_template("lobby.html",error="Sorry this room is full! Please join another"))
-                    newPlayer = Player(playerIDs, str(session['username']))
-                    lobby.players[playerIDs]=newPlayer
-                    playerIDs = playerIDs + 1
+                    lobby.playerCount += 1
+                    newPlayer = Player(lobby.playerCount, str(session['username']))
+                    lobby.players[lobby.playerCount]=newPlayer
                 except:
                     print"Lobby does not exist"
                     return (render_template("lobby.html", error="Sorry this room does not exist try another room"))
