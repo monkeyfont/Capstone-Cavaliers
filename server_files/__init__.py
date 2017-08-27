@@ -368,14 +368,22 @@ def handle_message(msg):
 
 @app.route('/lobby', methods = ['GET', 'POST'])
 def lobby():
-    session["username"] = (random.randint(0,100000000))
 
     if request.method == 'POST':
-            session['username'] = request.form['username']
-            session['roomname'] = request.form['roomname']
-            session['roomtype'] = request.form['roomtype']
-            session['roomprivacy'] = request.form['privacy']
-            return (redirect(url_for('game')))
+        for key in games:
+            if key == request.form['roomname']:
+                print ("That room already exists")
+                # we are setting the name to invalid so when we redirect it to the lobby it knows that the username put an exisitng room
+                # and now it can be corrected.
+                # fron end people shoul use this
+                session['roomtype'] = "invalid"
+                return (render_template("lobby.html"))
+
+        session['username'] = request.form['username']
+        session['roomname'] = request.form['roomname']
+        session['roomtype'] = request.form['roomtype']
+        session['roomprivacy'] = request.form['privacy']
+        return (redirect(url_for('game')))
 
     return (render_template("lobby.html"))
 
