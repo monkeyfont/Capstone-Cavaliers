@@ -20,26 +20,41 @@ def home():
     # Quick session testing code.
     return render_template("home.html")
 
-# @app.route('/pregame')
-# def pregame():
-#
-#     if 'username' and "roomname" in session:
-#         username = str(session['username'])
-#         roomname = str(session['roomname'])
-#
-#     currentLobby=lobbies[roomname]
-#     playerdict=currentLobby.players
-#
-#     return (render_template("intermission.html",room=roomname,players=playerdict))
+
+@app.route('/pregame')
+def pregame():
+
+    if 'username' and "roomname" in session:
+        username = str(session['username'])
+        roomname = str(session['roomname'])
+
+    currentLobby=lobbies[roomname]
+    playerdict=currentLobby.players
+
+    return (render_template("intermission.html",room=roomname,players=playerdict))
+
+@app.route('/pregame')
+def pregame():
+
+    if 'username' and "roomname" in session:
+        username = str(session['username'])
+        roomname = str(session['roomname'])
+
+    currentLobby=lobbies[roomname]
+    playerdict=currentLobby.players
+    return (render_template("intermission.html",room=roomname,players=playerdict))
+
 
 
 @app.route('/game')
 def game():
+
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
         roomname = str(session['roomname'])
         join_room(roomname)
+
         # We need to check if the user is joining or creating a game
         print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
 
@@ -75,7 +90,7 @@ def roomprivacy():
         if lobbyobj.privacy == "public":
             print("public lobby found with id " +lobbyobj.name )
             publicLobbies.append(lobbyobj.name)
-    emit('publicLobbies', {'lobbies': publicLobbies}, room="1")
+    emit('publicLobbies', {'lobbies': publicLobbies}, room=1)
 
 @socketio.on('playerJoined')
 def playerJoined():
@@ -86,7 +101,9 @@ def playerJoined():
 
 @socketio.on('getPlayerObject')
 def getPlayerObject():
+
     roomname=session["roomname"]
+    join_room(roomname)
     username=session["username"]
     gameObj=games[roomname]
     for playerkey in gameObj.players:
@@ -132,18 +149,22 @@ def handleclick(msg):
     emit('clicked', {'msg' : player + messg },room=room)
 
 @socketio.on('checkMove')
-def handleclick(msg):
+def handlecheckmove(msg):
     #"Check move called"
-    room = str(session['roomname'])
+    roomName = str(session['roomname'])
     username = str(session["username"])
     cityToMove= msg["cityName"]
-    gameObject = games[room]
+    print (username, " in room ", roomName," moved to ", cityToMove)
+    gameObject = games[roomName]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response=gameObject.movePlayer(playerObject.id,cityToMove)
-            emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+            #       response will be either true or false
+            print ("we are about to emit a message")
+            emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=roomName)
+
 
 
 @socketio.on('checkDirectFlight')
