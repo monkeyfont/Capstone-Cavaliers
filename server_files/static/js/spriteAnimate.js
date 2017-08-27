@@ -79,12 +79,12 @@ socket.on('joined', function (data) {
 //CHECK MOVE TO NEIGHBOURING CITY
 function checkMove(city){
 
-
+    console.log("emitting move");
     socket.emit('checkMove', {cityName:city})
 
     };
 socket.on('checked', function (data) {
-        //alert(data.msg);
+        alert("MADE IT INTO HERE")
         check=data.msg;
         var city=eval(data.city);
         console.log(check+" "+ city)

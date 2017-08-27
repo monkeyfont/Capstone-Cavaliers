@@ -20,44 +20,44 @@ def home():
     # Quick session testing code.
     return render_template("home.html")
 
-@app.route('/pregame')
-def pregame():
-
-    if 'username' and "roomname" in session:
-        username = str(session['username'])
-        roomname = str(session['roomname'])
-
-    currentLobby=lobbies[roomname]
-    playerdict=currentLobby.players
-
-
-
-
-
-    return (render_template("intermission.html",room=roomname,players=playerdict))
+# @app.route('/pregame')
+# def pregame():
+#
+#     if 'username' and "roomname" in session:
+#         username = str(session['username'])
+#         roomname = str(session['roomname'])
+#
+#     currentLobby=lobbies[roomname]
+#     playerdict=currentLobby.players
+#
+#     return (render_template("intermission.html",room=roomname,players=playerdict))
 
 
 @app.route('/game')
 def game():
-    # if 'username'and "roomname" and "roomtype" in session:
-    username = str(session['username'])
-    roomname = str(session['roomname'])
+    if 'username'and "roomname" in session:
+
+        username = str(session['username'])
+        roomname = str(session['roomname'])
+        join_room(roomname)
         # We need to check if the user is joining or creating a game
-    print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
+        print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
 
 
-    currentLobby = lobbies[roomname]
-    playerdict = currentLobby.players
+        currentLobby = lobbies[roomname]
+        playerdict = currentLobby.players
 
-    if roomname in games: # if game for this room has already been created then go to game
-        return(render_template("MapOnCanvas.html"))
-    else:
-          #otherwise create a new game for this room
-        gameobject = GameBoard(playerdict)
-        gameobject.gameID = roomname
-        games[roomname] = gameobject
-        print games
-        return (render_template("MapOnCanvas.html"))
+        if roomname in games: # if game for this room has already been created then go to game
+            return(render_template("MapOnCanvas.html"))
+        else:
+              #otherwise create a new game for this room
+            gameobject = GameBoard(playerdict)
+            gameobject.gameID = roomname
+            games[roomname] = gameobject
+            print games
+            return (render_template("MapOnCanvas.html"))
+
+    print("NOT IN SESSION")
 
 
     # return "You are not logged in <br><a href = '/lobby'></b>" + \
@@ -102,7 +102,6 @@ def getPlayerObject():
 def startGame():
     roomname = session["roomname"]
     username = session["username"]
-    print"PLAYER NAME IS ", username, "ROOM NAME IS ", roomname," WOOOOOW"
 
     emit('gameStarted',{},room=roomname)
 
@@ -143,9 +142,7 @@ def handleclick(msg):
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
-            #Player found."
             response=gameObject.movePlayer(playerObject.id,cityToMove)
-            #       response will be either true or false
             emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
 
 
@@ -435,8 +432,7 @@ def lobby():
                     return (render_template("lobby.html", error="Sorry this room does not exist try another room"))
 
 
-
-            return (redirect(url_for('pregame')))
+            return (render_template("intermission.html",room=session['roomname']))
 
 
     return (render_template("lobby.html"))
