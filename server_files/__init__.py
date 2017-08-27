@@ -79,7 +79,7 @@ def roomprivacy():
 def playerJoined():
     print("player joined",session["username"])
     join_room(session["roomname"])
-    emit('playerJoined',{'playername':str(session['username'])},room=session["roomname"])
+    emit('playerJoined',{'playerName':str(session['username'])},room=session["roomname"])
 
 
 
@@ -122,7 +122,7 @@ def handleclick(msg):
             #Player found."
             response=gameObject.movePlayer(playerObject.id,cityToMove)
     #response will be either true or false
-    emit('checked', {'msg':response,'city':cityToMove},room=room)
+    emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
 
 
 @socketio.on('checkDirectFlight')

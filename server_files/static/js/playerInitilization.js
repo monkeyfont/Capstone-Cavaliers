@@ -11,7 +11,7 @@ function playerInitilization (){
 	this.players = {};
 	
 	this.addPlayer = function(options){
-		console.log("adding new player")
+		console.log("adding new player",options.playerName)
 		//options = {playerName:"player1",playerType="",xPos:200,yPos:200}
 		if (options.playerType=="contingencyPlanner"){
 			playerImage = contingencyPlanner;
