@@ -209,13 +209,13 @@ class City:
         treats a disease of colour by the amount specified. If the amount is too much, it clamps color to 0.
         """
         if colour == "blue":
-            self.blue -= amount if self.blue-amount > 0 else 0
+            self.blue -= (amount if self.blue-amount > 0 else self.blue)
         elif colour == "yellow":
-            self.yellow -= amount if self.yellow - amount > 0 else  0
+            self.yellow -= (amount if self.yellow - amount > 0 else self.yellow)
         elif colour == "red":
-            self.red -= amount if self.red - amount > 0 else 0
+            self.red -= (amount if self.red - amount > 0 else self.red)
         elif colour == "black":
-            self.black -= amount if self.black - amount > 0 else 0
+            self.black -= (amount if self.black - amount > 0 else self.black)
 
 class Player:
     """ Player class def """
