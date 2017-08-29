@@ -178,18 +178,6 @@ class City:
         self.connections = connections # [string]
         self.colour = colour
 
-    def addResearchStation(self):
-        self.researchStation = 1
-
-    def removeResearchStation(self):
-        self.researchStation = 0
-
-    def getResearchStation(self):
-        return self.researchStation
-
-    def getConnections(self):
-        return self.connections
-
     def getInfections(self, colour):
         """
         Returns the cities current infection count for a colour.
@@ -278,7 +266,7 @@ class GameBoard:
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
         self.players[1].location = ("ATLANTA")
-        self.cities["ATLANTA"].addResearchStation()
+        self.cities["ATLANTA"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
 
@@ -432,7 +420,7 @@ class GameBoard:
         """
         currentCityName = self.players[playerId].location
         cityObj = self.cities[currentCityName]
-        if nextCityName in cityObj.getConnections():
+        if nextCityName in cityObj.connections:
             self.players[playerId].location = nextCityName
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             return True
@@ -481,7 +469,7 @@ class GameBoard:
         currentCityName = playerObj.location
         curCityObj = self.cities[currentCityName]
         destCityObj = self.cities[destinationCity]
-        if (curCityObj.getResearchStation()==1 and destCityObj.getResearchStation()==1):
+        if (curCityObj.researchStation == 1 and destCityObj.researchStation == 1):
             self.players[playerId].location = destinationCity
             playerObj.actions -= 1
             print('player ' + str(playerId) + ' has successfully shuttleFlight\'d from ' + currentCityName + ' to ' + destinationCity)
@@ -498,9 +486,9 @@ class GameBoard:
         curCityObj = self.cities[currentLocation]
         for card in playerHand:
             if card.name == cityCardName:
-                if cityCardName == currentLocation and curCityObj.getResearchStation == 0 :
+                if cityCardName == currentLocation and curCityObj.researchStation == 0 :
                     # if the city card is where you are then create research station
-                    curCityObj.addResearchStation()
+                    curCityObj.researchStation = 1
                     playerHand.remove(card)
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
@@ -666,7 +654,7 @@ class GameBoard:
                 if city not in cityOutBreaks: # can't outbreak the same city more than once.
                     cityOutBreaks.append(city)
                     # retrieve neighbouring city objects and append to citiesToInfect
-                    for cityStr in city.getConnections():
+                    for cityStr in city.connections:
                         citiesToInfect.append(self.cities[cityStr])
 
 class PlayerCard:
