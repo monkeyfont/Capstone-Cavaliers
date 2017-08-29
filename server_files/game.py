@@ -376,14 +376,27 @@ class GameBoard:
         for id in self.players:
             playerObj = self.players[id]
             for i in range(nCardsPerPlayer):
+                # move the card from the player deck, to the players hand.
                 playerObj.hand.append(self.playerDeck.pop(0))
 
 
     def endTurnInfectCities(self):
         """
-        Function infects all cities of the game.
+        Function draws infect city cards, and then infects those cities.
+        The call to self.infectCity() handles infection and outbreak logic.
+        The infect city card is added to the discard pile.
         """
-        pass
+        # TODO lose game if out of cards.
+        amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
+        for i in range(amountToDraw):
+            # Draw the infection card from the top of the deck.
+            infectCard = self.infectionDeck.pop(0)
+            cityName = infectCard.name
+            # infect the city. If an outbreak occurs, infectCity() handles it.
+            self.infectCity(cityName)
+            # add the card to the discard pile
+            self.infectionDiscarded.append(infectCard)
+
 
     def resetPlayerActions(self):
         """
