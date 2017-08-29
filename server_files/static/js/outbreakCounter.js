@@ -10,6 +10,10 @@ function outbreakCounter(options) {
 	this.yScale = options.yScale || 1;
 	this.outbreakStage = 0;
 
+	this.advanceStage = function(){
+		this.outbreakStage ++;
+	}
+	
 	this.render = function () {
        for (i =0;i<9;i++){
 		this.context.beginPath();

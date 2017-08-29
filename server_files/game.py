@@ -256,7 +256,7 @@ class GameBoard:
         self.infectionLevel = 0
         self.gameID = 0
         self.difficulty = 0 #easy 0, medium 1, hard 2.
-
+        self.visibility = "private" # TODO this should be lobby based instead of GameBoard obj.
 
     def __initializeBoard(self):
         """ Function initializes the board, with starting states for cities, decks, hands and locations. """

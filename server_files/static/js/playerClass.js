@@ -51,8 +51,9 @@ function player(options) {
 		}
 	}
 	this.render = function () {
+		this.update();
         // Draw the animation
-		//console.log("image render",this.image.src)
+		// console.log("image render", this.image.src,this.xPos,this.yPos,this.width,this.height)
 		this.context.drawImage(
 		this.image, //image to use
 		0, // x position to start clipping 

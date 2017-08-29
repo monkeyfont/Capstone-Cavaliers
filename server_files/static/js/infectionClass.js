@@ -1,5 +1,6 @@
 function infection(options) {
-	this.id = options.id,			
+	this.id = options.id,	
+	this.colour = options.colour,
 	this.context = options.context || canvas.getContext("2d");
 	this.width = options.width;
 	this.height = options.height;
@@ -12,20 +13,20 @@ function infection(options) {
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
 	this.tempSpeed = 0;
-	this.cityTravel = options.infectionPath || [];
-	
+	this.infectionPath = options.infectionPath || [];
+	// [{x:200,y:200},{x:300,y:300}]
 	this.moveCity = function(){
-		if (this.cityTravel.length>0){
-			if (locations[this.cityTravel.length-1].xPos == this.xPos && 
-			locations[this.cityTravel.length-1].yPos == this.yPos){
-				this.cityTravel.pop()
-				if (this.cityTravel.length>0){
-					this.move(locations[this.cityTravel.length-1].xPos,locations[this.cityTravel.length-1].yPos)
+		if (this.infectionPath.length>0){
+			if (this.infectionPath[this.infectionPath.length-1].x == this.xPos && 
+			this.infectionPath[this.infectionPath.length-1].y == this.yPos){
+				this.infectionPath.pop()
+				if (this.infectionPath.length>0){
+					this.move(this.infectionPath[this.infectionPath.length-1].x,this.infectionPath[this.infectionPath.length-1].y);
 				}
 			}else{
-				if(locations[this.cityTravel.length-1].xPos != this.moveX || 
-				locations[this.cityTravel.length-1].yPos != this.moveY){
-					this.move(locations[this.cityTravel.length-1].xPos,locations[this.cityTravel.length-1].yPos)
+				if(this.infectionPath[this.infectionPath.length-1].x != this.moveX || 
+				this.infectionPath[this.infectionPath.length-1].y != this.moveY){
+					this.move(this.infectionPath[this.infectionPath.length-1].x,this.infectionPath[this.infectionPath.length-1].y);
 				}
 			}
 			this.update();
@@ -73,6 +74,7 @@ function infection(options) {
 		}
 	}
 	this.render = function () {
+		this.moveCity();
         // Draw the animation
 		// console.log("rendering infection")
 		//console.log("image render",this.image.src)

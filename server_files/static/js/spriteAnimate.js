@@ -72,22 +72,39 @@ socket.on('joined', function (data) {
 
     };
 
+
+
+//-------------------------PLAYER ACTIONS WEB SOCKET FUNCTIONS----------------
+
+//CHECK MOVE TO NEIGHBOURING CITY
 function checkMove(city){
 
 
     socket.emit('checkMove', {cityName:city})
 
     };
-
-
-socket.on('clicked', function (data) {
-
-        console.log(data.msg);
-
-    });
-
-
 socket.on('checked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+			console.log('moving',data.playerName)
+			// console.log('player k',players.players.k)
+			// console.log(players)
+			players.players[data.playerName].move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+});
+
+function directFlight(city) {
+
+    var city = prompt("Enter name of city in your hand you would like to move to");
+    socket.emit('checkDirectFlight', {cityName:city})
+}
+socket.on('directFlightChecked', function (data) {
         //alert(data.msg);
         check=data.msg;
         var city=eval(data.city);
@@ -98,50 +115,180 @@ socket.on('checked', function (data) {
 	else{
 	    console.log("Sorry invalid move");
 	}
+});
 
 
+
+function charterFlight() {
+
+    var cityCard = prompt("Enter name of card you would like to use");
+    var citytoMoveTo = prompt("Enter name of city you would like to move to");
+    socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
+
+}
+socket.on('charterFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            // player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+ });
+
+
+function shuttleFlight() {
+
+    var city = prompt("Enter name of city with research station you would like to move to");
+    socket.emit('checkShuttleFlight', {cityName:city})
+
+}
+
+socket.on('shuttleFlightChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+		console.log("data",data);
+        var city=eval(data.city);
+        console.log(check+" "+ city)
+        if (check ==true){
+            // player.move(city.xPos,city.yPos);
+	}
+	else{
+	    console.log("Sorry invalid move");
+	}
+});
+
+function buildResearch() {
+    var city = prompt("Enter current city Name: ");
+    socket.emit('buildResearchStation', {cityName:city})
+
+}
+
+socket.on('researchBuildChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Research station can be built here")
+	}
+	else{
+	    console.log("Sorry research station cannot be built here");
+	}
+});
+
+function shareKnowledge() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('shareKnowledge', {cityName:city})
+
+}
+
+socket.on('knowledgeShared', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Cards have been swapped")
+	}
+	else{
+	    console.log("Sorry cannot share this card to the other player");
+	}
+
+    });
+
+function treatDisease() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('treatDisease', {cityName:city})
+
+}
+
+socket.on('diseaseTreated', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Disease treated")
+	}
+	else{
+	    console.log("Sorry cannot treat this disease");
+	}
 
     });
 
 
-	
-$('.btn').on('click', function(changePlayer){
-	if (changePlayer.currentTarget.id == 'up-left'){
-		player.yStart=120;
-	}
-	if (changePlayer.currentTarget.id == 'up'){
-		player.yStart=160;
-	}
-	if (changePlayer.currentTarget.id == 'up-right'){
-		player.yStart=280;
-	}
-	if (changePlayer.currentTarget.id == 'left'){
-		player.yStart=80;
-	}
-	if (changePlayer.currentTarget.id == 'stop'){
-		
-	}
-	if (changePlayer.currentTarget.id == 'right'){
-		player.yStart=240;
-	}
-	if (changePlayer.currentTarget.id == 'down-left'){
-		player.yStart=40;
-	}
-	if (changePlayer.currentTarget.id == 'down'){
-		player.yStart=0;
-	}
-	if (changePlayer.currentTarget.id == 'down-right'){
-		player.yStart=200;
-	}
-	
-	
-	
-	// alert("Button clicked with value: "+changePlayer.currentTarget.id);
-		
-	});		
-	
+function discoverCure() {
 
-	
+    var city = prompt("Enter current city Name: ");
+    socket.emit('discoverCure', {cityName:city})
+
+}
+
+socket.on('cureDiscovered', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Cure has been discovered")
+	}
+	else{
+	    console.log("Sorry cure was not discovered");
+	}
+
+    });
+
+
+socket.on('clicked', function (data) {
+
+        console.log(data.msg);
+
+    });
+
+
+// $('.btn').on('click', function(changePlayer){
+	// if (changePlayer.currentTarget.id == 'up-left'){
+		// player.yStart=120;
+	// }
+	// if (changePlayer.currentTarget.id == 'up'){
+		// player.yStart=160;
+	// }
+	// if (changePlayer.currentTarget.id == 'up-right'){
+		// player.yStart=280;
+	// }
+	// if (changePlayer.currentTarget.id == 'left'){
+		// player.yStart=80;
+	// }
+	// if (changePlayer.currentTarget.id == 'stop'){
+
+	// }
+	// if (changePlayer.currentTarget.id == 'right'){
+		// player.yStart=240;
+	// }
+	// if (changePlayer.currentTarget.id == 'down-left'){
+		// player.yStart=40;
+	// }
+	// if (changePlayer.currentTarget.id == 'down'){
+		// player.yStart=0;
+	// }
+	// if (changePlayer.currentTarget.id == 'down-right'){
+		// player.yStart=200;
+	// }
+
+
+
+	// alert("Button clicked with value: "+changePlayer.currentTarget.id);
+
+	// });
+
+
+
 var coinImage = new Image();
 
 coinImage.src = "static/images/coin-sprite-animation.png";
@@ -171,7 +318,7 @@ function displayOutbreaks(outbreakCount){
     //if(outbreakCount >= 8){//player has lost}
     //if odd outbreakCount / (outbreakCount%2 != 0){move up and right}
     //else {move down and right}
-  
+
     //based upon outbreak counter looking like: -_-_-_-_o
     //  1   3   5   7   [Lost]
     //    2   4    6   8
@@ -179,7 +326,7 @@ function displayOutbreaks(outbreakCount){
 
 //function infect(infectionColour, cityToInfect, amount){
 function infecting(){
-	ATLANTA.infect({});
+	ATLANTA.infect({});moveInfection
 	for (i in locations){
 		console.log(locations[i])
 		locations[i].infect({})
@@ -189,8 +336,8 @@ function infecting(){
 		console.log("___checking__")
 		// locations[i].renderCheck()
 	};
-    
-    
+
+
 }
 
 
@@ -265,7 +412,7 @@ KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYAOH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBU
 			// yPos:ATLANTA.yPos,
 			// xScale:2,
 			// yScale:2,
-			// image: infectionImage		
+			// image: infectionImage
 // })
 
 
@@ -276,7 +423,7 @@ canvas.addEventListener('click', function(evt) {
 	var mousePos ={
 		x: (evt.clientX - canvas.getBoundingClientRect().left)/scaleSize,
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
-	}	
+	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 
 
@@ -299,7 +446,7 @@ canvas.addEventListener('click', function(evt) {
 	for (var i in cardList){
 		if (mousePos.x >= cardList[i].xPos && mousePos.x <= cardList[i].xPos+(cardList[i].width*cardList[i].xScale) &&
 			mousePos.y >= cardList[i].yPos && mousePos.y <= cardList[i].yPos+(cardList[i].height*cardList[i].yScale)){
-			console.log(cardList[i].id,"was clicked------------------");	
+			console.log(cardList[i].id,"was clicked------------------");
 			console.log(cardList[i].toFlip,"was clicked------------------");
 			cardList[i].flip();
 		}
@@ -318,10 +465,10 @@ canvas.addEventListener('click', function(evt) {
 				checkMove(i);
 
 			}
-			
+
 	}
-		
-		
+
+
 })
 
 
@@ -344,13 +491,13 @@ function gameLoop(){
 	for (var start in locations){
 		// console.log("start",locations[start].id);
 		// console.log("connections",locations[start].connections);
-		for (var end in locations[start].connections){			
+		for (var end in locations[start].connections){
 			// console.log("end",end);
 			// console.log("end city", locations[locations[start].connections[end]]);
 			var endCity = locations[locations[start].connections[end]];
-			
+
 			if (Math.abs(locations[start].xPos-endCity.xPos) > 800){
-				context.beginPath(); 
+				context.beginPath();
 				// Staring point (10,45)
 				context.moveTo(locations[start].xPos,locations[start].yPos);
 				// End point (180,47)
@@ -360,22 +507,22 @@ function gameLoop(){
 				}else{
 					context.lineTo(0,endCity.yPos+((locations[start].yPos-endCity.yPos)/2));
 				}
-				// Make the line visible		  
+				// Make the line visible
 				context.lineWidth = 4;
 				// set line color
 				context.strokeStyle = 'rgba(225,225,225,0.5)';
 				context.stroke();
-			}else{			
-			//console.log("actual end city", locations[locations[start].connections[end]].id)		
-				context.beginPath(); 
+			}else{
+			//console.log("actual end city", locations[locations[start].connections[end]].id)
+				context.beginPath();
 				// Staring point (10,45)
 				context.moveTo(locations[start].xPos,locations[start].yPos);
 				// End point (180,47)
 				context.lineTo(endCity.xPos,endCity.yPos);
-				// Make the line visible		  
+				// Make the line visible
 				context.lineWidth = 4;
 				// set line color
-				
+
 				context.strokeStyle = 'rgba(225,225,225,0.5)';
 				context.stroke();
 			}
@@ -391,14 +538,15 @@ function gameLoop(){
 	// coin2.render();
 	// coin3.update();
 	// coin3.render();
-	player.update();
-	player.render();
+	// player.update();
+	// player.render();
+	players.render();
 	deck.render();
 	card.render();
 	for (var i in cardList){
 		cardList[i].render();
 	}
-	
+
 	outbreakCount.render();
 	infectRate.render();
 	// AtlantaInfection.render()
@@ -415,11 +563,11 @@ function gameLoop(){
 		// console.log("infection array",locations[i].infectionStatus)
 		// console.log("infections",locations[i].infectionStatus[locations[i].colour][0].render())
 	// };
-	
-	
+
+
 	// console.log(card.flipping,card.width);
 	// console.log("-----------------------",card.toFlip);
-	
+
 
 	//console.log("gameloop");
 }
@@ -436,11 +584,11 @@ function gameLoop(){
 	// numberOfFrames: 1,
 	// ticksPerFrame: 10,
 	// image: mapImage
-	// });	
+	// });
 
 
 
-	
+
 // var coin3 = new sprite({
 	// id:"coin3",
     // context: canvas.getContext("2d"),
@@ -450,8 +598,8 @@ function gameLoop(){
 	// ticksPerFrame: 3,
 	// xPos:300,
 	// yPos:300,
-    // image: coinImage	
-	// });	
+    // image: coinImage
+	// });
 
 // var coin = new sprite({
 	// id:"coin",
@@ -462,9 +610,9 @@ function gameLoop(){
 	// ticksPerFrame: 16,
 	// xPos:100,
 	// yPos:100,
-    // image: coinImage	
-	// });		
-	
+    // image: coinImage
+	// });
+
 // var coin2 = new sprite({
 	// id:"coin2",
     // context: canvas.getContext("2d"),
@@ -474,22 +622,22 @@ function gameLoop(){
 	// ticksPerFrame: 16,
 	// xPos:400,
 	// yPos:400,
-    // image: coinImage	
-	// });	
-	
-var player = new player({
-	id:"player",
-	context: canvas.getContext("2d"),
-    width: 32,
-    height: 40,
-	numberOfFrames: 4,
-	ticksPerFrame: 16,
-	xPos:ATLANTA.xPos,
-	yPos:ATLANTA.yPos,
-	xScale:2,
-	yScale:2,
-    image: playerImage	
-})
+    // image: coinImage
+	// });
+
+// var player = new player({
+	// id:"player",
+	// context: canvas.getContext("2d"),
+    // width: 32,
+    // height: 40,
+	// numberOfFrames: 4,
+	// ticksPerFrame: 16,
+	// xPos:ATLANTA.xPos,
+	// yPos:ATLANTA.yPos,
+	// xScale:2,
+	// yScale:2,
+    // image: playerImage
+// })
 
 var CardImage = new Image();
 CardImage.src = 'static/images/infection-Cards.png';
@@ -506,7 +654,7 @@ var card = new flippable({
 	yPos:40,
 	xScale:0.5,
 	yScale:0.5,
-    imageBack: CardImage,	
+    imageBack: CardImage,
 	imageFront: cardFront
 })
 
@@ -521,7 +669,7 @@ var deck = new sprite({
 	yPos:40,
 	xScale:0.5,
 	yScale:0.5,
-    image: CardImage	
+    image: CardImage
 
 })
 var cardList = [];
@@ -537,7 +685,7 @@ function createCard(id) {
 	yPos:40,
 	xScale:0.5,
 	yScale:0.5,
-    imageBack: CardImage,	
+    imageBack: CardImage,
 	imageFront: cardFront
 }))
 }
@@ -545,7 +693,7 @@ function createCard(id) {
 
 
 function flippable(options) {
-	this.id = options.id,			
+	this.id = options.id,
 	this.context = options.context;
 	this.width = options.width;
 	this.height = options.height;
@@ -570,14 +718,14 @@ function flippable(options) {
 		// scale the card up
 		this.flipping = true;
 		if (this.flipStage == 10){
-			
+
 		}else{
 			this.widthDraw -= this.width/this.flipSpeed;
 		}
 		if (this.widthDraw <0.1 && this.widthDraw > -0.1){
 			this.toFlip=true;
 		}
-		
+
 		if (this.toFlip == true){
 			if (this.currentImage==this.imageBack){
 				this.currentImage = this.imageFront;
@@ -586,17 +734,17 @@ function flippable(options) {
 			}
 			this.toFlip = false;
 		}
-			
-		
+
+
 		if (this.widthDraw <= -this.width){
 			this.flipping = false;
 			this.widthDraw = this.width;
 			this.xPos = this.xPos-(this.width*this.xScale);
 		}
 	}
-	
+
 	// take image 1, shrink into middle, show image 2 grow from middle
-	
+
 	this.render = function () {
 		if (this.flipping == true){
 			this.flip();
@@ -605,13 +753,13 @@ function flippable(options) {
 		//console.log("image render",this.image.src)
 		this.context.drawImage(
 		this.currentImage, //image to use
-		0, // x position to start clipping 
+		0, // x position to start clipping
 		0, // y position to start clipping
 		this.width, //width of clipped image
 		this.height, // height of clipped image
 		this.xPos, //x position for image on canvas
 		this.yPos, // y position for image on canvas
-		this.widthDraw*this.xScale, // width of image to use 
+		this.widthDraw*this.xScale, // width of image to use
 		this.heightDraw*this.yScale); // height of image to use
     };
 }
@@ -619,20 +767,35 @@ function flippable(options) {
 outbreakCount = new outbreakCounter({})
 infectRate = new infectionRate({})
 
+players = new playerInitilization();
+players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 
-// coin,coin2,coin3,
-spriteList = [player,card,deck];
-	
+
+
+// coin,coin2,coin3,player,
+spriteList = [card,deck];
+
 mapImage.addEventListener("load", gameLoop);
 
 
 moveInfection = function(){
-	
+	ATLANTA.infect({colour:'black',infectionPath:[{x:ATLANTA.xPos,y:ATLANTA.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
+	SANFRANCISCO.infect({colour:'black',infectionPath:[{x:SANFRANCISCO.xPos,y:SANFRANCISCO.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
+	ATLANTA.infect({colour:'black',infectionPath:[{x:ATLANTA.xPos,y:ATLANTA.yPos},{x:CHICAGO.xPos,y:CHICAGO.yPos},{x:MONTREAL.xPos,y:MONTREAL.yPos}]});
 }
-	
+
+
+socket.on('playerJoined',function(data){
+	console.log('data is: ',data )
+	console.log("you've joined the room",data.playerName);
+	players.addPlayer({playerName:data['playerName'],playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+});
+
+
+window.onload = function (){socket.emit('playerJoined') }
+
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();
 // console.log("pie");
 // };
-
