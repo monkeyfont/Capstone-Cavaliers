@@ -79,6 +79,17 @@ def playerJoined():
     join_room(session["roomname"])
     emit('playerJoined',{'msg': str(session['username']) + " has joined room " + str(session['roomname'])},room=session["roomname"])
 
+@socketio.on('getGameInitialization')
+def getGameInitialization():
+    roomname = session["roomname"]
+    gameboard = games[roomname]
+    print (gameboard.players)
+    for player in gameboard.players:
+        print (player)
+        playerObj = gameboard.players[player]
+        playerName = playerObj.name
+        playerRole = "contingencyPlanner"
+        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole},room=session["roomname"])
 
 @socketio.on('getPlayerObject')
 def getPlayerObject():
