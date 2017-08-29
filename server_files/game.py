@@ -252,9 +252,9 @@ class GameBoard:
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         #just for now while testing the GameBoard init function
-        self.cities = self.__generateCities() # {id : City}
-        self.infectionDeck = self.__generateInfectionDeck() # [InfectionCard]
-        self.playerDeck = self.__generatePlayerDeck() # [PlayerCard]
+        self.cities = self.generateCities() # {id : City}
+        self.infectionDeck = self.generateInfectionDeck() # [InfectionCard]
+        self.playerDeck = self.generatePlayerDeck() # [PlayerCard]
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.playerCount = 0
@@ -273,25 +273,25 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].addResearchStation()
-        self.__infectCitiesStage()
-        self.__distributeHand()
+        self.infectCitiesStage()
+        self.distributeHand()
 
 
-    def __generateCities(self):
+    def generateCities(self):
         """ Function generates a dictionary that contains all cities, and links between them. """
         citiesDict = {}
         for k in CITIES_TEMPLATE:
             citiesDict[k] = City(k, CITIES_TEMPLATE[k]["connections"], CITIES_TEMPLATE[k]["colour"])
         return citiesDict
 
-    def __generatePlayerDeck(self):
+    def generatePlayerDeck(self):
         """ Returns a list containing player card objects. Epidemic cards are NOT added."""
         cards = []
         for k in PLAYER_CARDS: #name,colour,population,area,country
             cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
         return cards
 
-    def __generateInfectionDeck(self):
+    def generateInfectionDeck(self):
         """ Returns a list containing infection card objects """
         cards = []
         for k in INFECTION_CARDS: #id,name,country,colour
@@ -299,7 +299,7 @@ class GameBoard:
         return cards
 
 
-    def __distributeHand(self):
+    def distributeHand(self):
         """ """
         # determine the number of cards to deal
         # 2 players - 4 cards, 3 - 3, 4 - 2
@@ -315,7 +315,7 @@ class GameBoard:
                 print("Player id is " + str(id) + " cards are ", playerHand[i].name)
 
 
-    def __infectCitiesStage(self):
+    def infectCitiesStage(self):
         """ 
         Infect cities stage occurs during the initalization.
         The infection deck is shuffled, then  
@@ -343,7 +343,7 @@ class GameBoard:
             self.infectionDiscarded.append(self.infectionDeck.pop(0))
 
 
-    def __placeEpidemicCards(self):
+    def placeEpidemicCards(self):
         """
         This should only be called after cards are dealt to players.
         Function created and places epidemic card objects into the deck.
@@ -558,7 +558,7 @@ class GameBoard:
 
 
 
-    def __isPlayerAtResearchStation(self, playerId):
+    def isPlayerAtResearchStation(self, playerId):
         # Check the user is currently at a research station.
         playerObj = self.players[playerId]
         playerCityObj = self.cities[playerObj.location]
@@ -571,7 +571,7 @@ class GameBoard:
         """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
         # TODO this code should probably be refactored.
         # Check player is at a research station
-        if self.__isPlayerAtResearchStation(playerId) is False:
+        if self.isPlayerAtResearchStation(playerId) is False:
             return
         # Check there is 5 city cards.
         if len(cities) != 5:
@@ -629,14 +629,14 @@ class GameBoard:
         colour = cityObj.colour
         amount = cityObj.getInfections(colour)
         if amount == 3:
-            self.__cityOutBreak(cityObj, colour)
+            self.cityOutBreak(cityObj, colour)
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour)
 
 
 
-    def __cityOutBreak(self, targetCityObj, colour):
+    def cityOutBreak(self, targetCityObj, colour):
         """
         Intended to be called when the city has 3 infections on it.
         It will spread its colour of infection cubes to neighbouring cities.

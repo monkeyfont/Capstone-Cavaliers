@@ -1,7 +1,24 @@
 from unittest import TestCase
 
-
 class TestGameBoard(TestCase):
+    def test_generateCities(self):
+        self.fail()
+
+    def test_generatePlayerDeck(self):
+        self.fail()
+
+    def test_generateInfectionDeck(self):
+        self.fail()
+
+    def test_distributeHand(self):
+        self.fail()
+
+    def test_infectCitiesStage(self):
+        self.fail()
+
+    def test_placeEpidemicCards(self):
+        self.fail()
+
     def test_endTurnDrawCards(self):
         self.fail()
 
@@ -35,6 +52,9 @@ class TestGameBoard(TestCase):
     def test_shareKnowledgeGive(self):
         self.fail()
 
+    def test_isPlayerAtResearchStation(self):
+        self.fail()
+
     def test_discoverCure(self):
         self.fail()
 
@@ -42,4 +62,7 @@ class TestGameBoard(TestCase):
         self.fail()
 
     def test_infectCity(self):
+        self.fail()
+
+    def test_cityOutBreak(self):
         self.fail()
