@@ -252,9 +252,9 @@ class GameBoard:
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         #just for now while testing the GameBoard init function
-        self.cities = self.generateCities() # {id : City}
-        self.infectionDeck = self.generateInfectionDeck() # [InfectionCard]
-        self.playerDeck = self.generatePlayerDeck() # [PlayerCard]
+        self.cities = {}
+        self.infectionDeck = []
+        self.playerDeck = []
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.playerCount = 0
@@ -269,6 +269,12 @@ class GameBoard:
         self.gameID = 0
         self.difficulty = 0 #easy 0, medium 1, hard 2.
 
+
+    def __initializeBoard(self):
+        """ Function initializes the board, with starting states for cities, decks, hands and locations. """
+        self.cities = self.generateCities() # {id : City}
+        self.infectionDeck = self.generateInfectionDeck() # [InfectionCard]
+        self.playerDeck = self.generatePlayerDeck() # [PlayerCard]
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
         self.players[1].location = ("ATLANTA")
