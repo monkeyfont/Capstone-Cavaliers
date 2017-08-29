@@ -91,23 +91,36 @@ class TestCity(TestCase):
     def test_treatBlue(self):
         """ A city with 3 infections, cured with a param of 1, should have 2 remaining"""
         self.testCity.blue = 2
-        self.testCity.treat("blue", 2)
-        self.assertEqual(self.testCity.blue, 0)
+        self.testCity.treat("blue", 1)
+        self.assertEqual(self.testCity.blue, 1)
 
     def test_treatRed(self):
         """ A city with 3 infections, cured with a param of 1, should have 2 remaining"""
-        self.testCity.blue = 3
-        self.testCity.treat("red", 3)
-        self.assertEqual(self.testCity.red, 0)
+        self.testCity.red = 3
+        self.testCity.treat("red", 2)
+        self.assertEqual(self.testCity.red, 1)
 
     def test_treatYellow(self):
         """ A city with 3 infections, cured with a param of 1, should have 2 remaining"""
-        self.testCity.blue = 2
-        self.testCity.treat("yellow", 2)
-        self.assertEqual(self.testCity.yellow, 0)
+        self.testCity.yellow = 2
+        self.testCity.treat("yellow", 1)
+        self.assertEqual(self.testCity.yellow, 1)
 
     def test_treatBlack(self):
         """ A city with 3 infections, cured with a param of 1, should have 2 remaining"""
-        self.testCity.blue = 2
-        self.testCity.treat("black", 2)
+        self.testCity.black = 2
+        self.testCity.treat("black", 1)
+        self.assertEqual(self.testCity.black, 1)
+
+    def test_treatClampsToZero(self):
+        """ Treating a city by more than it has infected, should result in zero infections. It cant be negative."""
+        self.testCity.black = 2
+        self.testCity.treat("black", 5)
         self.assertEqual(self.testCity.black, 0)
+
+    def test_treatClampsToZero2(self):
+        """ Treating a city by more than it has infected, should result in zero infections. It cant be negative."""
+        self.testCity.treat("red", 5)
+        self.assertEqual(self.testCity.red, 0)
+
+
