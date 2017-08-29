@@ -228,15 +228,9 @@ class Player:
         self.host = 0
         self.actions = 4 # actions remaining for the turn.
 
-    def getid(self):
-        return self.id
-    def setid(self,id):
-        self.id = id
-
-
 class GameBoard:
     """ Game class definition """
-    def __init__(self):
+    def __init__(self, player1=None, player2=None, player3=None, player4=None):
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         #just for now while testing the GameBoard init function
@@ -246,7 +240,7 @@ class GameBoard:
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.playerCount = 0
-        self.players = {1:Player(1), 2:Player(2), 3:Player(3), 4:Player(4)}
+        self.players = {} # {id:playerObj}
         self.blueUsed = 0 # total disease cubes used?
         self.redUsed = 0
         self.yellowUsed = 0
@@ -270,6 +264,13 @@ class GameBoard:
         self.infectCitiesStage()
         self.distributeHand()
 
+    def __addPlayer(self, playerObj):
+        """
+        Add a player object to the players dictionary.
+        The key is the current playerCount.
+        """
+        self.playerCount += 1
+        self.players[self.playerCount] = playerObj
 
     def generateCities(self):
         """ Function generates a dictionary that contains all cities, and links between them. """
