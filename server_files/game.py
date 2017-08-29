@@ -367,6 +367,23 @@ class GameBoard:
             self.playerDeck.insert(epidemics.pop(i), location)
             displaced += 1
 
+    def endTurnDrawCards(self):
+        """
+        function draw cards for all of the players in the game.
+        """
+        #TODO out of cards logic.
+        nCardsPerPlayer = 2 # n drawn for each player.
+        for id in self.players:
+            playerObj = self.players[id]
+            for i in range(nCardsPerPlayer):
+                playerObj.hand.append(self.playerDeck.pop(0))
+
+
+    def endTurnInfectCities(self):
+        """
+        Function infects all cities of the game.
+        """
+        pass
 
     def resetPlayerActions(self):
         """
