@@ -88,8 +88,9 @@ def getGameInitialization():
         print (player)
         playerObj = gameboard.players[player]
         playerName = playerObj.name
+        playerLocation = playerObj.getLocation()
         playerRole = "contingencyPlanner"
-        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole},room=session["roomname"])
+        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
 
 @socketio.on('getPlayerObject')
 def getPlayerObject():

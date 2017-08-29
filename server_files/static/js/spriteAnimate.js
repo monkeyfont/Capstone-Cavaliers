@@ -794,7 +794,10 @@ socket.on('gotPlayer',function(data){
 
 socket.on('gamePlayerInitilization',function(data){
 	console.log('data is: ',data )
-	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+	cityName = data.playerLocation;
+	console.log(locations[cityName]);
+	city = locations[cityName]
+	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 });
 window.onload = function (){
 	socket.emit('getPlayerObject') 
