@@ -264,7 +264,7 @@ class GameBoard:
         self.infectCitiesStage()
         self.distributeHand()
 
-    def __addPlayer(self, playerObj):
+    def addPlayer(self, playerObj):
         """
         Add a player object to the players dictionary.
         The key is the current playerCount.
@@ -577,6 +577,7 @@ class GameBoard:
         for cityStr in cities:
             cityObj = self.cities[cityStr]
             cityObjs.append(cityObj)
+
         # make sure all cards are cities of the same colour.
             if colour == "": # retrieve colour
                 colour = cityObj.colour
@@ -586,7 +587,9 @@ class GameBoard:
         # we now know all cards are of the same colour, so remove them from the user's hand.
         playerObj = self.players[playerId]
         for cityObj in cityObjs:
-            playerObj.hand.remove(cityObj)
+            for card in playerObj.hand:
+                if card.name==cityObj.name:
+                    playerObj.hand.remove(card)
         # add that colour cure to the game board
         self.cures[colour] = 1
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
@@ -627,7 +630,7 @@ class GameBoard:
             self.cityOutBreak(cityObj, colour)
         else:
             print (targetCity + " has been infected.")
-            cityObj.infect(colour)
+            cityObj.infect(colour,1)
 
 
 
