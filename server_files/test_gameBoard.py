@@ -26,7 +26,9 @@ class TestGameBoard(TestCase):
         # test num of cards for 4 players
         self.testGameBoard.playerDeck=self.testGameBoard.generatePlayerDeck()
         self.testGameBoard.distributeHand()
-        self.assertEqual(self.testGameBoard.players[1].hand.__len__(), 2)
+        for player in self.testGameBoard.players:
+            
+            self.assertEqual(self.testGameBoard.players[player].hand.__len__(), 2)
 
 
 
