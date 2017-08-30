@@ -84,7 +84,6 @@ function checkMove(city){
 
     };
 socket.on('checked', function (data) {
-        alert("MADE IT INTO HERE")
         check=data.msg;
         var city=eval(data.city);
         console.log(check+" "+ city)

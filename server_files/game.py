@@ -265,12 +265,21 @@ class GameBoard:
         self.__infectCitiesStage()
         self.__distributeHand()
         self.__setStartingLocation()
+        self.__setRoles()
 
 
     def __setStartingLocation(self):
         for playerkey in self.players:
             playerObj=self.players[playerkey]
             playerObj.setLocation("ATLANTA")
+
+    def __setRoles(self):
+        roles=["contingencyPlanner","dispatcher","medic","operationsExpert","quarantineSpecialist","researcher","scientist"]
+        shuffle(roles)
+        for playerkey in self.players:
+            playerObj=self.players[playerkey]
+            playerObj.role=roles[0]
+            roles.pop(0)
 
     def __generateCities(self):
         """ Function generates a dictionary that contains all cities, and links between them. """

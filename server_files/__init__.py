@@ -20,32 +20,6 @@ def home():
     # Quick session testing code.
     return render_template("home.html")
 
-
-@app.route('/pregame')
-def pregame():
-
-    if 'username' and "roomname" in session:
-        username = str(session['username'])
-        roomname = str(session['roomname'])
-
-    currentLobby=lobbies[roomname]
-    playerdict=currentLobby.players
-
-    return (render_template("intermission.html",room=roomname,players=playerdict))
-
-@app.route('/pregame')
-def pregame():
-
-    if 'username' and "roomname" in session:
-        username = str(session['username'])
-        roomname = str(session['roomname'])
-
-    currentLobby=lobbies[roomname]
-    playerdict=currentLobby.players
-    return (render_template("intermission.html",room=roomname,players=playerdict))
-
-
-
 @app.route('/game')
 def game():
 
@@ -53,7 +27,7 @@ def game():
 
         username = str(session['username'])
         roomname = str(session['roomname'])
-        join_room(roomname)
+        #join_room(roomname)
 
         # We need to check if the user is joining or creating a game
         print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
@@ -108,7 +82,7 @@ def getGameInitialization():
         playerObj = gameboard.players[player]
         playerName = playerObj.name
         playerLocation = playerObj.getLocation()
-        playerRole = "contingencyPlanner"
+        playerRole = playerObj.role
         emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
 
 @socketio.on('getPlayerObject')
@@ -123,7 +97,7 @@ def getPlayerObject():
         #print playerObj.name, "######"
         if playerObj.name==username:
             playerName = playerObj.name
-            playerRole = "contingencyPlanner"
+            playerRole = playerObj.role
             emit('gotPlayer',{"playerName":playerName,"playerType":playerRole})
 
 
