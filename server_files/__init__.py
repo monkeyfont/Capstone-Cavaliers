@@ -1,6 +1,8 @@
 from flask import Flask, render_template, session, make_response,redirect, url_for, escape, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from game import *
+
+from time import gmtime, strftime
 import random
 from flask import Flask, redirect, url_for
 import unittest
@@ -13,13 +15,13 @@ playerID = 1
 games = {} # in here we will store the game objects
 userTable = {} # this will be changed later on to be a database storing the user details
 game=GameBoard()
-@app.route('/')
-def home():
-    # Quick session testing code.
-    return render_template("home.html")
-
+#This will check if the username calling the game has a cookie with a username, room it wants to join
+#whether it requested to join or create a room and lastly if he wants to make the room public ro private.
 @app.route('/game')
 def game():
+    # session['username'] = "Jorge"
+    # session['roomname'] = "mexicanRoom"
+    # session['roomtype'] = "create"
     if 'username'and "roomname" and "roomtype" in session:
         username = str(session['username'])
         roomname = str(session['roomname'])
@@ -56,15 +58,17 @@ def game():
                 gameobject.players[numberOfPlayers] = playerObject
                 print ("Number of players in this board game: " + str(gameobject.playerCount))
         return (render_template("MapOnCanvas.html"))
+    #TODO make a better page displaying thaat the user needs to go to the lobby first
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
 
-
-@socketio.on('checkroomprivacy')
+#This is called to display the public rooms in the lobby page
+@socketio.on('checkRoomPrivacy')
 def roomprivacy():
     print ("Check room called")
-    #"Check move called"
-    join_room("1")
+    #All users will start by joining the 'default_room'. This is so we can send the list of public rooms to all of them
+    # TODO Deny users the ability to create a room called 'default_room'
+    join_room("default_room")
     publicRooms = []
     for gameobjectkey in games:
         gameobject = games[gameobjectkey]
@@ -73,7 +77,7 @@ def roomprivacy():
 
             publicRooms.append(gameobject.gameID)
     print (publicRooms)
-    emit('publicRooms', {'rooms': publicRooms}, room="1")
+    emit('publicRooms', {'rooms': publicRooms}, room="default_room")
 
 @socketio.on('playerJoined')
 def playerJoined():
@@ -81,23 +85,34 @@ def playerJoined():
     join_room(session["roomname"])
     emit('playerJoined',{'playerName':str(session['username'])},room=session["roomname"])
 
+@socketio.on('getMessages')
+def getMessages():
+    roomStart = session["roomname"]
 
+    Gameinstance = games[roomStart]
+    previousMessages = Gameinstance.messageHistory
+    leave_room(roomStart)
+    join_room(roomStart+"GetMessage")
+    emit('messageReceived', {'msg' : previousMessages }, room=roomStart+"GetMessage")
+    leave_room(roomStart+"GetMessage")
+    join_room(roomStart)
 
-@socketio.on('join')
-def joined():
-    player = session["username"]
-    room = session["roomname"]
-    print ("Player name: " + player)
-    print ("Player room name: " + room)
-    join_room(room)
-    emit('joined', {'msg': str(player) + " joined room " + str(room)}, room=room)
-
-@socketio.on('move')
+@socketio.on('sendMessage')
 def handleMessage(msg):
+    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
     player = session["username"]
     room = session["roomname"]
-    location = msg["move_location"]
-    emit('moved', {'msg' : str(player) + " moved to " + location}, room=room)
+    message = msg["message"]
+
+    messageSent = time + "  :: "+ player + " said: "+message
+    Gameinstance = games[room]
+    if Gameinstance.messageHistory == "":
+        Gameinstance.messageHistory = messageSent
+    else:
+        Gameinstance.messageHistory = Gameinstance.messageHistory + "&#013"+messageSent
+    print "All of the chat history: " + Gameinstance.messageHistory
+    emit('messageReceived', {'msg' : messageSent}, room=room)
 
 @socketio.on('click')
 def handleclick(msg):
@@ -132,8 +147,6 @@ def handleclick(msg):
     #response=game.directFlight(1,cityToMove)
     #response will be either true or false
     response = True
-
-
     emit('directFlightChecked', {'msg':response,'city':cityToMove},room=room)
 
 
@@ -370,29 +383,38 @@ def handle_message(msg):
 def lobby():
 
     if request.method == 'POST':
-        for key in games:
-            if key == request.form['roomname']:
-                print ("That room already exists")
-                # we are setting the name to invalid so when we redirect it to the lobby it knows that the username put an exisitng room
-                # and now it can be corrected.
-                # fron end people shoul use this
-                session['roomtype'] = "invalid"
-                return (render_template("lobby.html"))
+        print "Here"
 
-        session['username'] = request.form['username']
-        session['roomname'] = request.form['roomname']
-        session['roomtype'] = request.form['roomtype']
-        session['roomprivacy'] = request.form['privacy']
-        return (redirect(url_for('game')))
+        if request.form['roomtype'] == "join":
+
+                session['username'] = request.form['username']
+                session['roomname'] = request.form['roomname']
+                session['roomtype'] = request.form['roomtype']
+                return (redirect(url_for('game')))
+        else:
+            for key in games:
+                print "ROom type: "+ request.form['roomtype']
+                if key == request.form['roomname']:
+                    print "Room type: " +  request.form['roomtype'];
+                    print ("That room already exists")
+                    # we are setting the name to invalid so when we redirect it to the lobby it knows that the username put an exisitng room
+                    # and now it can be corrected.
+                    # fron end people shoul use this
+                    session['roomtype'] = "invalid"
+                    return (render_template("lobby.html"))
+
+            session['username'] = request.form['username']
+            session['roomname'] = request.form['roomname']
+            session['roomtype'] = request.form['roomtype']
+            session['roomprivacy'] = request.form['privacy']
+            return (redirect(url_for('game')))
+
+
+
 
     return (render_template("lobby.html"))
 
-@socketio.on('/joinroom')
-def handleMessage(msg):
-    user = session["username"]
-    room = session["roomname"]
-    join_room(room)
-    emit('created', {'msg' : ("Player " + str(user) + " created room " + room)}, room=room)
+
 ####################################################################################
 # DO NOT MOVE ANYTHING IN BETWEEN HERE
 #testing sending messages from game to server

@@ -3,7 +3,7 @@ $(document).ready(function () {
     socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on('connect', function () {
-        socket.emit('checkroomprivacy');
+        socket.emit('checkRoomPrivacy');
     });
 
     socket.on('publicRooms', function (data) {
