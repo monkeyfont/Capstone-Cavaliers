@@ -233,7 +233,7 @@ class Player:
 
 class GameBoard:
     """ Game class definition """
-    def __init__(self):
+    def __init__(self,playersDictionary):
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
         #just for now while testing the GameBoard init function
@@ -243,7 +243,8 @@ class GameBoard:
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.playerCount = 0
-        self.players = {1:Player(1), 2:Player(2),3:Player(3), 4:Player(4)}
+        #self.players = {1:Player(1), 2:Player(2),3:Player(3), 4:Player(4)}
+        self.players = playersDictionary
         self.blueUsed = 0 # disease cubes used
         self.redUsed = 0
         self.yellowUsed = 0
@@ -255,14 +256,30 @@ class GameBoard:
         self.outBreakLevel = 0
         self.infectionLevel = 0
         self.gameID = 0
+        self.visibility = "private"
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
-        self.players[1].setLocation("ATLANTA")
+        # self.players[1].setLocation("ATLANTA")
         self.cities["ATLANTA"].addResearchStation()
         self.__infectCitiesStage()
         self.__distributeHand()
+        self.__setStartingLocation()
+        self.__setRoles()
 
+
+    def __setStartingLocation(self):
+        for playerkey in self.players:
+            playerObj=self.players[playerkey]
+            playerObj.setLocation("ATLANTA")
+
+    def __setRoles(self):
+        roles=["contingencyPlanner","dispatcher","medic","operationsExpert","quarantineSpecialist","researcher","scientist"]
+        shuffle(roles)
+        for playerkey in self.players:
+            playerObj=self.players[playerkey]
+            playerObj.role=roles[0]
+            roles.pop(0)
 
     def __generateCities(self):
         """ Function generates a dictionary that contains all cities, and links between them. """
@@ -294,7 +311,7 @@ class GameBoard:
             for i in range(3):
                 playerhand.append(self.playerDeck[0])
                 self.playerDeck.remove(self.playerDeck[0])
-                print("Player id is",id,"cards are ",playerhand[i].name)
+                #print("Player id is",id,"cards are ",playerhand[i].name)
 
 
 
@@ -315,7 +332,7 @@ class GameBoard:
             cityObj = self.cities[cityName] # get the city object with the key that matches card city name.
             colour = cityObj.colour
             cityObj.infectCity(colour, infectionAmount)
-            print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
+           # print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
         # discard the 9 infection cards.
         for i in range(9):
             self.infectionDiscarded.append(self.infectionDeck.pop(0))
@@ -325,6 +342,15 @@ class GameBoard:
         """ """
         pass
 
+    # def __setStartingLocation(self):
+    #     """ """
+    #
+    #     print(self.players," IS THE PLAYERSSS")
+    #     for playerk in self.players:
+    #         playerObj=self.players[playerk]
+    #         playerObj.setLocation("ATLANTA")
+    #         print"PLAYER : ",playerObj, "is now in: ",playerObj.getLocation()
+
     def movePlayer(self, playerId, nextCityName):
         """
         card desc: Move to a connected city
@@ -332,14 +358,15 @@ class GameBoard:
         This sets the player object to that city, and the city object to know that the player is there.
         Returns: True if successful, False if unsuccessful.
         """
+
         currentCityName = self.players[playerId].getLocation()
         cityObj = self.cities[currentCityName]
         if nextCityName in cityObj.getConnections():
             self.players[playerId].setLocation(nextCityName)
-            print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
+            #print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             return True
         else:
-            print("PlayerID " + str(playerId) + " FAILED to move to move from  "+currentCityName+" to " + nextCityName)
+            #print("PlayerID " + str(playerId) + " FAILED to move to move from  "+currentCityName+" to " + nextCityName)
             return False
 
 
