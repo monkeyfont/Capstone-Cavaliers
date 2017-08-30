@@ -789,12 +789,21 @@ socket.on('gotPlayer',function(data){
 	console.log('data is: ',data )
 	console.log("you are the player",data.playerName);
 	console.log("you are the player",data.playerType);
-	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+	// players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
 
-
-window.onload = function (){socket.emit('getPlayerObject') }
-
+socket.on('gamePlayerInitilization',function(data){
+	console.log('data is: ',data )
+	cityName = data.playerLocation;
+	console.log(locations[cityName]);
+	city = locations[cityName]
+	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
+});
+window.onload = function (){
+	socket.emit('getPlayerObject') 
+	socket.emit('getGameInitialization') 
+	}
+// window.onload = function (){socket.emit('getGameInitialization') }
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();
