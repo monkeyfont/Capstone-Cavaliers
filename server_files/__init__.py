@@ -88,7 +88,6 @@ def playerJoined():
 @socketio.on('getMessages')
 def getMessages():
     roomStart = session["roomname"]
-
     Gameinstance = games[roomStart]
     previousMessages = Gameinstance.messageHistory
     leave_room(roomStart)

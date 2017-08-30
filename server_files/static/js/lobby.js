@@ -4,16 +4,22 @@ $(document).ready(function () {
 
     socket.on('connect', function () {
         socket.emit('checkRoomPrivacy');
+        // This will be called automatically
+        // it will allow the user to request all the public rooms
+
+    });
+        // This will display the public rooms availble
+    socket.on('publicRooms', function (data) {
+        console.log(data);
+        var i = 0;
+        for (roomID in data.rooms){
+            console.log(data.rooms[0]);
+            $('#roomlog').val($('#roomlog').val() + data.rooms[i] + '\n');
+            i = i + 1;
+        }
+        i = 0;
     });
 
-    socket.on('publicRooms', function (data) {
-    console.log(data);
-    var i = 0;
-    for (roomID in data.rooms){
-        console.log(data.rooms[0]);
-        $('#roomlog').val($('#roomlog').val() + data.rooms[i] + '\n');
-        i = i + 1;
-    }
-    i = 0;
-    });
+
+
 });

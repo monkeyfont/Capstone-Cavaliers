@@ -2,20 +2,19 @@ var socket;
 $(document).ready(function () {
 
     socket = io.connect('http://' + document.domain + ':' + location.port);
-    socket.on('connect', function () {
-        socket.emit('getMessages');
-    });
-    $("#message_button").click(function(){
+
+
+    $("#movement_button").click(function(){
         // get the value from the movement box
-        var value = $('#message_input').val();
+        var value = $('#movement_input').val();
         // clear the field
-        $('#message_input').val("");
+        $('#movement_input').val("");
         // submit that value
-        socket.emit('sendMessage', {message:value})
+        socket.emit('move', {move_location:value})
 
     });
 
-    socket.on('messageReceived', function (data) {
+    socket.on('moved', function (data) {
         $('#log').val($('#log').val() + data.msg + '\n');
     });
 
