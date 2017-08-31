@@ -30,8 +30,6 @@ def game():
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         playerdict = currentLobby.players
-        print playerdict[1].name
-        print playerdict[2].name
         gameobject = GameBoard(playerdict)
         gameobject.gameID = roomname
         games[roomname] = gameobject
