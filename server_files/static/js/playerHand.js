@@ -34,10 +34,15 @@ function playerHand(){
 		//options = {cardname:cardName}
 	}
 	this.render = function(){
+		startPoint = 960-(Object.keys(this.cards).length)/2*(584*0.5)
+		pos = 0;
 		for(i in this.cards){
-			this.cards[i].move (this.xPos,this.yPos)
+			console.log(i)
+			console.log(startPoint+(584*pos),this.yPos)
+			this.cards[i].move (startPoint+584*0.5*pos,this.yPos)
 			this.cards[i].render();
+			pos++;
 		}
-		console.log(Object.keys(this.cards).length)
+		console.log((Object.keys(this.cards).length)/2)
 	}
 }
