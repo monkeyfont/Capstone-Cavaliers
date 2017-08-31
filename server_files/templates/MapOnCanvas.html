@@ -47,12 +47,13 @@ Your browser does not support the HTML5 canvas tag.
 </canvas>
 
     <div class="container">
-        <h3>Move</h3>
-        <input id="movement_input" placeholder="move to?">
-        <input id="movement_button" type="button" value="Move">
+        <h3>Message</h3>
+        <input id="message_input" placeholder="">
+        <input id="message_button" type="button" value="Send">
+
     </div>
     <div class="container">
-        <h3>Event log</h3>
+        <h3>Chat history</h3>
         <textarea id="log"></textarea>
     </div>
 
@@ -63,9 +64,9 @@ Your browser does not support the HTML5 canvas tag.
 
 	$('.btn').on('click', function(e){
 		alert("Button clicked with value: "+e.currentTarget.value);
-	});	
-	
-	
+	});
+
+
 </script>
 <script src="static/js/infectionRate.js"></script>
 <script src="static/js/outbreakCounter.js"></script>
@@ -75,9 +76,8 @@ Your browser does not support the HTML5 canvas tag.
 <script src="static/js/playerClass.js"></script>
 <script src="static/js/playerInitilization.js"></script>
 <script src="static/js/backgroundMusic.js"></script>
-
+<script src="static/js/GameBoardPlayerMessagingSystem.js"></script>
 <script src="static/js/spriteAnimate.js"></script>
-<script src="static/js/roomChoice.js"></script>
 
 
 </body>

@@ -6,5 +6,7 @@ class Lobby:
         self.players={}
         self.privacy=""
         self.playerCount=0
+        self.messageHistory = ""
+
 
 
