@@ -27,12 +27,6 @@ def game():
 
         username = str(session['username'])
         roomname = str(session['roomname'])
-        #join_room(roomname)
-
-        # We need to check if the user is joining or creating a game
-        print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
-
-
         currentLobby = lobbies[roomname]
         playerdict = currentLobby.players
 
@@ -49,8 +43,8 @@ def game():
     print("NOT IN SESSION")
 
 
-    # return "You are not logged in <br><a href = '/lobby'></b>" + \
-    #   "click here to log in</b></a>"
+    return "You are not logged in <br><a href = '/lobby'></b>" + \
+      "click here to log in</b></a>"
 
 
 @socketio.on('checkroomprivacy')
@@ -71,6 +65,7 @@ def playerJoined():
 
     join_room(session["roomname"])
     emit('playerJoined',{'msg': str(session['username']) + " has joined room " + str(session['roomname'])},room=session["roomname"])
+
 
 @socketio.on('getGameInitialization')
 def getGameInitialization():
