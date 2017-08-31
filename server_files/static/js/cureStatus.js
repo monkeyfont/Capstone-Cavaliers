@@ -1,12 +1,12 @@
-var undiscovered = new image();
-var redDiscovered = new image();
-var redEradicated = new image();
-var blueDiscovered = new image();
-var blueEradicated = new image();
-var yellowDiscovered = new image();
-var yellowEradicated = new image();
-var blackDiscovered = new image();
-var blackEradicated = new image();
+var undiscovered = new Image();
+var redDiscovered = new Image();
+var redEradicated = new Image();
+var blueDiscovered = new Image();
+var blueEradicated = new Image();
+var yellowDiscovered = new Image();
+var yellowEradicated = new Image();
+var blackDiscovered = new Image();
+var blackEradicated = new Image();
 
 function cureStatusBar(options){
 	this.xPos = options.xPos;

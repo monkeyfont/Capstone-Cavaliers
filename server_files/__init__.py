@@ -28,12 +28,6 @@ def game():
 
         username = str(session['username'])
         roomname = str(session['roomname'])
-        #join_room(roomname)
-
-        # We need to check if the user is joining or creating a game
-        print"PLAYER NAME IS ",username, "ROOM NAME IS ",roomname
-
-
         currentLobby = lobbies[roomname]
         playerdict = currentLobby.players
 
@@ -47,9 +41,6 @@ def game():
             return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
-
-
-
 
 @socketio.on('checkRoomPrivacy')
 def roomprivacy():
@@ -69,6 +60,7 @@ def roomprivacy():
 def playerJoined():
     join_room(session["roomname"])
     emit('playerJoined',{'msg': str(session['username']) + " has joined room " + str(session['roomname'])},room=session["roomname"])
+
 
 @socketio.on('getGameInitialization')
 def getGameInitialization():
