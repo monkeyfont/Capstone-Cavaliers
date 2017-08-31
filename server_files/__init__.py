@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, make_response,redirect, url_f
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from game import *
 from lobby import *
+from time import gmtime, strftime
 import random
 from flask import Flask, redirect, url_for
 import unittest
@@ -37,32 +38,26 @@ def game():
             gameobject = GameBoard(playerdict)
             gameobject.gameID = roomname
             games[roomname] = gameobject
-            print games
             return (render_template("MapOnCanvas.html"))
-
-    print("NOT IN SESSION")
-
-
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
 
-
-@socketio.on('checkroomprivacy')
+@socketio.on('checkRoomPrivacy')
 def roomprivacy():
     print ("Check room called")
     #"Check move called"
-    join_room("1")
+    join_room("default")
     publicLobbies = []
     for lobbyobjectkey in lobbies:
         lobbyobj=lobbies[lobbyobjectkey]
         if lobbyobj.privacy == "public":
             print("public lobby found with id " +lobbyobj.name )
             publicLobbies.append(lobbyobj.name)
-    emit('publicLobbies', {'lobbies': publicLobbies}, room=1)
+    emit('publicLobbies', {'lobbies': publicLobbies}, room="default")
+
 
 @socketio.on('playerJoined')
 def playerJoined():
-
     join_room(session["roomname"])
     emit('playerJoined',{'msg': str(session['username']) + " has joined room " + str(session['roomname'])},room=session["roomname"])
 
@@ -100,25 +95,37 @@ def getPlayerObject():
 def startGame():
     roomname = session["roomname"]
     username = session["username"]
+    lobbies[roomname].messageHistory = ""
 
     emit('gameStarted',{},room=roomname)
 
+@socketio.on('getMessages')
+def getMessages():
+    roomStart = session["roomname"]
+    LobbyInstance = lobbies[roomStart]
+    previousMessages = LobbyInstance.messageHistory
+    leave_room(roomStart)
+    join_room(roomStart+"GetMessage")
+    emit('messageReceived', {'msg' : previousMessages }, room=roomStart+"GetMessage")
+    leave_room(roomStart+"GetMessage")
+    join_room(roomStart)
 
-@socketio.on('join')
-def joined():
-    player = session["username"]
-    room = session["roomname"]
-    print ("Player name: " + player)
-    print ("Player room name: " + room)
-    join_room(room)
-    emit('joined', {'msg': str(player) + " joined room " + str(room)}, room=room)
-
-@socketio.on('move')
+@socketio.on('sendMessage')
 def handleMessage(msg):
+    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
     player = session["username"]
     room = session["roomname"]
-    location = msg["move_location"]
-    emit('moved', {'msg' : str(player) + " moved to " + location}, room=room)
+    message = msg["message"]
+
+    messageSent = time + "  :: "+ player + " said: "+message
+    LobbyInstance = lobbies[room]
+    if LobbyInstance.messageHistory == "":
+        LobbyInstance.messageHistory = messageSent
+    else:
+        LobbyInstance.messageHistory = LobbyInstance.messageHistory + " &#013 "+messageSent
+    print "All of the chat history: " + LobbyInstance.messageHistory
+    emit('messageReceived', {'msg' : messageSent}, room=room)
 
 @socketio.on('click')
 def handleclick(msg):
@@ -163,6 +170,7 @@ def handleclick(msg):
             response = gameObject.directFlight(playerObject.id, cityToMove)
 
     emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+
 
 
 @socketio.on('checkCharterFlight')
@@ -400,6 +408,7 @@ def lobby():
     global playerIDs
 
     if request.method == 'POST':
+
             session['username'] = request.form['username']
             session['roomname'] = request.form['roomname']
             if request.form['roomtype']=="create":
@@ -437,14 +446,12 @@ def lobby():
             return (render_template("intermission.html",room=session['roomname']))
 
 
+
+
+
     return (render_template("lobby.html"))
 
-@socketio.on('/joinroom')
-def handleMessage(msg):
-    user = session["username"]
-    room = session["roomname"]
-    join_room(room)
-    emit('created', {'msg' : ("Player " + str(user) + " created room " + room)}, room=room)
+
 ####################################################################################
 # DO NOT MOVE ANYTHING IN BETWEEN HERE
 #testing sending messages from game to server

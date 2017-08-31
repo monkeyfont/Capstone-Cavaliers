@@ -3,9 +3,10 @@ $(document).ready(function () {
     socket = io.connect('http://' + document.domain + ':' + location.port);
 
     socket.on('connect', function () {
-        socket.emit('checkroomprivacy');
-    });
-
+        socket.emit('checkRoomPrivacy');
+        // This will be called automatically
+        // it will allow the user to request all the public rooms
+});
     socket.on('publicLobbies', function (data) {
     console.log(data);
     var i = 0;
