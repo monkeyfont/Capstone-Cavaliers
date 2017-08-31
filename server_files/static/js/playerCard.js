@@ -80,6 +80,7 @@ function playerCard(options){
 		}
 	}
 	this.render = function () {
+		this.update();
         // Draw the animation
 		//console.log("image render",this.image.src)
 		this.context.drawImage(

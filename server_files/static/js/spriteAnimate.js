@@ -424,7 +424,7 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-
+	console.log(message);
 
 
 	for (var i in spriteList){
@@ -548,6 +548,11 @@ function gameLoop(){
 
 	outbreakCount.render();
 	infectRate.render();
+	
+	
+	playersHand.render();
+	
+	
 	// AtlantaInfection.render()
 	// for (var i in cities){
 
@@ -763,9 +768,9 @@ function flippable(options) {
     };
 }
 
-outbreakCount = new outbreakCounter({})
-infectRate = new infectionRate({})
-
+outbreakCount = new outbreakCounter({});
+infectRate = new infectionRate({});
+playersHand = new playerHand();
 players = new playerInitilization();
 //players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 
@@ -775,6 +780,11 @@ players = new playerInitilization();
 spriteList = [card,deck];
 
 mapImage.addEventListener("load", gameLoop);
+
+addPlayersCard = function(){
+	playersHand.addCard({cardName:'testCard'});
+}
+
 
 
 moveInfection = function(){
