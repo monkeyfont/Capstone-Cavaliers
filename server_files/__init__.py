@@ -30,15 +30,12 @@ def game():
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         playerdict = currentLobby.players
-
-        if roomname in games: # if game for this room has already been created then go to game
-            return(render_template("MapOnCanvas.html"))
-        else:
-              #otherwise create a new game for this room
-            gameobject = GameBoard(playerdict)
-            gameobject.gameID = roomname
-            games[roomname] = gameobject
-            return (render_template("MapOnCanvas.html"))
+        print playerdict[1].name
+        print playerdict[2].name
+        gameobject = GameBoard(playerdict)
+        gameobject.gameID = roomname
+        games[roomname] = gameobject
+        return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
 
@@ -66,9 +63,7 @@ def playerJoined():
 def getGameInitialization():
     roomname = session["roomname"]
     gameboard = games[roomname]
-    print (gameboard.players)
     for player in gameboard.players:
-        print (player)
         playerObj = gameboard.players[player]
         playerName = playerObj.name
         playerLocation = playerObj.getLocation()
@@ -101,22 +96,32 @@ def startGame():
 
 @socketio.on('getMessages')
 def getMessages():
-    roomStart = session["roomname"]
-    LobbyInstance = lobbies[roomStart]
-    previousMessages = LobbyInstance.messageHistory
-    leave_room(roomStart)
-    join_room(roomStart+"GetMessage")
-    emit('messageReceived', {'msg' : previousMessages }, room=roomStart+"GetMessage")
-    leave_room(roomStart+"GetMessage")
-    join_room(roomStart)
+    if lobbies == {}:
+        return
+    else:
+        roomStart = session["roomname"]
+        print roomStart
+        LobbyInstance = lobbies[roomStart]
+        previousMessages = LobbyInstance.messageHistory
+        leave_room(roomStart)
+        join_room(roomStart+"GetMessage")
+        emit('messageReceived', {'msg' : previousMessages }, room=roomStart+"GetMessage")
+        leave_room(roomStart+"GetMessage")
+        join_room(roomStart)
 
+# this will received the message by the user
+# add it to the message history
+# and then return the whole history
 @socketio.on('sendMessage')
 def handleMessage(msg):
     time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     player = session["username"]
+    print player
     room = session["roomname"]
+    print room
     message = msg["message"]
+    print message
 
     messageSent = time + "  :: "+ player + " said: "+message
     LobbyInstance = lobbies[room]
