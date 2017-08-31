@@ -37,12 +37,10 @@ function playerHand(){
 		startPoint = 960-(Object.keys(this.cards).length)/2*(584*0.5)
 		pos = 0;
 		for(i in this.cards){
-			console.log(i)
-			console.log(startPoint+(584*pos),this.yPos)
 			this.cards[i].move (startPoint+584*0.5*pos,this.yPos)
 			this.cards[i].render();
 			pos++;
 		}
-		console.log((Object.keys(this.cards).length)/2)
+		// console.log((Object.keys(this.cards).length)/2)
 	}
 }
