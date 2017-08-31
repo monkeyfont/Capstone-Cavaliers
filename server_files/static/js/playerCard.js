@@ -1,23 +1,58 @@
 function playerCard(options){
 	this.id = options.id,			
-	this.frameIndex = 0, //current frame being rendered
-	this.tickCount = 0,	// number of updates since the last render 
-	this.ticksPerFrame = options.ticksPerFrame || 0; //by having ticks per frame, it allows us to slow the animation down, and still fun a game at 60fps, 
 	this.context = options.context;
 	this.width = options.width;
 	this.height = options.height;
-	this.image = options.image;
-	this.loop = options.loop || true; // do we loop the sprite, or just play it once
+	this.widthDraw = options.width;
+	this.heightDraw = options.height;
+	this.imageFront = options.imageFront;
+	this.imageBack = options.imageBack;
 	this.yPos = options.yPos || 0;
 	this.xPos = options.xPos || 0;
-	this.numberOfFrames = options.numberOfFrames || 1;
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
-	this.yStart = options.yStart || 0;
 	this.moveX = this.xPos;
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
 	this.tempSpeed = 0;
+	this.flipping = false;
+	this.flipSpeed = options.flipSpeed || 20;
+	this.flipStage = 0;
+	this.toFlip = false;
+	this.currentImage = this.imageBack,
+	this.flip = function() {
+		// if the card is on its back flip to its front
+		// scale the card down
+		// swap the card
+		// scale the card up
+		this.flipping = true;
+		if (this.flipStage == 10){
+
+		}else{
+			this.widthDraw -= this.width/this.flipSpeed;
+		}
+		if (this.widthDraw <0.1 && this.widthDraw > -0.1){
+			this.toFlip=true;
+		}
+
+		if (this.toFlip == true){
+			if (this.currentImage==this.imageBack){
+				this.currentImage = this.imageFront;
+			}else{
+				this.currentImage=this.imageBack;
+			}
+			this.toFlip = false;
+		}
+
+
+		if (this.widthDraw <= -this.width){
+			this.flipping = false;
+			this.widthDraw = this.width;
+			this.xPos = this.xPos-(this.width*this.xScale);
+		}
+	}
+	
+	
 	
 	
 	this.move = function (x, y){
@@ -66,32 +101,23 @@ function playerCard(options){
 				
 			}
 		}
-		//update the frame every x ticks 
-		//console.log("updated",this.image.src);
-		this.tickCount +=1;
-		if (this.tickCount > this.ticksPerFrame){
-			this.tickCount = 0;
-			if (this.frameIndex<this.numberOfFrames-1){
-				this.frameIndex +=1;
-			}else if (this.loop){
-				this.frameIndex=0
-			}
-			
-		}
 	}
 	this.render = function () {
+		if (this.flipping == true){
+			this.flip();
+		}
 		this.update();
         // Draw the animation
 		//console.log("image render",this.image.src)
 		this.context.drawImage(
-		this.image, //image to use
-		this.frameIndex * this.width, // x position to start clipping 
-		this.yStart, // y position to start clipping
+		this.currentImage, //image to use
+		0, // x position to start clipping 
+		0, // y position to start clipping
 		this.width, //width of clipped image
 		this.height, // height of clipped image
 		this.xPos, //x position for image on canvas
 		this.yPos, // y position for image on canvas
-		this.width*this.xScale, // width of image to use 
-		this.height*this.yScale); // height of image to use
+		this.widthDraw*this.xScale, // width of image to use 
+		this.heightDraw*this.yScale); // height of image to use
     };
 }

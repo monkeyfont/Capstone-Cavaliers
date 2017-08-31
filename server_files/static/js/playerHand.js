@@ -23,11 +23,11 @@ function playerHand(){
 			xScale:0.5,
 			yScale:0.5,
 			imageBack: CardImage,
-			image: cardFront
+			imageFront: cardFront
 		});
-		
-		this.cards[options.cardName+Object.keys(this.cards).length] = newPlayerCard;
-		
+		cardName = options.cardName+Object.keys(this.cards).length;
+		this.cards[cardName] = newPlayerCard;
+		this.cards[cardName].flipping = true;
 		
 	}
 	this.removeCard = function (options){
