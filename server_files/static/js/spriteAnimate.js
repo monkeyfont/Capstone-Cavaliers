@@ -808,6 +808,12 @@ socket.on('gamePlayerInitilization',function(data){
 	city = locations[cityName]
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 });
+
+socket.on('infectedStartCities',function(data){
+	alert(data)
+
+});
+
 window.onload = function (){
 	socket.emit('getPlayerObject') 
 	socket.emit('getGameInitialization') 

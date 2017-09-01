@@ -230,7 +230,7 @@ class Player:
 
 class GameBoard:
     """ Game class definition """
-    def __init__(self, player1=None, player2=None, player3=None, player4=None):
+    def __init__(self, playerDict):
 
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
@@ -241,7 +241,7 @@ class GameBoard:
         self.infectionDiscarded = []
         self.playerDiscarded = []
         self.playerCount = 0
-        self.players = {} # {id:playerObj}
+        self.players = playerDict # {id:playerObj}
         self.blueUsed = 0 # total disease cubes used?
         self.redUsed = 0
         self.yellowUsed = 0
@@ -252,6 +252,7 @@ class GameBoard:
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
+        self.infectedCities={}
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
@@ -259,8 +260,8 @@ class GameBoard:
         #self.cities["ATLANTA"].addResearchStation()
         # self.__infectCitiesStage()
         # self.__distributeHand()
-        self.__setStartingLocation()
-        self.__setRoles()
+        self.__initializeBoard()
+
 
 
     def __setStartingLocation(self):
@@ -283,10 +284,11 @@ class GameBoard:
         self.playerDeck = self.generatePlayerDeck() # [PlayerCard]
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
-        self.players[1].location = ("ATLANTA")
+        #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
+        self.__setRoles()
 
     def addPlayer(self, playerObj):
         """
@@ -351,12 +353,13 @@ class GameBoard:
         for i in range(9):
             if i % 3 == 0 and i != 0: # this will happen on cards 3 and 6.
                 infectionAmount -= 1
-            print self.infectionDeck[4]
+
             cityName = self.infectionDeck[i].name
             cityObj = self.cities[cityName] # get the city object with the key that matches card city name.
             colour = cityObj.colour
             cityObj.infect(colour, infectionAmount)
             print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
+            self.infectedCities[cityName]=infectionAmount
             # discard the 9 infection cards.
         for i in range(9):
             self.infectionDiscarded.append(self.infectionDeck.pop(0))

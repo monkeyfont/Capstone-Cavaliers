@@ -30,9 +30,13 @@ def game():
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         playerdict = currentLobby.players
-        gameobject = GameBoard(playerdict)
-        gameobject.gameID = roomname
-        games[roomname] = gameobject
+        if roomname not in games:
+            gameobject = GameBoard(playerdict)
+            gameobject.gameID = roomname
+            games[roomname] = gameobject
+
+
+
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
@@ -64,7 +68,7 @@ def getGameInitialization():
     for player in gameboard.players:
         playerObj = gameboard.players[player]
         playerName = playerObj.name
-        playerLocation = playerObj.getLocation()
+        playerLocation = playerObj.location
         playerRole = playerObj.role
         emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
 
@@ -115,19 +119,15 @@ def handleMessage(msg):
     time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     player = session["username"]
-    print player
     room = session["roomname"]
-    print room
     message = msg["message"]
-    print message
-
     messageSent = time + "  :: "+ player + " said: "+message
     LobbyInstance = lobbies[room]
     if LobbyInstance.messageHistory == "":
         LobbyInstance.messageHistory = messageSent
     else:
         LobbyInstance.messageHistory = LobbyInstance.messageHistory + " &#013 "+messageSent
-    print "All of the chat history: " + LobbyInstance.messageHistory
+    #print "All of the chat history: " + LobbyInstance.messageHistory
     emit('messageReceived', {'msg' : messageSent}, room=room)
 
 @socketio.on('click')
@@ -135,7 +135,7 @@ def handleclick(msg):
     room = str(session['roomname'])
     player = session["username"]
     messg= msg["mess"]
-    print(messg)
+    #print(messg)
 
     emit('clicked', {'msg' : player + messg },room=room)
 
@@ -145,7 +145,7 @@ def handlecheckmove(msg):
     roomName = str(session['roomname'])
     username = str(session["username"])
     cityToMove= msg["cityName"]
-    print (username, " in room ", roomName," moved to ", cityToMove)
+    #print (username, " in room ", roomName," moved to ", cityToMove)
     gameObject = games[roomName]
     playerDictionary = gameObject.players
     for key in playerDictionary:
@@ -153,7 +153,8 @@ def handlecheckmove(msg):
         if playerObject.name == username:
             response=gameObject.movePlayer(playerObject.id,cityToMove)
             #       response will be either true or false
-            print ("we are about to emit a message")
+            #
+            # print ("we are about to emit a message")
             emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=roomName)
 
 
