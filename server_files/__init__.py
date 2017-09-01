@@ -82,6 +82,25 @@ def getinitInfections():
     emit('intitialInfectedCities',citiesInfected,room=session["roomname"])
 
 
+
+@socketio.on('getPlayersHands')
+def getPlayersHands():
+    roomname = session["roomname"]
+    gameboard = games[roomname]
+    playersHands={}
+    players=gameboard.players
+    for playerK in players:
+        playerObj= players[playerK]
+        playerHand=playerObj.hand
+        playerCardNames=[]
+        for card in playerHand:
+            cardname=card.name
+            playerCardNames.append(cardname)
+        playersHands[playerK]=playerCardNames
+
+    emit('gotInitialHands',playersHands,room=session["roomname"])
+
+
 @socketio.on('getPlayerObject')
 def getPlayerObject():
 

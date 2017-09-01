@@ -831,6 +831,29 @@ socket.on('intitialInfectedCities',function(data){
        }
        });
 
+socket.on('gotInitialHands',function(data){
+
+    for (var player in data) {
+
+    if (data.hasOwnProperty(player)) {
+    var playerId= player
+    var cards=data[player]
+    console.log("Player "+playerId + "has the cards: ")
+    for (var card in cards) {
+
+    if (cards.hasOwnProperty(card)) {
+
+    // if you want to access each individial card then get in here through cards[card]
+    // if you want the list of player cards get it through just "cards"
+    console.log(cards[card])
+                  }
+             }
+        }
+    }
+ });
+
+
+
 
 
 
@@ -838,6 +861,7 @@ window.onload = function (){
 	socket.emit('getPlayerObject') 
 	socket.emit('getGameInitialization')
 	socket.emit('getinitInfections')
+	socket.emit('getPlayersHands')
 
 	}
 // window.onload = function (){socket.emit('getGameInitialization') }
