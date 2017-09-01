@@ -1,8 +1,8 @@
 var scrnWidth = window.innerWidth;//screen.width;
 var scrnHeight = window.innerHeight;//screen.height;
 console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
-var optimalScreenWidth = 1920;
-var optimalScreenHeight = 1080;
+var optimalScreenWidth = 2560; //1920
+var optimalScreenHeight = 1440; //1080;
 
 var screenHeightPercentage = scrnHeight/optimalScreenHeight;
 var screenWidthPercentage = scrnWidth/optimalScreenWidth;
@@ -79,12 +79,11 @@ socket.on('joined', function (data) {
 //CHECK MOVE TO NEIGHBOURING CITY
 function checkMove(city){
 
-
+    console.log("emitting move");
     socket.emit('checkMove', {cityName:city})
 
     };
 socket.on('checked', function (data) {
-        //alert(data.msg);
         check=data.msg;
         var city=eval(data.city);
         console.log(check+" "+ city)
@@ -101,7 +100,7 @@ socket.on('checked', function (data) {
 
 function directFlight(city) {
 
-    var city = prompt("Enter name of city in your hand you would like to move to");
+    var city = prompt("Enter name of city card in your hand you would like to move to");
     socket.emit('checkDirectFlight', {cityName:city})
 }
 socket.on('directFlightChecked', function (data) {
@@ -110,7 +109,8 @@ socket.on('directFlightChecked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            player.move(city.xPos,city.yPos);
+
+            players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -130,8 +130,9 @@ socket.on('charterFlightChecked', function (data) {
         //alert(data.msg);
         check=data.msg;
         var city=eval(data.city);
-        console.log(check+" "+ city)
+
         if (check ==true){
+        players.players[data.playerName].move(city.xPos,city.yPos);
             // player.move(city.xPos,city.yPos);
 	}
 	else{
@@ -154,7 +155,7 @@ socket.on('shuttleFlightChecked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            // player.move(city.xPos,city.yPos);
+             players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -295,7 +296,7 @@ coinImage.src = "static/images/coin-sprite-animation.png";
 var playerImage = new Image();
 playerImage.src = 'static/images/player6.png';
 var mapImage = new Image();
-mapImage.src = 'static/images/WorldMap.jpg';
+mapImage.src = 'static/images/backgroundMap.jpg'//'static/images/WorldMap.jpg';
 var cityImage = new Image();
 cityImage.src = "static/images/city token.png";
 
@@ -339,6 +340,7 @@ function infecting(){
 
 
 }
+
 
 
 
@@ -425,7 +427,7 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-
+	console.log(message);
 
 
 	for (var i in spriteList){
@@ -549,6 +551,11 @@ function gameLoop(){
 
 	outbreakCount.render();
 	infectRate.render();
+	
+	
+	playersHand.render();
+	
+	
 	// AtlantaInfection.render()
 	// for (var i in cities){
 
@@ -764,11 +771,11 @@ function flippable(options) {
     };
 }
 
-outbreakCount = new outbreakCounter({})
-infectRate = new infectionRate({})
-
+outbreakCount = new outbreakCounter({});
+infectRate = new infectionRate({});
+playersHand = new playerHand();
 players = new playerInitilization();
-players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+//players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 
 
 
@@ -776,6 +783,11 @@ players.addPlayer({playerName:"player1",playerType:"contingencyPlanner",xPos:ATL
 spriteList = [card,deck];
 
 mapImage.addEventListener("load", gameLoop);
+
+addPlayersCard = function(){
+	playersHand.addCard({cardName:'testCard'});
+}
+
 
 
 moveInfection = function(){
@@ -785,15 +797,81 @@ moveInfection = function(){
 }
 
 
-socket.on('playerJoined',function(data){
+socket.on('gotPlayer',function(data){
 	console.log('data is: ',data )
-	console.log("you've joined the room",data.playerName);
-	players.addPlayer({playerName:data['playerName'],playerType:"contingencyPlanner",xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
+	console.log("you are the player",data.playerName);
+	console.log("you are the player",data.playerType);
+	// players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
 
+socket.on('gamePlayerInitilization',function(data){
+	console.log('data is: ',data )
+	cityName = data.playerLocation;
+	console.log(locations[cityName]);
+	city = locations[cityName]
+	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
+});
 
-window.onload = function (){socket.emit('playerJoined') }
+socket.on('intitialInfectedCities',function(data){
 
+    var amount;
+
+    //this is all just to loop through a json Object which is quite annoying
+    for (var city in data) {
+        if (data.hasOwnProperty(city)) {
+             for (var colour in data[city]){
+                if (data[city].hasOwnProperty(colour)) {
+                amount=data[city][colour];
+                // here loop through the amount which is number of times the city needs to be infected
+                for (var x=0;x<amount;x++){
+                // get the city from locations and infect it with karls .infect function
+                locations[city].infect({})
+                }
+             }
+        }
+       }
+       }
+       });
+
+socket.on('gotInitialHands',function(data){
+
+
+    for (var player in data) {
+
+    if (data.hasOwnProperty(player)) {
+    var playerId= player
+    var cards=data[player]
+    console.log("Player "+playerId + "has the cards: ")
+    $('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
+
+    for (var card in cards) {
+
+    if (cards.hasOwnProperty(card)) {
+
+    // if you want to access each individial card then get in here through cards[card]
+    // if you want the list of player cards get it through just "cards"
+    console.log(cards[card])
+
+    $('#cards').val($('#cards').val() + cards[card] + '\n');
+                  }
+             }
+        }
+    }
+ });
+
+
+
+
+
+
+window.onload = function (){
+	socket.emit('getPlayerObject') 
+	socket.emit('getGameInitialization')
+	socket.emit('getinitInfections')
+	socket.emit('getPlayersHands')
+
+	}
+// window.onload = function (){socket.emit('getGameInitialization') }
 // coinImage.addEventListener("load", gameLoop);
 // window.onload = function() {
 // coin.render();

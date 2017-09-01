@@ -2,24 +2,6 @@
 <html>
 <body>
 
-<p>Image to use:</p>
-<table>
-	<tr>
-		<td><input class = "btn" id="up-left" type="button" value="&#x2196" /></td>
-		<td><input class = "btn" id="up" type="button" value="&#x2191" /></td>
-		<td><input class = "btn" id="up-right" type="button" value="&#x2197" /></td>
-	</tr>
-	<tr>		
-		<td><input class = "btn" id="left" type="button" value="&#x2190" /></td>
-		<td><input class = "btn" id="stop" type="button" value="&#x25A0" /></td>
-		<td><input class = "btn" id="right" type="button" value="&#x2192" /></td>
-	</tr>
-	<tr>		
-		<td><input class = "btn" id="down-left" type="button" value="&#x2199" /></td>
-		<td><input class = "btn" id="down" type="button" value="&#x2193" /></td>
-		<td><input class = "btn" id="down-right" type="button" value="&#x2198" /></td>
-	</tr>
-</table>
 <p />
 <input class = "btn" id="clickTest" type="button" value="TESTER" />
 <p />
@@ -34,10 +16,14 @@
 <input type="button" value="Share Knowledge" onclick="shareKnowledge()" />
 <input type="button" value="Treat Disease" onclick="treatDisease()" />
 <input type="button" value="Discover Cure" onclick="discoverCure()" />
-
+<input type="button" value="add card to player" onclick="addPlayersCard()" />
 
 <!-- <img id="scream" 
 src="WorldMap.jpg" alt="The Scream"> -->
+<div class="Cardscontainer">
+        <h3>current Cards</h3>
+        <textarea id="cards"></textarea>
+    </div>
 
 <p>Canvas:</p>
 
@@ -48,8 +34,9 @@ Your browser does not support the HTML5 canvas tag.
 
     <div class="container">
         <h3>Message</h3>
-        <input id="movement_input" placeholder="send">
-        <input id="movement_button" type="button" value="Move">
+        <input id="message_input" placeholder="">
+        <input id="message_button" type="button" value="Send">
+
     </div>
     <div class="container">
         <h3>Chat history</h3>
@@ -63,9 +50,9 @@ Your browser does not support the HTML5 canvas tag.
 
 	$('.btn').on('click', function(e){
 		alert("Button clicked with value: "+e.currentTarget.value);
-	});	
-	
-	
+	});
+
+
 </script>
 <script src="static/js/infectionRate.js"></script>
 <script src="static/js/outbreakCounter.js"></script>
@@ -76,7 +63,12 @@ Your browser does not support the HTML5 canvas tag.
 <script src="static/js/playerInitilization.js"></script>
 <script src="static/js/backgroundMusic.js"></script>
 <script src="static/js/GameBoardPlayerMessagingSystem.js"></script>
+<script src="static/js/playerHand.js"></script>
+<script src="static/js/playerCard.js"></script>
+<script src="static/js/cureStatus.js"></script>
+
 <script src="static/js/spriteAnimate.js"></script>
+
 
 </body>
 </html>
