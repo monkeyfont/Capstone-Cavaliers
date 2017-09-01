@@ -209,179 +209,32 @@ def handleclick(msg):
 @socketio.on('checkCharterFlight')
 def handleclick(msg):
     room = str(session['roomname'])
-
+    username = str(session["username"])
     cityCardName=msg["cityName"]
     cityToMove= msg["destination"]
-    print("Player wants to discard card '",cityCardName,"' and wants to move to '",cityToMove,"' ")
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            print(playerObject.name," wants to use the card", cityCardName ," to move to ",cityToMove)
+            response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
     # IF USERS CURRENT CITY IS SAME AS THIS CITYTOMOVE TO VALUE THEN THEY CAN MOVE ANYWHERE
-    #response=game.charterFlight(1,cityCardName,cityToMove)
-    response=True
-    #response will be either true or false
 
-    emit('charterFlightChecked', {'msg':response,'city':cityToMove},room=room)
+    emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
 
 @socketio.on('checkShuttleFlight')
 def handleclick(msg):
     room = str(session['roomname'])
-    cityToMove= msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('shuttleFlightChecked', {'msg':response,'city':cityToMove},room=room)
-
-@socketio.on('buildResearchStation')
-def handleclick(msg):
-    room = str(session['roomname'])
-    cityToBuildOn= msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('researchBuildChecked', {'msg':response,'city':cityToBuildOn},room=room)
-
-@socketio.on('shareKnowledge')
-def handleclick(msg):
-    room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('knowledgeShared', {'msg':response,'city':playerCity},room=room)
-
-
-@socketio.on('treatDisease')
-def handleclick(msg):
-    room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('diseaseTreated', {'msg':response,'city':playerCity},room=room)
-
-
-@socketio.on('discoverCure')
-def handleclick(msg):
-    room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
-
-
-
-@socketio.on('message') # use for testing client side messages.
-def handle_message(msg):
-    print('received message: ' + str(msg))
-
-
-@socketio.on('checkCharterFlight')
-def handleclick(msg):
-    room = str(session['roomname'])
-
-    cityCardName=msg["cityName"]
-    cityToMove= msg["destination"]
-    print("Player wants to discard card '",cityCardName,"' and wants to move to '",cityToMove,"' ")
-    # IF USERS CURRENT CITY IS SAME AS THIS CITYTOMOVE TO VALUE THEN THEY CAN MOVE ANYWHERE
-    #response=game.charterFlight(1,cityCardName,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('charterFlightChecked', {'msg':response,'city':cityToMove},room=room)
-
-@socketio.on('checkShuttleFlight')
-def handleclick(msg):
-    room = str(session['roomname'])
-    cityToMove= msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('shuttleFlightChecked', {'msg':response,'city':cityToMove},room=room)
-
-@socketio.on('buildResearchStation')
-def handleclick(msg):
-    room = str(session['roomname'])
-    cityToBuildOn= msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('researchBuildChecked', {'msg':response,'city':cityToBuildOn},room=room)
-
-@socketio.on('shareKnowledge')
-def handleclick(msg):
-    room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('knowledgeShared', {'msg':response,'city':playerCity},room=room)
-
-
-@socketio.on('treatDisease')
-def handleclick(msg):
-    room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('diseaseTreated', {'msg':response,'city':playerCity},room=room)
-
-
-@socketio.on('discoverCure')
-def handleclick(msg):
-    room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
-
-
-
-@socketio.on('message') # use for testing client side messages.
-def handle_message(msg):
-    print('received message: ' + str(msg))
-
-
-
-@socketio.on('checkCharterFlight')
-def handleclick(msg):
-    room = str(session['roomname'])
-
-    cityCardName=msg["cityName"]
-    cityToMove= msg["destination"]
-    print("Player wants to discard card '",cityCardName,"' and wants to move to '",cityToMove,"' ")
-    # IF USERS CURRENT CITY IS SAME AS THIS CITYTOMOVE TO VALUE THEN THEY CAN MOVE ANYWHERE
-    #response=game.charterFlight(1,cityCardName,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('charterFlightChecked', {'msg':response,'city':cityToMove},room=room)
-
-@socketio.on('checkShuttleFlight')
-def handleclick(msg):
-    room = str(session['roomname'])
-    cityToMove= msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('shuttleFlightChecked', {'msg':response,'city':cityToMove},room=room)
+    username = str(session["username"])
+    cityToMove = msg["cityName"]
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response = gameObject.shuttleFlight(playerObject.id, cityToMove)
+    emit('shuttleFlightChecked', {'playerName': username,'msg':response,'city':cityToMove},room=room)
 
 @socketio.on('buildResearchStation')
 def handleclick(msg):

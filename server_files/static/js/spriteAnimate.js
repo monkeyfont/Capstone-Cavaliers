@@ -100,7 +100,7 @@ socket.on('checked', function (data) {
 
 function directFlight(city) {
 
-    var city = prompt("Enter name of city in your hand you would like to move to");
+    var city = prompt("Enter name of city card in your hand you would like to move to");
     socket.emit('checkDirectFlight', {cityName:city})
 }
 socket.on('directFlightChecked', function (data) {
@@ -109,7 +109,8 @@ socket.on('directFlightChecked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            player.move(city.xPos,city.yPos);
+
+            players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -129,8 +130,9 @@ socket.on('charterFlightChecked', function (data) {
         //alert(data.msg);
         check=data.msg;
         var city=eval(data.city);
-        console.log(check+" "+ city)
+
         if (check ==true){
+        players.players[data.playerName].move(city.xPos,city.yPos);
             // player.move(city.xPos,city.yPos);
 	}
 	else{
@@ -153,7 +155,7 @@ socket.on('shuttleFlightChecked', function (data) {
         var city=eval(data.city);
         console.log(check+" "+ city)
         if (check ==true){
-            // player.move(city.xPos,city.yPos);
+             players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
 	    console.log("Sorry invalid move");
@@ -846,6 +848,7 @@ socket.on('gotInitialHands',function(data){
     // if you want to access each individial card then get in here through cards[card]
     // if you want the list of player cards get it through just "cards"
     console.log(cards[card])
+    $('#cards').val($('#cards').val() + cards[card] + '\n');
                   }
              }
         }

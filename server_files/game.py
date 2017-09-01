@@ -286,6 +286,8 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
+        # jsut for testing on game page
+        self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
         self.__setRoles()
@@ -482,14 +484,15 @@ class GameBoard:
         for card in playerHand:
             if(card.name == curCityCard and currentLocation == curCityCard):
                 #if the city card is where you are, set cur city to the destination
+
                 playerObj.location = destinationCity
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 playerObj.actions -= 1
                 print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
                 return True
-            else:
-                return False
+
+        return False
 
 
     def shuttleFlight(self,playerId,destinationCity):
