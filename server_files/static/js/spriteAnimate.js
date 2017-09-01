@@ -342,6 +342,7 @@ function infecting(){
 
 
 
+
 var SANFRANCISCO = new city({id:'SANFRANCISCO', colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
 var CHICAGO = new city({id:'CHICAGO',colour:'blue',xPos:390,yPos:330,connections:['SANFRANCISCO','LOSANGELES','MEXICOCITY','ATLANTA','MONTREAL']});
 var MONTREAL = new city({id:'MONTREAL',colour:'blue',xPos:520,yPos:350,connections:['CHICAGO','WASHINGTON','NEWYORK']});
@@ -809,14 +810,35 @@ socket.on('gamePlayerInitilization',function(data){
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 });
 
-socket.on('infectedStartCities',function(data){
-	alert(data)
+socket.on('intitialInfectedCities',function(data){
 
-});
+    var amount;
+
+    //this is all just to loop through a json Object which is quite annoying
+    for (var city in data) {
+        if (data.hasOwnProperty(city)) {
+             for (var colour in data[city]){
+                if (data[city].hasOwnProperty(colour)) {
+                amount=data[city][colour];
+                // here loop through the amount which is number of times the city needs to be infected
+                for (var x=0;x<amount;x++){
+                // get the city from locations and infect it with karls .infect function
+                locations[city].infect({})
+                }
+             }
+        }
+       }
+       }
+       });
+
+
+
 
 window.onload = function (){
 	socket.emit('getPlayerObject') 
-	socket.emit('getGameInitialization') 
+	socket.emit('getGameInitialization')
+	socket.emit('getinitInfections')
+
 	}
 // window.onload = function (){socket.emit('getGameInitialization') }
 // coinImage.addEventListener("load", gameLoop);

@@ -72,6 +72,16 @@ def getGameInitialization():
         playerRole = playerObj.role
         emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
 
+
+@socketio.on('getinitInfections')
+def getinitInfections():
+    roomname = session["roomname"]
+    gameboard = games[roomname]
+    citiesInfected=gameboard.initInfectedCities
+
+    emit('intitialInfectedCities',citiesInfected,room=session["roomname"])
+
+
 @socketio.on('getPlayerObject')
 def getPlayerObject():
 
