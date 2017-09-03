@@ -10,12 +10,9 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
 app.secret_key = 'development' # change when out of development!
 socketio = SocketIO(app)
-room_ID = 1
-playerID = 1
 playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
-userTable = {} # this will be changed later on to be a database storing the user details
 
 
 ####################################################################################
@@ -24,7 +21,7 @@ userTable = {} # this will be changed later on to be a database storing the user
 @app.route('/')
 def home():
     # Quick session testing code.
-    return render_template("home.html")
+    return redirect(url_for('game'))
 
 @app.route('/game')
 def game():
@@ -335,10 +332,6 @@ def lobby():
 
 
             return (render_template("intermission.html",room=session['roomname']))
-
-
-
-
 
     return (render_template("lobby.html"))
 

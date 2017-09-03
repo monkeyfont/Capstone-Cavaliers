@@ -1,5 +1,5 @@
 from unittest import TestCase
-from game import City
+from pandemic import City # package level.
 
 class TestCity(TestCase):
 
