@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, make_response,redirect, url_for, escape, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from game import *
+from pandemic.gamelogic.game import *
 from lobby import *
 from time import gmtime, strftime
 import random
