@@ -1,5 +1,5 @@
 from unittest import TestCase
-from pandemic import *
+from pandemic.pandemic import *
 
 class TestGameBoard(TestCase):
 

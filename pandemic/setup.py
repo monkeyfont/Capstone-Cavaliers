@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import setuptools
 
+
 setuptools.setup(
     name='pandemic',
     packages=setuptools.find_packages(),
