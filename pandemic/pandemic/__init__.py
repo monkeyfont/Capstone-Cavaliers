@@ -5,7 +5,7 @@ from lobby import *
 from time import gmtime, strftime
 import random
 from flask import Flask, redirect, url_for
-import unittest
+
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
 app.secret_key = 'development' # change when out of development!
@@ -16,6 +16,11 @@ playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
 userTable = {} # this will be changed later on to be a database storing the user details
+
+
+####################################################################################
+####
+
 @app.route('/')
 def home():
     # Quick session testing code.
