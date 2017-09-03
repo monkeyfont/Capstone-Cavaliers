@@ -1,5 +1,5 @@
 from unittest import TestCase
-from game import *
+from ..game import *
 
 class TestGameBoard(TestCase):
 
@@ -7,8 +7,8 @@ class TestGameBoard(TestCase):
     def setUp(self):
         """ Create the gameBoard, add players """
 
-        self.testGameBoard = GameBoard()
-        self.testGameBoard.players = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(d)
 
     def test_generateCities(self):
         self.assertEqual(self.testGameBoard.generateCities().__len__(), 48)

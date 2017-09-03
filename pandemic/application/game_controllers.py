@@ -1,29 +1,24 @@
 from flask import Flask, render_template, session, make_response,redirect, url_for, escape, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from game import *
-from lobby import *
+from gamelogic.game import *
+from structures import Lobby
 from time import gmtime, strftime
 import random
 from flask import Flask, redirect, url_for
-import unittest
-app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
-app.secret_key = 'development' # change when out of development!
-socketio = SocketIO(app)
-room_ID = 1
-playerID = 1
+
+# noinspection PyUnresolvedReferences
+from application import app, socketio
+
+# Views / Communication for gameplay.
+
 playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
-userTable = {} # this will be changed later on to be a database storing the user details
-@app.route('/')
-def home():
-    # Quick session testing code.
-    return render_template("home.html")
+
+#
 
 @app.route('/game')
 def game():
-
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
@@ -34,9 +29,6 @@ def game():
             gameobject = GameBoard(playerdict)
             gameobject.gameID = roomname
             games[roomname] = gameobject
-
-
-
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/lobby'></b>" + \
       "click here to log in</b></a>"
@@ -327,34 +319,7 @@ def lobby():
                 except:
                     print"Lobby does not exist"
                     return (render_template("lobby.html", error="Sorry this room does not exist try another room"))
-
-
             return (render_template("intermission.html",room=session['roomname']))
-
-
-
-
-
     return (render_template("lobby.html"))
 
-
-####################################################################################
-# DO NOT MOVE ANYTHING IN BETWEEN HERE
-#testing sending messages from game to server
-if __name__ == '__main__':
-    print("running server on 127.0.0.1:5000")
-    socketio.run(app) #if you run this python file, it will execute a FLASK server.
-# attempt to clear cache so static files reload... doesn't seem to work all the time!
-@app.after_request
-def add_header(r):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
-####################################################################################
-
+print("imported")
