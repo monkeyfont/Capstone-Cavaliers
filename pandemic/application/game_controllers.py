@@ -231,23 +231,39 @@ def handleclick(msg):
 @socketio.on('buildResearchStation')
 def handleclick(msg):
     room = str(session['roomname'])
+    username = str(session["username"])
     cityToBuildOn= msg["cityName"]
     #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response= gameObject.buildResearchStation(playerObject.id,cityToBuildOn)
+    emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn}, room=room)
 
-    emit('researchBuildChecked', {'msg':response,'city':cityToBuildOn},room=room)
 
-@socketio.on('shareKnowledge')
+@socketio.on('shareKnowledgeGive')
 def handleclick(msg):
     room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
+    username = str(session["username"])
+    cityCardToShare=msg["cityName"]
+    playerTakingName= msg["playerTaking"]
+    gameObject = games[room]
 
-    emit('knowledgeShared', {'msg':response,'city':playerCity},room=room)
+    #print playerid, otherPlayerid
+    playerDictionary = gameObject.players
+
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            playerid=playerObject.id
+        elif playerObject.name== playerTakingName:
+            otherPlayerid=playerObject.id
+    response = gameObject.shareKnowledgeGive(playerid,otherPlayerid,cityCardToShare)
+
+
+    emit('giveKnowledgeShared', {'msg':response,'city':"no"},room=room)
 
 
 @socketio.on('treatDisease')

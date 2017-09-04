@@ -174,29 +174,37 @@ socket.on('researchBuildChecked', function (data) {
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
+
             console.log("Research station can be built here")
 	}
 	else{
+
 	    console.log("Sorry research station cannot be built here");
 	}
 });
 
-function shareKnowledge() {
+function shareKnowledgeGive() {
 
-    var city = prompt("Enter current city Name: ");
-    socket.emit('shareKnowledge', {cityName:city})
+    var city = prompt("Enter card you wish to swap: ");
+    var otherPlayer = prompt("Enter name of player you want to swap with: ");
+    socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
 
 }
 
-socket.on('knowledgeShared', function (data) {
+socket.on('giveKnowledgeShared', function (data) {
         //alert(data.msg);
         check=data.msg;
-        var city=eval(data.city);
+
         if (check ==true){
             //addResearchStation(city);
+
+            j=players
+            JSON.stringify(j);
+            console.log(j)
             console.log("Cards have been swapped")
 	}
 	else{
+
 	    console.log("Sorry cannot share this card to the other player");
 	}
 
