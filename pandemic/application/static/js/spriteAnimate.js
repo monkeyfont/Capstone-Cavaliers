@@ -210,6 +210,34 @@ socket.on('giveKnowledgeShared', function (data) {
 
     });
 
+
+function shareKnowledgeTake() {
+
+    var city = prompt("Enter card you wish to take: ");
+    var otherPlayer = prompt("Enter name of player's card you want to take: ");
+    socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+
+}
+
+socket.on('takeKnowledgeShared', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+
+        if (check ==true){
+            //addResearchStation(city);
+
+            j=players
+            JSON.stringify(j);
+            console.log(j)
+            console.log("Cards have been swapped")
+	}
+	else{
+
+	    console.log("Sorry cannot share this card to the other player");
+	}
+
+    });
+
 function treatDisease() {
 
     var city = prompt("Enter current city Name: ");

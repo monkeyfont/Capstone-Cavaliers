@@ -265,6 +265,28 @@ def handleclick(msg):
 
     emit('giveKnowledgeShared', {'msg':response,'city':"no"},room=room)
 
+@socketio.on('shareKnowledgeTake')
+def handleclick(msg):
+    room = str(session['roomname'])
+    username = str(session["username"])
+    cityCardToShare=msg["cityName"]
+    playerGivingName= msg["playerGiving"]
+    gameObject = games[room]
+
+    #print playerid, otherPlayerid
+    playerDictionary = gameObject.players
+
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            playerid=playerObject.id
+        elif playerObject.name== playerGivingName:
+            otherPlayerid=playerObject.id
+    response = gameObject.shareKnowledgeTake(playerid,otherPlayerid,cityCardToShare)
+
+
+    emit('takeKnowledgeShared', {'msg':response,'city':"no"},room=room)
+
 
 @socketio.on('treatDisease')
 def handleclick(msg):
