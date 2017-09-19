@@ -99,6 +99,130 @@ socket.on('checked', function (data) {
 });
 
 
+<<<<<<< HEAD
+=======
+}
+
+socket.on('researchBuildChecked', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+
+            console.log("Research station can be built here")
+	}
+	else{
+
+	    console.log("Sorry research station cannot be built here");
+	}
+});
+
+function shareKnowledgeGive() {
+
+    var city = prompt("Enter card you wish to swap: ");
+    var otherPlayer = prompt("Enter name of player you want to swap with: ");
+    socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
+
+}
+
+socket.on('giveKnowledgeShared', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+
+        if (check ==true){
+            //addResearchStation(city);
+
+            j=players
+            JSON.stringify(j);
+            console.log(j)
+            console.log("Cards have been swapped")
+	}
+	else{
+
+	    console.log("Sorry cannot share this card to the other player");
+	}
+
+    });
+
+
+function shareKnowledgeTake() {
+
+    var city = prompt("Enter card you wish to take: ");
+    var otherPlayer = prompt("Enter name of player's card you want to take: ");
+    socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+
+}
+
+socket.on('takeKnowledgeShared', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+
+        if (check ==true){
+            //addResearchStation(city);
+
+            j=players
+            JSON.stringify(j);
+            console.log(j)
+            console.log("Cards have been swapped")
+	}
+	else{
+
+	    console.log("Sorry cannot share this card to the other player");
+	}
+
+    });
+
+function treatDisease() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('treatDisease', {cityName:city})
+
+}
+
+socket.on('diseaseTreated', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            alert("Disease treated")
+	}
+	else{
+	    alert("Sorry cannot treat this disease");
+	}
+
+    });
+
+
+function discoverCure() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('discoverCure', {cityName:city})
+
+}
+
+socket.on('cureDiscovered', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Cure has been discovered")
+	}
+	else{
+	    console.log("Sorry cure was not discovered");
+	}
+
+    });
+
+
+socket.on('clicked', function (data) {
+
+        console.log(data.msg);
+
+    });
+>>>>>>> pullBranch
 
 
 // $('.btn').on('click', function(changePlayer){
