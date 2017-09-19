@@ -404,6 +404,8 @@ function gameLoop(){
 	playersHand.render();
 	
 	
+	playerView.render();
+	
 	// AtlantaInfection.render()
 	// for (var i in cities){
 
@@ -863,6 +865,21 @@ socket.on('clicked', function (data) {
 
     });
 
+	
+var playerViewImage = new Image();
+playerViewImage.src = 'static/images/Medic.png';	
+
+playerView = new portrait({
+	id:"playerViewImage",
+	xPos:1902,
+	yPos:20,
+	xScale:1,
+	yScale:1,
+	height:200,
+	width:300,
+	image:playerViewImage,
+	context: canvas.getContext("2d")
+});
 
 
 
