@@ -70,8 +70,12 @@ function city(options){
 		}));
 		
 	}
-	this.disInfect = function(options){
-		//TODO
+	this.disinfect = function(options){
+		//options = {colour:, ammount:}
+		for(i = 0; i < options.ammount; i++){
+			console.log("removed infection")
+			this.infectionStatus[options.colour].pop()
+		}
 	}
 	
 	
