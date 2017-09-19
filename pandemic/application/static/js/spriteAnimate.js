@@ -98,75 +98,6 @@ socket.on('checked', function (data) {
 	}
 });
 
-function directFlight(city) {
-
-    var city = prompt("Enter name of city card in your hand you would like to move to");
-    socket.emit('checkDirectFlight', {cityName:city})
-}
-socket.on('directFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg;
-        var city=eval(data.city);
-        console.log(check+" "+ city)
-        if (check ==true){
-
-            players.players[data.playerName].move(city.xPos,city.yPos);
-	}
-	else{
-	    console.log("Sorry invalid move");
-	}
-});
-
-
-
-function charterFlight() {
-
-    var cityCard = prompt("Enter name of card you would like to use");
-    var citytoMoveTo = prompt("Enter name of city you would like to move to");
-    socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
-
-}
-socket.on('charterFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg;
-        var city=eval(data.city);
-
-        if (check ==true){
-        players.players[data.playerName].move(city.xPos,city.yPos);
-            // player.move(city.xPos,city.yPos);
-	}
-	else{
-	    console.log("Sorry invalid move");
-	}
- });
-
-
-function shuttleFlight() {
-
-    var city = prompt("Enter name of city with research station you would like to move to");
-    socket.emit('checkShuttleFlight', {cityName:city})
-
-}
-
-socket.on('shuttleFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg;
-		console.log("data",data);
-        var city=eval(data.city);
-        console.log(check+" "+ city)
-        if (check ==true){
-             players.players[data.playerName].move(city.xPos,city.yPos);
-	}
-	else{
-	    console.log("Sorry invalid move");
-	}
-});
-
-function buildResearch() {
-    var city = prompt("Enter current city Name: ");
-    socket.emit('buildResearchStation', {cityName:city})
-
-}
 
 socket.on('researchBuildChecked', function (data) {
         //alert(data.msg);
@@ -251,7 +182,9 @@ socket.on('diseaseTreated', function (data) {
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
-            console.log("Disease treated")
+			locations[data.city].disinfect({'colour':locations[data.city].colour,'ammount':1});
+            console.log("Disease treated in ",data.city)
+
 	}
 	else{
 	    console.log("Sorry cannot treat this disease");
@@ -287,43 +220,6 @@ socket.on('clicked', function (data) {
         console.log(data.msg);
 
     });
-
-
-// $('.btn').on('click', function(changePlayer){
-	// if (changePlayer.currentTarget.id == 'up-left'){
-		// player.yStart=120;
-	// }
-	// if (changePlayer.currentTarget.id == 'up'){
-		// player.yStart=160;
-	// }
-	// if (changePlayer.currentTarget.id == 'up-right'){
-		// player.yStart=280;
-	// }
-	// if (changePlayer.currentTarget.id == 'left'){
-		// player.yStart=80;
-	// }
-	// if (changePlayer.currentTarget.id == 'stop'){
-
-	// }
-	// if (changePlayer.currentTarget.id == 'right'){
-		// player.yStart=240;
-	// }
-	// if (changePlayer.currentTarget.id == 'down-left'){
-		// player.yStart=40;
-	// }
-	// if (changePlayer.currentTarget.id == 'down'){
-		// player.yStart=0;
-	// }
-	// if (changePlayer.currentTarget.id == 'down-right'){
-		// player.yStart=200;
-	// }
-
-
-
-	// alert("Button clicked with value: "+changePlayer.currentTarget.id);
-
-	// });
-
 
 
 var coinImage = new Image();
@@ -896,6 +792,35 @@ socket.on('gotInitialHands',function(data){
  });
 
 
+
+
+function discoverCure() {
+
+    var city = prompt("Enter current city Name: ");
+    socket.emit('discoverCure', {cityName:city})
+
+}
+
+socket.on('cureDiscovered', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+        var city=eval(data.city);
+        if (check ==true){
+            //addResearchStation(city);
+            console.log("Cure has been discovered")
+	}
+	else{
+	    console.log("Sorry cure was not discovered");
+	}
+
+    });
+
+
+socket.on('clicked', function (data) {
+
+        console.log(data.msg);
+
+    });
 
 
 
