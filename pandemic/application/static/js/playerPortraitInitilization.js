@@ -1,0 +1,3 @@
+function portraitInitilization(options){
+	
+}
