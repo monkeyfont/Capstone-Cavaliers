@@ -12,7 +12,6 @@ function portrait(options){
 	
 	this.render = function(){
         // Draw the animation
-		console.log("image render",this.portrait.src)
 		this.context.drawImage(
 		this.portrait, //image to use
 		0, // x position to start clipping 
@@ -21,7 +20,7 @@ function portrait(options){
 		this.height, // height of clipped image
 		this.xPos, //x position for image on canvas
 		this.yPos, // y position for image on canvas
-		this.widthDraw*this.xScale, // width of image to use 
-		this.heightDraw*this.yScale); // height of image to use
+		this.width*this.xScale, // width of image to use 
+		this.height*this.yScale); // height of image to use
     };
 }

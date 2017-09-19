@@ -41,8 +41,8 @@ console.log("scale Size:"+scaleSize);
 // }
 
 
-var cardNumber = 0;
-var socket;
+// var cardNumber = 0;
+// var socket;
 
 
 socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -55,8 +55,6 @@ socket.on('connect', function () {
 
 socket.on('joined', function (data) {
         console.log(data.msg + '\n');
-
-
     });
 
 
@@ -869,18 +867,8 @@ socket.on('clicked', function (data) {
 var playerViewImage = new Image();
 playerViewImage.src = 'static/images/Medic.png';	
 
-playerView = new portrait({
-	id:"playerViewImage",
-	xPos:1902,
-	yPos:20,
-	xScale:1,
-	yScale:1,
-	height:200,
-	width:300,
-	image:playerViewImage,
-	context: canvas.getContext("2d")
-});
-
+playerView = new portraitInitilization({});
+playerView.addPlayerPortrait({});
 
 
 window.onload = function (){
@@ -890,9 +878,3 @@ window.onload = function (){
 	socket.emit('getPlayersHands')
 
 	}
-// window.onload = function (){socket.emit('getGameInitialization') }
-// coinImage.addEventListener("load", gameLoop);
-// window.onload = function() {
-// coin.render();
-// console.log("pie");
-// };
