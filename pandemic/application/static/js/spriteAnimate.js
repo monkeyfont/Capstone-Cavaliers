@@ -251,10 +251,10 @@ socket.on('diseaseTreated', function (data) {
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
-            console.log("Disease treated")
+            alert("Disease treated")
 	}
 	else{
-	    console.log("Sorry cannot treat this disease");
+	    alert("Sorry cannot treat this disease");
 	}
 
     });

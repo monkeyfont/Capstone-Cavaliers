@@ -291,13 +291,16 @@ def handleclick(msg):
 @socketio.on('treatDisease')
 def handleclick(msg):
     room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('diseaseTreated', {'msg':response,'city':playerCity},room=room)
+    username = str(session["username"])
+    cityToTreat = msg["cityName"]
+    gameObject = games[room]
+    cityObject = gameObject.cities[cityToTreat]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response = gameObject.treatDisease(playerObject.id, cityToTreat, cityObject.colour)
+            emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
 
 
 @socketio.on('discoverCure')
