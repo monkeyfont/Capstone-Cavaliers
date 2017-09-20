@@ -8,11 +8,10 @@ var yellowEradicated = new Image(); yellowEradicated.src = 'static/images/Cures/
 var blackDiscovered = new Image(); blackDiscovered.src = 'static/images/Cures/blackCure.png';
 var blackEradicated = new Image(); blackEradicated.src = 'static/images/Cures/blackEradicate.png';
 
-cureImages = {'blackEradicated':blackEradicated,'blackDiscovered':blackDiscovered,
-'yellowEradicated':yellowEradicated,'yellowDiscovered':yellowDiscovered,
-'blueEradicated':blueEradicated,'blueDiscovered':blueDiscovered,
-'redEradicated':redEradicated,'redDiscovered':redDiscovered,
-'undiscovered':undiscovered};
+cureImages = {'blackEradicated':blackEradicated,'blackDiscovered':blackDiscovered,'blackUndiscovered':undiscovered,
+'yellowEradicated':yellowEradicated,'yellowDiscovered':yellowDiscovered,'yellowUndiscovered':undiscovered,
+'blueEradicated':blueEradicated,'blueDiscovered':blueDiscovered,'blueUndiscovered':undiscovered,
+'redEradicated':redEradicated,'redDiscovered':redDiscovered,'redUndiscovered':undiscovered};
 
 function cureStatusBar(options){
 	this.xPos = options.xPos;
@@ -22,19 +21,20 @@ function cureStatusBar(options){
 	this.xScale = options.xScale;
 	this.yScale = options.yScale;
 	this.context = options.context;
-	this.infection = {yellow:'undiscovered',blue:'undiscovered',black:'undiscovered',red:'undiscovered'};
+	this.infection = {yellow:'Undiscovered',blue:'Undiscovered',black:'Undiscovered',red:'Undiscovered'};
 	
 	
 	
 	this.changeStatus = function(options){
+		//options = {colour:'yellow'|'red'|'black'|'blue', status:'Undiscovered'|'Discovered'|'Eradicated'}
 		this.infection[options.colour] = options.status;
 	}	
 	this.render = function () {
 		for (i in this.infection){
-			
+			currentImage = cureImages[i+this.infection[i]];
 			// console.log(i)
 			this.context.drawImage(
-			cureImages[this.infection[i]], //image to use
+			currentImage, //image to use
 			0, // x position to start clipping 
 			0, // y position to start clipping
 			this.width, //width of clipped image
