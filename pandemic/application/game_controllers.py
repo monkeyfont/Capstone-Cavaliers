@@ -292,14 +292,15 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityToTreat = msg["cityName"]
+    #cityToTreat = msg["cityName"]
     gameObject = games[room]
-    cityObject = gameObject.cities[cityToTreat]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
-            response = gameObject.treatDisease(playerObject.id, cityToTreat, cityObject.colour)
+            cityToTreat = playerObject.location
+            cityObject = gameObject.cities[cityToTreat]
+            response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
             emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
 
 

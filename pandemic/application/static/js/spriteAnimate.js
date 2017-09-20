@@ -243,8 +243,8 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-    var city = prompt("Enter current city Name: ");
-    socket.emit('treatDisease', {cityName:city})
+
+    socket.emit('treatDisease', {})
 
 }
 
