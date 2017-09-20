@@ -816,7 +816,7 @@ socket.on('gamePlayerInitilization',function(data){
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 });
 
-socket.on('intitialInfectedCities',function(data){
+socket.on('InfectedCities',function(data){
 
     var amount;
 
@@ -876,7 +876,7 @@ socket.on('clicked', function (data) {
 window.onload = function (){
 	socket.emit('getPlayerObject') 
 	socket.emit('getGameInitialization')
-	socket.emit('getinitInfections')
+	socket.emit('getInfections')
 	socket.emit('getPlayersHands')
 
 	}

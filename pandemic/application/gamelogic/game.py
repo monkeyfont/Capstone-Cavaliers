@@ -265,7 +265,7 @@ class GameBoard:
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
-        self.initInfectedCities={}
+
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
@@ -374,8 +374,6 @@ class GameBoard:
             colour = cityObj.colour
             cityObj.infect(colour, infectionAmount)
             print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
-            self.initInfectedCities[cityName]={colour:infectionAmount}
-        # print self.initInfectedCities
             # discard the 9 infection cards.
         for i in range(9):
             self.infectionDiscarded.append(self.infectionDeck.pop(0))
@@ -453,6 +451,21 @@ class GameBoard:
         for k in self.players:
             total += self.players[k].actions
         return total
+
+
+    def getAllCurrentInfectedCities(self):
+        infectedCities={}
+        for city in self.cities:
+            cityObject=self.cities[city]
+            cityColour=cityObject.colour
+            amount=cityObject.getInfections(cityColour)
+            if amount>0:
+                infectedCities[cityObject.name]={cityColour:amount}
+
+        return infectedCities
+
+
+
 
 
     def movePlayer(self, playerId, nextCityName):
