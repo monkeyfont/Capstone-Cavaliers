@@ -152,7 +152,7 @@ function gameLoop(){
 	playersHand.render();
 	
 	playerPortraits.render();
-
+	cureBar.render();
 	
 }
 
@@ -193,6 +193,17 @@ mapImage.addEventListener("load", gameLoop);
 
 playerPortraits = new portraitInitilization({});
 playerPortraits.addPlayerPortrait({});
+
+cureBar = new cureStatusBar({
+	context: canvas.getContext("2d"),
+	xPos:680,
+	yPos:70,
+	height:256,
+	width:256,
+	xScale:0.4,
+	yScale:0.4	
+});
+
 
 
 window.onload = function (){
