@@ -209,13 +209,26 @@ class City:
         treats a disease of colour by the amount specified. If the amount is too much, it clamps color to 0.
         """
         if colour == "blue":
-            self.blue -= (amount if self.blue-amount > 0 else self.blue)
+            if self.blue==0:
+                return False
+            else:
+                self.blue -= (amount if self.blue-amount > 0 else self.blue)
+                return True
         elif colour == "yellow":
+            if self.yellow==0:
+                return False
             self.yellow -= (amount if self.yellow - amount > 0 else self.yellow)
+            return True
         elif colour == "red":
+            if self.red==0:
+                return False
             self.red -= (amount if self.red - amount > 0 else self.red)
+            return True
         elif colour == "black":
+            if self.black==0:
+                return False
             self.black -= (amount if self.black - amount > 0 else self.black)
+            return True
 
 class Player:
     """ Player class def """
@@ -639,11 +652,19 @@ class GameBoard:
         playerObj = self.players[playerId]
         # Retrieve cities colour
         cityObj = self.cities[targetCity]
-        cityObj.treat(colour, amount)
-        playerObj.actions -= 1
-        print('player ' + playerId + ' successfully treated colour ' + colour + ' for ' + cityObj.name)
+        currentLocation = playerObj.location
+        if currentLocation!=targetCity:
+            return False
+        response=cityObj.treat(colour, amount)
+        print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
+        if response:
+            playerObj.actions -= 1
+            return True
+        else:
+            return False
+
         # TODO need to implement logic that checks if the disease is cured.
-        return True
+
 
 
     def infectCity(self, targetCity):

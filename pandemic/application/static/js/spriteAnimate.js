@@ -76,6 +76,7 @@ socket.on('joined', function (data) {
 
 //-------------------------PLAYER ACTIONS WEB SOCKET FUNCTIONS----------------
 
+
 //CHECK MOVE TO NEIGHBOURING CITY
 function checkMove(city){
 
@@ -162,6 +163,8 @@ socket.on('shuttleFlightChecked', function (data) {
 	}
 });
 
+
+
 function buildResearch() {
     var city = prompt("Enter current city Name: ");
     socket.emit('buildResearchStation', {cityName:city})
@@ -174,29 +177,65 @@ socket.on('researchBuildChecked', function (data) {
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
+
             console.log("Research station can be built here")
 	}
 	else{
+
 	    console.log("Sorry research station cannot be built here");
 	}
 });
 
-function shareKnowledge() {
+function shareKnowledgeGive() {
 
-    var city = prompt("Enter current city Name: ");
-    socket.emit('shareKnowledge', {cityName:city})
+    var city = prompt("Enter card you wish to swap: ");
+    var otherPlayer = prompt("Enter name of player you want to swap with: ");
+    socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
 
 }
 
-socket.on('knowledgeShared', function (data) {
+socket.on('giveKnowledgeShared', function (data) {
         //alert(data.msg);
         check=data.msg;
-        var city=eval(data.city);
+
         if (check ==true){
             //addResearchStation(city);
+
+            j=players
+            JSON.stringify(j);
+            console.log(j)
             console.log("Cards have been swapped")
 	}
 	else{
+
+	    console.log("Sorry cannot share this card to the other player");
+	}
+
+    });
+
+
+function shareKnowledgeTake() {
+
+    var city = prompt("Enter card you wish to take: ");
+    var otherPlayer = prompt("Enter name of player's card you want to take: ");
+    socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+
+}
+
+socket.on('takeKnowledgeShared', function (data) {
+        //alert(data.msg);
+        check=data.msg;
+
+        if (check ==true){
+            //addResearchStation(city);
+
+            j=players
+            JSON.stringify(j);
+            console.log(j)
+            console.log("Cards have been swapped")
+	}
+	else{
+
 	    console.log("Sorry cannot share this card to the other player");
 	}
 
@@ -215,7 +254,9 @@ socket.on('diseaseTreated', function (data) {
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
-            console.log("Disease treated")
+			locations[data.city].disinfect({'colour':locations[data.city].colour,'ammount':1});
+            console.log("Disease treated in ",data.city)
+
 	}
 	else{
 	    console.log("Sorry cannot treat this disease");
@@ -251,43 +292,6 @@ socket.on('clicked', function (data) {
         console.log(data.msg);
 
     });
-
-
-// $('.btn').on('click', function(changePlayer){
-	// if (changePlayer.currentTarget.id == 'up-left'){
-		// player.yStart=120;
-	// }
-	// if (changePlayer.currentTarget.id == 'up'){
-		// player.yStart=160;
-	// }
-	// if (changePlayer.currentTarget.id == 'up-right'){
-		// player.yStart=280;
-	// }
-	// if (changePlayer.currentTarget.id == 'left'){
-		// player.yStart=80;
-	// }
-	// if (changePlayer.currentTarget.id == 'stop'){
-
-	// }
-	// if (changePlayer.currentTarget.id == 'right'){
-		// player.yStart=240;
-	// }
-	// if (changePlayer.currentTarget.id == 'down-left'){
-		// player.yStart=40;
-	// }
-	// if (changePlayer.currentTarget.id == 'down'){
-		// player.yStart=0;
-	// }
-	// if (changePlayer.currentTarget.id == 'down-right'){
-		// player.yStart=200;
-	// }
-
-
-
-	// alert("Button clicked with value: "+changePlayer.currentTarget.id);
-
-	// });
-
 
 
 var coinImage = new Image();
@@ -860,6 +864,11 @@ socket.on('gotInitialHands',function(data){
  });
 
 
+socket.on('clicked', function (data) {
+
+        console.log(data.msg);
+
+    });
 
 
 
