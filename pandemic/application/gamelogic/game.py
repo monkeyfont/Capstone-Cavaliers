@@ -726,6 +726,9 @@ class GameBoard:
                     for cityStr in city.connections:
                         citiesToInfect.append(self.cities[cityStr])
 
+
+
+
 class PlayerCard:
     """ Player City Card Definition """
     def __init__(self, name, colour, population, area, country):

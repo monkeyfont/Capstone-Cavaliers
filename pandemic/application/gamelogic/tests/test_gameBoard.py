@@ -199,3 +199,4 @@ class TestGameBoard(TestCase):
         city=self.testGameBoard.cities["SYDNEY"]
         self.testGameBoard.cityOutBreak(city,city.colour)
 
+

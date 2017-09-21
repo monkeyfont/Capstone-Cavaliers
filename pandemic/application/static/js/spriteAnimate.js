@@ -166,8 +166,8 @@ socket.on('shuttleFlightChecked', function (data) {
 
 
 function buildResearch() {
-    var city = prompt("Enter current city Name: ");
-    socket.emit('buildResearchStation', {cityName:city})
+    //var city = prompt("Enter current city Name: ");
+    socket.emit('buildResearchStation', {})
 
 }
 
@@ -431,7 +431,7 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	console.log(message);
+	//console.log(message);
 
 
 	for (var i in spriteList){
@@ -467,7 +467,7 @@ canvas.addEventListener('click', function(evt) {
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
-				console.log('city ', i ,' was clicked');
+				//console.log('city ', i ,' was clicked');
 				checkMove(i);
 
 			}
@@ -802,16 +802,16 @@ moveInfection = function(){
 
 
 socket.on('gotPlayer',function(data){
-	console.log('data is: ',data )
-	console.log("you are the player",data.playerName);
-	console.log("you are the player",data.playerType);
+	//console.log('data is: ',data )
+	//console.log("you are the player",data.playerName);
+	//console.log("you are the player",data.playerType);
 	// players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
 
 socket.on('gamePlayerInitilization',function(data){
-	console.log('data is: ',data )
+	//console.log('data is: ',data )
 	cityName = data.playerLocation;
-	console.log(locations[cityName]);
+	//console.log(locations[cityName]);
 	city = locations[cityName]
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 });
@@ -845,7 +845,7 @@ socket.on('gotInitialHands',function(data){
     if (data.hasOwnProperty(player)) {
     var playerId= player
     var cards=data[player]
-    console.log("Player "+playerId + "has the cards: ")
+    //console.log("Player "+playerId + "has the cards: ")
     $('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
 
     for (var card in cards) {
@@ -866,7 +866,7 @@ socket.on('gotInitialHands',function(data){
 
 socket.on('clicked', function (data) {
 
-        console.log(data.msg);
+        //console.log(data.msg);
 
     });
 

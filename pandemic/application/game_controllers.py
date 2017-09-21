@@ -69,15 +69,20 @@ def getGameInitialization():
 def getInfections():
     roomname = session["roomname"]
     gameboard = games[roomname]
-    citiesInfected=gameboard.getAllCurrentInfectedCities()
-
-    emit('InfectedCities',citiesInfected,room=session["roomname"])
+    username = str(session["username"])
+    for player in gameboard.players:
+        playerObj = gameboard.players[player]
+        playerName = playerObj.name
+        if playerName==username:
+            citiesInfected=gameboard.getAllCurrentInfectedCities()
+            emit('InfectedCities',citiesInfected)
 
 
 
 @socketio.on('getPlayersHands')
 def getPlayersHands():
     roomname = session["roomname"]
+    username = session["username"]
     gameboard = games[roomname]
     playersHands={}
     players=gameboard.players
@@ -90,7 +95,8 @@ def getPlayersHands():
             playerCardNames.append(cardname)
         playersHands[playerK]=playerCardNames
 
-    emit('gotInitialHands',playersHands,room=session["roomname"])
+
+    emit('gotInitialHands',playersHands)
 
 
 @socketio.on('getPlayerObject')
@@ -107,6 +113,8 @@ def getPlayerObject():
             playerName = playerObj.name
             playerRole = playerObj.role
             emit('gotPlayer',{"playerName":playerName,"playerType":playerRole})
+
+
 
 
 @socketio.on('startGame')
@@ -232,12 +240,13 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityToBuildOn= msg["cityName"]
+
     #response=game.charterFlight(1,cityToMove)
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
+        cityToBuildOn = playerObject.location
         if playerObject.name == username:
             response= gameObject.buildResearchStation(playerObject.id,cityToBuildOn)
     emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn}, room=room)
