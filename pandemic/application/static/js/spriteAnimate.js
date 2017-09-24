@@ -9,6 +9,8 @@ var screenWidthPercentage = scrnWidth/optimalScreenWidth;
 
 var scaleSize = 1;
 
+
+
 // sets the scalesize to the lower of height or width
 if (screenHeightPercentage<screenWidthPercentage){
 	scaleSize = screenHeightPercentage;
