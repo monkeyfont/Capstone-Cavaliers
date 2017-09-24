@@ -284,6 +284,7 @@ class GameBoard:
             a dictionary {validAction:True/False,actionsCount:int,cardsCount:int}
         """
         result = {}
+        result["invalidReason"] = []
 
         playerObj = self.players[playerId]
 
@@ -293,11 +294,15 @@ class GameBoard:
         # add actions of a player
         result["actionsCount"] = actionsCount = playerObj.actions
 
-        # check if it is a valid move
-        if cardsCount > 8 and actionsCount > 0:
+        # check if valid move.
+        if cardsCount < 8 and actionsCount > 0:
             result["validAction"] = True
         else:
             result["validAction"] = False
+            if cardsCount >= 8:
+                result["invalidReason"].append("Too many cards")
+            if actionsCount <= 0:
+                result["invalidReason"].append("No actions remain")
 
         return result
             
@@ -500,7 +505,6 @@ class GameBoard:
         The call to self.infectCity() handles infection and outbreak logic.
         The infect city card is added to the discard pile.
         """
-        # TODO lose game if out of cards.
         amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
         for i in range(amountToDraw):
             # Draw the infection card from the top of the deck.
@@ -692,8 +696,15 @@ class GameBoard:
             return False
 
     def discoverCure(self,playerId,cities):
-        """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
+        """
+        at any research station, discard 5 city cards of the same disease colour to cure that disease
+        Returns a dictionary:
+            result = {validAction:"false", reason:"notEnoughCards" }
+        """
         # TODO this code should probably be refactored.
+
+        validation = self.__checkAction(playerId) #validate its a legal player move.
+
         # Check player is at a research station
         if self.isPlayerAtResearchStation(playerId) is False:
             return
@@ -701,6 +712,7 @@ class GameBoard:
         if len(cities) != 5:
             return
         # retrieve city objects from strings.
+        result = {} # holds the return dict.
         cityObjs = []
         colour = ""
         for cityStr in cities:
@@ -723,6 +735,7 @@ class GameBoard:
         self.cures[colour] = 1
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
+
         return True
 
 

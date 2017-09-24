@@ -18,7 +18,6 @@ class TestGameBoard(TestCase):
         # test to make sure all 48 player cards are in the player deck list
         self.assertEqual(self.testGameBoard.generatePlayerDeck().__len__(), 48)
 
-
     def test_generateInfectionDeck(self):
         self.assertEqual(self.testGameBoard.generateInfectionDeck().__len__(), 48)
 
