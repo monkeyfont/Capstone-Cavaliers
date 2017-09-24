@@ -475,19 +475,24 @@ class GameBoard:
         This sets the player object to that city, and the city object to know that the player is there.
         Returns: True if successful, False if unsuccessful.
         """
+        responseDict={}
         currentCityName = self.players[playerId].location
         cityObj = self.cities[currentCityName]
         if nextCityName in cityObj.connections:
             self.players[playerId].location = nextCityName
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
-            return True
+            responseDict["response"] = True
+            return responseDict
         else:
             print("PlayerID " + str(playerId) + " FAILED to move to move from  " + currentCityName + " to " + nextCityName)
-            return False
+            responseDict["response"]=False
+            responseDict["errorMessage"]="ERROR: This city is not connected to your current city"
+            return responseDict
 
 
     def directFlight(self,playerId,nextCityName):
         """ Discard a city card to move to the city named on the card """
+        responseDict = {}
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         currentLocation = playerObj.location
@@ -498,27 +503,38 @@ class GameBoard:
                 self.playerDiscarded.append(card)
                 playerObj.actions -= 1
                 print("player has successfully moved from" + currentLocation + " to " + playerObj.location)
-                return True
-        return False
+                responseDict["response"] = True
+                return responseDict
+
+        responseDict["response"] = False
+        responseDict["errorMessage"] = "ERROR: You do not have this card in your hand"
+        return responseDict
 
 
     def charterFlight(self,playerId,curCityCard,destinationCity):
         """ Discard the city card that matches the city you are in to move to any city """
+        responseDict = {}
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         currentLocation = playerObj.location
         for card in playerHand:
-            if(card.name == curCityCard and currentLocation == curCityCard):
-                #if the city card is where you are, set cur city to the destination
-
-                playerObj.location = destinationCity
-                playerHand.remove(card)
-                self.playerDiscarded.append(card)
-                playerObj.actions -= 1
-                print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
-                return True
-
-        return False
+            if(card.name == curCityCard):# if you have that card
+                if (currentLocation == curCityCard): # if you are in the right location
+                    #if the city card is where you are, set cur city to the destination
+                    playerObj.location = destinationCity
+                    playerHand.remove(card)
+                    self.playerDiscarded.append(card)
+                    playerObj.actions -= 1
+                    print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
+                    return True
+                else:
+                    responseDict["errorMessage"] = "ERROR: You are not in the right location. To do this action you must be in the city of the card you wish to play"
+                    responseDict["response"] = False
+                    return responseDict
+            
+        responseDict["errorMessage"] = "ERROR: You do not have this card in your hand"
+        responseDict["response"] = False
+        return responseDict
 
 
     def shuttleFlight(self,playerId,destinationCity):

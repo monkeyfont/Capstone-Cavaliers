@@ -15,7 +15,6 @@ playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
 
-#
 
 @app.route('/game')
 def game():
@@ -201,8 +200,7 @@ def handleclick(msg):
             # Player found."
             print playerObject.id,"player id!"
             response = gameObject.directFlight(playerObject.id, cityToMove)
-
-    emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+            emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
 
 
 
@@ -220,8 +218,7 @@ def handleclick(msg):
             print(playerObject.name," wants to use the card", cityCardName ," to move to ",cityToMove)
             response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
     # IF USERS CURRENT CITY IS SAME AS THIS CITYTOMOVE TO VALUE THEN THEY CAN MOVE ANYWHERE
-
-    emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
+            emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
 
 @socketio.on('checkShuttleFlight')
 def handleclick(msg):

@@ -85,9 +85,8 @@ function checkMove(city){
 
     };
 socket.on('checked', function (data) {
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
-        console.log(check+" "+ city)
         if (check ==true){
 			console.log('moving',data.playerName)
 			// console.log('player k',players.players.k)
@@ -95,7 +94,7 @@ socket.on('checked', function (data) {
 			players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
 });
 
@@ -106,15 +105,14 @@ function directFlight(city) {
 }
 socket.on('directFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
-        console.log(check+" "+ city)
         if (check ==true){
 
             players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
 });
 
@@ -129,7 +127,7 @@ function charterFlight() {
 }
 socket.on('charterFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
 
         if (check ==true){
@@ -137,7 +135,7 @@ socket.on('charterFlightChecked', function (data) {
             // player.move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
  });
 
