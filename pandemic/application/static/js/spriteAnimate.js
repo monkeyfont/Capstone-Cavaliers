@@ -62,10 +62,20 @@ canvas.addEventListener('click', function(evt) {
 				if (spriteList[i].id == 'Infection Card'){
 					spriteList[i].flip();
 				}
-
+				// if (spriteList[i].id == 'Infection Deck'){
+					// createCard(cardNumber);
+					// cardNumber ++;
+				// }
 			}
 	}
-
+	// for (var i in cardList){
+		// if (mousePos.x >= cardList[i].xPos && mousePos.x <= cardList[i].xPos+(cardList[i].width*cardList[i].xScale) &&
+			// mousePos.y >= cardList[i].yPos && mousePos.y <= cardList[i].yPos+(cardList[i].height*cardList[i].yScale)){
+			// console.log(cardList[i].id,"was clicked------------------");
+			// console.log(cardList[i].toFlip,"was clicked------------------");
+			// cardList[i].flip();
+		// }
+	// }
 
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
@@ -144,7 +154,10 @@ function gameLoop(){
 
 	players.render();
 	deck.render();
-
+	// card.render();
+	// for (var i in cardList){
+		// cardList[i].render();
+	// }
 
 	outbreakCount.render();
 	infectRate.render();
@@ -156,12 +169,91 @@ function gameLoop(){
 	
 }
 
+// canvas.width = 1000;
+// canvas.height = 1000;
+
+
+
+// var map = sprite({
+	// context: canvas.getContext("2d"),
+    // width: 1920,
+    // height: 1080,
+	// numberOfFrames: 1,
+	// ticksPerFrame: 10,
+	// image: mapImage
+	// });
+
+
+
+
+// var coin3 = new sprite({
+	// id:"coin3",
+    // context: canvas.getContext("2d"),
+    // width: 100,
+    // height: 100,
+	// numberOfFrames: 10,
+	// ticksPerFrame: 3,
+	// xPos:300,
+	// yPos:300,
+    // image: coinImage
+	// });
+
+// var coin = new sprite({
+	// id:"coin",
+    // context: canvas.getContext("2d"),
+    // width: 100,
+    // height: 100,
+	// numberOfFrames: 10,
+	// ticksPerFrame: 16,
+	// xPos:100,
+	// yPos:100,
+    // image: coinImage
+	// });
+
+// var coin2 = new sprite({
+	// id:"coin2",
+    // context: canvas.getContext("2d"),
+    // width: 100,
+    // height: 100,
+	// numberOfFrames: 10,
+	// ticksPerFrame: 16,
+	// xPos:400,
+	// yPos:400,
+    // image: coinImage
+	// });
+
+// var player = new player({
+	// id:"player",
+	// context: canvas.getContext("2d"),
+    // width: 32,
+    // height: 40,
+	// numberOfFrames: 4,
+	// ticksPerFrame: 16,
+	// xPos:ATLANTA.xPos,
+	// yPos:ATLANTA.yPos,
+	// xScale:2,
+	// yScale:2,
+    // image: playerImage
+// })
 
 var CardImage = new Image();
 CardImage.src = 'static/images/infection-Cards.png';
 var cardFront = new Image();
 cardFront.src = 'static/images/infection-Front.png';
-
+// var card = new flippable({
+	// id:"Infection Card",
+	// context: canvas.getContext("2d"),
+    // width: 584,
+    // height: 800,
+	// numberOfFrames: 1,
+	// ticksPerFrame: 1,
+	// xPos:1600,
+	// yPos:40,
+	// xScale:0.5,
+	// yScale:0.5,
+    // imageBack: CardImage,
+	// imageFront: cardFront
+// })
 
 var deck = new sprite({
 	id:"Infection Deck",
@@ -177,6 +269,97 @@ var deck = new sprite({
     image: CardImage
 
 })
+// var cardList = [];
+// function createCard(id) {
+	// this.cardListing = cardList.push(new flippable({
+	// id:"Infection Card "+id,
+	// context: canvas.getContext("2d"),
+    // width: 584,
+    // height: 800,
+	// numberOfFrames: 1,
+	// ticksPerFrame: 1,
+	// xPos:1600,
+	// yPos:40,
+	// xScale:0.5,
+	// yScale:0.5,
+    // imageBack: CardImage,
+	// imageFront: cardFront
+// }))
+// }
+
+
+
+// function flippable(options) {
+	// this.id = options.id,
+	// this.context = options.context;
+	// this.width = options.width;
+	// this.height = options.height;
+	// this.widthDraw = options.width;
+	// this.heightDraw = options.height;
+	// this.imageBack = options.imageBack;
+	// this.imageFront = options.imageFront;
+	// this.loop = options.loop || true; // do we loop the sprite, or just play it once
+	// this.yPos = options.yPos || 0;
+	// this.xPos = options.xPos || 0;
+	// this.xScale = options.xScale || 1;
+	// this.yScale = options.yScale || 1;
+	// this.flipping = false;
+	// this.flipSpeed = options.flipSpeed || 20;
+	// this.flipStage = 0;
+	// this.currentImage = this.imageBack;
+	// this.toFlip = false;
+	// this.flip = function() {
+		// // if the card is on its back flip to its front
+		// // scale the card down
+		// // swap the card
+		// // scale the card up
+		// this.flipping = true;
+		// if (this.flipStage == 10){
+
+		// }else{
+			// this.widthDraw -= this.width/this.flipSpeed;
+		// }
+		// if (this.widthDraw <0.1 && this.widthDraw > -0.1){
+			// this.toFlip=true;
+		// }
+
+		// if (this.toFlip == true){
+			// if (this.currentImage==this.imageBack){
+				// this.currentImage = this.imageFront;
+			// }else{
+				// this.currentImage=this.imageBack;
+			// }
+			// this.toFlip = false;
+		// }
+
+
+		// if (this.widthDraw <= -this.width){
+			// this.flipping = false;
+			// this.widthDraw = this.width;
+			// this.xPos = this.xPos-(this.width*this.xScale);
+		// }
+	// }
+
+	// // take image 1, shrink into middle, show image 2 grow from middle
+
+	// this.render = function () {
+		// if (this.flipping == true){
+			// this.flip();
+		// }
+        // // Draw the animation
+		// //console.log("image render",this.image.src)
+		// this.context.drawImage(
+		// this.currentImage, //image to use
+		// 0, // x position to start clipping
+		// 0, // y position to start clipping
+		// this.width, //width of clipped image
+		// this.height, // height of clipped image
+		// this.xPos, //x position for image on canvas
+		// this.yPos, // y position for image on canvas
+		// this.widthDraw*this.xScale, // width of image to use
+		// this.heightDraw*this.yScale); // height of image to use
+    // };
+// }
 
 outbreakCount = new outbreakCounter({});
 infectRate = new infectionRate({});
