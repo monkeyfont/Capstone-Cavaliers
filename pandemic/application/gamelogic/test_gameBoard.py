@@ -1,8 +1,7 @@
 from unittest import TestCase
-from ..game import *
+from game import *
 
 class TestGameBoard(TestCase):
-
 
     def setUp(self):
         """ Create the gameBoard, add players """
