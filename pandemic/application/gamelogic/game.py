@@ -303,7 +303,7 @@ class GameBoard:
             
 
 
-    def __endRoundCheck(self)
+    def __endOfRound(self)
         """ 
         function removes an action from the player for the round.
         If all actions for all players are gone, it will invoke the end of the round functions.
@@ -319,20 +319,38 @@ class GameBoard:
         if actions > 1:
             result["endRound":False]
         else:
+            result["gameLoss"] = False
+            result["gameLossReason"] = []
+
             # end of round has occured.
             result["endRound":True]
 
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
 
+            # check if out of cards during the draw stage.
+            if result["cardDraw"]["outOfCards"] == True:
+                result["gameLoss"] = True
+                result["gameLossReason"].append("Out of player cards.")
+
             # invoke infect cities step
             result["infectedCities"] = self.endTurnInfectCities()
 
-            # # check if outbreak meter is at max
-            # outbreak = 
+            # check if cubes of any colour have run out.
+            for colour in self.cubes:
+                if self.cubes[colour] > self.maxCubeCount:
+                    result["gameLoss"] = True
+                    result["gameLossReason"].append("Out of " + colour + " cubes")
 
-            # # check if out of cubes. 
+            # add the current outbreak level
+            result["outBreakLevel"] = self.outBreakLevel
 
+            # check if outbreak meter is at max
+            if self.outBreakLevel >= self.maxOutBreakLevel:
+                result["gameLoss"] = True
+                result["gameLossReason"].append("Outbreak level")
+
+        return result
 
 
     def __setStartingLocation(self):
