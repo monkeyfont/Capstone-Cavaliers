@@ -295,9 +295,9 @@ class GameBoard:
 
         # check if it is a valid move
         if cardsCount > 8 and actionsCount > 0:
-            result["validAction":True]
+            result["validAction"] = True
         else:
-            result["validAction":False]
+            result["validAction"] = False
 
         return result
             
@@ -317,13 +317,13 @@ class GameBoard:
         # check for actions left
         actions = self.totalPlayerActions()
         if actions > 1:
-            result["endRound":False]
+            result["endRound"] =False
         else:
             result["gameLoss"] = False
             result["gameLossReason"] = []
 
             # end of round has occured.
-            result["endRound":True]
+            result["endRound"] = True
 
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
@@ -337,8 +337,8 @@ class GameBoard:
             result["infectedCities"] = self.endTurnInfectCities()
 
             # check if cubes of any colour have run out.
-            for colour in self.cubes:
-                if self.cubes[colour] > self.maxCubeCount:
+            for colour in self.cubesUsed:
+                if self.cubesUsed[colour] > self.maxCubeCount:
                     result["gameLoss"] = True
                     result["gameLossReason"].append("Out of " + colour + " cubes")
 
@@ -375,7 +375,7 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
-        # jsut for testing on game page
+        # just for testing on game page
         self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
