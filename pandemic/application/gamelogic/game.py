@@ -255,12 +255,11 @@ class GameBoard:
         self.playerDiscarded = []
         self.playerCount = 0
         self.players = playerDict # {id:playerObj}
-        self.blueUsed = 0 # total disease cubes used?
-        self.redUsed = 0
-        self.yellowUsed = 0
-        self.blackUsed = 0
+        self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
+        self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
         self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
+        self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
@@ -274,6 +273,65 @@ class GameBoard:
         # self.__infectCitiesStage()
         # self.__distributeHand()
         self.__initializeBoard()
+
+
+    def __checkAction(self, playerId):
+        """ 
+        Check if player has too many cards (they must discard before being able to perform an action)
+        Checks that the player has available moves left from their action counter.
+            
+        Returns:
+            a dictionary {validAction:True/False,actionsCount:int,cardsCount:int}
+        """
+        result = {}
+
+        playerObj = self.players[playerId]
+
+        # add card count of a players hand.
+        result["cardsCount"] = cardsCount = len(playerObj.hand)
+
+        # add actions of a player
+        result["actionsCount"] = actionsCount = playerObj.actions
+
+        # check if it is a valid move
+        if cardsCount > 0 and actionsCount > 0:
+            result["validAction":True]
+        else:
+            result["validAction":False]
+
+        return result
+            
+
+
+    def __endRoundCheck(self)
+        """ 
+        function removes an action from the player for the round.
+        If all actions for all players are gone, it will invoke the end of the round functions.
+        It then checks all losing conditions, to see if the game has been lost.
+        Returns: 
+            if any player has moves left: False
+            if all player moves used: a dictionary containing end of round key:value pairs.
+        """
+        result = {}
+
+        # check for actions left
+        actions = self.totalPlayerActions()
+        if actions > 1:
+            result["endRound":False]
+        else:
+            # end of round has occured.
+            result["endRound":True]
+
+            # invoke draw cards step
+            result["cardDraw"] = self.endTurnDrawCards()
+
+            # invoke infect cities step
+            result["infectedCities"] = self.endTurnInfectCities()
+
+            # # check if outbreak meter is at max
+            # outbreak = 
+
+            # # check if out of cubes. 
 
 
 
@@ -453,6 +511,15 @@ class GameBoard:
         for k in self.players:
             total += self.players[k].actions
         return total
+
+    def checkWin(self):
+        """ If all cures are discovered, victory!
+            returns True/False
+        """
+        if self.cures["blue"] == 1 and self.cures["red"] == 1 and self.cures["yellow"] == 1 and self.cures["black"] == 1
+            return True
+        else:
+            return False
 
 
     def movePlayer(self, playerId, nextCityName):
@@ -683,6 +750,7 @@ class GameBoard:
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour,1)
+
 
 
 
