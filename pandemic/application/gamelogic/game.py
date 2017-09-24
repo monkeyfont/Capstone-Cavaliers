@@ -294,7 +294,7 @@ class GameBoard:
         result["actionsCount"] = actionsCount = playerObj.actions
 
         # check if it is a valid move
-        if cardsCount > 0 and actionsCount > 0:
+        if cardsCount > 8 and actionsCount > 0:
             result["validAction":True]
         else:
             result["validAction":False]
@@ -303,7 +303,7 @@ class GameBoard:
             
 
 
-    def __endOfRound(self)
+    def __endOfRound(self):
         """ 
         function removes an action from the player for the round.
         If all actions for all players are gone, it will invoke the end of the round functions.
@@ -534,7 +534,7 @@ class GameBoard:
         """ If all cures are discovered, victory!
             returns True/False
         """
-        if self.cures["blue"] == 1 and self.cures["red"] == 1 and self.cures["yellow"] == 1 and self.cures["black"] == 1
+        if self.cures["blue"] == 1 and self.cures["red"] == 1 and self.cures["yellow"] == 1 and self.cures["black"] == 1:
             return True
         else:
             return False
