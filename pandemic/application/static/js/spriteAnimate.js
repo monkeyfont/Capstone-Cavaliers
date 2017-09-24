@@ -9,6 +9,8 @@ var screenWidthPercentage = scrnWidth/optimalScreenWidth;
 
 var scaleSize = 1;
 
+
+
 // sets the scalesize to the lower of height or width
 if (screenHeightPercentage<screenWidthPercentage){
 	scaleSize = screenHeightPercentage;
@@ -85,9 +87,8 @@ function checkMove(city){
 
     };
 socket.on('checked', function (data) {
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
-        console.log(check+" "+ city)
         if (check ==true){
 			console.log('moving',data.playerName)
 			// console.log('player k',players.players.k)
@@ -95,7 +96,7 @@ socket.on('checked', function (data) {
 			players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
 });
 
@@ -106,15 +107,14 @@ function directFlight(city) {
 }
 socket.on('directFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
-        console.log(check+" "+ city)
         if (check ==true){
 
             players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
 });
 
@@ -129,7 +129,7 @@ function charterFlight() {
 }
 socket.on('charterFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
 
         if (check ==true){
@@ -137,7 +137,7 @@ socket.on('charterFlightChecked', function (data) {
             // player.move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
  });
 
@@ -166,8 +166,8 @@ socket.on('shuttleFlightChecked', function (data) {
 
 
 function buildResearch() {
-    var city = prompt("Enter current city Name: ");
-    socket.emit('buildResearchStation', {cityName:city})
+    //var city = prompt("Enter current city Name: ");
+    socket.emit('buildResearchStation', {})
 
 }
 
@@ -243,8 +243,8 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-    var city = prompt("Enter current city Name: ");
-    socket.emit('treatDisease', {cityName:city})
+
+    socket.emit('treatDisease', {})
 
 }
 
@@ -431,7 +431,7 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	console.log(message);
+	//console.log(message);
 
 
 	for (var i in spriteList){
@@ -467,7 +467,7 @@ canvas.addEventListener('click', function(evt) {
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
-				console.log('city ', i ,' was clicked');
+				//console.log('city ', i ,' was clicked');
 				checkMove(i);
 
 			}
@@ -802,21 +802,21 @@ moveInfection = function(){
 
 
 socket.on('gotPlayer',function(data){
-	console.log('data is: ',data )
-	console.log("you are the player",data.playerName);
-	console.log("you are the player",data.playerType);
+	//console.log('data is: ',data )
+	//console.log("you are the player",data.playerName);
+	//console.log("you are the player",data.playerType);
 	// players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
 
 socket.on('gamePlayerInitilization',function(data){
-	console.log('data is: ',data )
+	//console.log('data is: ',data )
 	cityName = data.playerLocation;
-	console.log(locations[cityName]);
+	//console.log(locations[cityName]);
 	city = locations[cityName]
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 });
 
-socket.on('intitialInfectedCities',function(data){
+socket.on('InfectedCities',function(data){
 
     var amount;
 
@@ -845,7 +845,7 @@ socket.on('gotInitialHands',function(data){
     if (data.hasOwnProperty(player)) {
     var playerId= player
     var cards=data[player]
-    console.log("Player "+playerId + "has the cards: ")
+    //console.log("Player "+playerId + "has the cards: ")
     $('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
 
     for (var card in cards) {
@@ -866,7 +866,7 @@ socket.on('gotInitialHands',function(data){
 
 socket.on('clicked', function (data) {
 
-        console.log(data.msg);
+        //console.log(data.msg);
 
     });
 
@@ -876,7 +876,7 @@ socket.on('clicked', function (data) {
 window.onload = function (){
 	socket.emit('getPlayerObject') 
 	socket.emit('getGameInitialization')
-	socket.emit('getinitInfections')
+	socket.emit('getInfections')
 	socket.emit('getPlayersHands')
 
 	}
