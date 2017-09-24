@@ -151,15 +151,13 @@ function shuttleFlight() {
 
 socket.on('shuttleFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg;
-		console.log("data",data);
+        check=data.msg.response;
         var city=eval(data.city);
-        console.log(check+" "+ city)
         if (check ==true){
              players.players[data.playerName].move(city.xPos,city.yPos);
 	}
 	else{
-	    console.log("Sorry invalid move");
+	    alert(data.msg.errorMessage);
 	}
 });
 
@@ -173,7 +171,7 @@ function buildResearch() {
 
 socket.on('researchBuildChecked', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
@@ -182,7 +180,7 @@ socket.on('researchBuildChecked', function (data) {
 	}
 	else{
 
-	    console.log("Sorry research station cannot be built here");
+	    alert(data.msg.errorMessage);
 	}
 });
 
@@ -196,7 +194,7 @@ function shareKnowledgeGive() {
 
 socket.on('giveKnowledgeShared', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
 
         if (check ==true){
             //addResearchStation(city);
@@ -208,7 +206,7 @@ socket.on('giveKnowledgeShared', function (data) {
 	}
 	else{
 
-	    console.log("Sorry cannot share this card to the other player");
+	    alert(data.msg.errorMessage);
 	}
 
     });
@@ -224,8 +222,7 @@ function shareKnowledgeTake() {
 
 socket.on('takeKnowledgeShared', function (data) {
         //alert(data.msg);
-        check=data.msg;
-
+        check=data.msg.response;
         if (check ==true){
             //addResearchStation(city);
 
@@ -236,7 +233,7 @@ socket.on('takeKnowledgeShared', function (data) {
 	}
 	else{
 
-	    console.log("Sorry cannot share this card to the other player");
+	    alert(data.msg.errorMessage);
 	}
 
     });
@@ -250,16 +247,16 @@ function treatDisease() {
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.response;
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
 			locations[data.city].disinfect({'colour':locations[data.city].colour,'ammount':1});
-            console.log("Disease treated in ",data.city)
+
 
 	}
 	else{
-	    console.log("Sorry cannot treat this disease");
+	    alert(data.msg.errorMessage);
 	}
 
     });

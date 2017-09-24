@@ -618,7 +618,8 @@ class GameBoard:
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
                     print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
-                    return True
+                    responseDict["response"] = True
+                    return responseDict
                 else:
                     responseDict["errorMessage"] = "ERROR: You are not in the right location. To do this action you must be in the city of the card you wish to play"
                     responseDict["response"] = False
@@ -631,6 +632,7 @@ class GameBoard:
 
     def shuttleFlight(self,playerId,destinationCity):
         """ Move from a city with a research station to any other city that has a research station """
+        responseDict = {}
         playerObj = self.players[playerId]
         currentCityName = playerObj.location
         curCityObj = self.cities[currentCityName]
@@ -639,13 +641,21 @@ class GameBoard:
             self.players[playerId].location = destinationCity
             playerObj.actions -= 1
             print('player ' + str(playerId) + ' has successfully shuttleFlight\'d from ' + currentCityName + ' to ' + destinationCity)
-            return True
+            responseDict["response"] = True
+            return responseDict
         else:
-            return False
+            responseDict["response"] = False
+            if curCityObj.researchStation != 1:
+                responseDict["errorMessage"] = "ERROR: The city you are in does not have a research station"
+            else:
+                responseDict["errorMessage"] = "ERROR: The city you want to move to does not have a research station"
+            return responseDict
+
 
 
     def buildResearchStation(self, playerId, cityCardName):
         """ Discard the city card that matches the city you are in to place a research station there """
+        responseDict = {}
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         currentLocation = playerObj.location
@@ -659,10 +669,20 @@ class GameBoard:
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
                     print('player ' + str(playerId) + ' has successfully built a research station at ' + currentLocation)
-                    return True
+                    responseDict["response"] = True
+                    return responseDict
                 else:
-                    return False
-        return False
+                    responseDict["response"] = False
+                    if cityCardName != currentLocation:
+                        responseDict["errorMessage"] = "ERROR: You are not on the city of the card you want to play"
+                    else:
+                        responseDict["errorMessage"] = "ERROR: The city you wish to build a research station on already has one"
+
+                    return responseDict
+
+        responseDict["errorMessage"] = "ERROR: You do not have this card in your hand"
+        responseDict["response"] = False
+        return responseDict
 
 
     def shareKnowledgeTake(self, playerId, targetPlayerId, targetCity):
@@ -671,13 +691,16 @@ class GameBoard:
 
         playerId takes the city card from targetPlayerId if they have the card, and both players are in the same city.
         """
+        responseDict = {}
         playerObj = self.players[playerId]
         targetPlayer = self.players[targetPlayerId]
         playerHand = playerObj.hand
         targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
         if playerObj.location != targetPlayer.location:
-            return False
+            responseDict["errorMessage"] = "ERROR: You are not on the same city as {}".format(targetPlayer.name)
+            responseDict["response"] = False
+            return responseDict
         # If targetPlayer has that city card, move it to players hand.
         for card in targetPlayerHand:
             if card.name == targetCity:
@@ -685,9 +708,12 @@ class GameBoard:
                 playerHand.append(card)
                 playerObj.actions -= 1
                 print('player ' + str(playerId) + ' used shareKnowledge (take) with ' + str(targetPlayerId) + ' for city ' + targetCity)
-                return True
+                responseDict["response"] = True
+                return responseDict
         #fall through
-        return False
+        responseDict["errorMessage"] = "ERROR: {} does not have this card in their hand".format(targetPlayer.name)
+        responseDict["response"] = False
+        return responseDict
         #TODO - not sure if 'permission' logic should be added here, or elsewhere.
 
 
@@ -697,13 +723,16 @@ class GameBoard:
 
         if has the city card, playerId gives the city card to targetPlayerId. Both players must be in the same city.
         """
+        responseDict = {}
         playerObj = self.players[playerId]
         targetPlayer = self.players[targetPlayerId]
         playerHand = playerObj.hand
         targetPlayerHand = targetPlayer.hand
         # Check both players are in the same city
         if playerObj.location != targetPlayer.location:
-            return False
+            responseDict["errorMessage"] = "ERROR: You are not on the same city as {}".format(targetPlayer.name)
+            responseDict["response"] = False
+            return responseDict
         # If player has that city card, move it to players hand.
         for card in playerHand:
             if card.name == targetCity:
@@ -711,9 +740,12 @@ class GameBoard:
                 targetPlayerHand.append(card)
                 playerObj.actions -= 1
                 print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
-                return True
+                responseDict["response"] = True
+                return responseDict
         #fall through
-        return False
+        responseDict["errorMessage"] = "ERROR: {} does not have this card in their hand".format(targetPlayer.name)
+        responseDict["response"] = False
+        return responseDict
         #TODO - not sure if 'permission' logic should be added here, or elsewhere.
 
 
@@ -778,6 +810,7 @@ class GameBoard:
 
         """
         # TODO potentially need to see if a disease can actually be treated.
+        responseDict = {}
         # Get player object
         playerObj = self.players[playerId]
         # Retrieve cities colour
@@ -789,9 +822,12 @@ class GameBoard:
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
             playerObj.actions -= 1
-            return True
+            responseDict["response"] = True
+            return responseDict
         else:
-            return False
+            responseDict["errorMessage"] = "ERROR: This city can not be treated"
+            responseDict["response"] = False
+            return responseDict
 
         # TODO need to implement logic that checks if the disease is cured.
 
