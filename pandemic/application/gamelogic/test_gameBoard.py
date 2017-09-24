@@ -16,8 +16,7 @@ class TestGameBoard(TestCase):
     def test_generatePlayerDeck(self):
         # test to make sure all 48 player cards are in the player deck list
         self.assertEqual(self.testGameBoard.generatePlayerDeck().__len__(), 48)
-
-
+        
     def test_generateInfectionDeck(self):
         self.assertEqual(self.testGameBoard.generateInfectionDeck().__len__(), 48)
 
@@ -26,7 +25,6 @@ class TestGameBoard(TestCase):
         self.testGameBoard.playerDeck=self.testGameBoard.generatePlayerDeck()
         self.testGameBoard.distributeHand()
         for player in self.testGameBoard.players:
-
             self.assertEqual(self.testGameBoard.players[player].hand.__len__(), 2)
 
 
@@ -197,5 +195,4 @@ class TestGameBoard(TestCase):
         self.testGameBoard.cities = self.testGameBoard.generateCities()
         city=self.testGameBoard.cities["SYDNEY"]
         self.testGameBoard.cityOutBreak(city,city.colour)
-
 

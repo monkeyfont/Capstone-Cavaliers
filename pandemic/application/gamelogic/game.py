@@ -255,12 +255,11 @@ class GameBoard:
         self.playerDiscarded = []
         self.playerCount = 0
         self.players = playerDict # {id:playerObj}
-        self.blueUsed = 0 # total disease cubes used?
-        self.redUsed = 0
-        self.yellowUsed = 0
-        self.blackUsed = 0
+        self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
+        self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
         self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
+        self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
@@ -275,6 +274,91 @@ class GameBoard:
         # self.__distributeHand()
         self.__initializeBoard()
 
+
+    def __checkAction(self, playerId):
+        """ 
+        Check if player has too many cards (they must discard before being able to perform an action)
+        Checks that the player has available moves left from their action counter.
+            
+        Returns:
+            a dictionary {validAction:True/False,actionsCount:int,cardsCount:int}
+        """
+        result = {}
+        result["invalidReason"] = []
+
+        playerObj = self.players[playerId]
+
+        # add card count of a players hand.
+        result["cardsCount"] = cardsCount = len(playerObj.hand)
+
+        # add actions of a player
+        result["actionsCount"] = actionsCount = playerObj.actions
+
+        # check if valid move.
+        if cardsCount < 8 and actionsCount > 0:
+            result["validAction"] = True
+        else:
+            result["validAction"] = False
+            if cardsCount >= 8:
+                result["invalidReason"].append("Too many cards")
+            if actionsCount <= 0:
+                result["invalidReason"].append("No actions remain")
+
+        return result
+            
+
+
+    def __endOfRound(self):
+        """ 
+        function removes an action from the player for the round.
+        If all actions for all players are gone, it will invoke the end of the round functions.
+        It then checks all losing conditions, to see if the game has been lost.
+        Returns: 
+            if any player has moves left: False
+            if all player moves used: a dictionary containing end of round key:value pairs.
+        """
+        result = {}
+
+        # check for actions left
+        actions = self.totalPlayerActions()
+        if actions > 1:
+            result["endRound"] =False
+        else:
+            result["gameLoss"] = False
+            result["gameLossReason"] = []
+
+            # end of round has occured.
+            result["endRound"] = True
+
+            # invoke draw cards step
+            result["cardDraw"] = self.endTurnDrawCards()
+
+            # append infection level
+            result["infectionLevel"] = self.infectionLevel
+
+            # check if out of cards during the draw stage.
+            if result["cardDraw"]["outOfCards"] == True:
+                result["gameLoss"] = True
+                result["gameLossReason"].append("Out of player cards.")
+
+            # invoke infect cities step
+            result["infectedCities"] = self.endTurnInfectCities()
+
+            # check if cubes of any colour have run out.
+            for colour in self.cubesUsed:
+                if self.cubesUsed[colour] > self.maxCubeCount:
+                    result["gameLoss"] = True
+                    result["gameLossReason"].append("Out of " + colour + " cubes")
+
+            # add the current outbreak level
+            result["outBreakLevel"] = self.outBreakLevel
+
+            # check if outbreak meter is at max
+            if self.outBreakLevel >= self.maxOutBreakLevel:
+                result["gameLoss"] = True
+                result["gameLossReason"].append("Outbreak level")
+
+        return result
 
 
     def __setStartingLocation(self):
@@ -299,7 +383,7 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
-        # jsut for testing on game page
+        # just for testing on game page
         self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
@@ -422,7 +506,6 @@ class GameBoard:
         The call to self.infectCity() handles infection and outbreak logic.
         The infect city card is added to the discard pile.
         """
-        # TODO lose game if out of cards.
         amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
         for i in range(amountToDraw):
             # Draw the infection card from the top of the deck.
@@ -451,6 +534,15 @@ class GameBoard:
         for k in self.players:
             total += self.players[k].actions
         return total
+
+    def checkWin(self):
+        """ If all cures are discovered, victory!
+            returns True/False
+        """
+        if self.cures["blue"] == 1 and self.cures["red"] == 1 and self.cures["yellow"] == 1 and self.cures["black"] == 1:
+            return True
+        else:
+            return False
 
 
     def getAllCurrentInfectedCities(self):
@@ -636,8 +728,15 @@ class GameBoard:
             return False
 
     def discoverCure(self,playerId,cities):
-        """ at any research station, discard 5 city cards of the same disease colour to cure that disease """
+        """
+        at any research station, discard 5 city cards of the same disease colour to cure that disease
+        Returns a dictionary:
+            result = {validAction:"false", reason:"notEnoughCards" }
+        """
         # TODO this code should probably be refactored.
+
+        validation = self.__checkAction(playerId) #validate its a legal player move.
+
         # Check player is at a research station
         if self.isPlayerAtResearchStation(playerId) is False:
             return
@@ -645,6 +744,7 @@ class GameBoard:
         if len(cities) != 5:
             return
         # retrieve city objects from strings.
+        result = {} # holds the return dict.
         cityObjs = []
         colour = ""
         for cityStr in cities:
@@ -667,6 +767,7 @@ class GameBoard:
         self.cures[colour] = 1
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
+
         return True
 
 
@@ -712,6 +813,7 @@ class GameBoard:
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour,1)
+
 
 
 
