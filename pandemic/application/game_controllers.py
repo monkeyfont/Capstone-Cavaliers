@@ -23,6 +23,7 @@ def game():
         username = str(session['username'])
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
+        currentLobby.gameStarted=True
         playerdict = currentLobby.players
         if roomname not in games:
             gameobject = GameBoard(playerdict)
@@ -40,7 +41,7 @@ def roomprivacy():
     publicLobbies = []
     for lobbyobjectkey in lobbies:
         lobbyobj=lobbies[lobbyobjectkey]
-        if lobbyobj.privacy == "public":
+        if lobbyobj.privacy == "public" and lobbyobj.gameStarted==False:
             print("public lobby found with id " +lobbyobj.name )
             publicLobbies.append(lobbyobj.name)
     emit('publicLobbies', {'lobbies': publicLobbies}, room="default")
@@ -331,7 +332,6 @@ def handleclick(msg):
             cityToTreat = playerObject.location
             cityObject = gameObject.cities[cityToTreat]
             response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
-            print response,"YOZA"
             if response["response"] == True:
                 emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
             else:
@@ -390,6 +390,9 @@ def lobby():
 
                     if lobby.playerCount==4:
                         return (render_template("lobby.html",error="Sorry this room is full! Please join another"))
+                    if lobby.gameStarted==True:
+                        return (render_template("lobby.html", error="This game has already started please Join or create another game"))
+
                     lobby.playerCount += 1
                     newPlayer = Player(lobby.playerCount, str(session['username']))
                     lobby.players[lobby.playerCount]=newPlayer
