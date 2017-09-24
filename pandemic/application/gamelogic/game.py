@@ -333,6 +333,9 @@ class GameBoard:
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
 
+            # append infection level
+            result["infectionLevel"] = self.infectionLevel
+
             # check if out of cards during the draw stage.
             if result["cardDraw"]["outOfCards"] == True:
                 result["gameLoss"] = True
