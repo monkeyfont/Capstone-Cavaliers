@@ -168,6 +168,36 @@ def handleclick(msg):
 
     emit('clicked', {'msg' : player + messg },room=room)
 
+@socketio.on('roundOverDone')
+def roundOverDone():
+    roomName = str(session['roomname'])
+    username = str(session["username"])
+
+    gameObject = games[roomName]
+    gameObject.resetPlayerActions()
+
+@socketio.on('discardCard')
+def HandleDiscardCard(msg):
+    roomName = str(session['roomname'])
+    username = str(session["username"])
+    cardName = msg["cardName"]
+    gameObject = games[roomName]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response = gameObject.discardCard(playerObject.id, cardName)
+            if response==True:
+                emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
+            else:
+                emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
+
+
+
+
+
+
+
 @socketio.on('checkMove')
 def handlecheckmove(msg):
     #"Check move called"
@@ -333,7 +363,7 @@ def handleclick(msg):
             cityToTreat = playerObject.location
             cityObject = gameObject.cities[cityToTreat]
             response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
-            if response["response"] == True:
+            if response["validAction"] == True:
                 emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
             else:
                 emit('diseaseTreated', {'msg': response, 'city': cityToTreat})

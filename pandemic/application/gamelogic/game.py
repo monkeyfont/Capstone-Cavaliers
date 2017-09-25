@@ -581,6 +581,21 @@ class GameBoard:
 
         return infectedCities
 
+    def discardCard(self,playerId,cardToBeDiscarded):
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if(card.name == cardToBeDiscarded):
+                playerHand.remove(card)
+                self.playerDiscarded.append(card)
+                return True
+
+        return False
+
+
+
+
 
 
 
@@ -883,22 +898,29 @@ class GameBoard:
         """
         # TODO potentially need to see if a disease can actually be treated.
         responseDict = {}
+        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
         # Get player object
         playerObj = self.players[playerId]
         # Retrieve cities colour
         cityObj = self.cities[targetCity]
         currentLocation = playerObj.location
         if currentLocation!=targetCity:
-            return False
+            responseDict["errorMessage"] = "ERROR: You are not on the city you wish to treat"
+            responseDict["validAction"] = False
+            return responseDict
         response=cityObj.treat(colour, amount)
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
             playerObj.actions -= 1
-            responseDict["response"] = True
+            responseDict["validAction"] = True
+            endOfGameCheck = self.__endOfRound()
+            responseDict.update(endOfGameCheck)
             return responseDict
         else:
             responseDict["errorMessage"] = "ERROR: This city can not be treated"
-            responseDict["response"] = False
+            responseDict["validAction"] = False
             return responseDict
 
         # TODO need to implement logic that checks if the disease is cured.

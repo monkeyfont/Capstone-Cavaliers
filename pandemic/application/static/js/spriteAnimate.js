@@ -81,8 +81,11 @@ socket.on('joined', function (data) {
 function endOfRound(info){
 
 // in here will do all the front end work with the json string
-console.log("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
+alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
 console.log(info);
+//do some stuff
+socket.emit('roundOverDone')
+
 
 
 };
@@ -285,9 +288,10 @@ function treatDisease() {
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
-        var city=eval(data.city);
+        check=data.msg.validAction;
+
         if (check ==true){
+            var city=eval(data.city);
             //addResearchStation(city);
 			locations[data.city].disinfect({'colour':locations[data.city].colour,'ammount':1});
 
@@ -296,6 +300,11 @@ socket.on('diseaseTreated', function (data) {
 	else{
 	    alert(data.msg.errorMessage);
 	}
+
+	if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
 
     });
 
@@ -318,6 +327,25 @@ socket.on('cureDiscovered', function (data) {
 	else{
 	    console.log("Sorry cure was not discovered");
 	}
+
+    });
+
+function discardCard(){
+
+    var card = prompt("Enter name of card you wish to discard: ");
+    socket.emit('discardCard', {cardName:card})
+
+}
+
+socket.on('cardRemoved', function (data) {
+        check=data.msg;
+        if (check == true){
+        alert(data.cardToRemove+" has been discarded from your hand")
+        }
+        else{
+        alert("cannot discard this card")
+        }
+
 
     });
 
