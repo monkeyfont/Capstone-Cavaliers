@@ -184,7 +184,8 @@ def handlecheckmove(msg):
             #       response will be either true or false
             #
             # print ("we are about to emit a message")
-            if response["response"]==True:
+            print response
+            if response["validAction"]==True:
                 emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=roomName)
             else:
                 emit('checked', {'playerName': username, 'msg': response, 'city': cityToMove})
@@ -205,7 +206,7 @@ def handleclick(msg):
             # Player found."
             print playerObject.id,"player id!"
             response = gameObject.directFlight(playerObject.id, cityToMove)
-            if response["response"] == True:
+            if response["validAction"] == True:
                 emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
             else:
                 emit('directFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
@@ -227,7 +228,7 @@ def handleclick(msg):
             print(playerObject.name," wants to use the card", cityCardName ," to move to ",cityToMove)
 
             response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
-            if response["response"] == True:
+            if response["validAction"] == True:
                 emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
             else:
                 emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
@@ -244,7 +245,7 @@ def handleclick(msg):
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response = gameObject.shuttleFlight(playerObject.id, cityToMove)
-            if response["response"] == True:
+            if response["validAction"] == True:
                 emit('shuttleFlightChecked', {'playerName': username,'msg':response,'city':cityToMove},room=room)
             else:
                 emit('shuttleFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
@@ -263,7 +264,7 @@ def handleclick(msg):
         cityToBuildOn = playerObject.location
         if playerObject.name == username:
             response= gameObject.buildResearchStation(playerObject.id,cityToBuildOn)
-            if response["response"] == True:
+            if response["validAction"] == True:
                 emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn}, room=room)
             else:
                 emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn})
@@ -289,7 +290,7 @@ def handleclick(msg):
             otherPlayerid=playerObject.id
     response = gameObject.shareKnowledgeGive(playerid,otherPlayerid,cityCardToShare)
 
-    if response["response"] == True:
+    if response["validAction"] == True:
         emit('giveKnowledgeShared', {'msg':response},room=room)
     else:
         emit('giveKnowledgeShared', {'msg': response})
@@ -313,7 +314,7 @@ def handleclick(msg):
         elif playerObject.name== playerGivingName:
             otherPlayerid=playerObject.id
     response = gameObject.shareKnowledgeTake(playerid,otherPlayerid,cityCardToShare)
-    if response["response"] == True:
+    if response["validAction"] == True:
         emit('takeKnowledgeShared', {'msg':response}, room=room)
     else:
         emit('takeKnowledgeShared', {'msg': response})

@@ -78,6 +78,14 @@ socket.on('joined', function (data) {
 
 //-------------------------PLAYER ACTIONS WEB SOCKET FUNCTIONS----------------
 
+function endOfRound(info){
+
+// in here will do all the front end work with the json string
+console.log("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
+console.log(info);
+
+
+};
 
 //CHECK MOVE TO NEIGHBOURING CITY
 function checkMove(city){
@@ -87,17 +95,20 @@ function checkMove(city){
 
     };
 socket.on('checked', function (data) {
-        check=data.msg.response;
+
+        check=data.msg.validAction;
         var city=eval(data.city);
-        if (check ==true){
-			console.log('moving',data.playerName)
-			// console.log('player k',players.players.k)
-			// console.log(players)
+        if (data.msg.validAction ==true){
 			players.players[data.playerName].move(city.xPos,city.yPos);
-	}
-	else{
+	    }
+	    else{
 	    alert(data.msg.errorMessage);
 	}
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
+
 });
 
 function directFlight(city) {
@@ -107,15 +118,19 @@ function directFlight(city) {
 }
 socket.on('directFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
+        check=data.msg.validAction;
         var city=eval(data.city);
         if (check ==true){
-
             players.players[data.playerName].move(city.xPos,city.yPos);
-	}
-	else{
+	    }
+	    else{
 	    alert(data.msg.errorMessage);
-	}
+	    }
+
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
 });
 
 
@@ -129,16 +144,23 @@ function charterFlight() {
 }
 socket.on('charterFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
-        var city=eval(data.city);
+        check=data.msg.validAction;
+
 
         if (check ==true){
-        players.players[data.playerName].move(city.xPos,city.yPos);
+            var city=eval(data.city);
+            players.players[data.playerName].move(city.xPos,city.yPos);
             // player.move(city.xPos,city.yPos);
-	}
-	else{
-	    alert(data.msg.errorMessage);
-	}
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
+
  });
 
 
@@ -151,14 +173,19 @@ function shuttleFlight() {
 
 socket.on('shuttleFlightChecked', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
-        var city=eval(data.city);
+        check=data.msg.validAction;
+
         if (check ==true){
+            var city=eval(data.city);
              players.players[data.playerName].move(city.xPos,city.yPos);
-	}
-	else{
-	    alert(data.msg.errorMessage);
-	}
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
 });
 
 
@@ -171,17 +198,21 @@ function buildResearch() {
 
 socket.on('researchBuildChecked', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
-        var city=eval(data.city);
+        check=data.msg.validAction;
+
         if (check ==true){
+            var city=eval(data.city);
             //addResearchStation(city);
+            console.log("Research station HAS BEEEN built here")
+	    }
+	    else{
 
-            console.log("Research station can be built here")
-	}
-	else{
+	        alert(data.msg.errorMessage);
+	    }
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
 
-	    alert(data.msg.errorMessage);
-	}
+        }
 });
 
 function shareKnowledgeGive() {
@@ -194,8 +225,7 @@ function shareKnowledgeGive() {
 
 socket.on('giveKnowledgeShared', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
-
+        check=data.msg.validAction;
         if (check ==true){
             //addResearchStation(city);
 
@@ -203,11 +233,15 @@ socket.on('giveKnowledgeShared', function (data) {
             JSON.stringify(j);
             console.log(j)
             console.log("Cards have been swapped")
-	}
-	else{
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
 
-	    alert(data.msg.errorMessage);
-	}
+        }
+
 
     });
 
@@ -222,7 +256,7 @@ function shareKnowledgeTake() {
 
 socket.on('takeKnowledgeShared', function (data) {
         //alert(data.msg);
-        check=data.msg.response;
+        check=data.msg.validAction;
         if (check ==true){
             //addResearchStation(city);
 
@@ -230,11 +264,15 @@ socket.on('takeKnowledgeShared', function (data) {
             JSON.stringify(j);
             console.log(j)
             console.log("Cards have been swapped")
-	}
-	else{
+	    }
+	    else{
 
-	    alert(data.msg.errorMessage);
-	}
+	        alert(data.msg.errorMessage);
+	    }
+	    if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
 
     });
 
@@ -851,7 +889,6 @@ socket.on('gotInitialHands',function(data){
 
     // if you want to access each individial card then get in here through cards[card]
     // if you want the list of player cards get it through just "cards"
-    console.log(cards[card])
 
     $('#cards').val($('#cards').val() + cards[card] + '\n');
                   }
