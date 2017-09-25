@@ -51,7 +51,7 @@
 	});
 	
 	describe('The city Object',function(){
-		var testCity = new city({id:'testCity', colour:'black', xPos:0, yPos:0, connections:[], canvas:"No Canvas"});
+		var testCity = new city({id:'testCity', colour:'black', xPos:0, yPos:0, connections:[], context:"No Canvas"});
 		it('can initalise city',function(){
 			expect(testCity.colour).toEqual("black");
 			expect(testCity.xPos).toEqual(0);

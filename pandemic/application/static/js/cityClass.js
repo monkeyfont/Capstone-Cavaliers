@@ -8,7 +8,7 @@ function city(options){
 	this.colour = options.colour;
 	this.xPos = options.xPos;
 	this.yPos = options.yPos; 
-	this.canvas = options.canvas || canvas.getContext("2d");
+	this.context = options.context || canvas.getContext("2d") ;
 	this.radius = options.radius || 12;
 	this.researchStation = options.researchStation || false;
 	this.infectionStatus = options.infectionStatus || {black:[],blue:[],yellow:[],red:[]};
@@ -58,7 +58,7 @@ function city(options){
 		this.infectionStatus[infectionColour].push(new infection({
 			id:this.id+" "+ infectionColour+" "+this.infectionStatus[infectionColour].length,
 			colour: options.colour || this.colour,
-			context: this.canvas,
+			context: this.context,
 			width: 256,
 			height: 256,
 			xPos:infectionX,
@@ -72,13 +72,12 @@ function city(options){
 		
 	}
 	this.disinfect = function(options){
-		//options = {colour:, ammount:}
-		// infectionColour = options.colour || this.colour;
-		disinfections = options.ammount 
-		// || 1;
+		// options = {colour:, ammount:}
+		infectionColour = this.colour || options.colour;
+		disinfections = options.ammount || 1;
 		for(i = 0; i < disinfections; i++){
 			console.log("removed infection")
-			this.infectionStatus[options.colour].pop()
+			this.infectionStatus[infectionColour].pop()
 		}
 	}
 	
