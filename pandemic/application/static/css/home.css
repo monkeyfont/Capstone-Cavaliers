@@ -1,0 +1,104 @@
+body{
+    background-color:black;
+}
+h3,h1{
+    color: red;
+    text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
+    letter-spacing: 2px;
+    text-align: center;
+
+}
+h1{
+    font-size:300%;
+}
+#title{
+    font-size:400%;
+
+}
+.typeHere {
+
+    background-color: red;
+    border: 5px solid yellow;
+    border-radius:3px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width:48%;
+    color:black;
+}
+.typeMessageHere {
+
+    background-color: red;
+    border: 5px solid yellow;
+    border-radius:3px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width:80%;
+    color:black;
+}
+.two {
+    margin-left:25%;
+    margin-right:25%;
+    width:50%;
+
+}
+.two_t {
+    margin-left:45%;
+    margin-right:45%;
+    width:10%;
+    background-color: red;
+    border: 5px solid yellow;
+    border-radius:3px;
+    text-align: center;
+    color:black;
+}
+.two_tt{
+    margin-left:42.5%;
+    margin-right:42.5%;
+    width:15%;
+    background-color: red;
+    border: 5px solid yellow;
+    border-radius:3px;
+    text-align: center;
+    margin-top:2%;
+    margin-bottom:2%;
+    padding-top:2%;
+    padding-bottom:2%;
+    cursor: text;
+    color:black;
+    font-weight:bolder;
+}
+.two_tt:hover{
+    background-color: rgba(255, 0, 0, 0.84);
+    font-size:130%
+}
+.bullets{
+   background-color: red;
+    border: 5px solid yellow;
+    border-radius:3px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: text;
+    color:black;
+}
+textarea{
+    width:100%;
+    height:100px;
+}
+.three{
+    background-color: yellow;
+    border: 5px solid yellow;
+    border-radius:3px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width:15%;
+    color:black;
+    font-weight:bolder;
+}

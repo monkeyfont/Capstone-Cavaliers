@@ -2,32 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Pandemic Lobby</title>
+    <link rel="stylesheet" href="static/css/home.css">
+
 </head>
 <body>
-        <h1>{{error}}</h1>
-        <h1>Welcome to Pandemic</h1>
+    <!--<img src="static/images/Pandemic_Banner.jpg">-->
+    <div id="container">
+        <h1 id="title"> WELCOME TO PANDEMIC</h1>
     <form action = "/lobby" method = "post">
-        <h3>Create New Room</h3>
-        <input  placeholder="ROOM NAME" name = "roomname">
-        <input type = "text"  placeholder= "YOUR NAME" name = "username" ><br>
-        Room privacy<br>
-        <input type="radio" name="privacy" value="private" checked>Private<br>
-        <input type="radio" name="privacy" value="public"> Public<br>
+        <div class="row">
+            <h1 class="col-sm-12">New Team</h1>
+            <div class="two">
+                <input class = "typeHere"placeholder="Team name" name = "roomname">
+                <input class = "typeHere" type = "text"  placeholder= "Your name" name = "username" ><br>
+            </div>
+        </div>
+        <h1>{{error}}</h1>
+        <h3>Room privacy</h3>
+        <div class="two_t">
+            <input class = "bullets" type="radio" name="privacy" value="private" checked>Private<br>
+            <input class = "bullets" type="radio" name="privacy" value="public">Public<br>
+        </div>
         <input type="hidden" name="roomtype" value="create">
-        <input type= "submit" value= "Create New Room">
+        <input class="two_tt" type= "submit" value= "Create Team">
     </form>
     <form action="/lobby"  method = "post">
-            <h3>Join a room</h3>
-            <input  placeholder="ROOM NAME" name = "roomname">
-            <input  placeholder="YOUR NAME" name = "username">
+            <h1>Join Existing Team</h1>
+        <div class="row">
+            <div class="two">
+                <input class = "typeHere" placeholder="Team name" name = "roomname">
+                <input class = "typeHere" placeholder="Your name" name = "username">
+            </div>
+        </div>
             <input type="hidden" name="roomtype" value="join">
-            <input  type="submit" value= "Join" >
+            <input  class="two_tt" type="submit" value= "Join Team" >
+
     </form>
-        <h2>Public Rooms</h2>
-        <textarea id="roomlog"></textarea>
+        <h3>Public Teams</h3>
+        <div class="two">
+          <textarea id="roomlog"></textarea>
+        </div>
+    </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+
 </body>
 </html>
