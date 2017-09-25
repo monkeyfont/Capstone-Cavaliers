@@ -1,6 +1,6 @@
 (function(){
 	
-	describe('The Game Objects',function(){
+	describe('The Player Object',function(){
 		
 		it('can pass a test',function(){
 			expect(1).toBe(1);
@@ -46,6 +46,28 @@
 			expect(yDistanceAfterUpdate).toBeLessThan(xDistanceBeforeUpdate);
 		});
 		
+		
+		
+	});
+	
+	describe('The city Object',function(){
+		var testCity = new city({id:'testCity', colour:'black', xPos:0, yPos:0, connections:[], canvas:"No Canvas"});
+		it('can initalise city',function(){
+			expect(testCity.colour).toEqual("black");
+			expect(testCity.xPos).toEqual(0);
+			expect(testCity.yPos).toEqual(0);
+		});
+		
+		it('can be infected',function(){
+			expect(testCity.infectionStatus.black).toEqual([]);
+			testCity.infect({});
+			expect(testCity.infectionStatus.black).not.toEqual([]);
+		});
+		
+		it('can be Disinfected',function(){
+			testCity.disinfect({});
+			expect(testCity.infectionStatus.black).toEqual([]);
+		});
 		
 		
 	});
