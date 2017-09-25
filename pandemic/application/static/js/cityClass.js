@@ -1,7 +1,7 @@
-var blueInfection = new Image(); blueInfection.src = 'static/images/Infections/InfectionStatusBlue.png';
-var blackInfection = new Image(); blackInfection.src = 'static/images/Infections/InfectionStatusBlack.png';
-var redInfection = new Image(); redInfection.src = 'static/images/Infections/InfectionStatusRed.png';
-var yellowInfection = new Image(); yellowInfection.src = 'static/images/Infections/InfectionStatusYellow.png';
+var blueInfection = new Image(); blueInfection.src = 'static/images/Infections/blueInfection.png';
+var blackInfection = new Image(); blackInfection.src = 'static/images/Infections/blackInfection.png';
+var redInfection = new Image(); redInfection.src = 'static/images/Infections/redInfection.png';
+var yellowInfection = new Image(); yellowInfection.src = 'static/images/Infections/yellowInfection.png';
 
 function city(options){
 	this.id = options.id;
@@ -58,12 +58,12 @@ function city(options){
 			id:this.id+" "+ infectionColour+" "+this.infectionStatus[infectionColour].length,
 			colour: options.colour || this.colour,
 			context: canvas.getContext("2d"),
-			width: 80,
-			height: 80,
+			width: 256,
+			height: 256,
 			xPos:infectionX,
 			yPos:infectionY,
-			xScale:0.5,
-			yScale:0.5,
+			xScale:0.15,
+			yScale:0.15,
 			image: infectionImage,
 			infectionPath:options.infectionPath || []
 			// options.colour || this.colour
