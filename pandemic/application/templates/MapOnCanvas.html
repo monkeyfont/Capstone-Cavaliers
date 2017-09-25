@@ -7,13 +7,14 @@
 <p />
 <input class = "Audio" id = "Mute" type="button" value="Mute" />
 <input class = "Audio" id = "Play" type="button" value="Play/Pause" />
-<input type="button" value="Infect" onclick="infecting()" />
-<input type="button" value="Move Infect" onclick="moveInfection()" />
+<!-- <input type="button" value="Infect" onclick="infecting()" /> -->
+<!-- <input type="button" value="Move Infect" onclick="moveInfection()" /> -->
 <input type="button" value="Direct Flight" onclick="directFlight()" />
 <input type="button" value="Charter Flight" onclick="charterFlight()" />
 <input type="button" value="Shuttle Flight" onclick="shuttleFlight()" />
 <input type="button" value="Build Research Station" onclick="buildResearch()" />
-<input type="button" value="Share Knowledge" onclick="shareKnowledge()" />
+<input type="button" value="Share Knowledge GIVE" onclick="shareKnowledgeGive()" />
+<input type="button" value="Share Knowledge TAKE" onclick="shareKnowledgeTake()" />
 <input type="button" value="Treat Disease" onclick="treatDisease()" />
 <input type="button" value="Discover Cure" onclick="discoverCure()" />
 <input type="button" value="add card to player" onclick="addPlayersCard()" />
@@ -61,11 +62,18 @@ Your browser does not support the HTML5 canvas tag.
 <script src="static/js/cityClass.js"></script>
 <script src="static/js/playerClass.js"></script>
 <script src="static/js/playerInitilization.js"></script>
+<script src="static/js/playerPortraitInitilization.js"></script>
+<script src="static/js/playerPortrait.js"></script>
 <script src="static/js/backgroundMusic.js"></script>
 <script src="static/js/GameBoardPlayerMessagingSystem.js"></script>
 <script src="static/js/playerHand.js"></script>
 <script src="static/js/playerCard.js"></script>
 <script src="static/js/cureStatus.js"></script>
+
+<script src="static/js/socketCommunication.js"></script>
+
+<script src="static/js/locations.js"></script>
+
 
 <script src="static/js/spriteAnimate.js"></script>
 
