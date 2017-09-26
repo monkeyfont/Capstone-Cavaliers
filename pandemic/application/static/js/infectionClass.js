@@ -1,7 +1,7 @@
 function infection(options) {
-	this.id = options.id,	
-	this.colour = options.colour,
-	this.context = options.context || canvas.getContext("2d");
+	this.id = options.id;
+	this.colour = options.colour;
+	this.context = options.context ;
 	this.width = options.width;
 	this.height = options.height;
 	this.image = options.image;
