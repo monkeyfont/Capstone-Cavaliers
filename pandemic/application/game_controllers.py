@@ -95,6 +95,8 @@ def getPlayersHands():
             playerCardNames.append(cardname)
         playersHands[playerK]=playerCardNames
 
+    print playersHands
+
 
     emit('gotInitialHands',playersHands)
 

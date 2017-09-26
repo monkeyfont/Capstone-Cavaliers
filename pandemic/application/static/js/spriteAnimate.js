@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 var scrnWidth = window.innerWidth;//screen.width;
 var scrnHeight = window.innerHeight;//screen.height;
 console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
@@ -543,6 +543,9 @@ socket.on('gotInitialHands',function(data){
         }
     }
  });
+
+
+
 
 
 socket.on('clicked', function (data) {
