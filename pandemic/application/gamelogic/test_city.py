@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ..game import *
+from  game import *
 
 class TestCity(TestCase):
 
