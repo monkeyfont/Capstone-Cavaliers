@@ -15,7 +15,6 @@ playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
 
-#
 
 @app.route('/game')
 def game():
@@ -24,6 +23,7 @@ def game():
         username = str(session['username'])
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
+        currentLobby.gameStarted=True
         playerdict = currentLobby.players
         if roomname not in games:
             gameobject = GameBoard(playerdict)
@@ -41,7 +41,7 @@ def roomprivacy():
     publicLobbies = []
     for lobbyobjectkey in lobbies:
         lobbyobj=lobbies[lobbyobjectkey]
-        if lobbyobj.privacy == "public":
+        if lobbyobj.privacy == "public" and lobbyobj.gameStarted==False:
             print("public lobby found with id " +lobbyobj.name )
             publicLobbies.append(lobbyobj.name)
     emit('publicLobbies', {'lobbies': publicLobbies}, room="default")
@@ -65,19 +65,24 @@ def getGameInitialization():
         emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
 
 
-@socketio.on('getinitInfections')
-def getinitInfections():
+@socketio.on('getInfections')
+def getInfections():
     roomname = session["roomname"]
     gameboard = games[roomname]
-    citiesInfected=gameboard.initInfectedCities
-
-    emit('intitialInfectedCities',citiesInfected,room=session["roomname"])
+    username = str(session["username"])
+    for player in gameboard.players:
+        playerObj = gameboard.players[player]
+        playerName = playerObj.name
+        if playerName==username:
+            citiesInfected=gameboard.getAllCurrentInfectedCities()
+            emit('InfectedCities',citiesInfected)
 
 
 
 @socketio.on('getPlayersHands')
 def getPlayersHands():
     roomname = session["roomname"]
+    username = session["username"]
     gameboard = games[roomname]
     playersHands={}
     players=gameboard.players
@@ -90,7 +95,10 @@ def getPlayersHands():
             playerCardNames.append(cardname)
         playersHands[playerK]=playerCardNames
 
-    emit('gotInitialHands',playersHands,room=session["roomname"])
+    print playersHands
+
+
+    emit('gotInitialHands',playersHands)
 
 
 @socketio.on('getPlayerObject')
@@ -107,6 +115,8 @@ def getPlayerObject():
             playerName = playerObj.name
             playerRole = playerObj.role
             emit('gotPlayer',{"playerName":playerName,"playerType":playerRole})
+
+
 
 
 @socketio.on('startGame')
@@ -160,6 +170,36 @@ def handleclick(msg):
 
     emit('clicked', {'msg' : player + messg },room=room)
 
+@socketio.on('roundOverDone')
+def roundOverDone():
+    roomName = str(session['roomname'])
+    username = str(session["username"])
+
+    gameObject = games[roomName]
+    gameObject.resetPlayerActions()
+
+@socketio.on('discardCard')
+def HandleDiscardCard(msg):
+    roomName = str(session['roomname'])
+    username = str(session["username"])
+    cardName = msg["cardName"]
+    gameObject = games[roomName]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response = gameObject.discardCard(playerObject.id, cardName)
+            if response==True:
+                emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
+            else:
+                emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
+
+
+
+
+
+
+
 @socketio.on('checkMove')
 def handlecheckmove(msg):
     #"Check move called"
@@ -176,7 +216,12 @@ def handlecheckmove(msg):
             #       response will be either true or false
             #
             # print ("we are about to emit a message")
-            emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=roomName)
+            print response
+            if response["validAction"]==True:
+                emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=roomName)
+            else:
+                emit('checked', {'playerName': username, 'msg': response, 'city': cityToMove})
+
 
 
 
@@ -193,8 +238,11 @@ def handleclick(msg):
             # Player found."
             print playerObject.id,"player id!"
             response = gameObject.directFlight(playerObject.id, cityToMove)
+            if response["validAction"] == True:
+                emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+            else:
+                emit('directFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
 
-    emit('directFlightChecked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
 
 
 
@@ -210,10 +258,13 @@ def handleclick(msg):
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             print(playerObject.name," wants to use the card", cityCardName ," to move to ",cityToMove)
-            response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
-    # IF USERS CURRENT CITY IS SAME AS THIS CITYTOMOVE TO VALUE THEN THEY CAN MOVE ANYWHERE
 
-    emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
+            response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
+            if response["validAction"] == True:
+                emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
+            else:
+                emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
+
 
 @socketio.on('checkShuttleFlight')
 def handleclick(msg):
@@ -226,21 +277,30 @@ def handleclick(msg):
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response = gameObject.shuttleFlight(playerObject.id, cityToMove)
-    emit('shuttleFlightChecked', {'playerName': username,'msg':response,'city':cityToMove},room=room)
+            if response["validAction"] == True:
+                emit('shuttleFlightChecked', {'playerName': username,'msg':response,'city':cityToMove},room=room)
+            else:
+                emit('shuttleFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
+
 
 @socketio.on('buildResearchStation')
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityToBuildOn= msg["cityName"]
+
     #response=game.charterFlight(1,cityToMove)
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
+        cityToBuildOn = playerObject.location
         if playerObject.name == username:
             response= gameObject.buildResearchStation(playerObject.id,cityToBuildOn)
-    emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn}, room=room)
+            if response["validAction"] == True:
+                emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn}, room=room)
+            else:
+                emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn})
+
 
 
 @socketio.on('shareKnowledgeGive')
@@ -262,8 +322,11 @@ def handleclick(msg):
             otherPlayerid=playerObject.id
     response = gameObject.shareKnowledgeGive(playerid,otherPlayerid,cityCardToShare)
 
+    if response["validAction"] == True:
+        emit('giveKnowledgeShared', {'msg':response},room=room)
+    else:
+        emit('giveKnowledgeShared', {'msg': response})
 
-    emit('giveKnowledgeShared', {'msg':response,'city':"no"},room=room)
 
 @socketio.on('shareKnowledgeTake')
 def handleclick(msg):
@@ -283,24 +346,30 @@ def handleclick(msg):
         elif playerObject.name== playerGivingName:
             otherPlayerid=playerObject.id
     response = gameObject.shareKnowledgeTake(playerid,otherPlayerid,cityCardToShare)
-
-
-    emit('takeKnowledgeShared', {'msg':response,'city':"no"},room=room)
+    if response["validAction"] == True:
+        emit('takeKnowledgeShared', {'msg':response}, room=room)
+    else:
+        emit('takeKnowledgeShared', {'msg': response})
 
 
 @socketio.on('treatDisease')
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityToTreat = msg["cityName"]
+    #cityToTreat = msg["cityName"]
     gameObject = games[room]
-    cityObject = gameObject.cities[cityToTreat]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
-            response = gameObject.treatDisease(playerObject.id, cityToTreat, cityObject.colour)
-            emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
+            cityToTreat = playerObject.location
+            cityObject = gameObject.cities[cityToTreat]
+            response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
+            if response["validAction"] == True:
+                emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
+            else:
+                emit('diseaseTreated', {'msg': response, 'city': cityToTreat})
+
 
 
 @socketio.on('discoverCure')
@@ -354,6 +423,9 @@ def lobby():
 
                     if lobby.playerCount==4:
                         return (render_template("lobby.html",error="Sorry this room is full! Please join another"))
+                    if lobby.gameStarted==True:
+                        return (render_template("lobby.html", error="This game has already started please Join or create another game"))
+
                     lobby.playerCount += 1
                     newPlayer = Player(lobby.playerCount, str(session['username']))
                     lobby.players[lobby.playerCount]=newPlayer
