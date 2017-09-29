@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Pandemic Home</title>
+    <!--<style>-->
+        <!--body{-->
+            <!--background-color:transparent;-->
+        <!--}-->
+        <!--html{-->
+            <!--background: url(static/images/WorldMap.jpg) no-repeat center center fixed;-->
+            <!-- -webkit-background-size: cover;-->
+            <!-- -moz-background-size: cover;-->
+            <!-- -o-background-size: cover;-->
+            <!--background-size: cover;-->
+        <!--}-->
+        <!--.bottomLeftButton{-->
+            <!--padding:3%;-->
+        <!--}-->
+        <!--.bottomRightButton{-->
+            <!--padding:3%;-->
+        <!--}-->
+        <!--button{-->
+            <!--width:100%;-->
+
+        <!--}-->
+
+        <!--.col-sm-6{-->
+            <!--padding:0px;-->
+        <!--}-->
+        <!--#newGame{-->
+            <!--visibility: normal;-->
+        <!--}-->
+        <!--#existingGame{-->
+            <!--visibility: normal;-->
+        <!--}-->
+        <!--#menu,#newGame,#existingGame{-->
+            <!--display:block;-->
+            <!--margin-top:25%;-->
+            <!--margin-left:25%;-->
+            <!--margin-right:25%;-->
+            <!--visibility: visible;-->
+            <!--height:20%;-->
+        <!--}-->
+        <!--.col-sm-12 h2{-->
+            <!--width:100%;-->
+        <!--}-->
+        <!--.col-sm-6 h3,{-->
+            <!--margin-left:15px;-->
+        <!--}-->
+        <!--.messageHere{-->
+            <!--width:100%;-->
+            <!--padding:1.5%;-->
+        <!--}-->
+        <!--#goGame{-->
+            <!--width:100%;-->
+        <!--}-->
+        <!--#startGame{-->
+            <!--width:100%;-->
+        <!--}-->
+        <!--.typeHere{-->
+            <!--margin-left:15px;-->
+            <!--width:100%;-->
+        <!--}-->
+        <!--#topMenu{-->
+            <!--padding-bottom:1%;-->
+            <!--padding-left:0px;-->
+            <!--padding-right:0px;-->
+        <!--}-->
+        <!--#bottomMenu{-->
+            <!--padding-top:1%;-->
+        <!--}-->
+        <!--.topMenuButton{-->
+            <!--padding:1.5%;-->
+        <!--}-->
+        <!--#menuBottomLeft,#newGameBottomLeft{-->
+            <!--padding-right:1%;-->
+        <!--}-->
+        <!--#menuBottomRight,#newGameBottomRight{-->
+            <!--padding-left:1%;-->
+        <!--}-->
+
+    <!--</style>-->
+    <link rel="stylesheet" href="static/css/home.css"  hidden >
+
+</head>
+<body>
+    <!--<img src="static/images/Pandemic_Banner.jpg">-->
+    <div id="container">
+        <!--<h1 id="title"> WELCOME TO PANDEMIC</h1>-->
+        <div id="menu">
+
+            <div class="row">
+
+                <div class="col-sm-12"><h1>{{error}}</h1></div>
+
+                <div class="col-sm-12" id="topMenu"> <button class="topMenuButton" type="button" name="newGame">New Game</button></div>
+
+            </div>
+            <div class="row" id="bottomMenu">
+                    <div class="col-sm-6" id="menuBottomLeft"> <button   class="bottomLeftButton" type="button" >Rules</button></div>
+                    <div class="col-sm-6" id="menuBottomRight"> <button  class="bottomRightButton" type="button"  >Join Game</button></div>
+
+            </div>
+        </div>
+
+
+    </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+
+</body>
+</html>

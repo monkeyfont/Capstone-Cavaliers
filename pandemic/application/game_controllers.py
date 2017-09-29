@@ -15,6 +15,17 @@ playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
 
+@socketio.on('existingRoom')
+def joinTeam():
+    emit('joinR')
+
+@app.route('/join')
+def newTeamRedirect():
+    return (render_template("joinTeam.html"))
+
+@app.route('/new')
+def newTeam():
+    return (render_template("createTeam.html"))
 
 @app.route('/game')
 def game():
@@ -30,7 +41,7 @@ def game():
             gameobject.gameID = roomname
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
-    return "You are not logged in <br><a href = '/lobby'></b>" + \
+    return "You are not logged in <br><a href = '/home'></b>" + \
       "click here to log in</b></a>"
 
 @socketio.on('checkRoomPrivacy')
@@ -117,6 +128,9 @@ def getPlayerObject():
             emit('gotPlayer',{"playerName":playerName,"playerType":playerRole})
 
 
+@socketio.on('newRoom')
+def newRoom():
+    emit('createNewRoom')
 
 
 @socketio.on('startGame')
@@ -390,6 +404,11 @@ def handle_message(msg):
     print('received message: ' + str(msg))
 
 
+@app.route('/home', methods = ['GET', 'POST'])
+def home():
+    return render_template("home.html")
+
+
 @app.route('/lobby', methods = ['GET', 'POST'])
 def lobby():
     session["username"] = (random.randint(0,100000000))
@@ -403,11 +422,13 @@ def lobby():
 
 
                 if session['roomname'] in lobbies:
-                    return (render_template("lobby.html", error="Sorry this room name is already taken chose another"))
+                    return (render_template("home.html", error="Sorry this room name is already taken chose another"))
 
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
+
+                print ("THis room privacy is :" + lobby.privacy)
                 #add lobby to dictionary
                 lobbies[str(session['roomname'])] = lobby
                 lobby.playerCount=1
@@ -422,17 +443,17 @@ def lobby():
                     lobby = lobbies[str(session['roomname'])]
 
                     if lobby.playerCount==4:
-                        return (render_template("lobby.html",error="Sorry this room is full! Please join another"))
+                        return (render_template("home.html",error="Sorry this room is full! Please join another"))
                     if lobby.gameStarted==True:
-                        return (render_template("lobby.html", error="This game has already started please Join or create another game"))
+                        return (render_template("home.html", error="This game has already started please Join or create another game"))
 
                     lobby.playerCount += 1
                     newPlayer = Player(lobby.playerCount, str(session['username']))
                     lobby.players[lobby.playerCount]=newPlayer
                 except:
                     print"Lobby does not exist"
-                    return (render_template("lobby.html", error="Sorry this room does not exist try another room"))
+                    return (render_template("home.html", error="Sorry this room does not exist try another room"))
             return (render_template("intermission.html",room=session['roomname']))
-    return (render_template("lobby.html"))
+    return (render_template("home.html"))
 
 print("imported")
