@@ -1002,16 +1002,46 @@ class GameBoard:
     def treatMedic(playerId, targetCity, colour)
     """
         When a medic treats a city, he treats all infections on that city for a colour.
+        Calls self.treatDisease to treat the disease.
         Returns JSON the same as treatDisease()
     """
     # Check player is the medic
     playerObj = self.players[playerId]
     if playerObj.role != "medic":
         return {"validAction":False}
-
     resultDictionary = self.treatDisease(playerId, targetCity, colour, amount = 3)
     return resultDictionary
 
+
+    ### researcher
+    def researcherGiveCards(self, playerId, targetPlayerId, targetCity):
+        """
+        Give a targetPlayer ant city card. Both players must be in the same city.
+        The card does not have to match the city.
+        """
+        responseDict = {}
+        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
+        playerObj = self.players[playerId]
+        targetPlayer = self.players[targetPlayerId]
+        playerHand = playerObj.hand
+        targetPlayerHand = targetPlayer.hand
+        # If player has that city card, move it to players hand.
+        for card in playerHand:
+            if card.name == targetCity:
+                playerHand.remove(card)
+                targetPlayerHand.append(card)
+                playerObj.actions -= 1
+                print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
+                responseDict["validAction"] = True
+                endOfGameCheck = self.__endOfRound()
+                responseDict.update(endOfGameCheck)
+                return responseDict
+        #fall through
+        responseDict["errorMessage"] = "ERROR: {} does not have this card in their hand".format(targetPlayer.name)
+        responseDict["validAction"] = False
+        return responseDict
 
 
 
