@@ -20,4 +20,7 @@ def add_header(r):
 
 if __name__ == '__main__':
     print("running... ")
-    socketio.run(app)
+    port = int(os.environ.get("PORT", 5000))
+    print("port is:")
+    print(port)
+    socketio.run(app, host='0.0.0.0', port=port)
