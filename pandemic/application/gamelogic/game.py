@@ -1019,6 +1019,12 @@ class GameBoard:
         Give a targetPlayer ant city card. Both players must be in the same city.
         The card does not have to match the city.
         """
+
+        #check the player is the researcher.
+        playerObj = self.players[playerId]
+        if playerObj.role != "researcher":
+            return {"validAction":False}
+
         responseDict = {}
         validation = self.__checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
@@ -1032,7 +1038,7 @@ class GameBoard:
             if card.name == targetCity:
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
-                playerObj.actions -= 1
+                playerObj.actions -= 1 # use one of the player's actions.
                 print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
                 responseDict["validAction"] = True
                 endOfGameCheck = self.__endOfRound()
