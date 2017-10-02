@@ -6,8 +6,8 @@ install: pip install -r requirements.txt
 
 deploy:
 - provider: s3
-  access_key_id: access
-  secret_access_key: key
+  access_key_id: $access
+  secret_access_key: $key
   local_dir: dpl_cd_upload
   skip_cleanup: true
   on:
@@ -15,8 +15,8 @@ deploy:
   bucket: capstone-cavaliers
   region: ap-southeast-2
 - provider: codedeploy
-  access_key_id: access
-  secret_access_key: key
+  access_key_id: $access
+  secret_access_key: $key
   bucket: capstone-cavaliers
   key: latest.zip
   bundle_type: zip
