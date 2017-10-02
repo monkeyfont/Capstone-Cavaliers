@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+files:
+  - source: /pandemic/
+    destination: /pandemic
+
+hooks:
+  ApplicationStop:
+    - location: stop_server
+
+  AfterInstall:
+    - location: install_dependencies
+
+  ApplicationStart:
+    - location: start_server
+
+  
