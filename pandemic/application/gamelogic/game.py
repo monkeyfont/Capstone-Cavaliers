@@ -979,7 +979,6 @@ class GameBoard:
         """ 
         When a medic moves, if a cure has been discovered it will cure all infections on that city of that cures colour. 
         This function calls the standard move action. If successful, and a cure is found, it will remove all infections on that city.
-
         """
         responseDict = {}
         # Check player is the medic
@@ -1000,11 +999,15 @@ class GameBoard:
         return moveResult
 
 
-    def treatMedic()
+    def treatMedic(playerId, targetCity, colour)
     """
-        When a medic treats a city, he treats all of that infection.
+        When a medic treats a city, he treats all infections on that city for a colour.
+        Returns JSON the same as treatDisease()
     """
-    
+    resultDictionary = self.treatDisease(playerId, targetCity, colour, amount = 3)
+    return resultDictionary
+
+
 
 
 
