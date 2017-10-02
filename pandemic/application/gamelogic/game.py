@@ -979,6 +979,10 @@ class GameBoard:
         """ 
         When a medic moves, if a cure has been discovered it will cure all infections on that city of that cures colour. 
         This function calls the standard move action. If successful, and a cure is found, it will remove all infections on that city.
+
+        Returns a python dictionary:
+        
+        {"validAction":bool, "errorMessage":str}
         """
         responseDict = {}
         # Check player is the medic
@@ -1003,7 +1007,10 @@ class GameBoard:
     """
         When a medic treats a city, he treats all infections on that city for a colour.
         Calls self.treatDisease to treat the disease.
-        Returns JSON the same as treatDisease()
+
+        Returns a python dictionry:
+
+        {"validAction":bool, "errorMessage":str}
     """
     # Check player is the medic
     playerObj = self.players[playerId]
@@ -1016,8 +1023,12 @@ class GameBoard:
     ### researcher
     def researcherGiveCards(self, playerId, targetPlayerId, targetCity):
         """
-        Give a targetPlayer ant city card. Both players must be in the same city.
+        Give a targetPlayer any city card. Both players must be in the same city.
         The card does not have to match the city.
+
+        Returns a python dictionry:
+
+        {"validAction":bool, "errorMessage":str}
         """
 
         #check the player is the researcher.
