@@ -1,3 +1,4 @@
+import os
 from application import app, socketio
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
