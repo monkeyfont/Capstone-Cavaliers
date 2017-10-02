@@ -10,8 +10,8 @@ deploy:
   secret_access_key: key
   local_dir: dpl_cd_upload
   skip_cleanup: true
-  on: &2
-    repo: monkeyfont/Capstone-Cavaliers
+  on:
+    all_brancahes: true
   bucket: capstone-cavaliers
   region: ap-southeast-2
 - provider: codedeploy
@@ -23,7 +23,8 @@ deploy:
   application: Pandemic_2
   deployment_group: Pandemic_2
   region: ap-southeast-2
-  on: *2
+  on:
+    all_brancahes: true
 
 script:
   - zip -r latest *
