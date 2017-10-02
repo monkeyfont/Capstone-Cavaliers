@@ -1004,6 +1004,11 @@ class GameBoard:
         When a medic treats a city, he treats all infections on that city for a colour.
         Returns JSON the same as treatDisease()
     """
+    # Check player is the medic
+    playerObj = self.players[playerId]
+    if playerObj.role != "medic":
+        return {"validAction":False}
+
     resultDictionary = self.treatDisease(playerId, targetCity, colour, amount = 3)
     return resultDictionary
 
