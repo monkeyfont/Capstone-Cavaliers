@@ -593,13 +593,6 @@ class GameBoard:
 
         return False
 
-
-
-
-
-
-
-
     def movePlayer(self, playerId, nextCityName):
         """
         card desc: Move to a connected city
@@ -922,8 +915,9 @@ class GameBoard:
             responseDict["errorMessage"] = "ERROR: This city can not be treated"
             responseDict["validAction"] = False
             return responseDict
-
         # TODO need to implement logic that checks if the disease is cured.
+
+
 
 
 
@@ -973,6 +967,47 @@ class GameBoard:
                     # retrieve neighbouring city objects and append to citiesToInfect
                     for cityStr in city.connections:
                         citiesToInfect.append(self.cities[cityStr])
+
+
+    #############################################################################################
+    ############                        Specialist Moves                           ##############
+
+    # TODO -- need to decide if these should be special 'moves' sent from the frontend, or if the logic will be determined backend. 
+
+    ### Medic
+    def moveMedic(self, playerId, nextCityName):
+        """ 
+        When a medic moves, if a cure has been discovered it will cure all infections on that city of that cures colour. 
+        This function calls the standard move action. If successful, and a cure is found, it will remove all infections on that city.
+
+        """
+        responseDict = {}
+        # Check player is the medic
+        playerObj = self.players[playerId]
+        if playerObj.role != "medic":
+            return {"validAction":False}
+
+        # move medic to that city (this will remove an action.)
+        moveResult = self.movePlayer(playerId, nextCityName)
+        if moveResult["validAction"]:
+            # Retrieve cities colour
+            cityObj = self.cities[targetCity]
+            colour = cityObj.colour
+            # if a cure has been discovered for that colour, cure all cubes on that city.
+            if self.cures[colour]:
+                # treat all of that colour.
+                cityObj.treatDisease(colour, 3)
+        return moveResult
+
+
+    def treatMedic()
+    """
+        When a medic treats a city, he treats all of that infection.
+    """
+    
+
+
+
 
 
 
