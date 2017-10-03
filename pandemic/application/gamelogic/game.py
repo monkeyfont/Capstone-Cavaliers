@@ -452,8 +452,13 @@ class GameBoard:
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
         # ---- for testing treat differnt colour ----:
-        #cityObj = self.cities["SEOUL"]
-        #cityObj.infect("yellow", 1)
+        cityObj = self.cities["CHICAGO"]
+        cityObj.infect("yellow", 1)
+        cityObj.infect("blue", 1)
+        cityObj2 = self.cities["ATLANTA"]
+        cityObj2.infect("blue", 1)
+
+
         infectionAmount = 3
         for i in range(9):
             if i % 3 == 0 and i != 0: # this will happen on cards 3 and 6.
@@ -583,7 +588,10 @@ class GameBoard:
             for cityColour in colours:
                 amount=cityObject.getInfections(cityColour)
                 if amount>0:
-                    infectedCities[cityObject.name]={cityColour:amount}
+                    if city in infectedCities:
+                        infectedCities[cityObject.name][cityColour]=amount
+                    else:
+                        infectedCities[cityObject.name]={cityColour:amount}
 
         return infectedCities
 
@@ -926,7 +934,7 @@ class GameBoard:
         if response:
             playerObj.actions -= 1
             responseDict["validAction"] = True
-            responseDict["colourtreated"] = colour
+            responseDict["colourTreated"] = colour
             endOfGameCheck = self.__endOfRound()
             responseDict.update(endOfGameCheck)
             return responseDict

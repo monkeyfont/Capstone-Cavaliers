@@ -253,7 +253,10 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
+
+    //console.log(city.activeInfections());
     var colour = prompt("Enter colour of infection you wish to treat: ");
+
 
 
     socket.emit('treatDisease', {InfectionColour:colour})
@@ -263,7 +266,7 @@ function treatDisease() {
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
         check=data.msg.validAction;
-        var colour= data.msg.colourtreated
+        var colour= data.msg.colourTreated
 
         if (check ==true){
             var city=eval(data.city);
