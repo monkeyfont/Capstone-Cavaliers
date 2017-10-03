@@ -356,7 +356,7 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    #cityToTreat = msg["cityName"]
+    colToTreat = msg["InfectionColour"]
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
@@ -364,7 +364,7 @@ def handleclick(msg):
         if playerObject.name == username:
             cityToTreat = playerObject.location
             cityObject = gameObject.cities[cityToTreat]
-            response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
+            response = gameObject.treatDisease(playerObject.id, playerObject.location, colToTreat)
             if response["validAction"] == True:
                 emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
             else:

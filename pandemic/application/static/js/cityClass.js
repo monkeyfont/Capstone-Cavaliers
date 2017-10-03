@@ -73,8 +73,8 @@ function city(options){
 	}
 	this.disinfect = function(options){
 		// options = {colour:, ammount:}
-		infectionColour = this.colour || options.colour;
-		disinfections = options.ammount || 1;
+		infectionColour = options.colour || this.colour ;
+		disinfections = options.amount || 1;
 		for(i = 0; i < disinfections; i++){
 			console.log("removed infection")
 			this.infectionStatus[infectionColour].pop()

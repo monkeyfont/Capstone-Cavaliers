@@ -390,6 +390,7 @@ class GameBoard:
         self.distributeHand()
         self.__setRoles()
 
+
     def addPlayer(self, playerObj):
         """
         Add a player object to the players dictionary.
@@ -449,6 +450,9 @@ class GameBoard:
         # draw first 3 cards, place 3 disease markers
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
+        # ---- for testing treat differnt colour ----: 
+        #cityObj = self.cities["SEOUL"]
+        #cityObj.infect("yellow", 1)
         infectionAmount = 3
         for i in range(9):
             if i % 3 == 0 and i != 0: # this will happen on cards 3 and 6.
@@ -572,12 +576,13 @@ class GameBoard:
 
     def getAllCurrentInfectedCities(self):
         infectedCities={}
+        colours=["red","yellow","blue","black"]
         for city in self.cities:
             cityObject=self.cities[city]
-            cityColour=cityObject.colour
-            amount=cityObject.getInfections(cityColour)
-            if amount>0:
-                infectedCities[cityObject.name]={cityColour:amount}
+            for cityColour in colours:
+                amount=cityObject.getInfections(cityColour)
+                if amount>0:
+                    infectedCities[cityObject.name]={cityColour:amount}
 
         return infectedCities
 
@@ -915,6 +920,7 @@ class GameBoard:
         if response:
             playerObj.actions -= 1
             responseDict["validAction"] = True
+            responseDict["colourtreated"] = colour
             endOfGameCheck = self.__endOfRound()
             responseDict.update(endOfGameCheck)
             return responseDict
