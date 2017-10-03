@@ -450,6 +450,8 @@ function gameLoop(){
 	playerPortraits.render();
 	cureBar.render();
 	
+	playerActionsMenu.render()
+	
 }
 
 
@@ -569,6 +571,16 @@ cureBar = new cureStatusBar({
 	xScale:0.4,
 	yScale:0.4	
 });
+
+
+playerActionsMenu = new playerActionsBar({
+	context: canvas.getContext("2d"),
+	height: 400,
+	width: 1920,
+	yPos: 1080
+	
+	
+})
 
 
 window.onload = function (){
