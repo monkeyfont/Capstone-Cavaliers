@@ -26,6 +26,17 @@ function city(options){
 			// }
 		// }
 	// }
+	this.activeInfections = function(){
+		currentActive = {};
+		for (i in this.infectionStatus){
+			if (this.infectionStatus[i].length > 0){
+				currentActive[i] = this.infectionStatus[i].length;
+			}
+		}
+		console.log("current active",currentActive);
+		return currentActive 
+	}
+	
 	
 	this.infect = function(options){
 		// {colour:"yellow"||"red"||"black"||"blue",infectionPath:[{x:200,y:200},{x:300,y:300}]}
