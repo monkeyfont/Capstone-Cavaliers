@@ -261,6 +261,7 @@ class GameBoard:
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
+        self.researchStationsBuilt=0
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
@@ -385,7 +386,7 @@ class GameBoard:
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
         # just for testing on game page
-        self.cities["SEOUL"].researchStation = 1
+        #self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
         self.__setRoles()
@@ -450,7 +451,7 @@ class GameBoard:
         # draw first 3 cards, place 3 disease markers
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
-        # ---- for testing treat differnt colour ----: 
+        # ---- for testing treat differnt colour ----:
         #cityObj = self.cities["SEOUL"]
         #cityObj.infect("yellow", 1)
         infectionAmount = 3
@@ -736,6 +737,10 @@ class GameBoard:
         validation = self.__checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
+        if self.researchStationsBuilt >= 5: # made it 5 not six accounting for initial infection on atlanta
+            responseDict["errorMessage"] = "ERROR: Max number of stations have already been built"
+            responseDict["validAction"] = False
+            return responseDict
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         currentLocation = playerObj.location
@@ -749,6 +754,7 @@ class GameBoard:
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
                     print('player ' + str(playerId) + ' has successfully built a research station at ' + currentLocation)
+                    self.researchStationsBuilt+=1
                     responseDict["validAction"] = True
                     endOfGameCheck = self.__endOfRound()
                     responseDict.update(endOfGameCheck)
