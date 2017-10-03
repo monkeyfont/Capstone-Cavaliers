@@ -14,10 +14,10 @@ function playerActionsBar(options){
 		context.lineTo(this.width,this.yPos+this.height);
 		context.lineTo(0,this.yPos+this.height);
 		context.closePath();
-		context.lineWidth=5;
-		context.fillStyle = 'blue';
+		context.lineWidth=20;
+		context.fillStyle = '#1b293f';
 		context.fill();
-		context.strokeStyle = 'blue';
+		context.strokeStyle = '#18253a';
 		context.stroke();
 	}
 }
