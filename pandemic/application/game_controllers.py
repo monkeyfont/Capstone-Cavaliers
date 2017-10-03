@@ -426,6 +426,13 @@ def lobby():
                     if lobby.gameStarted==True:
                         return (render_template("lobby.html", error="This game has already started please Join or create another game"))
 
+                    for player in lobby.players:
+                        print lobby.players[player]
+                        print session['username']
+                        if lobby.players[player].name==session['username']:
+                            return (render_template("lobby.html", error="This username is already taken, chose another"))
+
+
                     lobby.playerCount += 1
                     newPlayer = Player(lobby.playerCount, str(session['username']))
                     lobby.players[lobby.playerCount]=newPlayer
