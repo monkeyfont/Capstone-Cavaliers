@@ -874,20 +874,22 @@ class GameBoard:
         SPECIAL CASE: if player is the scientist, they only need 4 cards to discover a cure.
         """
         # TODO this code should probably be refactored.
-
-
+        
         responseDict = self.__checkAction(playerId) #validate its a legal player move. Dictionary.
         if responseDict["validAction"] == False:
             return responseDict
         playerObj = self.players[playerId]
         # Check player is at a research station
         if self.isPlayerAtResearchStation(playerId) is False:
-            return
+            responseDict["errorMessage"] = "ERROR: you aren't at a research station!"
+            return responseDict
         # Check there is 5 city cards. Or if the player is the scientist, that there are 4 cards.
         if playerObj.role == "scientist" and len(cities) != 4:
-            return
+            responseDict["errorMessage"] = "ERROR: you didn't supply the right amount of cards (scientist needs 4)"
+            return responseDict
         elif len(cities) != 5:
-            return
+            responseDict["errorMessage"] = "ERROR: you didn't supply the right amount of cards(need 5)"
+            return responseDict
         # retrieve city objects from strings.
         cityObjs = []
         colour = ""
@@ -910,7 +912,9 @@ class GameBoard:
         self.cures[colour] = 1
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
-
+        responseDict["validAction"] = True
+        endOfGameCheck = self.__endOfRound()
+        responseDict.update(endOfGameCheck)
         return responseDict
 
 
