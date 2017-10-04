@@ -727,19 +727,32 @@ class GameBoard:
 
 
 
-    def buildResearchStation(self, playerId, cityCardName):
-        """ Discard the city card that matches the city you are in to place a research station there """
+    def buildResearchStation(self, playerId, cityName):
+        """
+        Discard the city card that matches the city you are in to place a research station there
+
+        """
         responseDict = {}
         validation = self.__checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
-        playerHand = playerObj.hand
         currentLocation = playerObj.location
         curCityObj = self.cities[currentLocation]
+        # special case if player is the operationsExpert - they dont have to discard a card to build a research station.
+        if playerObj.role == "operationsExpert":
+            curCityObj.researchStation = 1
+            playerObj.actions -= 1
+            print('player ' + str(playerId) + ' has successfully built a research station at ' + currentLocation + ' using the researcher ability.')
+            responseDict["validAction"] = True
+            endOfGameCheck = self.__endOfRound()
+            responseDict.update(endOfGameCheck)
+            return responseDict
+
+        playerHand = playerObj.hand
         for card in playerHand:
-            if card.name == cityCardName:
-                if cityCardName == currentLocation and curCityObj.researchStation == 0 :
+            if card.name == cityName:
+                if cityName == currentLocation and curCityObj.researchStation == 0 :
                     # if the city card is where you are then create research station
                     curCityObj.researchStation = 1
                     playerHand.remove(card)
@@ -752,7 +765,7 @@ class GameBoard:
                     return responseDict
                 else:
                     responseDict["validAction"] = False
-                    if cityCardName != currentLocation:
+                    if cityName != currentLocation:
                         responseDict["errorMessage"] = "ERROR: You are not on the city of the card you want to play"
                     else:
                         responseDict["errorMessage"] = "ERROR: The city you wish to build a research station on already has one"
@@ -862,9 +875,10 @@ class GameBoard:
         """
         # TODO this code should probably be refactored.
 
-        validation = self.__checkAction(playerId) #validate its a legal player move.
-        if validation["validAction"] == False:
-            return validation
+
+        responseDict = self.__checkAction(playerId) #validate its a legal player move. Dictionary.
+        if responseDict["validAction"] == False:
+            return responseDict
         playerObj = self.players[playerId]
         # Check player is at a research station
         if self.isPlayerAtResearchStation(playerId) is False:
@@ -875,19 +889,18 @@ class GameBoard:
         elif len(cities) != 5:
             return
         # retrieve city objects from strings.
-        result = {} # holds the return dict.
         cityObjs = []
         colour = ""
         for cityStr in cities:
             cityObj = self.cities[cityStr]
             cityObjs.append(cityObj)
-
         # make sure all cards are cities of the same colour.
             if colour == "": # retrieve colour
                 colour = cityObj.colour
             else:
                 if cityObj.colour != colour:
-                    return
+                    responseDict["errorMessage"] = "ERROR: the cards aren't the same colour!"
+                    return responseDict
         # we now know all cards are of the same colour, so remove them from the user's hand.
         for cityObj in cityObjs:
             for card in playerObj.hand:
@@ -898,7 +911,7 @@ class GameBoard:
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
 
-        return True
+        return responseDict
 
 
     def treatDisease(self, playerId, targetCity, colour, amount = 1):
