@@ -202,19 +202,20 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-
-    socket.emit('treatDisease', {})
+    var colour = prompt("Enter colour of infection you wish to treat: ");
+    socket.emit('treatDisease', {InfectionColour:colour})
 
 }
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
         check=data.msg.validAction;
+        var colour= data.msg.colourTreated
 
         if (check ==true){
             var city=eval(data.city);
             //addResearchStation(city);
-			locations[data.city].disinfect({'colour':locations[data.city].colour,'ammount':1});
+			locations[data.city].disinfect({'colour':colour,'amount':1});
 
 
 	}
@@ -332,7 +333,7 @@ socket.on('InfectedCities',function(data){
                 // here loop through the amount which is number of times the city needs to be infected
                 for (var x=0;x<amount;x++){
                 // get the city from locations and infect it with karls .infect function
-                locations[city].infect({})
+                locations[city].infect({colour})
                 }
              }
         }
