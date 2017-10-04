@@ -256,7 +256,6 @@ function discardCard(){
     var card = prompt("Enter name of card you wish to discard: ");
     socket.emit('discardCard', {cardName:card})
 
-}
 
 socket.on('cardRemoved', function (data) {
         check=data.msg;
@@ -269,7 +268,6 @@ socket.on('cardRemoved', function (data) {
 
 
     });
-
 
 function PassTurn(){
 
@@ -301,7 +299,6 @@ socket.on('clicked', function (data) {
         console.log(data.msg);
 
     });
-
 
 	
 	
@@ -365,13 +362,3 @@ socket.on('gotInitialHands',function(data){
         }
     }
  });
-
-
-
-
-
-socket.on('clicked', function (data) {
-
-        //console.log(data.msg);
-
-    });

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 var mapImage = new Image();
 mapImage.src = 'static/images/backgroundMap.jpg'
 
