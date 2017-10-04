@@ -863,14 +863,14 @@ class GameBoard:
         # TODO this code should probably be refactored.
 
         validation = self.__checkAction(playerId) #validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
         playerObj = self.players[playerId]
-
-
         # Check player is at a research station
         if self.isPlayerAtResearchStation(playerId) is False:
             return
         # Check there is 5 city cards. Or if the player is the scientist, that there are 4 cards.
-        if player.role == "scientist" and len(cities) != 4:
+        if playerObj.role == "scientist" and len(cities) != 4:
             return
         elif len(cities) != 5:
             return
