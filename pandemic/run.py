@@ -1,3 +1,4 @@
+import os
 from application import app, socketio
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 # DONT LET BROWSER CACHE ANYTHING! -- For development only!
@@ -20,4 +21,7 @@ def add_header(r):
 
 if __name__ == '__main__':
     print("running... ")
-    socketio.run(app)
+    port = int(os.environ.get("PORT", 5000))
+    print("port is:")
+    print(port)
+    socketio.run(app, host='0.0.0.0', port=port)
