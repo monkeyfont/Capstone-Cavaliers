@@ -954,8 +954,8 @@ class GameBoard:
         amount = cityObj.getInfections(colour)
 
         if self.canInfectionBePrevented(cityObj, colour):
-            return
-
+            return False
+        
         if amount == 3:
             self.cityOutBreak(cityObj, colour)
         else:
