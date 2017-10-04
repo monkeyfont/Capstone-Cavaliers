@@ -452,11 +452,11 @@ class GameBoard:
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
         # ---- for testing treat differnt colour ----:
-        cityObj = self.cities["CHICAGO"]
-        cityObj.infect("yellow", 1)
-        cityObj.infect("blue", 1)
-        cityObj2 = self.cities["ATLANTA"]
-        cityObj2.infect("blue", 1)
+        # cityObj = self.cities["CHICAGO"]
+        # cityObj.infect("yellow", 1)
+        # cityObj.infect("blue", 1)
+        # cityObj2 = self.cities["ATLANTA"]
+        # cityObj2.infect("blue", 1)
 
 
         infectionAmount = 3

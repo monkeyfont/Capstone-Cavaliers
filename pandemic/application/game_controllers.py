@@ -394,7 +394,7 @@ def handleclick():
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response=gameObject.passTurn(playerObject.id)
-            
+
             emit('passTurnChecked', {'msg':response})
 
 
