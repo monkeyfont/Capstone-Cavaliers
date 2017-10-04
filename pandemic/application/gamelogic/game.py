@@ -264,7 +264,7 @@ class GameBoard:
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
-
+        self.initialized = 0
 
         # start players at ATLANTA
         ## !!!!! just test with player 1 at the moment!
@@ -389,6 +389,7 @@ class GameBoard:
         self.infectCitiesStage()
         self.distributeHand()
         self.__setRoles()
+        self.initialized = 1
 
     def addPlayer(self, playerObj):
         """
@@ -943,16 +944,45 @@ class GameBoard:
         If the city already has 3 cubes of that colour, an outbreak will occur.
         NOTE: this function does NOT require a colour param. Cities can only be infected with a colour other than own
         by outbreaks.
+
+        city infections can be prevented by medic/quarantine specialist powers. see canInfectionBePrevented().
         """
+
         cityObj = self.cities[targetCity]
         # get the color of the city, and see what will happen if it is infected
         colour = cityObj.colour
         amount = cityObj.getInfections(colour)
+
+        if self.canInfectionBePrevented(cityObj, colour):
+            return
+
         if amount == 3:
             self.cityOutBreak(cityObj, colour)
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour,1)
+        return True
+
+
+    def canInfectionBePrevented(self, targetCityObj, colour):
+        """
+        SPECIAL CASE function
+        Function checks if the medic or quarantine specialist abilities can prevent the infection of a city.
+
+        Medic: if the medic is on a city and the cure is found, that city can not be infected with colours of that city.
+        Quarantine specialist: any city the specialist is in, or its connected cities cannot be infected.
+        """
+        # can only be prevented before board initalization
+        if self.initialized == 1:
+            # Check all players to see if they are a medic/quar role.
+            for player in self.players:
+                if player.role == "medic" and player.location == targetCityObj.name and self.cures[colour] == 1:
+                    return True
+                if player.role == "quarantineSpecialist":
+                    # check if the player is present in the current city, or connected cities.
+                    if player.location == targetCityObj.name or player.location in targetCityObj.connections:
+                        return True
+        return False
 
 
 
@@ -965,6 +995,7 @@ class GameBoard:
         If another outbreak occurs, it will recursively call this function again.
 
         Any city in the outBreakChain cannot be called twice.
+        Quarantine specialist/medic powers can prevent infection. see canInfectionBePrevented()
         """
         print (" AN OUTBREAK HAS OCCURED AT " + targetCityObj.name)
         citiesToInfect = [targetCityObj]
@@ -973,7 +1004,9 @@ class GameBoard:
             city = citiesToInfect.pop(0) # take the first city. (removes from list)
             amount = city.getInfections(colour)
             if amount < 3:
-                city.infect(colour, 1)
+                # check if the infection is blocked by specialist abilities.
+                if self.canInfectionBePrevented(city, colour) == False:
+                    city.infect(colour, 1)
             else:
                 # another outbreak has occured.
                 # need to infect all of its neighbours.
