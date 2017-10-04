@@ -857,16 +857,22 @@ class GameBoard:
         at any research station, discard 5 city cards of the same disease colour to cure that disease
         Returns a dictionary:
             result = {validAction:"false", reason:"notEnoughCards" }
+
+        SPECIAL CASE: if player is the scientist, they only need 4 cards to discover a cure.
         """
         # TODO this code should probably be refactored.
 
         validation = self.__checkAction(playerId) #validate its a legal player move.
+        playerObj = self.players[playerId]
+
 
         # Check player is at a research station
         if self.isPlayerAtResearchStation(playerId) is False:
             return
-        # Check there is 5 city cards.
-        if len(cities) != 5:
+        # Check there is 5 city cards. Or if the player is the scientist, that there are 4 cards.
+        if player.role == "scientist" and len(cities) != 4:
+            return
+        elif len(cities) != 5:
             return
         # retrieve city objects from strings.
         result = {} # holds the return dict.
@@ -883,7 +889,6 @@ class GameBoard:
                 if cityObj.colour != colour:
                     return
         # we now know all cards are of the same colour, so remove them from the user's hand.
-        playerObj = self.players[playerId]
         for cityObj in cityObjs:
             for card in playerObj.hand:
                 if card.name==cityObj.name:
@@ -955,7 +960,7 @@ class GameBoard:
 
         if self.canInfectionBePrevented(cityObj, colour):
             return False
-        
+
         if amount == 3:
             self.cityOutBreak(cityObj, colour)
         else:
