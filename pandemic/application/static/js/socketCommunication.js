@@ -296,6 +296,58 @@ socket.on('passTurnChecked', function (data) {
 
     });
 
+function PlayEventCard(){
+
+    var cardName = prompt("Enter Name of event Card you want to play: ");
+    if (cardName=="Government Grant"){
+        var cityName = prompt("Enter Name of city you want to build a research station on: ");
+        socket.emit('PlayEventCard',{card:cardName,city:cityName});
+    }
+    else if (cardName=="Airlift"){
+        var playerName = prompt("Enter Name of player you wish to move: ");
+        var cityName= prompt("Enter Name of city you wish to move player to: ");
+        socket.emit('PlayEventCard',{card:cardName,player:playerName,city:cityName});
+
+    }
+
+    else{
+    socket.emit('PlayEventCard',{card:cardName});
+    }
+
+
+
+}
+
+socket.on('governmentGrantChecked', function (data) {
+
+        check=data.msg.validAction;
+        if (check==true){
+            alert("research station built with event card")
+            // here goes logic to draw the building
+        }
+        else{
+            alert(data.msg.errorMessage);
+        }
+    });
+
+
+
+socket.on('airliftChecked', function (data) {
+
+        check=data.msg.validAction;
+
+        if (check ==true){
+            var city=eval(data.city);
+             players.players[data.playerName].move(city.xPos,city.yPos);
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+    });
+
+
+
+
 
 socket.on('clicked', function (data) {
 

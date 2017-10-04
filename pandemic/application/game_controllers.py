@@ -95,6 +95,7 @@ def getPlayersHands():
             playerCardNames.append(cardname)
         playersHands[playerK]=playerCardNames
 
+
     print playersHands
 
 
@@ -396,6 +397,43 @@ def handleclick():
             response=gameObject.passTurn(playerObject.id)
 
             emit('passTurnChecked', {'msg':response})
+
+
+@socketio.on('PlayEventCard')
+def handleclick(msg):
+    room = str(session['roomname'])
+    username = str(session["username"])
+    gameObject = games[room]
+    eventCardName = msg["card"]
+
+    playerDictionary = gameObject.players
+
+    if eventCardName== "Government Grant":
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                cityToBuildOn = msg["city"]
+                response=gameObject.governmentGrant(playerObject.id,eventCardName,cityToBuildOn)
+                emit('governmentGrantChecked', {'msg': response},room=room)
+
+    elif eventCardName== "Airlift":
+        playerToMove = msg["player"]
+        cityToMoveTo = msg["city"]
+        playerId=""
+        playerToMoveId=""
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                playerId = playerObject.id
+            elif playerObject.name == playerToMove:
+                playerToMoveId = playerObject.id
+        response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
+        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
+
+
+
+
+
 
 
 

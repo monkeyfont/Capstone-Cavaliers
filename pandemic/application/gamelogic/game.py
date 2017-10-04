@@ -157,11 +157,10 @@ PLAYER_CARDS = {
 
 EVENT_CARDS = {
     1:{"name":"Government Grant", "description":"Add 1 research station to any city ( no city card needed )"},
-    2:{"name":"Airlift", "description":"Move any 1 pawn to any city, get permission before moving another player's pawn"},
-    3: {"name": "testEvent", "description": "testEvent"},
-    4: {"name": "testEvent", "description": "testEvent"},
-    5: {"name": "testEvent", "description": "testEvent"},
-    6: {"name": "testEvent", "description": "testEvent"}
+    2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
+    3:{"name": "One Quiet Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"},
+    4:{"name": "Forecast", "description": "Examine top 6 cards of the infection draw pile. Rearrange them in order of your choice, and place them back on the pile"},
+    5:{"name": "Resilient Population", "description": "Take a card from the infection discard pile and remove it from the game"}
 }
 
 
@@ -409,10 +408,14 @@ class GameBoard:
         return citiesDict
 
     def generatePlayerDeck(self):
-        """ Returns a list containing player card objects. Epidemic cards are NOT added."""
+        """ Returns a list containing player card objects and event card objects. Epidemic cards are NOT added."""
         cards = []
         for k in PLAYER_CARDS: #name,colour,population,area,country
             cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
+
+        for k in EVENT_CARDS: #id, name, description
+            cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+
         return cards
 
     def generateInfectionDeck(self):
@@ -430,12 +433,14 @@ class GameBoard:
         cardsPerPlayer = {1:6, 2:4, 3:3, 4:2}
         nPlayers = len(self.players)
         nCardsToDeal = cardsPerPlayer[nPlayers]
-        shuffle(self.playerDeck)
+        #shuffle(self.playerDeck)
         for id in self.players:
             playerHand = self.players[id].hand
             for i in range(nCardsToDeal):
                 playerHand.append(self.playerDeck[0])
                 self.playerDeck.remove(self.playerDeck[0])
+            playerHand.append(self.playerDeck[-4])
+
 
     def infectCitiesStage(self):
         """ 
@@ -1012,6 +1017,57 @@ class GameBoard:
                         citiesToInfect.append(self.cities[cityStr])
 
 
+    def governmentGrant(self,playerId,eventCardName,cityName):
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if(card.name == eventCardName):#they do have the card
+                    curCityObj = self.cities[cityName]
+                    if curCityObj.researchStation==1:
+                        responseDict["errorMessage"] = "ERROR: This city already has a research station on it"
+                        responseDict["validAction"] = False
+                        return responseDict
+                    elif self.researchStationsBuilt>=5:
+                        responseDict["errorMessage"] = "ERROR: Max number of research stations have been built"
+                        responseDict["validAction"] = False
+                        return responseDict
+                    else:
+                        responseDict["validAction"] = True
+                        curCityObj.researchStation =1
+                        playerHand.remove(card)
+                        self.playerDiscarded.append(card)
+                        return responseDict
+
+    def airLift(self,playerId,playerToMoveId,cityToMoveTo):
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerToMoveObj=self.players[playerToMoveId]
+        playerHand=playerObj.hand
+        for card in playerHand:
+            if(card.name == "Airlift"):
+                playerToMoveObj.location = cityToMoveTo
+                responseDict["validAction"] = True
+                playerHand.remove(card)
+                self.playerDiscarded.append(card)
+                return responseDict
+
+        responseDict["errorMessage"] = "ERROR: You do not have this card"
+        responseDict["validAction"] = False
+        return responseDict
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class PlayerCard:
@@ -1024,15 +1080,15 @@ class PlayerCard:
         self.country = country
         self.type = "player"
 
-#
-# class EventCard:
-#     """ Event Card Definition """
-#     def __init__(self, id, name, description):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.type = "event"
-#
+
+class EventCard:
+    """ Event Card Definition """
+    def __init__(self, id, name, description):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.type = "event"
+
 class EpidemicCard:
     """ Infection Card Definition """
     def __init__(self):
