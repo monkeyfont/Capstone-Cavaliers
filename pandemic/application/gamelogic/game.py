@@ -599,7 +599,11 @@ class GameBoard:
         Move the player to the city that matches that cityID, only if they are connected.
         This sets the player object to that city, and the city object to know that the player is there.
         Returns: True if successful, False if unsuccessful.
+
+        SPECIAL CASE - if player is the medic, and a cure has been discovered, every city the medic moves to will automatically be cured of infections for that
+        cities colour.
         """
+
         responseDict={}
 
         validation = self.__checkAction(playerId)  # validate its a legal player move.
@@ -613,7 +617,11 @@ class GameBoard:
             self.players[playerId].location = nextCityName
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             responseDict["validAction"] = True
-
+            # special case if the player is the medic:
+            if playerObj.role == "medic":
+                colour = cityObj.colour
+                if self.cures[color]: # if a cure has been discovered, treat all diseases of that colour on that city.
+                    cityObj.treatDisease(colour, 3)
             playerObj.actions -= 1
             #print playerObj.actions
             endOfGameCheck = self.__endOfRound()
@@ -760,6 +768,8 @@ class GameBoard:
         Take the card that matches the city you are in from another player. Both players must be in that same city.
 
         playerId takes the city card from targetPlayerId if they have the card, and both players are in the same city.
+
+        SPECIAL CASE - if targetPlayer is the RESEARCHER it skips the check to make sure the city name matches the card city name.
         """
         responseDict = {}
         validation = self.__checkAction(playerId)  # validate its a legal player move.
@@ -776,7 +786,7 @@ class GameBoard:
             return responseDict
         # If targetPlayer has that city card, move it to players hand.
         for card in targetPlayerHand:
-            if card.name == targetCity:
+            if card.name == targetCity or targetPlayer.role == "researcher": # SPECIAL CASE: if target player is the researcher, skip the card name check.
                 targetPlayerHand.remove(card)
                 playerHand.append(card)
                 playerObj.actions -= 1
@@ -797,6 +807,8 @@ class GameBoard:
         Give the card that matches the city you are in to another player. Both players must be in that same city.
 
         if has the city card, playerId gives the city card to targetPlayerId. Both players must be in the same city.
+
+        SPECIAL CASE - if the player is the RESEARCHER it skips the check to make sure the city name matches the card city name.
         """
         responseDict = {}
         validation = self.__checkAction(playerId)  # validate its a legal player move.
@@ -813,7 +825,7 @@ class GameBoard:
             return responseDict
         # If player has that city card, move it to players hand.
         for card in playerHand:
-            if card.name == targetCity:
+            if card.name == targetCity or targetPlayer.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
                 playerObj.actions -= 1
@@ -888,6 +900,8 @@ class GameBoard:
         Treats a certain coloured disease within a city. An amount is defaults to 1.
         Retrieve the city object, and call its treat() function.
 
+        SPECIAL CASE: if the player's role is the medic, they will cure all infections on that city.
+
         """
         # TODO potentially need to see if a disease can actually be treated.
         responseDict = {}
@@ -903,6 +917,8 @@ class GameBoard:
             responseDict["errorMessage"] = "ERROR: You are not on the city you wish to treat"
             responseDict["validAction"] = False
             return responseDict
+        # special case - if the player is the medic, it should cure all infections on that city. (3 is the maximum.)
+        amount = 3
         response=cityObj.treat(colour, amount)
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
@@ -972,93 +988,99 @@ class GameBoard:
     #############################################################################################
     ############                        Specialist Moves                           ##############
 
-    # TODO -- need to decide if these should be special 'moves' sent from the frontend, or if the logic will be determined backend. 
 
-    ### Medic
-    def moveMedic(self, playerId, nextCityName):
-        """ 
-        When a medic moves, if a cure has been discovered it will cure all infections on that city of that cures colour. 
-        This function calls the standard move action. If successful, and a cure is found, it will remove all infections on that city.
+    #!!!!!!!!!! these functions are not being used anymore. their implementation has been moved to the generic functions.
 
-        Returns a python dictionary:
+    # # TODO -- need to decide if these should be special 'moves' sent from the frontend, or if the logic will be determined backend. 
+
+    # ### Medic
+    # def moveMedic(self, playerId, nextCityName):
+    #     """ 
+    #     When a medic moves, if a cure has been discovered it will cure all infections on that city of that cures colour. 
+    #     This function calls the standard move action. If successful, and a cure is found, it will remove all infections on that city.
+
+    #     Returns a python dictionary:
         
-        {"validAction":bool, "errorMessage":str}
-        """
-        responseDict = {}
-        # Check player is the medic
-        playerObj = self.players[playerId]
-        if playerObj.role != "medic":
-            return {"validAction":False}
+    #     {"validAction":bool, "errorMessage":str}
+    #     """
+    #     responseDict = {}
+    #     # Check player is the medic
+    #     playerObj = self.players[playerId]
+    #     if playerObj.role != "medic":
+    #         return {"validAction":False}
 
-        # move medic to that city (this will remove an action.)
-        moveResult = self.movePlayer(playerId, nextCityName)
-        if moveResult["validAction"]:
-            # Retrieve cities colour
-            cityObj = self.cities[targetCity]
-            colour = cityObj.colour
-            # if a cure has been discovered for that colour, cure all cubes on that city.
-            if self.cures[colour]:
-                # treat all of that colour.
-                cityObj.treatDisease(colour, 3)
-        return moveResult
-
-
-    def treatMedic(playerId, targetCity, colour)
-    """
-        When a medic treats a city, he treats all infections on that city for a colour.
-        Calls self.treatDisease to treat the disease.
-
-        Returns a python dictionry:
-
-        {"validAction":bool, "errorMessage":str}
-    """
-    # Check player is the medic
-    playerObj = self.players[playerId]
-    if playerObj.role != "medic":
-        return {"validAction":False}
-    resultDictionary = self.treatDisease(playerId, targetCity, colour, amount = 3)
-    return resultDictionary
+    #     # move medic to that city (this will remove an action.)
+    #     moveResult = self.movePlayer(playerId, nextCityName)
+    #     if moveResult["validAction"]:
+    #         # Retrieve cities colour
+    #         cityObj = self.cities[targetCity]
+    #         colour = cityObj.colour
+    #         # if a cure has been discovered for that colour, cure all cubes on that city.
+    #         if self.cures[colour]:
+    #             # treat all of that colour.
+    #             cityObj.treatDisease(colour, 3)
+    #     return moveResult
 
 
-    ### researcher
-    def researcherGiveCards(self, playerId, targetPlayerId, targetCity):
-        """
-        Give a targetPlayer any city card. Both players must be in the same city.
-        The card does not have to match the city.
+    # def treatMedic(playerId, targetCity, colour)
+    # """
+    #     When a medic treats a city, he treats all infections on that city for a colour.
+    #     Calls self.treatDisease to treat the disease.
 
-        Returns a python dictionry:
+    #     Returns a python dictionry:
 
-        {"validAction":bool, "errorMessage":str}
-        """
+    #     {"validAction":bool, "errorMessage":str}
+    # """
+    # # Check player is the medic
+    # playerObj = self.players[playerId]
+    # if playerObj.role != "medic":
+    #     return {"validAction":False}
+    # resultDictionary = self.treatDisease(playerId, targetCity, colour, amount = 3)
+    # return resultDictionary
 
-        #check the player is the researcher.
-        playerObj = self.players[playerId]
-        if playerObj.role != "researcher":
-            return {"validAction":False}
 
-        responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
-        if validation["validAction"] == False:
-            return validation
-        playerObj = self.players[playerId]
-        targetPlayer = self.players[targetPlayerId]
-        playerHand = playerObj.hand
-        targetPlayerHand = targetPlayer.hand
-        # If player has that city card, move it to players hand.
-        for card in playerHand:
-            if card.name == targetCity:
-                playerHand.remove(card)
-                targetPlayerHand.append(card)
-                playerObj.actions -= 1 # use one of the player's actions.
-                print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
-                responseDict["validAction"] = True
-                endOfGameCheck = self.__endOfRound()
-                responseDict.update(endOfGameCheck)
-                return responseDict
-        #fall through
-        responseDict["errorMessage"] = "ERROR: {} does not have this card in their hand".format(targetPlayer.name)
-        responseDict["validAction"] = False
-        return responseDict
+    # ### researcher
+    # def researcherGiveCards(self, playerId, targetPlayerId, targetCity):
+    #     """
+    #     Give a targetPlayer any city card. Both players must be in the same city.
+    #     The card does not have to match the city.
+
+    #     Returns a python dictionry:
+
+    #     {"validAction":bool, "errorMessage":str}
+    #     """
+
+    #     #check the player is the researcher.
+    #     playerObj = self.players[playerId]
+    #     if playerObj.role != "researcher":
+    #         return {"validAction":False}
+
+    #     responseDict = {}
+    #     validation = self.__checkAction(playerId)  # validate its a legal player move.
+    #     if validation["validAction"] == False:
+    #         return validation
+    #     playerObj = self.players[playerId]
+    #     targetPlayer = self.players[targetPlayerId]
+    #     playerHand = playerObj.hand
+    #     targetPlayerHand = targetPlayer.hand
+    #     # If player has that city card, move it to players hand.
+    #     for card in playerHand:
+    #         if card.name == targetCity:
+    #             playerHand.remove(card)
+    #             targetPlayerHand.append(card)
+    #             playerObj.actions -= 1 # use one of the player's actions.
+    #             print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
+    #             responseDict["validAction"] = True
+    #             endOfGameCheck = self.__endOfRound()
+    #             responseDict.update(endOfGameCheck)
+    #             return responseDict
+    #     #fall through
+    #     responseDict["errorMessage"] = "ERROR: {} does not have this card in their hand".format(targetPlayer.name)
+    #     responseDict["validAction"] = False
+    #     return responseDict
+
+
+    
 
 
 
