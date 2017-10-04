@@ -384,6 +384,21 @@ def handleclick(msg):
     emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
 
 
+@socketio.on('PassTurn')
+def handleclick():
+    room = str(session['roomname'])
+    username = str(session["username"])
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response=gameObject.passTurn(playerObject.id)
+            
+            emit('passTurnChecked', {'msg':response})
+
+
+
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):

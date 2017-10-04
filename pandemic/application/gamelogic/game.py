@@ -947,6 +947,23 @@ class GameBoard:
 
 
 
+    def passTurn(self,playerId):
+
+        responseDict = {}
+        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
+        playerObj = self.players[playerId]
+        # set player actions count to 0
+        playerObj.actions=0
+        responseDict["validAction"] = True
+        endOfGameCheck = self.__endOfRound()
+        responseDict.update(endOfGameCheck)
+        return responseDict
+
+
+
+
     def infectCity(self, targetCity):
         """
         Called by the game to infect a certain city.

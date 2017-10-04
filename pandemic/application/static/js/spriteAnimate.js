@@ -326,6 +326,31 @@ socket.on('cardRemoved', function (data) {
 
     });
 
+function PassTurn(){
+
+    socket.emit('PassTurn');
+
+}
+
+socket.on('passTurnChecked', function (data) {
+
+        check=data.msg.validAction;
+        if (check == true){
+        console.log("turn passed no more actions left")
+        }
+        else{
+        alert(data.msg.errorMessage);
+        }
+
+        if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
+
+
+    });
+
+
 
 socket.on('clicked', function (data) {
 
