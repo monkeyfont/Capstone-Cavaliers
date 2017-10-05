@@ -86,19 +86,21 @@ def getPlayersHands():
     gameboard = games[roomname]
     playersHands={}
     players=gameboard.players
+    print"players", players
     for playerK in players:
+        print "one player", players[playerK].name
         playerObj= players[playerK]
         playerHand=playerObj.hand
         playerCardNames=[]
         for card in playerHand:
             cardname=card.name
             playerCardNames.append(cardname)
-        playersHands[playerK]=playerCardNames
+        playersHands[players[playerK].name]=playerCardNames
 
     print playersHands
 
-
-    emit('gotInitialHands',playersHands)
+    print ('gotInitialHands',{"playerhand":playersHands,"username":username})
+    emit('gotInitialHands',{"playerhand":playersHands,"username":username})
 
 
 @socketio.on('getPlayerObject')

@@ -11,9 +11,9 @@ playerRoles = {contingencyPlannerPortrait,dispatcherPortrait,medicPortrait,opera
 function portraitInitilization(options){
 	this.xPos = 2560 
 	this.yPos = 20
-	this.playerPortraits = []
+	this.playerPortraits = {}
 	this.addPlayerPortrait = function(options){
-		this.playerPortraits.push(new portrait({
+		this.playerPortraits[options.playerType]=new portrait({
 			id:"playerViewImage",
 			xPos:this.xPos-(420*0.5),
 			yPos:this.yPos,
@@ -23,7 +23,7 @@ function portraitInitilization(options){
 			width:400,
 			image:playerRoles[options.playerType+"Portrait"],
 			context: canvas.getContext("2d")
-		}));
+		});
 		this.xPos = this.xPos-(420*0.5)
 	}
 	

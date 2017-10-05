@@ -318,28 +318,32 @@ socket.on('InfectedCities',function(data){
        });
 
 socket.on('gotInitialHands',function(data){
+	console.log(data)
 
+    for (var player in data["playerhand"]) {
+		console.log(player)
+		console.log(data["playerhand"])
+		console.log(data["playerhand"][player])
+    // if (data.hasOwnProperty(player)) {
+		var playerId = player
+		var cards=data["playerhand"][player]
+		console.log("Player "+playerId + "has the cards: ")
+		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
 
-    for (var player in data) {
+		for (var card in cards) {
+			console.log(card);
+			if (cards.hasOwnProperty(card)) {
+				console.log(cards[card]);
+				if (data.username==player){
+					playersHand.addCard({cardName:cards[card]})
+				}
+			// if you want to access each individial card then get in here through cards[card]
+			// if you want the list of player cards get it through just "cards"
 
-    if (data.hasOwnProperty(player)) {
-    var playerId= player
-    var cards=data[player]
-    console.log("Player "+playerId + "has the cards: ")
-    $('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
-
-    for (var card in cards) {
-		console.log(card);
-    if (cards.hasOwnProperty(card)) {
-		console.log(cards[card]);
-		playersHand.addCard({cardName:cards[card]})
-    // if you want to access each individial card then get in here through cards[card]
-    // if you want the list of player cards get it through just "cards"
-
-    $('#cards').val($('#cards').val() + cards[card] + '\n');
-                  }
-             }
-        }
+			$('#cards').val($('#cards').val() + cards[card] + '\n');
+						  }
+					 }
+        // }
     }
  });
 
