@@ -395,6 +395,7 @@ def handleclick():
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response=gameObject.passTurn(playerObject.id)
+            print response
 
             emit('passTurnChecked', {'msg':response})
 
@@ -429,6 +430,28 @@ def handleclick(msg):
                 playerToMoveId = playerObject.id
         response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
         emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
+
+    elif eventCardName == "One Quiet Night":
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                response=gameObject.skipInfectStage(playerObject.id)
+
+                emit('oneQuietNightChecked', {'msg': response})
+
+    elif eventCardName == "Resilient Population":
+        cardToRemove=msg["infectCard"]
+
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                response=gameObject.removeInfectionCard(playerObject.id,cardToRemove)
+                emit('resilientPopulationChecked', {'msg': response})
+
+
+
+
+
 
 
 

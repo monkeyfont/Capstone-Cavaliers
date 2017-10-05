@@ -264,6 +264,7 @@ class GameBoard:
         self.gameID = 0
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
+        self.skipInfectCities=False
 
 
         # start players at ATLANTA
@@ -439,7 +440,7 @@ class GameBoard:
             for i in range(nCardsToDeal):
                 playerHand.append(self.playerDeck[0])
                 self.playerDeck.remove(self.playerDeck[0])
-            playerHand.append(self.playerDeck[-4])
+            playerHand.append(self.playerDeck[-1])
 
 
     def infectCitiesStage(self):
@@ -539,6 +540,12 @@ class GameBoard:
         The infect city card is added to the discard pile.
         """
         infectedCities = {}
+        if self.skipInfectCities:
+            print"The infections for this round are getting skipped!"
+            self.skipInfectCities=False
+            return infectedCities
+        print"The infections for this round are not getting skipped!"
+
         amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
         for i in range(amountToDraw):
             # Draw the infection card from the top of the deck.
@@ -1055,6 +1062,51 @@ class GameBoard:
         responseDict["errorMessage"] = "ERROR: You do not have this card"
         responseDict["validAction"] = False
         return responseDict
+
+
+    def skipInfectStage(self,playerId):
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if (card.name == "One Quiet Night"):
+                self.skipInfectCities=True
+                responseDict["validAction"] = True
+                playerHand.remove(card)
+                self.playerDiscarded.append(card)
+                return responseDict
+
+        responseDict["errorMessage"] = "ERROR: You do not have this card"
+        responseDict["validAction"] = False
+        return responseDict
+
+    def removeInfectionCard(self,playerId,infectCardName): # this is for Resilient population
+
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if (card.name == "Resilient Population"):
+                for cardName in self.infectionDiscarded:
+                    if cardName.name==infectCardName: #is the card actually in the discard pile
+                        self.infectionDiscarded.remove(cardName) # remove card from discard pile
+                        responseDict["validAction"] = True
+                        playerHand.remove(card)
+                        return responseDict
+                        # it is now not in any deck so basicaly out of the game
+
+        responseDict["errorMessage"] = "ERROR: You do not have this card"
+        responseDict["validAction"] = False
+        return responseDict
+
+
+
+
+
+
+
+
+
 
 
 

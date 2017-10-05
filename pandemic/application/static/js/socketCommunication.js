@@ -310,6 +310,17 @@ function PlayEventCard(){
 
     }
 
+    else if (cardName=="One Quiet Night"){
+        socket.emit('PlayEventCard',{card:cardName,player:playerName});
+
+    }
+
+    else if (cardName=="Resilient Population"){
+        var infectCardName= prompt("Enter Name of infect card in the discard pile you wish to remove from the game: ");
+        socket.emit('PlayEventCard',{card:cardName,player:playerName,infectCard:infectCardName});
+
+    }
+
     else{
     socket.emit('PlayEventCard',{card:cardName});
     }
@@ -339,6 +350,29 @@ socket.on('airliftChecked', function (data) {
         if (check ==true){
             var city=eval(data.city);
              players.players[data.playerName].move(city.xPos,city.yPos);
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+    });
+
+socket.on('oneQuietNightChecked', function (data) {
+
+        check=data.msg.validAction;
+
+        if (check ==true){
+            alert("next infect cities will be skipped")
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+    });
+
+socket.on('resilientPopulationChecked', function (data) {
+
+        check=data.msg.validAction;
+        if (check ==true){
+            alert("Card has been removed from the game")
 	    }
 	    else{
 	        alert(data.msg.errorMessage);
