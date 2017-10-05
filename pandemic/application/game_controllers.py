@@ -62,7 +62,7 @@ def getGameInitialization():
         playerName = playerObj.name
         playerLocation = playerObj.location
         playerRole = playerObj.role
-        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
+        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation})
 
 
 @socketio.on('getInfections')

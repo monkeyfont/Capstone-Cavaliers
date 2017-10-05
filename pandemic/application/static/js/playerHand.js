@@ -70,8 +70,8 @@ function playerHand(){
 			newPlayerCard = new playerCard({
 			id:"Infection player Card ",
 			context: canvas.getContext("2d"),
-			width: 584,
-			height: 800,
+			width: 500,
+			height: 700,
 			numberOfFrames: 1,
 			ticksPerFrame: 1,
 			xPos:1600,

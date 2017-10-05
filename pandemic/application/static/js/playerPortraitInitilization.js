@@ -9,12 +9,14 @@ var scientistPortrait = new Image(); scientistPortrait.src = 'static/images/Play
 
 playerRoles = {contingencyPlannerPortrait,dispatcherPortrait,medicPortrait,operationsExpertPortrait,quarantineSpecialistPortrait,researcherPortrait,scientistPortrait}
 function portraitInitilization(options){
+	this.xPos = 2560 
+	this.yPos = 20
 	this.playerPortraits = []
 	this.addPlayerPortrait = function(options){
 		this.playerPortraits.push(new portrait({
 			id:"playerViewImage",
-			xPos:1920,
-			yPos:20,
+			xPos:this.xPos-(420*0.5),
+			yPos:this.yPos,
 			xScale:0.5,
 			yScale:0.5,
 			height:340,
@@ -22,6 +24,7 @@ function portraitInitilization(options){
 			image:playerRoles[options.playerType+"Portrait"],
 			context: canvas.getContext("2d")
 		}));
+		this.xPos = this.xPos-(420*0.5)
 	}
 	
 	this.render = function(){
