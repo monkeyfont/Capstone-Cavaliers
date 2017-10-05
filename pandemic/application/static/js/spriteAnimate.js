@@ -141,7 +141,7 @@ mapImage.addEventListener("load", gameLoop);
 
 
 playerPortraits = new portraitInitilization({});
-playerPortraits.addPlayerPortrait({});
+
 
 cureBar = new cureStatusBar({
 	context: canvas.getContext("2d"),
@@ -153,11 +153,13 @@ cureBar = new cureStatusBar({
 	yScale:0.4	
 });
 
-
+var load = document.getElementById("load");
+canvas.style.visibility='hidden' 
 window.onload = function (){
 	socket.emit('getPlayerObject') 
 	socket.emit('getGameInitialization')
 	socket.emit('getInfections')
 	socket.emit('getPlayersHands')
-
+	load.style.visibility='hidden' 
+	canvas.style.visibility='visible'
 	}

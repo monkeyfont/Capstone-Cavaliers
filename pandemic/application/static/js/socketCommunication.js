@@ -293,6 +293,7 @@ socket.on('gamePlayerInitilization',function(data){
 	//console.log(locations[cityName]);
 	city = locations[cityName]
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
+	playerPortraits.addPlayerPortrait({playerType:data.playerType});
 });
 
 socket.on('InfectedCities',function(data){
