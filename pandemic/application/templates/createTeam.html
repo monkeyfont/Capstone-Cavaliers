@@ -13,12 +13,16 @@
     <!--<img src="static/images/Pandemic_Banner.jpg">-->
     <div id="container">
         <!--<h1 id="title"> WELCOME TO PANDEMIC</h1>-->
+        <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
 
         <div id="newGame">
+
             <form action = "/lobby" method = "post">
                 <div class="row">
                     <div class="col-sm-12"><h2>Team Name</h2></div>
                     <div class="col-sm-12"><input  class = "bullets" type="radio" name="privacy" value="public">Public</div>
+                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="privacy" value="private" checked="checked">Private</div>
+
                 </div>
 
                 <div class="row">
@@ -36,7 +40,7 @@
 
                 <input type="hidden" name="roomtype" value="create">
                 <div class="row" id = "last">
-                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" type="button" onclick="alert('Go back')">Go Back</button></div>
+                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" id="goBack" type="button" onclick="goBack">Go Back</button></div>
                     <div class="col-sm-6" id="newGameBottomRight"><input class="bottomRightButton" id = "goGame" type= "submit" value= "Create Team"></div>
                 </div>
             </form>

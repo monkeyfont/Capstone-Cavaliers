@@ -11,6 +11,10 @@ $("#topMenu").click(function(){
         socket.emit('newRoom')
 
 });
+$("#goBack").click(function(){
+        socket.emit('goBack')
+
+});
 $("#menuBottomRight").click(function(){
         socket.emit('existingRoom')
 
@@ -28,7 +32,10 @@ $("#menuBottomRight").click(function(){
     });
 
 
+$("#goBack").click(function(){
+        location.href = "/home";
 
+});
 socket.on('joinR', function () {
     console.log ("Join Team")
     location.href ="/join";

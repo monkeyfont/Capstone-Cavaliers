@@ -7,7 +7,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="static/css/home.css"></head>
 <body>
+
+        <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
+
         <div id="existingGame">
+
             <form action = "/lobby" method = "post">
                 <div class="row">
                     <div class="col-sm-12"><h2>Team Name</h2></div>
@@ -29,7 +33,7 @@
                     <!--<div class="col-sm-6"><input class="bottomRightButton" id = "startGame" type="submit" value= "Start" ></div>-->
                 <!--</div>-->
                 <div class="row" id = "lasttoo">
-                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" type="button" onclick="alert('Go back')">Go Back</button></div>
+                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" type="button" id="goBack">Go Back</button></div>
                     <div class="col-sm-6" id="newGameBottomRight"><input class="bottomRightButton" id = "goGame" type= "submit" value= "Join Team"></div>
                 </div>
 

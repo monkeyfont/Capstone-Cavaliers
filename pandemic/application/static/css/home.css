@@ -1,13 +1,23 @@
 body{
     background-color:transparent;
 }
+
+#logo{
+    display:block;
+    margin-left:20%;
+    margin-right:20%;
+    visibility: visible;
+    width:60%;
+}
 html{
-    background: url("../images/WorldMap.jpg") no-repeat center center fixed;
+    background: url("../images/background.png") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
+
+
 .bottomLeftButton{
     padding:3%;
     width:100%;
@@ -25,10 +35,29 @@ html{
 .bottomRightButton{
     padding:3%;
     width:100%;
+    font-size:200%;
+    font-weight:bold;
+    background-color: rgba(64, 22, 251, 0.4);
+    color:white;
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:10px;
+}
+.bottomRightButton:hover{
+    background-color: rgba(64, 22, 251, 0.7);
+    color:red;
 }
 button{
-    width:100%;
+    background-color: rgba(64, 22, 251, 0.4);
+    color:white;
+    font-weight:bold;
+    font-size:200%;
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:10px;
 
+}
+button:hover{
+    background-color: rgba(64, 22, 251, 0.7);
+    color:red;
 }
 
 .col-sm-6{
@@ -43,7 +72,6 @@ button{
 }
 #menu,#newGame,#existingGame{
     display:block;
-    margin-top:25%;
     margin-left:25%;
     margin-right:25%;
     visibility: visible;
@@ -58,6 +86,12 @@ button{
 .messageHere{
     width:100%;
     padding:1.5%;
+    background-color: rgba(64, 22, 251, 0.4);
+    color:white;
+    font-weight:bold;
+    font-size:120%;
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:5px;
 }
 #goGame{
     width:100%;
@@ -83,4 +117,14 @@ button{
 }
 #menuBottomRight,#newGameBottomRight{
     padding-left:1%;
+}
+h2{
+    color:white;
+    font-weight:bold;
+    font-size:200%;
+}
+
+.bullets{
+   background-color:black;
+   border-radius:40px;
 }
