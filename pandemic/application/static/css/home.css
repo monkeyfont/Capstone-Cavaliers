@@ -128,3 +128,33 @@ h2{
    background-color:black;
    border-radius:40px;
 }
+
+#roomOptions{
+    max-height:30%;
+    color:white;
+}
+.optionalRooms{
+    color:white;
+    height:30px;
+    width:30px;
+}
+
+table{
+    margin-top:2%;
+}
+table, th, td {
+    border: 2px solid black;
+    background-color:white;
+    border-radius:3px;
+    color:black;
+}
+
+.tname{
+    width:65%;
+}
+.dif{
+    width:15%;
+}
+.npla{
+    width:20%;
+}

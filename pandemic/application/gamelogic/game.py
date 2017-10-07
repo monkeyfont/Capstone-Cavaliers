@@ -28,14 +28,14 @@ CITIES_TEMPLATE = {
     "KINSHASA": {"colour": "yellow", "connections": ['LAGOS','JOHANNESBURG','KHARTOUM']},
     "JOHANNESBURG": {"colour": "yellow", "connections": ['KINSHASA','KHARTOUM']},
     "SYDNEY": {"colour": "red", "connections": ['MANILA','JAKARTA','LOSANGELES']},
-    "JAKARTA": {"colour": "red", "connections": ['SYDNEY','HOCHIMINCITY','BANGKOK','CHENNAI']},
-    "MANILA": {"colour": "red", "connections": ['SYDNEY','SANFRANCISCO','HOCHIMINCITY','TAIPEI','HONGKONG']},
-    "HOCHIMINCITY": {"colour": "red", "connections": ['MANILA','JAKARTA','BANGKOK','HONGKONG']},
-    "BANGKOK": {"colour": "red", "connections": ['KOULKATA','HONGKONG','HOCHIMINCITY','JAKARTA','CHENNAI']},
+    "JAKARTA": {"colour": "red", "connections": ['SYDNEY','HOCHIMINHCITY','BANGKOK','CHENNAI']},
+    "MANILA": {"colour": "red", "connections": ['SYDNEY','SANFRANCISCO','HOCHIMINHCITY','TAIPEI','HONGKONG']},
+    "HOCHIMINHCITY": {"colour": "red", "connections": ['MANILA','JAKARTA','BANGKOK','HONGKONG']},
+    "BANGKOK": {"colour": "red", "connections": ['KOULKATA','HONGKONG','HOCHIMINHCITY','JAKARTA','CHENNAI']},
     "TAIPEI": {"colour": "red", "connections": ['OSAKA','SHANGHAI','HONGKONG','MANILA']},
     "OSAKA": {"colour": "red", "connections": ['TOKYO','TAIPEI']},
     "TOKYO": {"colour": "red", "connections": ['SEOUL','OSAKA','SANFRANCISCO','SHANGHAI']},
-    "HONGKONG": {"colour": "red", "connections": ['SHANGHAI','TAIPEI','MANILA','HOCHIMINCITY','BANGKOK','KOULKATA']},
+    "HONGKONG": {"colour": "red", "connections": ['SHANGHAI','TAIPEI','MANILA','HOCHIMINHCITY','BANGKOK','KOULKATA']},
     "SHANGHAI": {"colour": "red", "connections": ['BEIJING','SEOUL','TOKYO','TAIPEI','HONGKONG']},
     "SEOUL": {"colour": "red", "connections": ['TOKYO','SHANGHAI','BEIJING']},
     "BEIJING": {"colour": "red", "connections": ['SEOUL','SHANGHAI']},
@@ -43,12 +43,12 @@ CITIES_TEMPLATE = {
     "CHENNAI": {"colour": "black", "connections": ['DELHI','KOULKATA','BANGKOK','JAKARTA','MUMBAI']},
     "DELHI": {"colour": "black", "connections": ['KOULKATA','CHENNAI','MUMBAI','KARACHI','TEHRAN']},
     "MUMBAI": {"colour": "black", "connections": ['KARACHI','DELHI','CHENNAI']},
-    "KARACHI": {"colour": "black", "connections": ['TEHRAN','DELHI','MUMBAI','RIYAOH','BAGHDAD']},
-    "RIYAOH": {"colour": "black", "connections": ['BAGHDAD','KARACHI','CAIRO']},
+    "KARACHI": {"colour": "black", "connections": ['TEHRAN','DELHI','MUMBAI','RIYADH','BAGHDAD']},
+    "RIYADH": {"colour": "black", "connections": ['BAGHDAD','KARACHI','CAIRO']},
     "TEHRAN": {"colour": "black", "connections": ['DELHI','KARACHI','BAGHDAD','MOSCOW']},
     "MOSCOW": {"colour": "black", "connections": ['TEHRAN','ISTANBUL','STPETERSBURG']},
-    "BAGHDAD": {"colour": "black", "connections": ['TEHRAN','KARACHI','RIYAOH','CAIRO','ISTANBUL']},
-    "CAIRO": {"colour": "black", "connections": ['ISTANBUL','BAGHDAD','RIYAOH','ALGIERS','KHARTOUM']},
+    "BAGHDAD": {"colour": "black", "connections": ['TEHRAN','KARACHI','RIYADH','CAIRO','ISTANBUL']},
+    "CAIRO": {"colour": "black", "connections": ['ISTANBUL','BAGHDAD','RIYADH','ALGIERS','KHARTOUM']},
     "ISTANBUL": {"colour": "black", "connections": ['STPETERSBURG','MOSCOW','BAGHDAD','CAIRO','ALGIERS','MILAN']},
     "ALGIERS": {"colour": "black", "connections": ['PARIS','ISTANBUL','CAIRO','MADRID']}
 }
@@ -81,7 +81,7 @@ INFECTION_CARDS = {
     "SYDNEY": {"colour": "red", "country": ""},
     "JAKARTA": {"colour": "red", "country": ""},
     "MANILA": {"colour": "red", "country": ""},
-    "HOCHIMINCITY": {"colour": "red", "country": ""},
+    "HOCHIMINHCITY": {"colour": "red", "country": ""},
     "BANGKOK": {"colour": "red", "country": ""},
     "TAIPEI": {"colour": "red", "country": ""},
     "OSAKA": {"colour": "red", "country": ""},
@@ -95,7 +95,7 @@ INFECTION_CARDS = {
     "DELHI": {"colour": "black", "country": ""},
     "MUMBAI": {"colour": "black", "country": ""},
     "KARACHI": {"colour": "black", "country": ""},
-    "RIYAOH": {"colour": "black", "country": ""},
+    "RIYADH": {"colour": "black", "country": ""},
     "TEHRAN": {"colour": "black", "country": ""},
     "MOSCOW": {"colour": "black", "country": ""},
     "BAGHDAD": {"colour": "black", "country": ""},
@@ -132,7 +132,7 @@ PLAYER_CARDS = {
     "SYDNEY":{"colour":"red", "population":"", "area":"", "country": ""},
     "JAKARTA":{"colour":"red", "population":"", "area":"", "country": ""},
     "MANILA":{"colour":"red", "population":"", "area":"", "country": ""},
-    "HOCHIMINCITY":{"colour":"red", "population":"", "area":"", "country": ""},
+    "HOCHIMINHCITY":{"colour":"red", "population":"", "area":"", "country": ""},
     "BANGKOK":{"colour":"red","population":"", "area":"", "country": ""},
     "TAIPEI":{"colour":"red", "population":"", "area":"", "country": ""},
     "OSAKA":{"colour":"red", "population":"", "area":"", "country": ""},
@@ -146,7 +146,7 @@ PLAYER_CARDS = {
     "DELHI":{"colour":"black", "population":"", "area":"", "country": ""},
     "MUMBAI":{"colour":"black", "population":"", "area":"", "country": ""},
     "KARACHI":{"colour":"black", "population":"", "area":"", "country": ""},
-    "RIYAOH":{"colour":"black", "population":"", "area":"", "country": ""},
+    "RIYADH":{"colour":"black", "population":"", "area":"", "country": ""},
     "TEHRAN":{"colour":"black", "population":"", "area":"", "country": ""},
     "MOSCOW":{"colour":"black", "population":"", "area":"", "country": ""},
     "BAGHDAD":{"colour":"black", "population":"", "area":"", "country": ""},
@@ -261,7 +261,7 @@ class GameBoard:
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
-        self.gameID = 0
+        self.gameID = "default"
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
 

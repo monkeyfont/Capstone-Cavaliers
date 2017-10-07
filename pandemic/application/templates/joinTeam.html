@@ -13,18 +13,38 @@
         <div id="existingGame">
 
             <form action = "/lobby" method = "post">
-                <div class="row">
-                    <div class="col-sm-12"><h2>Team Name</h2></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "roomname"></div>
-                </div>
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12"><h2>Team Name</h2></div>-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12"><input class = "messageHere" placeholder="" name = "roomname"></div>-->
+                <!--</div>-->
                 <div class="row">
                     <div class="col-sm-12"><h2>Your Name</h2></div>
-                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "username"></div>
+                </div>
+                <div class="row" id="roomOptions">
+                    <table>
+                      <tr>
+                        <th></th>
+                        <th class="tname">Team Name</th>
+                        <th class="dif">Difficulty</th>
+                        <th class="npla"># of Players Needed</th>
+                      </tr>
+                        {%for rooms in availableRooms %}
+                            <tr>
+                                <td><input class="optionalRooms" type="radio" name="roomname" value="{{rooms}}"></td>
+                                <td class="tname">{{rooms}}</td>
+                                <td class="dif">{{allRooms[rooms].difficulty}}</td>
+                                <td class="npla">{{(4- allRooms[rooms].playerCount)}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+
                 </div>
                 <input type="hidden" name="roomtype" value="join">
                 <!--<div class="row" id="lasttoo">-->

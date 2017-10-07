@@ -21,7 +21,13 @@ def joinTeam():
 
 @app.route('/join')
 def newTeamRedirect():
-    return (render_template("joinTeam.html"))
+
+    publicRooms = []
+    for i in lobbies:
+        if lobbies[i].privacy == "public":
+            publicRooms.append(i)
+
+    return (render_template("joinTeam.html",availableRooms = publicRooms,allRooms = lobbies))
 
 @app.route('/new')
 def newTeam():
@@ -427,16 +433,18 @@ def lobby():
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
-
+                lobby.difficulty = request.form["difficulty"]
                 print ("THis room privacy is :" + lobby.privacy)
                 #add lobby to dictionary
-                lobbies[str(session['roomname'])] = lobby
+
                 lobby.playerCount=1
 
                 newPlayer=Player(lobby.playerCount,str(session['username']))
                 lobby.players[1]=newPlayer
 
                 playerIDs = playerIDs + 1
+
+                lobbies[str(session['roomname'])] = lobby
 
             else: # if user is joining a game
                 try:
@@ -447,12 +455,20 @@ def lobby():
                     if lobby.gameStarted==True:
                         return (render_template("home.html", error="This game has already started please Join or create another game"))
 
+                    for player in lobby.players:
+                        print lobby.players[player]
+                        print session['username']
+                        if lobby.players[player].name==session['username']:
+                            return (render_template("lobby.html", error="This username is already taken, chose another"))
+
+
                     lobby.playerCount += 1
                     newPlayer = Player(lobby.playerCount, str(session['username']))
                     lobby.players[lobby.playerCount]=newPlayer
                 except:
                     print"Lobby does not exist"
                     return (render_template("home.html", error="Sorry this room does not exist try another room"))
+
             return (render_template("intermission.html",room=session['roomname']))
     return (render_template("home.html"))
 
