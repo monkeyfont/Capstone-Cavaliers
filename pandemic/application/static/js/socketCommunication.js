@@ -435,13 +435,14 @@ socket.on('gotInitialHands',function(data){
     if (data.hasOwnProperty(player)) {
     var playerId= player
     var cards=data[player]
-    //console.log("Player "+playerId + "has the cards: ")
+    console.log("Player "+playerId + "has the cards: ")
     $('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
 
     for (var card in cards) {
-
+		console.log(card);
     if (cards.hasOwnProperty(card)) {
-
+		console.log(cards[card]);
+		playersHand.addCard({cardName:cards[card]})
     // if you want to access each individial card then get in here through cards[card]
     // if you want the list of player cards get it through just "cards"
 
