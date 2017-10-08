@@ -683,6 +683,19 @@ class GameBoard:
             responseDict["errorMessage"] =" ERROR: This city is not connected to the players current city"
             return responseDict
 
+
+    def __medicCureAfterMove(self, playerObj, cityObj):
+        """
+        Function is intended to be called after a movement (move, directFlight etc)
+        If a cure has been discovered for a colour, and the player is a medic, whenever they move onto a city of that cured colour,
+        it will remove all infection cubes of that colour.
+        """
+        # special case if the targeted player is the medic:
+        if playerObj.role == "medic":
+            # check for cures.
+            for colour in self.cures:
+                cityObj.treatDisease(colour, 3)
+
     def dispatcherTeleportOther(self, playerId, targetPlayerId, targetCity):
         """
         SPECIAL CASE: As an action, the dispatcher can move any player to a city with another player.
@@ -706,6 +719,7 @@ class GameBoard:
             if player.location == cityObj.location:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
+# TODO
                 return responseDict
         # fall through
         responseDict["errorMessage"] = "ERROR: There is no player at the target location"
