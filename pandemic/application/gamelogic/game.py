@@ -265,13 +265,6 @@ class GameBoard:
         self.difficulty = 0  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
         self.initialized = 0
-
-        # start players at ATLANTA
-        ## !!!!! just test with player 1 at the moment!
-        # self.players[1].setLocation("ATLANTA")
-        #self.cities["ATLANTA"].addResearchStation()
-        # self.__infectCitiesStage()
-        # self.__distributeHand()
         self.__initializeBoard()
 
 
@@ -635,7 +628,7 @@ class GameBoard:
             return responseDict
 
 
-    def dispatcherMoveOther(self, playerId, targetPlayerId, nextCityName):
+    def dispatcherMoveOther(self, playerId, targetPlayerId, targetCityName):
         """
         SPECIAL CASE: The dispatcher can move another player, as if it were their own.
         This is the same as the move function above, but it moves another player.
@@ -651,24 +644,24 @@ class GameBoard:
             return validation
 
         # retrieve components
-        playerObj = self.players[playerId]
-        targetPlayerObj = self.player[targetPlayerId]
+        dispatcherObj = self.players[playerId]
+        targetPlayerObj = self.players[targetPlayerId]
         targetPlayerLoc = targetPlayerObj.location
-        cityObj = self.cities[targetPlayerLoc]
+        targetCityObj = self.cities[targetPlayerLoc]
 
         # check the player is the dispatcher
-        if playerObj.role != "dispatcher":
+        if dispatcherObj.role != "dispatcher":
             responseDict["errorMessage"] = "ERROR: You are not the dispatcher!"
             return responseDict
 
         # move the user if possible
-        if nextCityName in cityObj.connections:
-            targetPlayerObj.location = nextCityName
+        if targetCityName in targetCityObj.connections: # if the requested city is in the
+            targetPlayerObj.location = targetCityName
             responseDict["validAction"] = True
             # check if the medics secondary power removes any infections.
-            self.__medicCureAfterMove(targetPlayerObj, cityObj)
+            self.__medicCureAfterMove(targetPlayerObj, targetCityObj)
             # remove the action from the DISPATCHER
-            playerObj.actions -= 1
+            dispatcherObj.actions -= 1
             endOfGameCheck = self.__endOfRound()
             responseDict.update(endOfGameCheck)
             return responseDict
