@@ -311,6 +311,18 @@ class GameBoard:
         Returns: 
             if any player has moves left: False
             if all player moves used: a dictionary containing end of round key:value pairs.
+
+        return dictionary -->
+        {
+        endRound: bool,
+        gameLoss: bool,
+        gameLossReason: [str,str],
+        infectionLevel: int,
+        outBreakLevel = int,
+        infectedCities = [cityName*:{colour:amount}]
+        cardDraw:{outOfCards:bool, playerName*:[str (cardName*)],}
+        }
+
         """
         result = {}
 
@@ -323,7 +335,7 @@ class GameBoard:
             result["gameLoss"] = False
             result["gameLossReason"] = []
 
-            # end of round has occured.
+            # end of round has occurred.
             result["endRound"] = True
 
             # invoke draw cards step
@@ -486,6 +498,8 @@ class GameBoard:
     def endTurnDrawCards(self):
         """
         function draw cards for all of the players in the game.
+        Retuns a dictionary:
+        {outOfCards:bool, playerName*:[card1,card2,card3]}
         """
         #TODO out of cards logic.
         cardDict={}
@@ -499,12 +513,17 @@ class GameBoard:
         nCardsPerPlayer = 2 # n drawn for each player.
         for id in self.players:
             playerObj = self.players[id]
+            # need a BLANK array for the cards.
+            cardDict[playerObj.name] = []
             for i in range(nCardsPerPlayer):
                 # move the card from the player deck, to the players hand.
                 if len(self.playerDeck) == 0:  # check after each time a card gets handed out
                     cardDict["outOfCards"] = True
                     return cardDict
-                playerObj.hand.append(self.playerDeck.pop(0))
+                card = self.playerDeck.pop(0)
+                # add the NAME of that card to the player's return Dict.
+                cardDict[playerObj.name].append(card.name)
+                playerObj.hand.append(card)
         # if you have made it to here then there are still cards left
         cardDict["outOfCards"] = False
         return cardDict
