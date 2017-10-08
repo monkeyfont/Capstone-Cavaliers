@@ -9,7 +9,7 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	//console.log(message);
+	console.log(message);
 
 
 	for (var i in spriteList){
