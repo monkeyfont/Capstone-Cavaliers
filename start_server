@@ -1,2 +1,0 @@
-# #!/bin/bash
-python /pandemic/run.py > /dev/null 2> /dev/null < /dev/null &

@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <link rel="stylesheet" href="static/css/home.css">
+</head>
 <body>
 
 <p />
-<input class = "btn" id="clickTest" type="button" value="TESTER" />
+<!--<input class = "btn" id="clickTest" type="button" value="TESTER" />-->
 <p />
+<div id="boardSection">
+
 <input class = "Audio" id = "Mute" type="button" value="Mute" />
 <input class = "Audio" id = "Play" type="button" value="Play/Pause" />
-<!-- <input type="button" value="Infect" onclick="infecting()" /> -->
-<!-- <input type="button" value="Move Infect" onclick="moveInfection()" /> -->
+ <!--<input type="button" value="Infect" onclick="infecting()" />-->
+ <!--<input type="button" value="Move Infect" onclick="moveInfection()" />-->
 <input type="button" value="Direct Flight" onclick="directFlight()" />
 <input type="button" value="Charter Flight" onclick="charterFlight()" />
 <input type="button" value="Shuttle Flight" onclick="shuttleFlight()" />
@@ -19,31 +26,24 @@
 <input type="button" value="Discover Cure" onclick="discoverCure()" />
 <input type="button" value="add card to player" onclick="addPlayersCard()" />
 <input type="button" value="Discard a card" onclick="discardCard()" />
+</div>
 
-<!-- <img id="scream" 
-src="WorldMap.jpg" alt="The Scream"> -->
+<div id="divider">
 <div class="Cardscontainer">
-        <h3>current Cards</h3>
+        <h1>Current Cards</h1>
         <textarea id="cards"></textarea>
-    </div>
+</div>
+    <div class="Cardscontainer">
+    <h1>Message</h1>
+    <input  class = "typeMessageHere" id="message_input" placeholder="">
+    <input  class = "three"id="message_button" type="button" value="Send"><textarea id="log"></textarea>
+</div>
+</div>
 
-<p>Canvas:</p>
-
-<canvas id="myCanvas" width="1920" height="1080"
-style="border:1px solid #d3d3d3;">
+<canvas id="myCanvas"  width="1920" height="1080">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
-    <div class="container">
-        <h3>Message</h3>
-        <input id="message_input" placeholder="">
-        <input id="message_button" type="button" value="Send">
-
-    </div>
-    <div class="container">
-        <h3>Chat history</h3>
-        <textarea id="log"></textarea>
-    </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>

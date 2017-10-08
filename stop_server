@@ -1,8 +1,0 @@
-# #!/bin/bash
-if pidof python run.py
-then
-    sudo kill $(pidof python run.py)
-    echo "run.py process has been killed"
-else
-    echo "run.py was not running."
-fi

@@ -2,32 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="static/css/home.css">
     <title>Pandemic Lobby</title>
+
 </head>
 <body>
-        <h1>{{error}}</h1>
-        <h1>Welcome to Pandemic</h1>
-    <form action = "/lobby" method = "post">
-        <h3>Create New Room</h3>
-        <input  placeholder="ROOM NAME" name = "roomname">
-        <input type = "text"  placeholder= "YOUR NAME" name = "username" ><br>
-        Room privacy<br>
-        <input type="radio" name="privacy" value="private" checked>Private<br>
-        <input type="radio" name="privacy" value="public"> Public<br>
-        <input type="hidden" name="roomtype" value="create">
-        <input type= "submit" value= "Create New Room">
-    </form>
-    <form action="/lobby"  method = "post">
-            <h3>Join a room</h3>
-            <input  placeholder="ROOM NAME" name = "roomname">
-            <input  placeholder="YOUR NAME" name = "username">
-            <input type="hidden" name="roomtype" value="join">
-            <input  type="submit" value= "Join" >
-    </form>
-        <h2>Public Rooms</h2>
-        <textarea id="roomlog"></textarea>
+    <!--<img src="static/images/Pandemic_Banner.jpg">-->
+    <div id="container">
+        <!--<h1 id="title"> WELCOME TO PANDEMIC</h1>-->
+        <div id="menu">
+            <div class="row">
+                <div class="col-sm-12" id="topMenu"> <button class="topMenuButton" type="button" onclick="alert('New game button was clicked')">New Game</button></div>
+            </div>
+            <div class="row" id="bottomMenu">
+                <div class="col-sm-6" id="menuBottomLeft"> <button class="bottomLeftButton" type="button" onclick="alert('Rules button was clicked')">Rules</button></div>
+                <div class="col-sm-6" id="menuBottomRight"> <button class="bottomRightButton" type="button" onclick="alert('Join game button was clicked')">Join Game</button></div>
+            </div>
+
+        </div>
+
+        <div id="newGame">
+            <form action = "/lobby" method = "post">
+                <div class="row">
+                    <div class="col-sm-12"><h2>Team Name</h2></div>
+                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="privacy" value="public">Public</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "roomname"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12"><h2>Your Name</h2></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12"><input class="messageHere" type = "text"  placeholder= "" name = "username" ></div>
+                </div>
+
+
+                <input type="hidden" name="roomtype" value="create">
+                <div class="row">
+                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" type="button" onclick="alert('Go back')">Go Back</button></div>
+                    <div class="col-sm-6" id="newGameBottomRight"><input class="bottomRightButton" id = "goGame" type= "submit" value= "Create Team"></div>
+                </div>
+            </form>
+        </div>
+
+        <div id="existingGame">
+            <form action = "/lobby" method = "post">
+                <div class="row">
+                    <div class="col-sm-6"><h2>Team Name</h2></div>
+                    <div class="col-sm-6"><h2>Your Name</h2></div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-6"><input class = "typeHere" placeholder="Team name" name = "roomname"></div>
+                    <div class="col-sm-6"><input class = "typeHere" placeholder="Your name" name = "username"></div>
+                </div>
+                <input type="hidden" name="roomtype" value="join">
+                <div class="row">
+
+                    <div class="col-sm-6"> <button type="button" onclick="alert('Go back')">Go Back</button></div>
+                    <div class="col-sm-6"><input id = "startGame" type="submit" value= "Start" ></div>
+                </div>
+            </form>
+        <!--<div class="two">-->
+          <!--<textarea id="roomlog"></textarea>-->
+        <!--</div>-->
+        </div>
+
+    </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+
 </body>
 </html>
