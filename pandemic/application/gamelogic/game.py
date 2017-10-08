@@ -713,13 +713,18 @@ class GameBoard:
         playerObj = self.players[playerId]
         targetPlayerObj = self.players[targetPlayerId]
 
+        # check the player is the dispatcher
+        if playerObj.role != "dispatcher":
+            responseDict["errorMessage"] = "ERROR: You are not the dispatcher!"
+            return responseDict
+
         cityObj = self.cities[targetCity]
         # if there is another player on the target city, move the target player there.
         for player in self.players:
             if player.location == cityObj.location:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
-# TODO
+                playerObj.actions -= 1
                 return responseDict
         # fall through
         responseDict["errorMessage"] = "ERROR: There is no player at the target location"
