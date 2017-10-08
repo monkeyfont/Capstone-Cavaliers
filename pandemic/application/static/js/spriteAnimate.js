@@ -35,6 +35,8 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
+	
+	playerActionsMenu.activateAction(mousePos)
 
 
 })

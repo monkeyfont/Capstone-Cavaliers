@@ -106,18 +106,18 @@ function city(options){
 		
 		
 		canvas.getContext("2d").font = "30px Sans-serif"
-		canvas.getContext("2d").strokeStyle = 'green';
+		canvas.getContext("2d").strokeStyle = 'black';//'green';
 		canvas.getContext("2d").lineWidth = 8;
 		canvas.getContext("2d").lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
 		canvas.getContext("2d").miterLimit=3;
 		textWidth = canvas.getContext("2d").measureText(this.id).width;
 		canvas.getContext("2d").strokeText(this.id,this.xPos-(textWidth/2),this.yPos-18);
-		canvas.getContext("2d").fillStyle = this.colour;
+		canvas.getContext("2d").fillStyle = 'white';//this.colour;
 		textWidth = canvas.getContext("2d").measureText(this.id).width;
 		canvas.getContext("2d").fillText(this.id,this.xPos-(textWidth/2),this.yPos-18);
 		
 		// canvas.getContext("2d").font="16px Verdana";
-		// canvas.getContext("2d").fillStyle = this.colour;
+		// canvas.getContext("2d").fillStyle = 'white';//this.colour;
 		// textWidth = canvas.getContext("2d").measureText(this.id).width;
 		// canvas.getContext("2d").fillText(this.id,this.xPos-(textWidth/2),this.yPos-18);
 		// for rendering city connections check the distance, and if more than  500, then x is off the board, and y is halfway
