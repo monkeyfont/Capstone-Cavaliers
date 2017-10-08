@@ -5,6 +5,8 @@ var yellowInfection = new Image(); yellowInfection.src = 'static/images/Infectio
 
 function city(options){
 	this.id = options.id;
+	this.locationPointerX = options.locationPointerX || options.xPos;
+	this.locationPointerY = options.locationPointerY || options.yPos;
 	this.colour = options.colour;
 	this.xPos = options.xPos;
 	this.yPos = options.yPos; 
@@ -89,6 +91,20 @@ function city(options){
 		canvas.getContext("2d").arc(this.xPos, this.yPos, this.radius, 0,Math.PI*2);
 		canvas.getContext("2d").fillStyle = this.colour;
 		canvas.getContext("2d").fill();
+		canvas.getContext("2d").arc(this.locationPointerX, this.locationPointerY, this.radius/3, 0,Math.PI*2);
+		canvas.getContext("2d").fillStyle = this.colour;
+		canvas.getContext("2d").fill();
+		context.beginPath();
+		context.moveTo(this.xPos, this.yPos);
+		context.lineTo(this.locationPointerX, this.locationPointerY);
+		context.lineWidth = 1;
+				// set line color
+		context.strokeStyle = this.colour;
+		context.stroke();
+		
+		
+		
+		
 		canvas.getContext("2d").font="16px Verdana";
 		canvas.getContext("2d").fillStyle = this.colour;
 		textWidth = canvas.getContext("2d").measureText(this.id).width;
