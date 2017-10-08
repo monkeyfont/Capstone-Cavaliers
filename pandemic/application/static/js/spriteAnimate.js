@@ -120,10 +120,10 @@ var deck = new sprite({
     height: 800,
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
-	xPos:1600,
-	yPos:40,
-	xScale:0.5,
-	yScale:0.5,
+	xPos:2300,
+	yPos:1100,
+	xScale:0.4,
+	yScale:0.4,
     image: CardImage
 
 })
