@@ -7,6 +7,19 @@ $(document).ready(function () {
         // This will be called automatically
         // it will allow the user to request all the public rooms
 });
+$("#topMenu").click(function(){
+        socket.emit('newRoom')
+
+});
+$("#goBack").click(function(){
+        socket.emit('goBack')
+
+});
+$("#menuBottomRight").click(function(){
+        socket.emit('existingRoom')
+
+});
+
     socket.on('publicLobbies', function (data) {
     console.log(data);
     var i = 0;
@@ -17,4 +30,25 @@ $(document).ready(function () {
     }
     i = 0;
     });
+
+
+$("#goBack").click(function(){
+        location.href = "/home";
+
+});
+socket.on('joinR', function () {
+    console.log ("Join Team")
+    location.href ="/join";
+
+});
+socket.on('createNewRoom', function () {
+
+    location.href ="/new";
+
+});
+socket.on('joinRoom', function () {
+
+    location.href ="/lobby";
+
+});
 });
