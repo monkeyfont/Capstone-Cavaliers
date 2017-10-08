@@ -61,7 +61,7 @@ KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBU
 
 function playerHand(){
 	this.xPos = 960;
-	this.yPos = 1080;
+	this.yPos = 990;
 	this.cards = {};
 	
 	this.addCard = function (options){
@@ -90,10 +90,10 @@ function playerHand(){
 		//options = {cardname:cardName}
 	}
 	this.render = function(){
-		startPoint = 960-(Object.keys(this.cards).length)/2*(584*0.5)
+		startPoint = 960-(Object.keys(this.cards).length)/2*(560*0.5)
 		pos = 0;
 		for(i in this.cards){
-			this.cards[i].move (startPoint+584*0.5*pos,this.yPos)
+			this.cards[i].move (startPoint+560*0.5*pos,this.yPos)
 			this.cards[i].render();
 			pos++;
 		}
