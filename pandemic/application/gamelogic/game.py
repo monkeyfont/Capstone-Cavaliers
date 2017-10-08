@@ -683,6 +683,35 @@ class GameBoard:
             responseDict["errorMessage"] =" ERROR: This city is not connected to the players current city"
             return responseDict
 
+    def dispatcherTeleportOther(self, playerId, targetPlayerId, targetCity):
+        """
+        SPECIAL CASE: As an action, the dispatcher can move any player to a city with another player.
+        This can include the dispatcher themselves.
+
+        If the moved player is the medic, and a cure is found, all infections of that cure's colour will be removed from that city.
+        """
+        responseDict={}
+
+        # check the dispatcher can make the move.
+        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
+
+        playerObj = self.players[playerId]
+        targetPlayerObj = self.players[targetPlayerId]
+
+        cityObj = self.cities[targetCity]
+        # if there is another player on the target city, move the target player there.
+        for player in self.players:
+            if player.location == cityObj.location:
+                targetPlayerObj.location = targetCity
+                responseDict["validAction"] = True
+                return responseDict
+        # fall through
+        responseDict["errorMessage"] = "ERROR: There is no player at the target location"
+        return responseDict
+
+
 
 
 
