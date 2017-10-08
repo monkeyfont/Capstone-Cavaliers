@@ -610,6 +610,8 @@ class GameBoard:
         validation = self.__checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
+
+
         currentCityName = self.players[playerId].location
         cityObj = self.cities[currentCityName]
         playerObj = self.players[playerId]
@@ -634,6 +636,54 @@ class GameBoard:
             responseDict["validAction"]=False
             responseDict["errorMessage"]="ERROR: This city is not connected to your current city"
             return responseDict
+
+
+    def dispatcherMoveOther(self, playerId, targetPlayerId, nextCityName):
+        """
+        SPECIAL CASE: The dispatcher can move another player, as if it were their own.
+        This is the same as the move function above, but it moves another player.
+        -1 action counter for the dispatcher.
+
+        If the moved player is the medic, and a cure is discovered, it will cure infections on that city.
+        """
+
+        responseDict={}
+
+        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
+
+        # retrieve components
+        playerObj = self.players[playerId]
+        targetPlayerObj = self.player[targetPlayerId]
+        targetPlayerLoc = targetPlayerObj.location
+        cityObj = self.cities[targetPlayerLoc]
+
+        # check the player is the dispatcher
+        if playerObj.role != "dispatcher":
+            responseDict["errorMessage"] = "ERROR: You are not the dispatcher!"
+            return responseDict
+
+        # move the user if possible
+        if nextCityName in cityObj.connections:
+            targetPlayerObj.location = nextCityName
+            responseDict["validAction"] = True
+            # special case if the targeted player is the medic:
+            if targetPlayerObj.role == "medic":
+                colour = cityObj.colour
+                if self.cures[colour]: # if a cure has been discovered, treat all diseases of that colour on that city.
+                    cityObj.treatDisease(colour, 3)
+            # remove the action from the DISPATCHER
+            playerObj.actions -= 1
+            endOfGameCheck = self.__endOfRound()
+            responseDict.update(endOfGameCheck)
+            return responseDict
+        else:
+            responseDict["validAction"] = False
+            responseDict["errorMessage"] =" ERROR: This city is not connected to the players current city"
+            return responseDict
+
+
 
 
     def directFlight(self,playerId,nextCityName):
