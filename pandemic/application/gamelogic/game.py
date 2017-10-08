@@ -726,6 +726,47 @@ class GameBoard:
             return responseDict
 
 
+    def operationsTeleport(self, playerId, cardName, destinationCity):
+        """
+        SPECIAL CASE: on a research station, the operations expert can discard any city card to move to any city.
+        """
+        responseDict = {}
+        # check it is a valid action
+        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        if validation["validAction"] == False:
+            return validation
+        # retrieve components
+        playerObj = self.players[playerId]
+        currentCityName = playerObj.location
+        curCityObj = self.cities[currentCityName]
+
+        # check the player is a operations expert
+        if playerObj.role != "operationsExpert":
+            responseDict["errorMessage"] = "ERROR: You are not an operations expert."
+            return responseDict
+
+        # check the player is on a research station
+        if curCityObj.researchStation == 0:
+            responseDict["errorMessage"] = "ERROR: You are not at a research station!"
+            return responseDict
+
+        # check the player has the card, and the card is a city type (player type).
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if card.name == cardName and card.type == "player":# if you have that card
+                # Fly the user to the destination city.
+                playerObj.location = destinationCity
+                playerObj.actions -= 1
+                playerHand.remove(card)
+                self.playerDiscarded.append(card)
+                responseDict["validAction"] = True
+                endOfGameCheck = self.__endOfRound()
+                responseDict.update(endOfGameCheck)
+                return responseDict
+            else:
+                responseDict["errorMessage"] = "ERROR: You don't have that card. Or the Card is of the wrong type."
+                responseDict["validAction"] = False
+                return responseDict
 
     def buildResearchStation(self, playerId, cityName):
         """
@@ -739,7 +780,9 @@ class GameBoard:
         playerObj = self.players[playerId]
         currentLocation = playerObj.location
         curCityObj = self.cities[currentLocation]
+
         # special case if player is the operationsExpert - they dont have to discard a card to build a research station.
+        # NOTE this code returns early.
         if playerObj.role == "operationsExpert":
             curCityObj.researchStation = 1
             playerObj.actions -= 1
