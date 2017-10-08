@@ -621,7 +621,7 @@ class GameBoard:
             # special case if the player is the medic:
             if playerObj.role == "medic":
                 colour = cityObj.colour
-                if self.cures[color]: # if a cure has been discovered, treat all diseases of that colour on that city.
+                if self.cures[colour]: # if a cure has been discovered, treat all diseases of that colour on that city.
                     cityObj.treatDisease(colour, 3)
             playerObj.actions -= 1
             #print playerObj.actions
