@@ -620,11 +620,8 @@ class GameBoard:
             self.players[playerId].location = nextCityName
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             responseDict["validAction"] = True
-            # special case if the player is the medic:
-            if playerObj.role == "medic":
-                colour = cityObj.colour
-                if self.cures[colour]: # if a cure has been discovered, treat all diseases of that colour on that city.
-                    cityObj.treatDisease(colour, 3)
+            # check if the medics secondary power removes any infections.
+            self.__medicCureAfterMove(playerObj, cityObj)
             playerObj.actions -= 1
             #print playerObj.actions
             endOfGameCheck = self.__endOfRound()
@@ -668,11 +665,8 @@ class GameBoard:
         if nextCityName in cityObj.connections:
             targetPlayerObj.location = nextCityName
             responseDict["validAction"] = True
-            # special case if the targeted player is the medic:
-            if targetPlayerObj.role == "medic":
-                colour = cityObj.colour
-                if self.cures[colour]: # if a cure has been discovered, treat all diseases of that colour on that city.
-                    cityObj.treatDisease(colour, 3)
+            # check if the medics secondary power removes any infections.
+            self.__medicCureAfterMove(targetPlayerObj, cityObj)
             # remove the action from the DISPATCHER
             playerObj.actions -= 1
             endOfGameCheck = self.__endOfRound()
@@ -687,6 +681,7 @@ class GameBoard:
     def __medicCureAfterMove(self, playerObj, cityObj):
         """
         Function is intended to be called after a movement (move, directFlight etc)
+        This activates the medics secondary power:
         If a cure has been discovered for a colour, and the player is a medic, whenever they move onto a city of that cured colour,
         it will remove all infection cubes of that colour.
         """
@@ -725,6 +720,8 @@ class GameBoard:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
                 playerObj.actions -= 1
+                # check if the medics secondary power removes any infections.
+                self.__medicCureAfterMove(targetPlayerObj, cityObj)
                 return responseDict
         # fall through
         responseDict["errorMessage"] = "ERROR: There is no player at the target location"
@@ -749,6 +746,8 @@ class GameBoard:
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 playerObj.actions -= 1
+                # check if the medics secondary power removes any infections.
+                self.__medicCureAfterMove(playerObj, self.cities[nextCityName])
                 print("player has successfully moved from" + currentLocation + " to " + playerObj.location)
                 responseDict["validAction"] = True
                 endOfGameCheck = self.__endOfRound()
@@ -782,6 +781,8 @@ class GameBoard:
                     playerHand.remove(card)
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
+                    # check if the medics secondary power removes any infections.
+                    self.__medicCureAfterMove(playerObj, self.cities[destinationCity])
                     print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
                     responseDict["validAction"] = True
                     endOfGameCheck = self.__endOfRound()
@@ -809,6 +810,8 @@ class GameBoard:
         destCityObj = self.cities[destinationCity]
         if (curCityObj.researchStation == 1 and destCityObj.researchStation == 1):
             self.players[playerId].location = destinationCity
+            # check if the medics secondary power removes any infections.
+            self.__medicCureAfterMove(playerObj, destCityObj)
             playerObj.actions -= 1
             print('player ' + str(playerId) + ' has successfully shuttleFlight\'d from ' + currentCityName + ' to ' + destinationCity)
             responseDict["validAction"] = True
