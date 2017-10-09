@@ -629,14 +629,22 @@ class GameBoard:
         Function checks if the player has an epidemic card in their hand.
 
         If so it then carries out the epidemic steps:
-        draw the card from the bottom of the deck. Infect it with 3 tokens.
+        draw the card from the bottom of the infection deck. Infect it with 3 tokens.
         The infection discard pile is then shuffled and added back on top of the infection deck.
 
         """
         # check and then remove the epidemic from the players hand
         for card in playerObj.hand:
             if card.type == "epidemic":
-                pass
+                # draw bottom card from infection deck
+                bottomCard = self.infection.pop()
+                # infect that city with 3 cubes.
+                self.infectCity
+
+                cityName = self.infectionDeck[i].name
+                cityObj = self.cities[cityName]  # get the city object with the key that matches card city name.
+                colour = cityObj.colour
+                cityObj.infect(colour, infectionAmount)
         pass
 
     def movePlayer(self, playerId, nextCityName):
@@ -1156,9 +1164,9 @@ class GameBoard:
 
 
 
-    def infectCity(self, targetCity):
+    def infectCity(self, targetCity, amount = 1):
         """
-        Called by the game to infect a certain city.
+        Called by the game to infect a certain city. This should only be called after the game has been initialized.
         If the city already has 3 cubes of that colour, an outbreak will occur.
         NOTE: this function does NOT require a colour param. Cities can only be infected with a colour other than own
         by outbreaks.
@@ -1166,7 +1174,7 @@ class GameBoard:
         city infections can be prevented by medic/quarantine specialist powers. see canInfectionBePrevented().
 
         Returns: a python list
-        [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
+        [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
         or
         [] if there are no infections.
         note: the first city in the cityStr is the origin city.
@@ -1174,16 +1182,24 @@ class GameBoard:
         cityObj = self.cities[targetCity]
         # get the color of the city, and see what will happen if it is infected
         colour = cityObj.colour
-        amount = cityObj.getInfections(colour)
+        currentInfections = cityObj.getInfections(colour)
         infections = []
         if self.canInfectionBePrevented(cityObj, colour):
             return []
-        if amount == 3:
-            infections = self.cityOutBreak(cityObj, colour) # replace the dict with a list of outbreaks
+        if currentInfections == 3:
+            infections = self.cityOutBreak(cityObj, colour) # replace the list with outbreaks
+        elif (currentInfections + amount) > 3:
+            # the city needs to be infected AND an outbreak will occur.
+            infectAmount = 3 - currentInfections
+            cityObj.infect(colour, infectAmount)
+            # add the infected city.
+            infections.append({"city":targetCity, "colour":colour, "amount":amount})
+            # add the outbreak cities.
+            infections.extend(self.cityOutBreak(cityObj, colour))
         else:
             print (targetCity + " has been infected.")
-            cityObj.infect(colour,1)
-            infections.append({"city":targetCity, "colour":colour})
+            cityObj.infect(colour,amount)
+            infections.append({"city":targetCity, "colour":colour, "amount":amount})
         return infections
 
 
@@ -1235,7 +1251,7 @@ class GameBoard:
                 # check if the infection is blocked by specialist abilities.
                 if self.canInfectionBePrevented(city, colour) == False:
                     city.infect(colour, 1)
-                    infections.append({"city":city.name, "path":cityOutBreaks, "colour":colour})
+                    infections.append({"city":city.name, "path":cityOutBreaks, "colour":colour, "amount":1})
             else:
                 # another outbreak has occured.
                 # need to infect all of its neighbours.
