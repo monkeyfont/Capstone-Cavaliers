@@ -341,6 +341,10 @@ class GameBoard:
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
 
+            # Need to manage epidemic logic here!
+            # Go through all cards in the card draw, for each epidemic, process the epidemic logic.
+
+
             # append infection level
             result["infectionLevel"] = self.infectionLevel
 
@@ -397,6 +401,8 @@ class GameBoard:
         self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
+        #now need to place epidemic cards ( has to be done after hand has been delt)
+        self.placeEpidemicCards()
         self.__setRoles()
         self.initialized = 1
 
