@@ -350,7 +350,10 @@ class GameBoard:
                 result["gameLossReason"].append("Out of player cards.")
 
             # invoke infect cities step
-            result["infectedCities"] = self.endTurnInfectCities()
+            infections = self.endTurnInfectCities()
+
+            result["infectedCities"] = infections[0] #TODO remove this once the 'infections' key is the only one being used.
+            result["infections"] = infections[1]
 
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
@@ -536,8 +539,14 @@ class GameBoard:
         Function draws infect city cards, and then infects those cities.
         The call to self.infectCity() handles infection and outbreak logic.
         The infect city card is added to the discard pile.
+
+        Returns:
+            A Python list of python dicts.
+            [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
+
         """
-        infectedCities = {}
+        infectedCities = {} #TODO REMOVE WHEN FIXED
+        infectedCitiesNew = [] # list of city infected objects.
         amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
         for i in range(amountToDraw):
             # Draw the infection card from the top of the deck.
@@ -549,11 +558,14 @@ class GameBoard:
 
 
             # infect the city. If an outbreak occurs, infectCity() handles it.
-            self.infectCity(cityName)
-            infectedCities[cityObject.name] = {cityColour: amount}
+            infectedCitiesNew.extend(self.infectCity(cityName)) # extend the infections list.
+
+            infectedCities[cityObject.name] = {cityColour: amount} #TODO - remove this when the new infection paths are working!
+
             # add the card to the discard pile
             self.infectionDiscarded.append(infectCard)
-        return infectedCities
+        #return infectedCitiesNew
+        return (infectedCitiesNew, infectedCities)
 
 
     def resetPlayerActions(self):
@@ -1132,22 +1144,25 @@ class GameBoard:
         by outbreaks.
 
         city infections can be prevented by medic/quarantine specialist powers. see canInfectionBePrevented().
-        """
 
+        Returns: a python list
+        [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
+        note: the first city in the cityStr is the origin city.
+        """
         cityObj = self.cities[targetCity]
         # get the color of the city, and see what will happen if it is infected
         colour = cityObj.colour
         amount = cityObj.getInfections(colour)
-
+        infections = []
         if self.canInfectionBePrevented(cityObj, colour):
             return False
-
         if amount == 3:
-            self.cityOutBreak(cityObj, colour)
+            infections = self.cityOutBreak(cityObj, colour) # replace the dict with a list of outbreaks
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour,1)
-        return True
+            infections.append({"city":targetCity, "colour":colour})
+        return infections
 
 
     def canInfectionBePrevented(self, targetCityObj, colour):
@@ -1182,9 +1197,14 @@ class GameBoard:
 
         Any city in the outBreakChain cannot be called twice.
         Quarantine specialist/medic powers can prevent infection. see canInfectionBePrevented()
+
+        Returns:
+            a python list of python dicts.
+            [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
         """
         print (" AN OUTBREAK HAS OCCURED AT " + targetCityObj.name)
         citiesToInfect = [targetCityObj]
+        infections = []
         cityOutBreaks = []
         while len(citiesToInfect) > 0:
             city = citiesToInfect.pop(0) # take the first city. (removes from list)
@@ -1193,15 +1213,17 @@ class GameBoard:
                 # check if the infection is blocked by specialist abilities.
                 if self.canInfectionBePrevented(city, colour) == False:
                     city.infect(colour, 1)
+                    infections.append({"city":city.name, "path":cityOutBreaks, "colour":colour})
             else:
                 # another outbreak has occured.
                 # need to infect all of its neighbours.
-                self.outBreakLevel += 1
                 if city not in cityOutBreaks: # can't outbreak the same city more than once.
+                    self.outBreakLevel += 1
                     cityOutBreaks.append(city)
                     # retrieve neighbouring city objects and append to citiesToInfect
                     for cityStr in city.connections:
                         citiesToInfect.append(self.cities[cityStr])
+        return infections
 
 
     #############################################################################################
