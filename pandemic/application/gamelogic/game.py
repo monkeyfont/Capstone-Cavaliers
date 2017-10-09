@@ -314,12 +314,15 @@ class GameBoard:
 
         return dictionary -->
         {
+        epidemic: bool
+        epidemicCities: [str]
         endRound: bool,
         gameLoss: bool,
         gameLossReason: [str,str],
         infectionLevel: int,
-        outBreakLevel = int,
-        infectedCities = [cityName*:{colour:amount}]
+        outBreakLevel : int,
+        infectedCities : [cityName*:{colour:amount}] # TODO - remove this once 'infections' is used instead.
+        infections : [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
         cardDraw:{outOfCards:bool, playerName*:[str (cardName*)],}
         }
 
@@ -341,9 +344,8 @@ class GameBoard:
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
 
-            # Need to manage epidemic logic here!
-            # Go through all cards in the card draw, for each epidemic, process the epidemic logic.
-
+            # Check if players now have epidemic cards.
+            result.update(self.processEpidemics()) # Adds the keys "infections", "epidemic", "epidemicCities"
 
             # append infection level
             result["infectionLevel"] = self.infectionLevel
@@ -357,7 +359,8 @@ class GameBoard:
             infections = self.endTurnInfectCities()
 
             result["infectedCities"] = infections[0] #TODO remove this once the 'infections' key is the only one being used.
-            result["infections"] = infections[1]
+
+            result["infections"].append(infections[1])# the "infections" key already exists from the processEpidemic step. Need to update it.
 
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
@@ -548,7 +551,7 @@ class GameBoard:
 
         Returns:
             A Python list of python dicts.
-            [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
+            [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
 
         """
         infectedCities = {} #TODO REMOVE WHEN FIXED
@@ -624,7 +627,7 @@ class GameBoard:
                 return True
         return False
 
-    def processEpidemic(self, playerObj):
+    def processEpidemics(self):
         """
         Function checks if the player has an epidemic card in their hand.
 
@@ -632,20 +635,43 @@ class GameBoard:
         draw the card from the bottom of the infection deck. Infect it with 3 tokens.
         The infection discard pile is then shuffled and added back on top of the infection deck.
 
+        returns: A python dictionary
+            {epidemic:bool, epidemicCities:[str], infections:[{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]}
+
         """
+
+        epidemicDict = {"epidemic":False, "epidemicCities":[], "infections":[]}
+
+        # Check through player hands for any epidemic cards
+        epidemicCounter = 0
+        for player in self.players:
+            for card in player.hand:
+                if card.type == "epidemic":
+                    epidemicCounter += 1
+                    # remove the card from the players hand, and add it to the player discard pile.
+                    player.hand.remove(card)
+                    self.playerDiscarded.append(card)
+                    epidemicDict["epidemic"] = True
+                    # add one to the infection counter
+                    self.infectionLevel += 1
         # check and then remove the epidemic from the players hand
-        for card in playerObj.hand:
-            if card.type == "epidemic":
+        for i in range(epidemicCounter):
                 # draw bottom card from infection deck
                 bottomCard = self.infection.pop()
+                cityName = bottomCard.name
+                # add the epidemic city name to the return dict.
+                epidemicDict["epidemicCities"].append(cityName)
                 # infect that city with 3 cubes.
-                self.infectCity
+                infections = self.infectCity(cityName,3)
+                # add the infections list to the return dict. ( can contain outbreaks etc )
+                epidemicDict["infections"].update(infections)
+                # add that card to the discard pile.
+                self.infectionDiscarded.append(bottomCard)
+                #shuffle the discard pile and add it back to the top of the deck.
+                shuffle(self.infectionDiscarded)
+                self.infectionDeck = self.infectionDiscarded + self.infectionDeck
+        return epidemicDict
 
-                cityName = self.infectionDeck[i].name
-                cityObj = self.cities[cityName]  # get the city object with the key that matches card city name.
-                colour = cityObj.colour
-                cityObj.infect(colour, infectionAmount)
-        pass
 
     def movePlayer(self, playerId, nextCityName):
         """
@@ -1238,7 +1264,7 @@ class GameBoard:
 
         Returns:
             a python list of python dicts.
-            [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
+            [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
         """
         print (" AN OUTBREAK HAS OCCURED AT " + targetCityObj.name)
         citiesToInfect = [targetCityObj]
