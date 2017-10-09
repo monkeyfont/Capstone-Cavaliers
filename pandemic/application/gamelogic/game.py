@@ -622,8 +622,22 @@ class GameBoard:
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 return True
-
         return False
+
+    def processEpidemic(self, playerObj):
+        """
+        Function checks if the player has an epidemic card in their hand.
+
+        If so it then carries out the epidemic steps:
+        draw the card from the bottom of the deck. Infect it with 3 tokens.
+        The infection discard pile is then shuffled and added back on top of the infection deck.
+
+        """
+        # check and then remove the epidemic from the players hand
+        for card in playerObj.hand:
+            if card.type == "epidemic":
+                pass
+        pass
 
     def movePlayer(self, playerId, nextCityName):
         """
