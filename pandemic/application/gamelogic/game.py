@@ -670,6 +670,8 @@ class GameBoard:
                 #shuffle the discard pile and add it back to the top of the deck.
                 shuffle(self.infectionDiscarded)
                 self.infectionDeck = self.infectionDiscarded + self.infectionDeck
+                # clear the infection discard pile.
+                self.infectionDiscarded = []
         return epidemicDict
 
 
