@@ -448,6 +448,17 @@ def handleclick(msg):
                 response=gameObject.removeInfectionCard(playerObject.id,cardToRemove)
                 emit('resilientPopulationChecked', {'msg': response})
 
+    # elif eventCardName== "Forecast":
+    #     #cardOrder=msg["cardsOrdered"]
+    #     cardOrder={2:"SYDNEY",3:"ATLANTA",0:"KOULKATA",5:"CHICAGO",1:"BOGOTA",4:"BEIJING"}
+    #     #cardOrder=[3,2,0,1,4,5]
+    #     for key in playerDictionary:
+    #         playerObject = playerDictionary[key]
+    #         if playerObject.name == username:
+    #             response=gameObject.playForecast(playerObject.id,cardOrder)
+
+
+
 
 
 
