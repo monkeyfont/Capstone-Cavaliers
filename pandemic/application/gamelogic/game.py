@@ -1167,6 +1167,8 @@ class GameBoard:
 
         Returns: a python list
         [{"city":cityStr, "colour":str, "path":[cityStr*]}*]
+        or
+        [] if there are no infections.
         note: the first city in the cityStr is the origin city.
         """
         cityObj = self.cities[targetCity]
@@ -1175,7 +1177,7 @@ class GameBoard:
         amount = cityObj.getInfections(colour)
         infections = []
         if self.canInfectionBePrevented(cityObj, colour):
-            return False
+            return []
         if amount == 3:
             infections = self.cityOutBreak(cityObj, colour) # replace the dict with a list of outbreaks
         else:
