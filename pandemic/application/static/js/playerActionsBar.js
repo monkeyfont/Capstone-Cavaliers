@@ -20,9 +20,9 @@ function playerActionsBar(options){
 	this.height = options.height;
 	this.width = options.width;	
 	this.yPos = options.yPos;
-	this.iconPosX = 20;
+	this.iconPosX = 200;
 	this.iconPosY = this.yPos+100;
-	this.iconScale = 2;
+	this.iconScale = 1.5;
 	this.iconWidth = 70;
 	this.iconHeight = 90;
 	
@@ -30,22 +30,21 @@ function playerActionsBar(options){
 		xPos = options.x;
 		yPos = options.y;
 		if (xPos>0 && xPos < this.width && yPos > this.yPos && yPos < this.yPos+this.width){
-			console.log('checking',xPos,yPos)
-			position = Math.floor((xPos - this.iconPosX)/(this.iconWidth*this.iconScale))
-			console.log('position', position)
-			chosenAction = 'none'
-			for ( i in actions){
-				pos = Object.keys(actions).indexOf(i)
-				if (pos == position){
-					chosenAction = i;
-					break
-				}
-			}
-			
-			
-			console.log('chosen action is: ',chosenAction)
-			
-			
+			if (yPos>this.iconPosY && yPos<this.iconPosY+(this.iconHeight*this.iconScale)){
+				console.log('checking',xPos,yPos)
+				position = Math.floor((xPos - this.iconPosX)/(this.iconWidth*this.iconScale))
+				console.log('position', position)
+				chosenAction = 'none'
+				for ( i in actions){
+					pos = Object.keys(actions).indexOf(i)
+					if (pos == position){
+						chosenAction = i;
+						break
+					}
+				}				
+				console.log('chosen action is: ',chosenAction)
+				
+			}	
 		}
 		
 	}

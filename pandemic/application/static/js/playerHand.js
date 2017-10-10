@@ -83,8 +83,8 @@ function playerHand(){
 			ticksPerFrame: 1,
 			xPos:1600,
 			yPos:40,
-			xScale:0.5,
-			yScale:0.5,
+			xScale:0.4,
+			yScale:0.4,
 			imageBack: CardImage,
 			imageFront: cardFront
 		});
@@ -98,10 +98,10 @@ function playerHand(){
 		delete this.cards[options.cardname];
 	}
 	this.render = function(){
-		startPoint = 960-(Object.keys(this.cards).length)/2*(560*0.5)
+		startPoint = 960-(Object.keys(this.cards).length)/2*(510*0.4)
 		pos = 0;
 		for(i in this.cards){
-			this.cards[i].move (startPoint+560*0.5*pos,this.yPos)
+			this.cards[i].move (startPoint+510*0.4*pos,this.yPos)
 			this.cards[i].render();
 			pos++;
 		}
