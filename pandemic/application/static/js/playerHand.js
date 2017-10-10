@@ -61,7 +61,7 @@ KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBU
 
 function playerHand(){
 	this.xPos = 960;
-	this.yPos = 1080;
+	this.yPos = 1080-60;
 	this.cards = {};
 	
 	this.addCard = function (options){
