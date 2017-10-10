@@ -202,19 +202,20 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-
-    socket.emit('treatDisease', {})
+    var colour = prompt("Enter colour of infection you wish to treat: ");
+    socket.emit('treatDisease', {InfectionColour:colour})
 
 }
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
         check=data.msg.validAction;
+        var colour= data.msg.colourTreated
 
         if (check ==true){
             var city=eval(data.city);
             //addResearchStation(city);
-			locations[data.city].disinfect({'colour':locations[data.city].colour,'ammount':1});
+			locations[data.city].disinfect({'colour':colour,'amount':1});
 
 
 	}
@@ -256,7 +257,8 @@ function discardCard(){
     var card = prompt("Enter name of card you wish to discard: ");
     socket.emit('discardCard', {cardName:card})
 
-}
+    }
+
 
 socket.on('cardRemoved', function (data) {
         check=data.msg;
@@ -270,14 +272,123 @@ socket.on('cardRemoved', function (data) {
 
     });
 
+function PassTurn(){
+
+    socket.emit('PassTurn');
+
+}
+
+socket.on('passTurnChecked', function (data) {
+
+        check=data.msg.validAction;
+        if (check == true){
+        console.log("turn passed no more actions left")
+        }
+        else{
+        alert(data.msg.errorMessage);
+        }
+
+        if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
+
+
+    });
+
+function PlayEventCard(){
+
+    var cardName = prompt("Enter Name of event Card you want to play: ");
+    if (cardName=="Government Grant"){
+        var cityName = prompt("Enter Name of city you want to build a research station on: ");
+        socket.emit('PlayEventCard',{card:cardName,city:cityName});
+    }
+    else if (cardName=="Airlift"){
+        var playerName = prompt("Enter Name of player you wish to move: ");
+        var cityName= prompt("Enter Name of city you wish to move player to: ");
+        socket.emit('PlayEventCard',{card:cardName,player:playerName,city:cityName});
+
+    }
+
+    else if (cardName=="One Quiet Night"){
+        socket.emit('PlayEventCard',{card:cardName,player:playerName});
+
+    }
+
+    else if (cardName=="Resilient Population"){
+        var infectCardName= prompt("Enter Name of infect card in the discard pile you wish to remove from the game: ");
+        socket.emit('PlayEventCard',{card:cardName,player:playerName,infectCard:infectCardName});
+
+    }
+
+    else{
+    socket.emit('PlayEventCard',{card:cardName});
+    }
+
+
+
+}
+
+socket.on('governmentGrantChecked', function (data) {
+
+        check=data.msg.validAction;
+        if (check==true){
+            alert("research station built with event card")
+            // here goes logic to draw the building
+        }
+        else{
+            alert(data.msg.errorMessage);
+        }
+    });
+
+
+
+socket.on('airliftChecked', function (data) {
+
+        check=data.msg.validAction;
+
+        if (check ==true){
+            var city=eval(data.city);
+             players.players[data.playerName].move(city.xPos,city.yPos);
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+    });
+
+socket.on('oneQuietNightChecked', function (data) {
+
+        check=data.msg.validAction;
+
+        if (check ==true){
+            alert("next infect cities will be skipped")
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+    });
+
+socket.on('resilientPopulationChecked', function (data) {
+
+        check=data.msg.validAction;
+        if (check ==true){
+            alert("Card has been removed from the game")
+	    }
+	    else{
+	        alert(data.msg.errorMessage);
+	    }
+    });
+
+
+
+
 
 socket.on('clicked', function (data) {
 
         console.log(data.msg);
 
     });
-	
-	
+
 	
 	
 socket.on('gotPlayer',function(data){
@@ -293,6 +404,7 @@ socket.on('gamePlayerInitilization',function(data){
 	//console.log(locations[cityName]);
 	city = locations[cityName]
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
+	playerPortraits.addPlayerPortrait({playerType:data.playerType});
 });
 
 socket.on('InfectedCities',function(data){
@@ -308,7 +420,7 @@ socket.on('InfectedCities',function(data){
                 // here loop through the amount which is number of times the city needs to be infected
                 for (var x=0;x<amount;x++){
                 // get the city from locations and infect it with karls .infect function
-                locations[city].infect({})
+                locations[city].infect({colour})
                 }
              }
         }
@@ -317,37 +429,31 @@ socket.on('InfectedCities',function(data){
        });
 
 socket.on('gotInitialHands',function(data){
+	console.log(data)
 
+    for (var player in data["playerhand"]) {
+		console.log(player)
+		console.log(data["playerhand"])
+		console.log(data["playerhand"][player])
+    // if (data.hasOwnProperty(player)) {
+		var playerId = player
+		var cards=data["playerhand"][player]
+		console.log("Player "+playerId + "has the cards: ")
+		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
 
-    for (var player in data) {
+		for (var card in cards) {
+			console.log(card);
+			if (cards.hasOwnProperty(card)) {
+				console.log(cards[card]);
+				if (data.username==player){
+					playersHand.addCard({cardName:cards[card]})
+				}
+			// if you want to access each individial card then get in here through cards[card]
+			// if you want the list of player cards get it through just "cards"
 
-    if (data.hasOwnProperty(player)) {
-    var playerId= player
-    var cards=data[player]
-    console.log("Player "+playerId + "has the cards: ")
-    $('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
-
-    for (var card in cards) {
-		console.log(card);
-    if (cards.hasOwnProperty(card)) {
-		console.log(cards[card]);
-		playersHand.addCard({cardName:cards[card]})
-    // if you want to access each individial card then get in here through cards[card]
-    // if you want the list of player cards get it through just "cards"
-
-    $('#cards').val($('#cards').val() + cards[card] + '\n');
-                  }
-             }
-        }
+			$('#cards').val($('#cards').val() + cards[card] + '\n');
+						  }
+					 }
+        // }
     }
  });
-
-
-
-
-
-socket.on('clicked', function (data) {
-
-        //console.log(data.msg);
-
-    });

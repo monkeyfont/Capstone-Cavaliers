@@ -53,15 +53,22 @@ var CAIRO = new Image();  CAIRO.src = 'static/images/infection-Cards.png';//'sta
 var ISTANBUL = new Image();  ISTANBUL.src = 'static/images/infection-Cards.png';//'static/images/Cards/player/Black/
 var ALGIERS = new Image(); ALGIERS.src = 'static/images/infection-Cards.png';//'static/images/Cards/player/Black/
 
+var Airlift = new Image(); Airlift.src = 'static/images/Cards/special/Airlift.png';
+var Epidemic = new Image(); Epidemic.src = 'static/images/Cards/special/Epidemic.png';
+var Forecast = new Image(); Forecast.src = 'static/images/Cards/special/Forecast.png';
+var Government_Grant = new Image(); Government_Grant.src = 'static/images/Cards/special/Government Grant.png';
+var One_Quiet_Night = new Image(); One_Quiet_Night.src = 'static/images/Cards/special/One Quiet Night.png';
+var Resilent_Population = new Image(); Resilent_Population.src = 'static/images/Cards/special/Resilent Population.png';
 
 var allPossiblePlayerCards = {testCard:testCardImage,SANFRANCISCO,CHICAGO,MONTREAL,NEWYORK,ATLANTA,WASHINGTON,LONDON,ESSEN,STPETERSBURG,MADRID,PARIS,MILAN,
 LOSANGELES,MEXICOCITY,MIAMI,BOGOTA,LIMA,SANTIAGO,BUENOSAIRES,SAOPAULO,LAGOS,KHARTOUM,KINSHASA,JOHANNESBURG,
 SYDNEY,JAKARTA,MANILA,HOCHIMINHCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,SEOUL,BEIJING,
-KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS}
+KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS,Airlift,Epidemic,Forecast,Government_Grant,One_Quiet_Night,Resilent_Population}
 
 function playerHand(){
 	this.xPos = 960;
-	this.yPos = 1080;
+	this.yPos = 1080-100;
+
 	this.cards = {};
 	
 	this.addCard = function (options){
@@ -70,30 +77,53 @@ function playerHand(){
 			newPlayerCard = new playerCard({
 			id:"Infection player Card ",
 			context: canvas.getContext("2d"),
-			width: 584,
-			height: 800,
+			width: 500,
+			height: 700,
 			numberOfFrames: 1,
 			ticksPerFrame: 1,
 			xPos:1600,
 			yPos:40,
-			xScale:0.5,
-			yScale:0.5,
+			xScale:0.4,
+			yScale:0.4,
 			imageBack: CardImage,
 			imageFront: cardFront
 		});
-		cardName = options.cardName+Object.keys(this.cards).length;
+		cardName = options.cardName;
 		this.cards[cardName] = newPlayerCard;
-		this.cards[cardName].flipping = true;
+		this.cards[cardName].flipping = true;		
+	}
+	
+	this.cardX = function (options){
+		if (options.y > this.yPos && options.y < this.yPos+40){
+			console.log('discarding a card')
+			startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
+			cardNumber = Math.floor((options.x-startPoint)/(510*0.4))
+			console.log(cardNumber)
+			chosenCard = 'none'
+			for ( i in this.cards){
+				pos = Object.keys(this.cards).indexOf(i)
+				if (pos == cardNumber){
+					chosenCard = i;
+					break
+				}
+			}				
+			console.log(chosenCard)
+			socket.emit('discardCard', {cardName:chosenCard})
+			this.removeCard({cardname:chosenCard})
+		}
 		
 	}
+	
+	
 	this.removeCard = function (options){
 		//options = {cardname:cardName}
+		delete this.cards[options.cardname];
 	}
 	this.render = function(){
-		startPoint = 960-(Object.keys(this.cards).length)/2*(584*0.5)
+		startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
 		pos = 0;
 		for(i in this.cards){
-			this.cards[i].move (startPoint+584*0.5*pos,this.yPos)
+			this.cards[i].move (startPoint+510*0.4*pos,this.yPos)
 			this.cards[i].render();
 			pos++;
 		}

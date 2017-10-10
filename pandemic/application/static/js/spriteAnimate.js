@@ -1,4 +1,3 @@
-
 var mapImage = new Image();
 mapImage.src = 'static/images/backgroundMap.jpg'
 
@@ -9,7 +8,7 @@ canvas.addEventListener('click', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	//console.log(message);
+	console.log(message);
 
 
 	for (var i in spriteList){
@@ -35,6 +34,8 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
+	playersHand.cardX(mousePos)
+	playerActionsMenu.activateAction(mousePos)
 
 
 })
@@ -96,12 +97,13 @@ function gameLoop(){
 
 	outbreakCount.render();
 	infectRate.render();
-	
+
 	playersHand.render();
-	
+
 	playerPortraits.render();
 	cureBar.render();
-	
+	playerActionsMenu.render()
+
 }
 
 
@@ -118,10 +120,10 @@ var deck = new sprite({
     height: 800,
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
-	xPos:1600,
-	yPos:40,
-	xScale:0.5,
-	yScale:0.5,
+	xPos:2300,
+	yPos:1100,
+	xScale:0.4,
+	yScale:0.4,
     image: CardImage
 
 })
@@ -141,7 +143,7 @@ mapImage.addEventListener("load", gameLoop);
 
 
 playerPortraits = new portraitInitilization({});
-playerPortraits.addPlayerPortrait({});
+
 
 cureBar = new cureStatusBar({
 	context: canvas.getContext("2d"),
@@ -150,14 +152,36 @@ cureBar = new cureStatusBar({
 	height:256,
 	width:256,
 	xScale:0.4,
-	yScale:0.4	
+	yScale:0.4
+});
+
+playerActionsMenu = new playerActionsBar({
+	context: canvas.getContext("2d"),
+	height: 400,
+	width: 1920,
+	yPos: 1080
+
+});
+
+playerActionsMenu = new playerActionsBar({
+	context: canvas.getContext("2d"),
+	height: 400,
+	width: 1920,
+	yPos: 1080
+
 });
 
 
+
+
+var load = document.getElementById("load");
+canvas.style="display:none;"
+
 window.onload = function (){
-	socket.emit('getPlayerObject') 
+	socket.emit('getPlayerObject')
 	socket.emit('getGameInitialization')
 	socket.emit('getInfections')
 	socket.emit('getPlayersHands')
-
+	load.style="display:none;"
+	canvas.style="display:block;"
 	}

@@ -15,6 +15,23 @@ playerIDs = 1
 games = {} # in here we will store the game objects
 lobbies={}
 
+@socketio.on('existingRoom')
+def joinTeam():
+    emit('joinR')
+
+@app.route('/join')
+def newTeamRedirect():
+
+    publicRooms = []
+    for i in lobbies:
+        if lobbies[i].privacy == "public":
+            publicRooms.append(i)
+
+    return (render_template("joinTeam.html",availableRooms = publicRooms,allRooms = lobbies))
+
+@app.route('/new')
+def newTeam():
+    return (render_template("createTeam.html"))
 
 @app.route('/game')
 def game():
@@ -30,7 +47,7 @@ def game():
             gameobject.gameID = roomname
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
-    return "You are not logged in <br><a href = '/lobby'></b>" + \
+    return "You are not logged in <br><a href = '/home'></b>" + \
       "click here to log in</b></a>"
 
 @socketio.on('checkRoomPrivacy')
@@ -62,7 +79,7 @@ def getGameInitialization():
         playerName = playerObj.name
         playerLocation = playerObj.location
         playerRole = playerObj.role
-        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation},room=session["roomname"])
+        emit('gamePlayerInitilization',{"playerName":playerName,"playerType":playerRole,"playerLocation":playerLocation})
 
 
 @socketio.on('getInfections')
@@ -86,19 +103,22 @@ def getPlayersHands():
     gameboard = games[roomname]
     playersHands={}
     players=gameboard.players
+    print"players", players
     for playerK in players:
+        print "one player", players[playerK].name
         playerObj= players[playerK]
         playerHand=playerObj.hand
         playerCardNames=[]
         for card in playerHand:
             cardname=card.name
             playerCardNames.append(cardname)
-        playersHands[playerK]=playerCardNames
+        playersHands[players[playerK].name]=playerCardNames
+
 
     print playersHands
 
-
-    emit('gotInitialHands',playersHands)
+    print ('gotInitialHands',{"playerhand":playersHands,"username":username})
+    emit('gotInitialHands',{"playerhand":playersHands,"username":username})
 
 
 @socketio.on('getPlayerObject')
@@ -117,6 +137,9 @@ def getPlayerObject():
             emit('gotPlayer',{"playerName":playerName,"playerType":playerRole})
 
 
+@socketio.on('newRoom')
+def newRoom():
+    emit('createNewRoom')
 
 
 @socketio.on('startGame')
@@ -356,7 +379,7 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    #cityToTreat = msg["cityName"]
+    colToTreat = msg["InfectionColour"]
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
@@ -364,7 +387,7 @@ def handleclick(msg):
         if playerObject.name == username:
             cityToTreat = playerObject.location
             cityObject = gameObject.cities[cityToTreat]
-            response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
+            response = gameObject.treatDisease(playerObject.id, playerObject.location, colToTreat)
             if response["validAction"] == True:
                 emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
             else:
@@ -384,10 +407,101 @@ def handleclick(msg):
     emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
 
 
+@socketio.on('PassTurn')
+def handleclick():
+    room = str(session['roomname'])
+    username = str(session["username"])
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response=gameObject.passTurn(playerObject.id)
+            print response
+
+            emit('passTurnChecked', {'msg':response})
+
+
+@socketio.on('PlayEventCard')
+def handleclick(msg):
+    room = str(session['roomname'])
+    username = str(session["username"])
+    gameObject = games[room]
+    eventCardName = msg["card"]
+
+    playerDictionary = gameObject.players
+
+    if eventCardName== "Government Grant":
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                cityToBuildOn = msg["city"]
+                response=gameObject.governmentGrant(playerObject.id,eventCardName,cityToBuildOn)
+                emit('governmentGrantChecked', {'msg': response},room=room)
+
+    elif eventCardName== "Airlift":
+        playerToMove = msg["player"]
+        cityToMoveTo = msg["city"]
+        playerId=""
+        playerToMoveId=""
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                playerId = playerObject.id
+            elif playerObject.name == playerToMove:
+                playerToMoveId = playerObject.id
+        response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
+        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
+
+    elif eventCardName == "One Quiet Night":
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                response=gameObject.skipInfectStage(playerObject.id)
+
+                emit('oneQuietNightChecked', {'msg': response})
+
+    elif eventCardName == "Resilient Population":
+        cardToRemove=msg["infectCard"]
+
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                response=gameObject.removeInfectionCard(playerObject.id,cardToRemove)
+                emit('resilientPopulationChecked', {'msg': response})
+
+    # elif eventCardName== "Forecast":
+    #     #cardOrder=msg["cardsOrdered"]
+    #     cardOrder={2:"SYDNEY",3:"ATLANTA",0:"KOULKATA",5:"CHICAGO",1:"BOGOTA",4:"BEIJING"}
+    #     #cardOrder=[3,2,0,1,4,5]
+    #     for key in playerDictionary:
+    #         playerObject = playerDictionary[key]
+    #         if playerObject.name == username:
+    #             response=gameObject.playForecast(playerObject.id,cardOrder)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @socketio.on('message') # use for testing client side messages.
 def handle_message(msg):
     print('received message: ' + str(msg))
+
+
+@app.route('/home', methods = ['GET', 'POST'])
+def home():
+    return render_template("home.html")
 
 
 @app.route('/lobby', methods = ['GET', 'POST'])
@@ -403,13 +517,15 @@ def lobby():
 
 
                 if session['roomname'] in lobbies:
-                    return (render_template("lobby.html", error="Sorry this room name is already taken chose another"))
+                    return (render_template("home.html", error="Sorry this room name is already taken chose another"))
 
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
+                lobby.difficulty = request.form["difficulty"]
+                print ("THis room privacy is :" + lobby.privacy)
                 #add lobby to dictionary
-                lobbies[str(session['roomname'])] = lobby
+
                 lobby.playerCount=1
 
                 newPlayer=Player(lobby.playerCount,str(session['username']))
@@ -417,14 +533,16 @@ def lobby():
 
                 playerIDs = playerIDs + 1
 
+                lobbies[str(session['roomname'])] = lobby
+
             else: # if user is joining a game
                 try:
                     lobby = lobbies[str(session['roomname'])]
 
                     if lobby.playerCount==4:
-                        return (render_template("lobby.html",error="Sorry this room is full! Please join another"))
+                        return (render_template("home.html",error="Sorry this room is full! Please join another"))
                     if lobby.gameStarted==True:
-                        return (render_template("lobby.html", error="This game has already started please Join or create another game"))
+                        return (render_template("home.html", error="This game has already started please Join or create another game"))
 
                     for player in lobby.players:
                         print lobby.players[player]
@@ -438,8 +556,9 @@ def lobby():
                     lobby.players[lobby.playerCount]=newPlayer
                 except:
                     print"Lobby does not exist"
-                    return (render_template("lobby.html", error="Sorry this room does not exist try another room"))
+                    return (render_template("home.html", error="Sorry this room does not exist try another room"))
+
             return (render_template("intermission.html",room=session['roomname']))
-    return (render_template("lobby.html"))
+    return (render_template("home.html"))
 
 print("imported")

@@ -1,4 +1,4 @@
-var SANFRANCISCO = new city({id:'SANFRANCISCO', colour:'blue',xPos:260,yPos:410,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
+var SANFRANCISCO = new city({id:'SANFRANCISCO', colour:'blue',xPos:260,yPos:410,locationPointerX:20,locationPointerY:20,connections:['TOKYO','MANILA','LOSANGELES','CHICAGO']});
 var CHICAGO = new city({id:'CHICAGO',colour:'blue',xPos:390,yPos:330,connections:['SANFRANCISCO','LOSANGELES','MEXICOCITY','ATLANTA','MONTREAL']});
 var MONTREAL = new city({id:'MONTREAL',colour:'blue',xPos:520,yPos:350,connections:['CHICAGO','WASHINGTON','NEWYORK']});
 var NEWYORK = new city({id:'NEWYORK',colour:'blue',xPos:590,yPos:400,connections:['MONTREAL','WASHINGTON','MADRID','LONDON']});
