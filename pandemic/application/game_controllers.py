@@ -112,6 +112,7 @@ def getPlayersHands():
             playerCardNames.append(cardname)
         playersHands[playerK]=playerCardNames
 
+
     print playersHands
 
 
@@ -376,7 +377,7 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    #cityToTreat = msg["cityName"]
+    colToTreat = msg["InfectionColour"]
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
@@ -384,7 +385,7 @@ def handleclick(msg):
         if playerObject.name == username:
             cityToTreat = playerObject.location
             cityObject = gameObject.cities[cityToTreat]
-            response = gameObject.treatDisease(playerObject.id, playerObject.location, cityObject.colour)
+            response = gameObject.treatDisease(playerObject.id, playerObject.location, colToTreat)
             if response["validAction"] == True:
                 emit('diseaseTreated', {'msg':response,'city':cityToTreat},room=room)
             else:
@@ -402,6 +403,92 @@ def handleclick(msg):
     #response will be either true or false
 
     emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
+
+
+@socketio.on('PassTurn')
+def handleclick():
+    room = str(session['roomname'])
+    username = str(session["username"])
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response=gameObject.passTurn(playerObject.id)
+            print response
+
+            emit('passTurnChecked', {'msg':response})
+
+
+@socketio.on('PlayEventCard')
+def handleclick(msg):
+    room = str(session['roomname'])
+    username = str(session["username"])
+    gameObject = games[room]
+    eventCardName = msg["card"]
+
+    playerDictionary = gameObject.players
+
+    if eventCardName== "Government Grant":
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                cityToBuildOn = msg["city"]
+                response=gameObject.governmentGrant(playerObject.id,eventCardName,cityToBuildOn)
+                emit('governmentGrantChecked', {'msg': response},room=room)
+
+    elif eventCardName== "Airlift":
+        playerToMove = msg["player"]
+        cityToMoveTo = msg["city"]
+        playerId=""
+        playerToMoveId=""
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                playerId = playerObject.id
+            elif playerObject.name == playerToMove:
+                playerToMoveId = playerObject.id
+        response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
+        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
+
+    elif eventCardName == "One Quiet Night":
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                response=gameObject.skipInfectStage(playerObject.id)
+
+                emit('oneQuietNightChecked', {'msg': response})
+
+    elif eventCardName == "Resilient Population":
+        cardToRemove=msg["infectCard"]
+
+        for key in playerDictionary:
+            playerObject = playerDictionary[key]
+            if playerObject.name == username:
+                response=gameObject.removeInfectionCard(playerObject.id,cardToRemove)
+                emit('resilientPopulationChecked', {'msg': response})
+
+    # elif eventCardName== "Forecast":
+    #     #cardOrder=msg["cardsOrdered"]
+    #     cardOrder={2:"SYDNEY",3:"ATLANTA",0:"KOULKATA",5:"CHICAGO",1:"BOGOTA",4:"BEIJING"}
+    #     #cardOrder=[3,2,0,1,4,5]
+    #     for key in playerDictionary:
+    #         playerObject = playerDictionary[key]
+    #         if playerObject.name == username:
+    #             response=gameObject.playForecast(playerObject.id,cardOrder)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
