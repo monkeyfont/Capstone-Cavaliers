@@ -4,6 +4,7 @@
     position:fixed;
     display:block;
     background-color:rgba(0,0,0,0.8);
+    margin-top:4%;
 }
 #lobbyMessageHistory{
     height:90%;
@@ -39,6 +40,13 @@
     margin-left: 25%;
     color:white;
 
+}
+
+
+#gameStarter{
+
+    position:fixed;
+    height:4%;
 }
 
 #lobbyMessageHistory::-webkit-scrollbar{
