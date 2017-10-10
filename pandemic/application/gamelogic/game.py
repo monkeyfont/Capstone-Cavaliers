@@ -509,18 +509,18 @@ class GameBoard:
         It gets the valid range for each epidemic, then randomly places them.
         """
         # create the epidemic card objects
-        amount = {0:4, 1:5, 2:6}
+        amount = {0:40, 1:30, 2:40}
         numEpidemics = amount[self.difficulty]
         epidemics = []
         for i in range(numEpidemics):
             epidemics.append(EpidemicCard())
         # how many cards are in each pile?
-        spread = int(len(self.playerDeck) / self.difficulty) # rounded down.
+        spread = int(len(self.playerDeck) / numEpidemics) # rounded down.
         #TODO - this could potentially miss the last card in the deck. Add logic in to deal with this.
         displaced = 0 # When adding a card in, the insert location will change by 1. Increase displaced by 1 for each epidemic added.
         for i in range(numEpidemics):
             location = randint(i*spread + displaced, (i+1)*spread + displaced)
-            self.playerDeck.insert(epidemics.pop(i), location)
+            self.playerDeck.insert(location, epidemics.pop())
             displaced += 1
 
     def endTurnDrawCards(self):
@@ -666,10 +666,10 @@ class GameBoard:
         """
 
         epidemicDict = {"epidemic":False, "epidemicCities":[], "infections":[]}
-
         # Check through player hands for any epidemic cards
         epidemicCounter = 0
-        for player in self.players:
+        for k in self.players:
+            player = self.players[k]
             for card in player.hand:
                 if card.type == "epidemic":
                     epidemicCounter += 1
@@ -682,14 +682,14 @@ class GameBoard:
         # check and then remove the epidemic from the players hand
         for i in range(epidemicCounter):
                 # draw bottom card from infection deck
-                bottomCard = self.infection.pop()
+                bottomCard = self.infectionDeck.pop()
                 cityName = bottomCard.name
                 # add the epidemic city name to the return dict.
                 epidemicDict["epidemicCities"].append(cityName)
                 # infect that city with 3 cubes.
                 infections = self.infectCity(cityName,3)
                 # add the infections list to the return dict. ( can contain outbreaks etc )
-                epidemicDict["infections"].update(infections)
+                epidemicDict["infections"] += infections
                 # add that card to the discard pile.
                 self.infectionDiscarded.append(bottomCard)
                 #shuffle the discard pile and add it back to the top of the deck.
@@ -697,6 +697,7 @@ class GameBoard:
                 self.infectionDeck = self.infectionDiscarded + self.infectionDeck
                 # clear the infection discard pile.
                 self.infectionDiscarded = []
+                print("AN EPIDEMIC HAS OCCURED!")
         return epidemicDict
 
 
@@ -829,7 +830,8 @@ class GameBoard:
 
         cityObj = self.cities[targetCity]
         # if there is another player on the target city, move the target player there.
-        for player in self.players:
+        for id in self.players:
+            player = self.players[id]
             if player.location == cityObj.location:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
@@ -1297,7 +1299,8 @@ class GameBoard:
         # can only be prevented before board initalization
         if self.initialized == 1:
             # Check all players to see if they are a medic/quar role.
-            for player in self.players:
+            for id in self.players:
+                player = self.players[id]
                 if player.role == "medic" and player.location == targetCityObj.name and self.cures[colour] == 1:
                     return True
                 if player.role == "quarantineSpecialist":
@@ -1332,7 +1335,8 @@ class GameBoard:
                 # check if the infection is blocked by specialist abilities.
                 if self.canInfectionBePrevented(city, colour) == False:
                     city.infect(colour, 1)
-                    infections.append({"city":city.name, "path":cityOutBreaks, "colour":colour, "amount":1})
+                    # add to the infections list. (note: path is a list comprehension of the cityObjs)
+                    infections.append({"city":city.name, "path":[c.name for c in cityOutBreaks], "colour":colour, "amount":1})
             else:
                 # another outbreak has occured.
                 # need to infect all of its neighbours.
@@ -1457,3 +1461,6 @@ class InfectionCard:
 
 
 
+if __name__ == "__main__":
+    players = {1:Player(1)}
+    gb = GameBoard(players)
