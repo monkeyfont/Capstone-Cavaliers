@@ -15,7 +15,18 @@ function city(options){
 	this.researchStation = options.researchStation || false;
 	this.infectionStatus = options.infectionStatus || {black:[],blue:[],yellow:[],red:[]};
 	this.connections = options.connections || [];
-	this.validMove = false;
+	this.players = {};
+	this.validMove = false;	
+	this.active = false;
+	this.timeActive = 0;
+	
+	this.cursorOn = function(){
+		this.active = true;
+	}
+	this.cursorOff = function(){
+		this.active = false;
+		this.timeActive = 0;
+	}
 	
 	// this.renderCheck = function(){
 		// console.log("___________infection status",this.infectionStatus)
@@ -147,7 +158,13 @@ function city(options){
 				// console.log("length = ",this.infectionStatus[i].length)
 				// console.log("x = ",infectionSymbol.xPos)
 				// console.log("y =", infectionSymbol.yPos)
-			}
+			}			
+		}
+		if (this.active == true){
+			this.timeActive = this.timeActive + 1;
+		}
+		if (this.timeActive > 60*4){
+			console.log("activate dropdown")
 		}
 		
 	}

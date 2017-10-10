@@ -2,6 +2,42 @@ var mapImage = new Image();
 mapImage.src = 'static/images/backgroundMap.jpg'
 
 
+var previousLocation = false;
+canvas.addEventListener('mousemove', function(evt) {
+	var mousePos ={
+		x: (evt.clientX - canvas.getBoundingClientRect().left)/scaleSize,
+		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
+	}
+	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+	console.log(message)
+	
+	var locationFound = false;
+	for (var i in locations){
+		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
+			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
+				console.log('city ', i ,' is hovered on');
+				locations[i].cursorOn()
+				previousLocation = i;
+				locationFound = true;
+				// checkMove(i);
+
+			}
+
+	}
+	if (locationFound == false){
+		console.log("no location")
+		if (previousLocation != false){
+			console.log("cursor off")
+			locations[previousLocation].cursorOff();
+			previousLocation = false;
+		}
+	}
+	
+	
+	
+	});
+
+
 canvas.addEventListener('click', function(evt) {
 	var mousePos ={
 		x: (evt.clientX - canvas.getBoundingClientRect().left)/scaleSize,
