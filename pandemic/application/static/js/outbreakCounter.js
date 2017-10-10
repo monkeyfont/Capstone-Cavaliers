@@ -30,7 +30,7 @@ function outbreakCounter(options) {
 	   }
 	canvas.getContext("2d").font="60px Verdana";
 	canvas.getContext("2d").fillStyle = 'green';
-	canvas.getContext("2d").fillText("Outbreak Counter",this.xPos,this.yPos+(this.radius*2));
+	canvas.getContext("2d").fillText("Outbreak Counter",this.xPos-this.radius,this.yPos-(this.radius*2));
 	   
 	   
     };
