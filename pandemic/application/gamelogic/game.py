@@ -775,6 +775,7 @@ class GameBoard:
                 amount = cityObj.getInfections(colour)
                 cityObj.treatDisease(colour, amount)
                 result["treated"].append({colour:amount})
+        return result
 
     def dispatcherTeleportOther(self, playerId, targetPlayerId, targetCity):
         """
@@ -1156,6 +1157,9 @@ class GameBoard:
         Retrieve the city object, and call its treat() function.
 
         SPECIAL CASE: if the player's role is the medic, they will cure all infections on that city.
+        returns:
+        A python dictionary
+        {"validAction":bool, "errorMessage":str, "cityName":str, "amount":str, "colour":str}
 
         """
         # TODO potentially need to see if a disease can actually be treated.
@@ -1163,6 +1167,7 @@ class GameBoard:
         validation = self.__checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
+
         # Get player object
         playerObj = self.players[playerId]
         # Retrieve cities colour
@@ -1173,10 +1178,14 @@ class GameBoard:
             responseDict["validAction"] = False
             return responseDict
         # special case - if the player is the medic, it should cure all infections on that city. (3 is the maximum.)
-        amount = 3
+        if playerObj.role == "medic":
+            amount = 3
         response=cityObj.treat(colour, amount)
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
+            responseDict["cityName"] = targetCity
+            responseDict["amount"] = amount
+            responseDict["colour"] = colour
             playerObj.actions -= 1
             responseDict["validAction"] = True
             endOfGameCheck = self.__endOfRound()
