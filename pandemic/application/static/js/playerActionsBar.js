@@ -1,3 +1,4 @@
+
 var Build = new Image(); Build.src = 'static/images/ActionIcons/Build.png';
 var CharterFlight = new Image(); CharterFlight.src = 'static/images/ActionIcons/Charter Flight.png';
 var Cure = new Image(); Cure.src = 'static/images/ActionIcons/Cure.png';
@@ -13,12 +14,12 @@ var Treat = new Image(); Treat.src = 'static/images/ActionIcons/Treat.png';
 actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
 
 
+
 function playerActionsBar(options){
 	this.context = options.context;
 	this.height = options.height;
 	this.width = options.width;	
 	this.yPos = options.yPos;
-	
 	this.iconPosX = 20;
 	this.iconPosY = this.yPos+100;
 	this.iconScale = 2;
@@ -66,8 +67,7 @@ function playerActionsBar(options){
 		for ( i in actions){
 			pos = Object.keys(actions).indexOf(i)
 			// console.log(i)
-			this.context.drawImage(
-			
+			this.context.drawImage(			
 			actions[i], //image to use
 			0, // x position to start clipping 
 			0, // y position to start clipping
@@ -82,5 +82,6 @@ function playerActionsBar(options){
 			
 		}
 		
+
 	}
 }

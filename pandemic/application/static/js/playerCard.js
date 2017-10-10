@@ -109,6 +109,7 @@ function playerCard(options){
 		this.update();
         // Draw the animation
 		//console.log("image render",this.image.src)
+		
 		this.context.drawImage(
 		this.currentImage, //image to use
 		0, // x position to start clipping 
