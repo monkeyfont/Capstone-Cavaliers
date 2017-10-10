@@ -765,16 +765,19 @@ class GameBoard:
         This activates the medics secondary power:
         If a cure has been discovered for a colour, and the player is a medic, whenever they move onto a city of that cured colour,
         it will remove all infection cubes of that colour.
+
+        returns a dictionary:
+        {"cityName":str, "amount":str, "colour":str}
         """
         # special case if the targeted player is the medic:
         result = {}
-        result["treated"] = {}
         if playerObj.role == "medic":
             # if that colour is cured, remove all infections on that city of that colour.
             for colour in self.cures:
                 amount = cityObj.getInfections(colour)
-                cityObj.treatDisease(colour, amount)
-                result["treated"].append({colour:amount})
+                if amount > 0: # only cure if greater than 0.
+                    cityObj.treatDisease(colour, amount)
+                    result = {"cityName":cityObj.name, "amount":amount, "colour":colour}
         return result
 
     def dispatcherTeleportOther(self, playerId, targetPlayerId, targetCity):
