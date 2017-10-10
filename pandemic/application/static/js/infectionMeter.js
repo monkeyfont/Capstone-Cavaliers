@@ -13,6 +13,11 @@ function infectionMeter(options){
 	this.infectionWidth = 256;
 	this.infectionHeight = 256;
 	this.infectionBarStatus = {red:{amount:40},yellow:{amount:40},black:{amount:40},blue:{amount:40}}
+	
+	this.alterInfectionStatus = function(options){
+		//{colour,amount}
+		this.infectionBarStatus[options.colour].amount = options.amount;
+	}
 				
 
 	this.render = function(){
