@@ -139,6 +139,7 @@ function gameLoop(){
 	playerPortraits.render();
 	cureBar.render();
 	playerActionsMenu.render()
+	infectionsMeterDisplay.render();
 
 }
 
@@ -168,7 +169,7 @@ outbreakCount = new outbreakCounter({});
 infectRate = new infectionRate({});
 playersHand = new playerHand();
 players = new playerInitilization();
-
+playerPortraits = new portraitInitilization({});
 
 // card,
 spriteList = [deck];
@@ -178,7 +179,11 @@ mapImage.addEventListener("load", gameLoop);
 
 
 
-playerPortraits = new portraitInitilization({});
+infectionsMeterDisplay = new infectionMeter({
+	context: canvas.getContext("2d"),
+	xPos:1600,
+	yPos:80
+})
 
 
 cureBar = new cureStatusBar({
