@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pandemic | Join Team</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="static/css/home.css"></head>
+<body>
+
+        <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
+
+        <div id="existingGame">
+
+            <form action = "/lobby" method = "post">
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12"><h2>Team Name</h2></div>-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                    <!--<div class="col-sm-12"><input class = "messageHere" placeholder="" name = "roomname"></div>-->
+                <!--</div>-->
+                <div class="row">
+                    <div class="col-sm-12"><h2>Your Name</h2></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "username"></div>
+                </div>
+                <div class="row" id="roomOptions">
+                    <table>
+                      <tr>
+                        <th></th>
+                        <th class="tname">Team Name</th>
+                        <th class="dif">Difficulty</th>
+                        <th class="npla"># of Players Needed</th>
+                      </tr>
+                        {%for rooms in availableRooms %}
+                            <tr>
+                                <td><input class="optionalRooms" type="radio" name="roomname" value="{{rooms}}"></td>
+                                <td class="tname">{{rooms}}</td>
+                                <td class="dif">{{allRooms[rooms].difficulty}}</td>
+                                <td class="npla">{{(4- allRooms[rooms].playerCount)}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+
+                </div>
+                <input type="hidden" name="roomtype" value="join">
+                <!--<div class="row" id="lasttoo">-->
+
+                    <!--<div class="col-sm-6"> <button class="bottomLeftButton" type="button" onclick="alert('Go back')">Go Back</button></div>-->
+                    <!--<div class="col-sm-6"><input class="bottomRightButton" id = "startGame" type="submit" value= "Start" ></div>-->
+                <!--</div>-->
+                <div class="row" id = "lasttoo">
+                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" type="button" id="goBack">Go Back</button></div>
+                    <div class="col-sm-6" id="newGameBottomRight"><input class="bottomRightButton" id = "goGame" type= "submit" value= "Join Team"></div>
+                </div>
+
+            </form>
+        <!--<div class="two">-->
+          <!--<textarea id="roomlog"></textarea>-->
+        <!--</div>-->
+        </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+
+
+</body>
+</html>
