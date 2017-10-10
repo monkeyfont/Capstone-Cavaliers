@@ -61,14 +61,29 @@
 		it('can be infected',function(){
 			expect(testCity.infectionStatus.black).toEqual([]);
 			testCity.infect({});
+			
 			expect(testCity.infectionStatus.black).not.toEqual([]);
 		});
 		
-		it('can be Disinfected',function(){
+		it('can return the activeInfections',function(){
+			testCity.infect({colour:"red"});
+			testCity.infect({colour:"red"});
+			expect(testCity.activeInfections()).toEqual({black:1,red:2});
+		});
+		
+		it('default colour can be Disinfected',function(){
 			testCity.disinfect({});
 			expect(testCity.infectionStatus.black).toEqual([]);
 		});
 		
+		it('non default colour can be Disinfected with more than 1',function(){
+			testCity.disinfect({colour:"red",amount:2});
+			expect(testCity.infectionStatus.red).toEqual([]);
+		});
+		
 		
 	});
+	
+	
+	
 }());
