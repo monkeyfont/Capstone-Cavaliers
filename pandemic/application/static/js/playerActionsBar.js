@@ -44,6 +44,7 @@ function playerActionsBar(options){
 				}				
 				console.log('chosen action is: ',chosenAction)
 				
+				
 			}	
 		}
 		

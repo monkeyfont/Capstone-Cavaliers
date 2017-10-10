@@ -88,17 +88,39 @@ function playerHand(){
 			imageBack: CardImage,
 			imageFront: cardFront
 		});
-		cardName = options.cardName+Object.keys(this.cards).length;
+		cardName = options.cardName;
 		this.cards[cardName] = newPlayerCard;
-		this.cards[cardName].flipping = true;
+		this.cards[cardName].flipping = true;		
+	}
+	
+	this.cardX = function (options){
+		if (options.y > this.yPos && options.y < this.yPos+40){
+			console.log('discarding a card')
+			startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
+			cardNumber = Math.floor((options.x-startPoint)/(510*0.4))
+			console.log(cardNumber)
+			chosenCard = 'none'
+			for ( i in this.cards){
+				pos = Object.keys(this.cards).indexOf(i)
+				if (pos == cardNumber){
+					chosenCard = i;
+					break
+				}
+			}				
+			console.log(chosenCard)
+			socket.emit('discardCard', {cardName:chosenCard})
+			this.removeCard({cardname:chosenCard})
+		}
 		
 	}
+	
+	
 	this.removeCard = function (options){
 		//options = {cardname:cardName}
 		delete this.cards[options.cardname];
 	}
 	this.render = function(){
-		startPoint = 960-(Object.keys(this.cards).length)/2*(510*0.4)
+		startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
 		pos = 0;
 		for(i in this.cards){
 			this.cards[i].move (startPoint+510*0.4*pos,this.yPos)

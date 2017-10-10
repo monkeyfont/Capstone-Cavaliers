@@ -94,9 +94,6 @@ function city(options){
 		}
 	}
 	
-	this.drawStroked = function(text, x, y) {
-		
-	}
 	
 	
 	this.render = function(){
@@ -116,7 +113,7 @@ function city(options){
 		context.stroke();
 		
 		
-		canvas.getContext("2d").font = "30px Sans-serif"
+		canvas.getContext("2d").font = "22px Sans-serif"
 		canvas.getContext("2d").strokeStyle = 'black';//'green';
 		canvas.getContext("2d").lineWidth = 8;
 		canvas.getContext("2d").lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!

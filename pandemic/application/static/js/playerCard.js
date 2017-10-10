@@ -120,5 +120,11 @@ function playerCard(options){
 		this.yPos, // y position for image on canvas
 		this.widthDraw*this.xScale, // width of image to use 
 		this.heightDraw*this.yScale); // height of image to use
+		if (this.flipping != true){
+			this.context.font = "22px Sans-serif"
+			this.context.strokeStyle = 'red';//'green';
+			this.context.strokeText('X',this.xPos+(this.width*this.xScale)-20,this.yPos+20);
+		}
+		
     };
 }

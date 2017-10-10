@@ -34,7 +34,7 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
-	
+	playersHand.cardX(mousePos)
 	playerActionsMenu.activateAction(mousePos)
 
 
