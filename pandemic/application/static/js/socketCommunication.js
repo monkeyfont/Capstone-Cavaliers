@@ -23,7 +23,12 @@ socket.on('checked', function (data) {
         check=data.msg.validAction;
         var city=eval(data.city);
         if (data.msg.validAction ==true){
-			players.players[data.playerName].move(city.xPos,city.yPos);
+			player = players.players[data.playerName]
+			player.move(city.xPos,city.yPos);
+			console.log(player)
+			locations[player.currentCity].removePlayer({playerName:data.playerName})
+			locations[data.city].addPlayer({playerName:data.playerName})
+			player.currentCity = data.city
 	    }
 	    else{
 	    alert(data.msg.errorMessage);
@@ -403,7 +408,11 @@ socket.on('gamePlayerInitilization',function(data){
 	cityName = data.playerLocation;
 	//console.log(locations[cityName]);
 	city = locations[cityName]
-	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
+	city.addPlayer({playerName:data.playerName})
+	console.log("cityName",cityName)
+	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos,currentCity:cityName});
+	console.log("playersName",players.players[data.playerName])
+	
 	playerPortraits.addPlayerPortrait({playerType:data.playerType});
 });
 

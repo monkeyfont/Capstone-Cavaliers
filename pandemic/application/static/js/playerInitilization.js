@@ -42,7 +42,8 @@ function playerInitilization (){
 			yPos:options.yPos,
 			xScale:0.15,
 			yScale:0.15,
-			image: playerImage	
+			image: playerImage,
+			currentCity:options.currentCity			
 		});
 	}
 	

@@ -12,7 +12,7 @@ function player(options) {
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
 	this.tempSpeed = 0;
-	this.currentCity = null;
+	this.currentCity = options.currentCity;
 	
 	
 	this.move = function (x, y){

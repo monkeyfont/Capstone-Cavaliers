@@ -9,7 +9,7 @@ canvas.addEventListener('mousemove', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	console.log(message)
+	// console.log(message)
 	
 	var locationFound = false;
 	for (var i in locations){

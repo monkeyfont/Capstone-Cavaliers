@@ -22,6 +22,15 @@ function city(options){
 	this.active = false;
 	this.timeActive = 0;
 	
+	this.addPlayer = function(options){
+		console.log("added player",options.playerName,this.id)
+		this.players[options.playerName] = options.playerName
+	}
+	
+	this.removePlayer = function(options){		
+		delete this.players[options.playerName]
+	}
+	
 	this.cursorOn = function(){
 		this.active = true;
 	}
