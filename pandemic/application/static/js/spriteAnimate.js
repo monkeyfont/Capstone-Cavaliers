@@ -141,6 +141,9 @@ function gameLoop(){
 	playerActionsMenu.render()
 	infectionsMeterDisplay.render();
 
+	if (!previousLocation == false){
+		locations[previousLocation].renderMenu();
+	}
 }
 
 

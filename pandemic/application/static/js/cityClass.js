@@ -105,6 +105,17 @@ function city(options){
 		}
 	}
 	
+	this.renderMenu = function(){
+		if (this.active == true){
+			this.timeActive = this.timeActive + 1;
+		}
+		if (this.timeActive > 60*4){
+			console.log("activate dropdown")
+			this.context.rect(this.xPos,this.yPos,150,100);
+			this.context.stroke();
+		}
+		
+	}
 	
 	
 	this.render = function(){
@@ -160,12 +171,7 @@ function city(options){
 				// console.log("y =", infectionSymbol.yPos)
 			}			
 		}
-		if (this.active == true){
-			this.timeActive = this.timeActive + 1;
-		}
-		if (this.timeActive > 60*4){
-			console.log("activate dropdown")
-		}
+		
 		
 	}
 	
