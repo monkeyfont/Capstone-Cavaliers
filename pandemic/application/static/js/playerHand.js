@@ -98,6 +98,9 @@ function playerHand(){
 			console.log('discarding a card')
 			startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
 			cardNumber = Math.floor((options.x-startPoint)/(510*0.4))
+			xStart = (510*0.4*(cardNumber+1))+startPoint-40
+			console.log('xstart:',xStart)
+			if (options.x>xStart){
 			console.log(cardNumber)
 			chosenCard = 'none'
 			for ( i in this.cards){
@@ -110,6 +113,7 @@ function playerHand(){
 			console.log(chosenCard)
 			socket.emit('discardCard', {cardName:chosenCard})
 			this.removeCard({cardname:chosenCard})
+			}
 		}
 		
 	}
