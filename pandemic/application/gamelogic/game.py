@@ -256,7 +256,7 @@ class GameBoard:
         self.players = playerDict # {id:playerObj}
         self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
         self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
-        self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
+        self.cures = {"blue" : 0, "red" : 0, "yellow" : 1, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
@@ -360,9 +360,9 @@ class GameBoard:
             # invoke infect cities step
             infections = self.endTurnInfectCities()
 
-            result["infectedCities"] = infections[0] #TODO remove this once the 'infections' key is the only one being used.
+            result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
-            result["infections"].append(infections[1])# the "infections" key already exists from the processEpidemic step. Need to update it.
+            result["infections"].append(infections[0])# the "infections" key already exists from the processEpidemic step. Need to update it.
 
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
@@ -386,8 +386,8 @@ class GameBoard:
             playerObj.setLocation("ATLANTA")
 
     def __setRoles(self):
-        roles=["contingencyPlanner","dispatcher","medic","operationsExpert","quarantineSpecialist","researcher","scientist"]
-        shuffle(roles)
+        roles=["dispatcher","medic","contingencyPlanner","operationsExpert","quarantineSpecialist","researcher","scientist"]
+        #shuffle(roles)
         for playerkey in self.players:
             playerObj=self.players[playerkey]
             playerObj.role=roles[0]
@@ -509,7 +509,7 @@ class GameBoard:
         It gets the valid range for each epidemic, then randomly places them.
         """
         # create the epidemic card objects
-        amount = {0:40, 1:30, 2:40}
+        amount = {0:4, 1:30, 2:40}
         numEpidemics = amount[self.difficulty]
         epidemics = []
         for i in range(numEpidemics):
@@ -728,7 +728,7 @@ class GameBoard:
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             responseDict["validAction"] = True
             # check if the medics secondary power removes any infections.
-            responseDict["medicTreatments"] = self.__medicCureAfterMove(playerObj, cityObj)
+            responseDict["medicTreatments"] = self.__medicCureAfterMove(playerObj, self.cities[nextCityName])
             playerObj.actions -= 1
             #print playerObj.actions
             endOfGameCheck = self.__endOfRound()
@@ -802,7 +802,7 @@ class GameBoard:
             for colour in self.cures:
                 amount = cityObj.getInfections(colour)
                 if amount > 0: # only cure if greater than 0.
-                    cityObj.treatDisease(colour, amount)
+                    cityObj.treat(colour, amount)
                     result = {"cityName":cityObj.name, "amount":amount, "colour":colour}
         return result
 
@@ -1457,8 +1457,6 @@ class InfectionCard:
         self.country = country
         self.colour = colour
         self.type = "infection"
-
-
 
 
 if __name__ == "__main__":

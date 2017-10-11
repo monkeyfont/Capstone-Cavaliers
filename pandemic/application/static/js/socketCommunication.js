@@ -2,15 +2,56 @@
 socket = io.connect('http://' + document.domain + ':' + location.port);
 function endOfRound(info){
 
-// in here will do all the front end work with the json string
-alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
-console.log(info);
-//do some stuff
-socket.emit('roundOverDone')
+    // in here will do all the front end work with the json string
+    alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
+    if (info.epidemic==true){
+    //epidemic has been drawn so do epidemic front end stuff...
+    }
+    console.log(info);
+    //do some stuff
+
+    for (var i=0;i<info.infections[0].length;i++){
+        var cityName=info.infections[0][i].city;
+        var amount=info.infections[0][i].amount;
+        var colour= info.infections[0][i].colour;
+        var path= info.infections[0][i].path;
+        for (var x=0;x<amount;x++){
+            //locations[cityName].infect({colour,infectionPath})
+            locations[cityName].infect({'colour':colour,'infectionPath':path});
+
+                }
+
+
+
+
+}
+//    try {
+//    var path= info.infections[0][i].path;
+//        }
+//    catch(err) {
+//    console.log("No outbreak occured so no path")
+//        }
+
+//    for (var key in data)
+//    {
+//    //console.log(key + ' : ' + data[key]);
+//    alert(key + ' --> ' + data[key]);
+//    }
+
+    socket.emit('roundOverDone')
 
 
 
 };
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
 
 function checkMove(city){
 
@@ -23,6 +64,11 @@ socket.on('checked', function (data) {
         check=data.msg.validAction;
         var city=eval(data.city);
         if (data.msg.validAction ==true){
+
+            if (isEmpty(data.msg.medicTreatments)==false){
+            locations[data.msg.medicTreatments.cityName].disinfect({'colour':data.msg.medicTreatments.colour,'amount':data.msg.medicTreatments.amount});
+            }
+
 			players.players[data.playerName].move(city.xPos,city.yPos);
 	    }
 	    else{
@@ -40,22 +86,22 @@ function directFlight(city) {
     var city = prompt("Enter name of city card in your hand you would like to move to");
     socket.emit('checkDirectFlight', {cityName:city})
 }
-socket.on('directFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg.validAction;
-        var city=eval(data.city);
-        if (check ==true){
-            players.players[data.playerName].move(city.xPos,city.yPos);
-	    }
-	    else{
-	    alert(data.msg.errorMessage);
-	    }
-
-	    if (data.msg.endRound==true){
-            endOfRound(data.msg);
-
-        }
-});
+//socket.on('directFlightChecked', function (data) {
+//        //alert(data.msg);
+//        check=data.msg.validAction;
+//        var city=eval(data.city);
+//        if (check ==true){
+//            players.players[data.playerName].move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	    alert(data.msg.errorMessage);
+//	    }
+//
+//	    if (data.msg.endRound==true){
+//            endOfRound(data.msg);
+//
+//        }
+//});
 
 
 
@@ -66,26 +112,26 @@ function charterFlight() {
     socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
 
 }
-socket.on('charterFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg.validAction;
-
-
-        if (check ==true){
-            var city=eval(data.city);
-            players.players[data.playerName].move(city.xPos,city.yPos);
-            // player.move(city.xPos,city.yPos);
-	    }
-	    else{
-	        alert(data.msg.errorMessage);
-	    }
-
-	    if (data.msg.endRound==true){
-            endOfRound(data.msg);
-
-        }
-
- });
+//socket.on('charterFlightChecked', function (data) {
+//        //alert(data.msg);
+//        check=data.msg.validAction;
+//
+//
+//        if (check ==true){
+//            var city=eval(data.city);
+//            players.players[data.playerName].move(city.xPos,city.yPos);
+//            // player.move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	        alert(data.msg.errorMessage);
+//	    }
+//
+//	    if (data.msg.endRound==true){
+//            endOfRound(data.msg);
+//
+//        }
+//
+// });
 
 
 function shuttleFlight() {
@@ -95,22 +141,22 @@ function shuttleFlight() {
 
 }
 
-socket.on('shuttleFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg.validAction;
-
-        if (check ==true){
-            var city=eval(data.city);
-             players.players[data.playerName].move(city.xPos,city.yPos);
-	    }
-	    else{
-	        alert(data.msg.errorMessage);
-	    }
-	    if (data.msg.endRound==true){
-            endOfRound(data.msg);
-
-        }
-});
+//socket.on('shuttleFlightChecked', function (data) {
+//        //alert(data.msg);
+//        check=data.msg.validAction;
+//
+//        if (check ==true){
+//            var city=eval(data.city);
+//             players.players[data.playerName].move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	        alert(data.msg.errorMessage);
+//	    }
+//	    if (data.msg.endRound==true){
+//            endOfRound(data.msg);
+//
+//        }
+//});
 
 
 
@@ -342,19 +388,19 @@ socket.on('governmentGrantChecked', function (data) {
     });
 
 
-
-socket.on('airliftChecked', function (data) {
-
-        check=data.msg.validAction;
-
-        if (check ==true){
-            var city=eval(data.city);
-             players.players[data.playerName].move(city.xPos,city.yPos);
-	    }
-	    else{
-	        alert(data.msg.errorMessage);
-	    }
-    });
+//
+//socket.on('airliftChecked', function (data) {
+//
+//        check=data.msg.validAction;
+//
+//        if (check ==true){
+//            var city=eval(data.city);
+//             players.players[data.playerName].move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	        alert(data.msg.errorMessage);
+//	    }
+//    });
 
 socket.on('oneQuietNightChecked', function (data) {
 
@@ -378,6 +424,21 @@ socket.on('resilientPopulationChecked', function (data) {
 	        alert(data.msg.errorMessage);
 	    }
     });
+
+function dispatcherMove(){
+
+    var playerName = prompt("Enter Name of player you wish to move: ");
+    var cityName= prompt("Enter Name of city you wish to move player to: ");
+    socket.emit('dispatcherMove',{player:playerName,city:cityName});
+
+}
+
+function operationExpert(){
+
+    socket.emit('operationExpert')
+
+
+}
 
 
 
@@ -405,6 +466,7 @@ socket.on('gamePlayerInitilization',function(data){
 	city = locations[cityName]
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos});
 	playerPortraits.addPlayerPortrait({playerType:data.playerType});
+
 });
 
 socket.on('InfectedCities',function(data){

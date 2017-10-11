@@ -13,6 +13,18 @@ var Treat = new Image(); Treat.src = 'static/images/ActionIcons/Treat.png';
 
 actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
 
+//if (playerRole=="operationsExpert"){
+//    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,OperationMove};
+//}
+//else if (playerRole=="dispatcher"){
+//    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,DispatcherMove};
+//}
+//else{
+//    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
+//}
+
+actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
+
 
 
 function playerActionsBar(options){
