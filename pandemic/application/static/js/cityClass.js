@@ -3,6 +3,8 @@ var blackInfection = new Image(); blackInfection.src = 'static/images/Infections
 var redInfection = new Image(); redInfection.src = 'static/images/Infections/redInfection.png';
 var yellowInfection = new Image(); yellowInfection.src = 'static/images/Infections/yellowInfection.png';
 
+infectionImages = {blueInfection,blackInfection,redInfection,yellowInfection}
+
 function city(options){
 	this.id = options.id;
 	this.locationPointerX = options.locationPointerX || options.xPos;
@@ -111,8 +113,66 @@ function city(options){
 		}
 		if (this.timeActive > 60*4){
 			console.log("activate dropdown")
-			this.context.rect(this.xPos,this.yPos,150,100);
-			this.context.stroke();
+			infectionNumbers = this.activeInfections();
+			numberOfElements = Object.keys(infectionNumbers).length
+			this.context.fillStyle = "rgba(0,0,0,.6)";
+			this.context.fillRect(this.xPos,this.yPos,120,80*numberOfElements);
+			
+			this.context.font = "22px Sans-serif"
+			this.context.strokeStyle = 'black';//'green';
+			this.context.lineWidth = 8;
+			this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+			this.context.miterLimit=3;
+
+			this.context.strokeText("Infections",this.xPos,this.yPos+30);
+			this.context.fillStyle = 'white';//this.colour;
+
+			this.context.fillText("Infections",this.xPos,this.yPos+30);
+				
+				
+			
+			
+			
+			
+			for (i in infectionNumbers){
+				position = Object.keys(infectionNumbers).indexOf(i)
+				// this.context.font = "bold 22px Verdana"
+				// this.context.fillStyle = "white";//'green';
+				// this.context.fillText("Infections",this.xPos,this.yPos+30);
+				
+				this.context.drawImage(
+				infectionImages[i+"Infection"], //image to use
+				0, // x position to start clipping 
+				0, // y position to start clipping
+				256, //width of clipped image
+				256, // height of clipped image
+				this.xPos+10, //x position for image on canvas
+				this.yPos+(256*0.2*position)+(position*10)+40, // y position for image on canvas
+				256*0.2, // width of image to use 
+				256*0.2);
+				
+				this.context.font = "22px Sans-serif"
+				this.context.strokeStyle = "black";//'green';
+				this.context.lineWidth = 8;
+				this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+				this.context.miterLimit=3;
+
+				this.context.strokeText(infectionNumbers[i],this.xPos+(256*0.2)+20,this.yPos+(256*0.2*position)+(position*10)+70);
+				this.context.fillStyle = "white";//this.colour;
+
+				this.context.fillText(infectionNumbers[i],this.xPos+(256*0.2)+20,this.yPos+(256*0.2*position)+(position*10)+70);
+				
+				
+					
+					// this.context.font = "bold 22px Sans-serif"
+					// this.context.fillStyle = i;//'green';
+					// this.context.fillText(infectionNumbers[i],this.xPos+(256*0.2)+20,this.yPos+(256*0.2*position)+(position*10)+20)+50;
+				
+			}
+			
+			
+			console.log("activeinfections",this.activeInfections())
+			// this.context.fill();
 		}
 		
 	}
