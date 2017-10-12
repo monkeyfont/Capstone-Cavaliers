@@ -362,8 +362,7 @@ class GameBoard:
 
             result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
-            result["infections"].append(infections[0])# the "infections" key already exists from the processEpidemic step. Need to update it.
-
+            result["infections"]+=infections[0]
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
                 if self.cubesUsed[colour] > self.maxCubeCount:
@@ -387,7 +386,7 @@ class GameBoard:
 
     def __setRoles(self):
         roles=["dispatcher","medic","contingencyPlanner","operationsExpert","quarantineSpecialist","researcher","scientist"]
-        #shuffle(roles)
+        shuffle(roles)
         for playerkey in self.players:
             playerObj=self.players[playerkey]
             playerObj.role=roles[0]
@@ -434,8 +433,8 @@ class GameBoard:
         for k in PLAYER_CARDS: #name,colour,population,area,country
             cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
-        for k in EVENT_CARDS: #id, name, description
-            cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+        # for k in EVENT_CARDS: #id, name, description
+        #     cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
 
         return cards
 
@@ -986,10 +985,10 @@ class GameBoard:
                 endOfGameCheck = self.__endOfRound()
                 responseDict.update(endOfGameCheck)
                 return responseDict
-            else:
-                responseDict["errorMessage"] = "ERROR: You don't have that card. Or the Card is of the wrong type."
-                responseDict["validAction"] = False
-                return responseDict
+
+        responseDict["errorMessage"] = "ERROR: You don't have that card. Or the Card is of the wrong type."
+        responseDict["validAction"] = False
+        return responseDict
 
     def buildResearchStation(self, playerId, cityName):
         """

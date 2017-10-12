@@ -2,41 +2,43 @@
 socket = io.connect('http://' + document.domain + ':' + location.port);
 function endOfRound(info){
 
+
     // in here will do all the front end work with the json string
-    alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
-    if (info.epidemic==true){
-    //epidemic has been drawn so do epidemic front end stuff...
-    }
-    console.log(info);
+    //alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
+//    if (info.epidemic==true){
+//    //epidemic has been drawn so do epidemic front end stuff...
+//    }
     //do some stuff
 
-    for (var i=0;i<info.infections[0].length;i++){
-        var cityName=info.infections[0][i].city;
-        var amount=info.infections[0][i].amount;
-        var colour= info.infections[0][i].colour;
-        var path= info.infections[0][i].path;
+    for (var i=0;i<info.infections.length;i++){
+        var cityName=info.infections[i].city;
+        var amount=info.infections[i].amount;
+        var colour= info.infections[i].colour;
+        var path= info.infections[i].path;
         for (var x=0;x<amount;x++){
             //locations[cityName].infect({colour,infectionPath})
+            alert(locations[cityName]);
             locations[cityName].infect({'colour':colour,'infectionPath':path});
 
                 }
+     for (var player in info["cardDraw"]) {
+		var cards=info["cardDraw"][player]
+		for (var card in cards) {
+			if (cards.hasOwnProperty(card)) {
+			        if (player==thisPlayerName){
+                    if (cards[card]=="epidemic"){
+                        console.log("this is an epidemic card")
+                    }
+                    else{
+					playersHand.addCard({cardName:cards[card]})
+					}
+					}
 
-
-
-
+						  }
+					 }
+    }
 }
-//    try {
-//    var path= info.infections[0][i].path;
-//        }
-//    catch(err) {
-//    console.log("No outbreak occured so no path")
-//        }
 
-//    for (var key in data)
-//    {
-//    //console.log(key + ' : ' + data[key]);
-//    alert(key + ' --> ' + data[key]);
-//    }
 
     socket.emit('roundOverDone')
 
@@ -309,7 +311,7 @@ function discardCard(){
 socket.on('cardRemoved', function (data) {
         check=data.msg;
         if (check == true){
-        alert(data.cardToRemove+" has been discarded from your hand")
+        console.log(data.cardToRemove+" has been discarded from your hand")
         }
         else{
         alert("cannot discard this card")
@@ -435,7 +437,9 @@ function dispatcherMove(){
 
 function operationExpert(){
 
-    socket.emit('operationExpert')
+    var cardName = prompt("Enter name of card you wish to discard: ");
+    var citytoMoveTo= prompt("Enter name of city you wish to move to")
+    socket.emit('operationExpert',{card:cardName,city:citytoMoveTo})
 
 
 }
@@ -458,6 +462,7 @@ socket.on('gotPlayer',function(data){
 	//console.log("you are the player",data.playerType);
 	// players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
+
 
 socket.on('gamePlayerInitilization',function(data){
 	//console.log('data is: ',data )
@@ -492,7 +497,7 @@ socket.on('InfectedCities',function(data){
 
 socket.on('gotInitialHands',function(data){
 	console.log(data)
-
+	thisPlayerName=data.username;
     for (var player in data["playerhand"]) {
 		console.log(player)
 		console.log(data["playerhand"])

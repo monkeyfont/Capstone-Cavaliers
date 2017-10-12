@@ -175,6 +175,7 @@ playerActionsMenu = new playerActionsBar({
 
 
 var load = document.getElementById("load");
+var thisPlayerName;
 canvas.style="display:none;"
 
 window.onload = function (){

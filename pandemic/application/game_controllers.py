@@ -426,8 +426,10 @@ def handleclick():
         if playerObject.name == username:
             response=gameObject.passTurn(playerObject.id)
             print response
-
-            emit('passTurnChecked', {'msg':response})
+            if response["validAction"] == True:
+                emit('passTurnChecked', {'playerName': username,'msg':response},room=room)
+            else:
+                emit('passTurnChecked', {'msg': response})
 
 
 @socketio.on('PlayEventCard')
@@ -515,18 +517,19 @@ def handle_message(msg):
 def handle_message(msg):
     room = str(session['roomname'])
     username = str(session["username"])
+    cardName = msg["card"]
+    cityToMoveTo = msg["city"]
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             playerId = playerObject.id
-            response = gameObject.dispatcherMoveOther(playerId, playerToMoveId, cityToMoveTo)
-    print response
-    if response["validAction"] == True:
-        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
-    else:
-        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo})
+            response = gameObject.operationsTeleport(playerId, cardName, cityToMoveTo)
+            if response["validAction"] == True:
+                emit('checked', {'playerName': username, 'msg': response, 'city': cityToMoveTo}, room=room)
+            else:
+                emit('checked', {'playerName': username, 'msg': response, 'city': cityToMoveTo})
 
 
 
