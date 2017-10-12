@@ -9,7 +9,7 @@ canvas.addEventListener('mousemove', function(evt) {
 		y: (evt.clientY - canvas.getBoundingClientRect().top)/scaleSize
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-	console.log(message)
+	// console.log(message)
 	
 	var locationFound = false;
 	for (var i in locations){
@@ -146,10 +146,10 @@ function gameLoop(){
 	}
 }
 
-locations["ATLANTA"].infect({});
-locations["ATLANTA"].infect({colour:"red"});
-locations["ATLANTA"].infect({colour:"yellow"});
-locations["ATLANTA"].infect({colour:"black"});
+// locations["ATLANTA"].infect({});
+// locations["ATLANTA"].infect({colour:"red"});
+// locations["ATLANTA"].infect({colour:"yellow"});
+// locations["ATLANTA"].infect({colour:"black"});
 
 
 var CardImage = new Image();
