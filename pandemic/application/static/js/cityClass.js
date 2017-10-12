@@ -231,7 +231,7 @@ function city(options){
 				256, //width of clipped image
 				256, // height of clipped image
 				this.xPos+10, //x position for image on canvas
-				startPosition+(256*0.2*position)+(position*10)+40, // y position for image on canvas
+				startPosition+40, // y position for image on canvas
 				256*0.2, // width of image to use 
 				256*0.2);
 				
