@@ -153,7 +153,6 @@ def getMessages():
         return
     else:
         roomStart = session["roomname"]
-        print roomStart
         LobbyInstance = lobbies[roomStart]
         previousMessages = LobbyInstance.messageHistory
         leave_room(roomStart)
