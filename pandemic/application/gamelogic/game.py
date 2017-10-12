@@ -160,7 +160,7 @@ EVENT_CARDS = {
     2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
     3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"},
     4:{"name": "Forecast", "description": "Examine top 6 cards of the infection draw pile. Rearrange them in order of your choice, and place them back on the pile"},
-    5:{"name": "Resilient_Population", "description": "Take a card from the infection discard pile and remove it from the game"}
+    5:{"name": "Resilent_Population", "description": "Take a card from the infection discard pile and remove it from the game"}
 }
 
 
