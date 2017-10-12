@@ -33,6 +33,7 @@ function playerInitilization (){
 		
 		this.players[options.playerName] = new player({
 			id:options.playerName +" "+ options.playerType,
+			playerType:options.playerType,
 			context: canvas.getContext("2d"),
 			width: 256,
 			height: 256,

@@ -3,6 +3,16 @@ var blackInfection = new Image(); blackInfection.src = 'static/images/Infections
 var redInfection = new Image(); redInfection.src = 'static/images/Infections/redInfection.png';
 var yellowInfection = new Image(); yellowInfection.src = 'static/images/Infections/yellowInfection.png';
 
+var contingencyPlanner = new Image(); contingencyPlanner.src = 'static/images/PlayerIcons/contingencyPlanner.png';
+var dispatcher = new Image(); dispatcher.src = 'static/images/PlayerIcons/dispatcher.png';
+var medic = new Image(); medic.src = 'static/images/PlayerIcons/medic.png';
+var operationsExpert = new Image(); operationsExpert.src = 'static/images/PlayerIcons/operationsExpert.png';
+var quarantineSpecialist = new Image(); quarantineSpecialist.src = 'static/images/PlayerIcons/quarantineSpecialist.png';
+var researcher = new Image(); researcher.src = 'static/images/PlayerIcons/researcher.png';
+var scientist = new Image(); scientist.src = 'static/images/PlayerIcons/scientist.png';
+
+playerTypeImages = {contingencyPlanner,dispatcher,medic,operationsExpert,quarantineSpecialist,researcher,scientist}
+
 infectionImages = {blueInfection,blackInfection,redInfection,yellowInfection}
 
 function city(options){
@@ -21,6 +31,14 @@ function city(options){
 	this.validMove = false;	
 	this.active = false;
 	this.timeActive = 0;
+	
+	
+	this.addResearchStation = function(){
+		this.researchStation = true;
+	}
+	this.removeResearchStation = function(){
+		this.researchStation = false;
+	}
 	
 	this.addPlayer = function(options){
 		console.log("added player",options.playerName,this.id)
@@ -123,25 +141,28 @@ function city(options){
 		if (this.timeActive > 60*4){
 			console.log("activate dropdown")
 			infectionNumbers = this.activeInfections();
-			numberOfElements = Object.keys(infectionNumbers).length
+			numberOfElements = Object.keys(infectionNumbers).length + Object.keys(this.players).length
 			this.context.fillStyle = "rgba(0,0,0,.6)";
 			this.context.fillRect(this.xPos,this.yPos,120,80*numberOfElements);
 			
-			this.context.font = "22px Sans-serif"
-			this.context.strokeStyle = 'black';//'green';
-			this.context.lineWidth = 8;
-			this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
-			this.context.miterLimit=3;
-
-			this.context.strokeText("Infections",this.xPos,this.yPos+30);
-			this.context.fillStyle = 'white';//this.colour;
-
-			this.context.fillText("Infections",this.xPos,this.yPos+30);
+			startPosition = this.yPos
+			
+			if (Object.keys(infectionNumbers).length > 0){
 				
+				this.context.font = "22px Sans-serif"
+				this.context.strokeStyle = 'black';//'green';
+				this.context.lineWidth = 8;
+				this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+				this.context.miterLimit=3;
+
+				this.context.strokeText("Infections",this.xPos,startPosition+30);
+				this.context.fillStyle = 'white';//this.colour;
+
+				this.context.fillText("Infections",this.xPos,startPosition+30);
+					
+				startPosition = startPosition + 30;
 				
-			
-			
-			
+			}			
 			
 			for (i in infectionNumbers){
 				position = Object.keys(infectionNumbers).indexOf(i)
@@ -156,7 +177,7 @@ function city(options){
 				256, //width of clipped image
 				256, // height of clipped image
 				this.xPos+10, //x position for image on canvas
-				this.yPos+(256*0.2*position)+(position*10)+40, // y position for image on canvas
+				startPosition+10, // y position for image on canvas
 				256*0.2, // width of image to use 
 				256*0.2);
 				
@@ -166,16 +187,55 @@ function city(options){
 				this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
 				this.context.miterLimit=3;
 
-				this.context.strokeText(infectionNumbers[i],this.xPos+(256*0.2)+20,this.yPos+(256*0.2*position)+(position*10)+70);
+				this.context.strokeText(infectionNumbers[i],this.xPos+(256*0.2)+20,startPosition+40);
 				this.context.fillStyle = "white";//this.colour;
 
-				this.context.fillText(infectionNumbers[i],this.xPos+(256*0.2)+20,this.yPos+(256*0.2*position)+(position*10)+70);
+				this.context.fillText(infectionNumbers[i],this.xPos+(256*0.2)+20,startPosition+40);
 				
-				
+				startPosition = startPosition+256*0.2+10
 					
 					// this.context.font = "bold 22px Sans-serif"
 					// this.context.fillStyle = i;//'green';
 					// this.context.fillText(infectionNumbers[i],this.xPos+(256*0.2)+20,this.yPos+(256*0.2*position)+(position*10)+20)+50;
+				
+			}
+			
+			
+			
+			if (Object.keys(this.players).length > 0){
+			
+			this.context.font = "22px Sans-serif"
+			this.context.strokeStyle = 'black';//'green';
+			this.context.lineWidth = 8;
+			this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+			this.context.miterLimit=3;
+
+			this.context.strokeText("Players",this.xPos,startPosition+30);
+			this.context.fillStyle = 'white';//this.colour;
+
+			this.context.fillText("Players",this.xPos,startPosition+30);
+				
+				
+			}	
+			
+			for(i in this.players){
+				position = Object.keys(this.players).indexOf(i)
+				// console.log(players)
+				// console.log(i)
+				// console.log(players.players[i])
+				// console.log(playerTypeImages[players.players[i].playerType])
+				this.context.drawImage(
+				playerTypeImages[players.players[i].playerType], //image to use
+				0, // x position to start clipping 
+				0, // y position to start clipping
+				256, //width of clipped image
+				256, // height of clipped image
+				this.xPos+10, //x position for image on canvas
+				startPosition+(256*0.2*position)+(position*10)+40, // y position for image on canvas
+				256*0.2, // width of image to use 
+				256*0.2);
+				
+				startPosition = startPosition+256*0.2+10
 				
 			}
 			

@@ -1,5 +1,6 @@
 function player(options) {
-	this.id = options.id,			
+	this.id = options.id,	
+	this.playerType = options.playerType;
 	this.context = options.context || canvas.getContext("2d");
 	this.width = options.width;
 	this.height = options.height;

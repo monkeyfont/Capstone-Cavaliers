@@ -146,10 +146,10 @@ function gameLoop(){
 	}
 }
 
-locations["ATLANTA"].infect({});
-locations["ATLANTA"].infect({colour:"red"});
-locations["ATLANTA"].infect({colour:"yellow"});
-locations["ATLANTA"].infect({colour:"black"});
+// locations["ATLANTA"].infect({});
+// locations["ATLANTA"].infect({colour:"red"});
+// locations["ATLANTA"].infect({colour:"yellow"});
+// locations["ATLANTA"].infect({colour:"black"});
 
 
 var CardImage = new Image();
