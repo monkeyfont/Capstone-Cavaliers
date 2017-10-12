@@ -17,7 +17,7 @@ function endOfRound(info){
         var path= info.infections[i].path;
         for (var x=0;x<amount;x++){
             //locations[cityName].infect({colour,infectionPath})
-            alert(locations[cityName]);
+            
             locations[cityName].infect({'colour':colour,'infectionPath':path});
 
                 }
