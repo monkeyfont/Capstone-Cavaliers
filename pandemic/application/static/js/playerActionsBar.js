@@ -55,7 +55,25 @@ function playerActionsBar(options){
 					}
 				}				
 				console.log('chosen action is: ',chosenAction)
-				
+				if(chosenAction == "Treat"){
+					treatDisease()
+				}else if(chosenAction == "Build"){
+					buildResearch()
+				}else if(chosenAction == "CharterFlight"){
+					charterFlight()
+				}else if(chosenAction == "Cure"){
+					discoverCure()
+				}else if(chosenAction == "DirectFlight"){
+					directFlight(city)
+				}else if(chosenAction == "Give"){
+					shareKnowledgeGive()
+				}else if(chosenAction == "Pass"){
+					PassTurn()
+				}else if(chosenAction == "ShuttleFlight"){
+					shuttleFlight()
+				}else if(chosenAction == "Take"){
+					shareKnowledgeTake()
+				}
 				
 			}	
 		}

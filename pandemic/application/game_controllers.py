@@ -19,6 +19,10 @@ lobbies={}
 def joinTeam():
     emit('joinR')
 
+@app.route('/')
+def defaultRoute():
+    return (redirect(url_for('home')))
+
 @app.route('/join')
 def newTeamRedirect():
 
