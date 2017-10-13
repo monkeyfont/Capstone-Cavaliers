@@ -1,5 +1,5 @@
 var mapImage = new Image();
-mapImage.src = 'static/images/backgroundMap.jpg'
+mapImage.src = 'static/images/WorldMap1235p.png'
 
 
 var previousLocation = false;
@@ -10,7 +10,7 @@ canvas.addEventListener('mousemove', function(evt) {
 	}
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 	// console.log(message)
-	
+
 	var locationFound = false;
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
@@ -32,9 +32,9 @@ canvas.addEventListener('mousemove', function(evt) {
 			previousLocation = false;
 		}
 	}
-	
-	
-	
+
+
+
 	});
 
 
@@ -153,7 +153,7 @@ function gameLoop(){
 
 
 var CardImage = new Image();
-CardImage.src = 'static/images/infection-Cards.png';
+CardImage.src = 'static/images/Cards/special/PLAYER_BACK.png';
 var cardFront = new Image();
 cardFront.src = 'static/images/infection-Front.png';
 
