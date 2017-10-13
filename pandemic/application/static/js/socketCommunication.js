@@ -9,7 +9,7 @@ function endOfRound(info){
 //    //epidemic has been drawn so do epidemic front end stuff...
 //    }
     //do some stuff
-
+	console.log("info",info)
     for (var i=0;i<info.infections.length;i++){
         var cityName=info.infections[i].city;
         var amount=info.infections[i].amount;
@@ -17,8 +17,22 @@ function endOfRound(info){
         var path= info.infections[i].path;
         for (var x=0;x<amount;x++){
             //locations[cityName].infect({colour,infectionPath})
-
-            locations[cityName].infect({'colour':colour,'infectionPath':path});
+            console.log(path)
+			if (path == undefined){
+				locations[cityName].infect({'colour':colour});
+			}else{
+				pathing = []
+				for (x in path){
+					city=locations[path[x]];
+					console.log(path[x])
+					console.log(locations[path[x]])
+					pathing.push({x:city.xPos,y:city.yPos})
+				}
+				city = locations[cityName]
+				pathing.push({x:city.xPos,y:city.yPos})
+				pathing.reverse()
+				locations[cityName].infect({'colour':colour,'infectionPath':pathing});
+			}
 
                 }
      for (var player in info["cardDraw"]) {
