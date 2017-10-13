@@ -17,7 +17,7 @@ function endOfRound(info){
         var path= info.infections[i].path;
         for (var x=0;x<amount;x++){
             //locations[cityName].infect({colour,infectionPath})
-            
+
             locations[cityName].infect({'colour':colour,'infectionPath':path});
 
                 }
@@ -263,9 +263,7 @@ socket.on('diseaseTreated', function (data) {
         if (check ==true){
             var city=eval(data.city);
             //addResearchStation(city);
-			locations[data.city].disinfect({'colour':colour,'amount':1});
-
-
+			locations[data.city].disinfect({'colour':colour,'amount':data.msg.amount});
 	}
 	else{
 	    alert(data.msg.errorMessage);
@@ -281,22 +279,52 @@ socket.on('diseaseTreated', function (data) {
 
 function discoverCure() {
 
-    var city = prompt("Enter current city Name: ");
-    socket.emit('discoverCure', {cityName:city})
+    if (thisPlayerRole!="scientist"){
+
+    var card1 = prompt("Enter City name: ");
+    var card2 = prompt("Enter City name: ");
+    var card3 = prompt("Enter City name: ");
+    var card4 = prompt("Enter City name: ");
+    var card5 = prompt("Enter City name: ");
+    socket.emit('discoverCure', {cities:[card1,card2,card3,card4,card5]})
+    }
+    else{
+    var card1 = prompt("Enter City name: ");
+    var card2 = prompt("Enter City name: ");
+    var card3 = prompt("Enter City name: ");
+    var card4 = prompt("Enter City name: ");
+    socket.emit('discoverCure', {cities:[card1,card2,card3,card4]})
+
+    }
+
 
 }
 
 socket.on('cureDiscovered', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.validAction;
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
-            console.log("Cure has been discovered")
+            alert("A cure has been discovered!")
+            playersHand.removeCard
+            for (var card in data.cardsToDiscard) {
+			if (cards.hasOwnProperty(card)) {
+				if (data.playerName==player){
+					playersHand.removeCard({cardName:data.cardsToDiscard[card]})
+				}
+						  }
+					 }
 	}
 	else{
-	    console.log("Sorry cure was not discovered");
+	    alert(data.msg.errorMessage);
 	}
+
+	if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
+
 
     });
 
@@ -457,6 +485,9 @@ socket.on('clicked', function (data) {
 	
 	
 socket.on('gotPlayer',function(data){
+
+    thisPlayerRole=data.playerType
+    //alert(thisPlayerRole);
 	//console.log('data is: ',data )
 	//console.log("you are the player",data.playerName);
 	//console.log("you are the player",data.playerType);

@@ -406,13 +406,19 @@ def handleclick(msg):
 @socketio.on('discoverCure')
 def handleclick(msg):
     room = str(session['roomname'])
-    playerCity= msg["cityName"]
-    secondPlayerCity = msg["cityName"]
-    #response=game.charterFlight(1,cityToMove)
-    response=True
-    #response will be either true or false
-
-    emit('cureDiscovered', {'msg':response,'city':playerCity},room=room)
+    cities= msg["cities"]
+    username = str(session["username"])
+    gameObject = games[room]
+    playerDictionary = gameObject.players
+    for key in playerDictionary:
+        playerObject = playerDictionary[key]
+        if playerObject.name == username:
+            response=gameObject.discoverCure(playerObject.id,cities)
+            print response
+            if response["validAction"] == True:
+                emit('cureDiscovered', {'playerName': username,'msg':response,'cardsToDiscard':cities},room=room)
+            else:
+                emit('cureDiscovered', {'msg': response})
 
 
 @socketio.on('PassTurn')

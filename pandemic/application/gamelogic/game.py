@@ -1132,6 +1132,9 @@ class GameBoard:
             return False
 
     def discoverCure(self,playerId,cities):
+
+
+
         """
         at any research station, discard 5 city cards of the same disease colour to cure that disease
         Returns a dictionary:
@@ -1151,10 +1154,11 @@ class GameBoard:
             responseDict["errorMessage"] = "ERROR: you aren't at a research station!"
             return responseDict
         # Check there is 5 city cards. Or if the player is the scientist, that there are 4 cards.
-        if playerObj.role == "scientist" and len(cities) != 4:
-            responseDict["validAction"] = False
-            responseDict["errorMessage"] = "ERROR: you didn't supply the right amount of cards (scientist needs 4)"
-            return responseDict
+        if playerObj.role == "scientist":
+            if len(cities) != 4:
+                responseDict["validAction"] = False
+                responseDict["errorMessage"] = "ERROR: you didn't supply the right amount of cards (scientist needs 4)"
+                return responseDict
         elif len(cities) != 5:
             responseDict["validAction"] = False
             responseDict["errorMessage"] = "ERROR: you didn't supply the right amount of cards(need 5)"
@@ -1163,13 +1167,16 @@ class GameBoard:
         cityObjs = []
         colour = ""
         for cityStr in cities:
+
             cityObj = self.cities[cityStr]
+
             cityObjs.append(cityObj)
         # make sure all cards are cities of the same colour.
             if colour == "": # retrieve colour
                 colour = cityObj.colour
             else:
                 if cityObj.colour != colour:
+                    responseDict["validAction"] = False
                     responseDict["errorMessage"] = "ERROR: the cards aren't the same colour!"
                     return responseDict
         # we now know all cards are of the same colour, so remove them from the user's hand.
@@ -1216,7 +1223,12 @@ class GameBoard:
         # special case - if the player is the medic, it should cure all infections on that city. (3 is the maximum.)
         if playerObj.role == "medic":
             amount = 3
-        response=cityObj.treat(colour, amount)
+        if self.cures[colour]==1:
+            amount = 3
+
+        response = cityObj.treat(colour, amount)
+
+
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
             responseDict["cityName"] = targetCity
