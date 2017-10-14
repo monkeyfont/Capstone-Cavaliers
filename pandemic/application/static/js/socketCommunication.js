@@ -2,15 +2,72 @@
 socket = io.connect('http://' + document.domain + ':' + location.port);
 function endOfRound(info){
 
-// in here will do all the front end work with the json string
-alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
-console.log(info);
-//do some stuff
-socket.emit('roundOverDone')
+
+    // in here will do all the front end work with the json string
+    //alert("ROUND OVER CARDS AND INFECTIONS WILL NOW BE DONE");
+//    if (info.epidemic==true){
+//    //epidemic has been drawn so do epidemic front end stuff...
+//    }
+    //do some stuff
+	console.log("info",info)
+    for (var i=0;i<info.infections.length;i++){
+        var cityName=info.infections[i].city;
+        var amount=info.infections[i].amount;
+        var colour= info.infections[i].colour;
+        var path= info.infections[i].path;
+        for (var x=0;x<amount;x++){
+            //locations[cityName].infect({colour,infectionPath})
+            console.log(path)
+			if (path == undefined){
+				locations[cityName].infect({'colour':colour});
+			}else{
+				pathing = []
+				for (x in path){
+					city=locations[path[x]];
+					console.log(path[x])
+					console.log(locations[path[x]])
+					pathing.push({x:city.xPos,y:city.yPos})
+				}
+				city = locations[cityName]
+				pathing.push({x:city.xPos,y:city.yPos})
+				pathing.reverse()
+				locations[cityName].infect({'colour':colour,'infectionPath':pathing});
+			}
+
+                }
+     for (var player in info["cardDraw"]) {
+		var cards=info["cardDraw"][player]
+		for (var card in cards) {
+			if (cards.hasOwnProperty(card)) {
+			        if (player==thisPlayerName){
+                    if (cards[card]=="epidemic"){
+                        console.log("this is an epidemic card")
+                    }
+                    else{
+					playersHand.addCard({cardName:cards[card]})
+					}
+					}
+
+						  }
+					 }
+    }
+}
+
+
+    socket.emit('roundOverDone')
 
 
 
 };
+
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
 
 function checkMove(city){
 
@@ -23,6 +80,9 @@ socket.on('checked', function (data) {
         check=data.msg.validAction;
         var city=eval(data.city);
         if (data.msg.validAction ==true){
+            if (isEmpty(data.msg.medicTreatments)==false){
+            locations[data.msg.medicTreatments.cityName].disinfect({'colour':data.msg.medicTreatments.colour,'amount':data.msg.medicTreatments.amount});
+            }
 			player = players.players[data.playerName]
 			player.move(city.xPos,city.yPos);
 			console.log(player)
@@ -45,22 +105,22 @@ function directFlight(city) {
     var city = prompt("Enter name of city card in your hand you would like to move to");
     socket.emit('checkDirectFlight', {cityName:city})
 }
-socket.on('directFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg.validAction;
-        var city=eval(data.city);
-        if (check ==true){
-            players.players[data.playerName].move(city.xPos,city.yPos);
-	    }
-	    else{
-	    alert(data.msg.errorMessage);
-	    }
-
-	    if (data.msg.endRound==true){
-            endOfRound(data.msg);
-
-        }
-});
+//socket.on('directFlightChecked', function (data) {
+//        //alert(data.msg);
+//        check=data.msg.validAction;
+//        var city=eval(data.city);
+//        if (check ==true){
+//            players.players[data.playerName].move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	    alert(data.msg.errorMessage);
+//	    }
+//
+//	    if (data.msg.endRound==true){
+//            endOfRound(data.msg);
+//
+//        }
+//});
 
 
 
@@ -71,26 +131,26 @@ function charterFlight() {
     socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
 
 }
-socket.on('charterFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg.validAction;
-
-
-        if (check ==true){
-            var city=eval(data.city);
-            players.players[data.playerName].move(city.xPos,city.yPos);
-            // player.move(city.xPos,city.yPos);
-	    }
-	    else{
-	        alert(data.msg.errorMessage);
-	    }
-
-	    if (data.msg.endRound==true){
-            endOfRound(data.msg);
-
-        }
-
- });
+//socket.on('charterFlightChecked', function (data) {
+//        //alert(data.msg);
+//        check=data.msg.validAction;
+//
+//
+//        if (check ==true){
+//            var city=eval(data.city);
+//            players.players[data.playerName].move(city.xPos,city.yPos);
+//            // player.move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	        alert(data.msg.errorMessage);
+//	    }
+//
+//	    if (data.msg.endRound==true){
+//            endOfRound(data.msg);
+//
+//        }
+//
+// });
 
 
 function shuttleFlight() {
@@ -100,22 +160,22 @@ function shuttleFlight() {
 
 }
 
-socket.on('shuttleFlightChecked', function (data) {
-        //alert(data.msg);
-        check=data.msg.validAction;
-
-        if (check ==true){
-            var city=eval(data.city);
-             players.players[data.playerName].move(city.xPos,city.yPos);
-	    }
-	    else{
-	        alert(data.msg.errorMessage);
-	    }
-	    if (data.msg.endRound==true){
-            endOfRound(data.msg);
-
-        }
-});
+//socket.on('shuttleFlightChecked', function (data) {
+//        //alert(data.msg);
+//        check=data.msg.validAction;
+//
+//        if (check ==true){
+//            var city=eval(data.city);
+//             players.players[data.playerName].move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	        alert(data.msg.errorMessage);
+//	    }
+//	    if (data.msg.endRound==true){
+//            endOfRound(data.msg);
+//
+//        }
+//});
 
 
 
@@ -220,9 +280,7 @@ socket.on('diseaseTreated', function (data) {
         if (check ==true){
             var city=eval(data.city);
             //addResearchStation(city);
-			locations[data.city].disinfect({'colour':colour,'amount':1});
-
-
+			locations[data.city].disinfect({'colour':colour,'amount':data.msg.amount});
 	}
 	else{
 	    alert(data.msg.errorMessage);
@@ -238,22 +296,52 @@ socket.on('diseaseTreated', function (data) {
 
 function discoverCure() {
 
-    var city = prompt("Enter current city Name: ");
-    socket.emit('discoverCure', {cityName:city})
+    if (thisPlayerRole!="scientist"){
+
+    var card1 = prompt("Enter City name: ");
+    var card2 = prompt("Enter City name: ");
+    var card3 = prompt("Enter City name: ");
+    var card4 = prompt("Enter City name: ");
+    var card5 = prompt("Enter City name: ");
+    socket.emit('discoverCure', {cities:[card1,card2,card3,card4,card5]})
+    }
+    else{
+    var card1 = prompt("Enter City name: ");
+    var card2 = prompt("Enter City name: ");
+    var card3 = prompt("Enter City name: ");
+    var card4 = prompt("Enter City name: ");
+    socket.emit('discoverCure', {cities:[card1,card2,card3,card4]})
+
+    }
+
 
 }
 
 socket.on('cureDiscovered', function (data) {
         //alert(data.msg);
-        check=data.msg;
+        check=data.msg.validAction;
         var city=eval(data.city);
         if (check ==true){
             //addResearchStation(city);
-            console.log("Cure has been discovered")
+            alert("A cure has been discovered!")
+            playersHand.removeCard
+            for (var card in data.cardsToDiscard) {
+			if (cards.hasOwnProperty(card)) {
+				if (data.playerName==player){
+					playersHand.removeCard({cardName:data.cardsToDiscard[card]})
+				}
+						  }
+					 }
 	}
 	else{
-	    console.log("Sorry cure was not discovered");
+	    alert(data.msg.errorMessage);
 	}
+
+	if (data.msg.endRound==true){
+            endOfRound(data.msg);
+
+        }
+
 
     });
 
@@ -268,7 +356,7 @@ function discardCard(){
 socket.on('cardRemoved', function (data) {
         check=data.msg;
         if (check == true){
-        alert(data.cardToRemove+" has been discarded from your hand")
+        console.log(data.cardToRemove+" has been discarded from your hand")
         }
         else{
         alert("cannot discard this card")
@@ -347,19 +435,19 @@ socket.on('governmentGrantChecked', function (data) {
     });
 
 
-
-socket.on('airliftChecked', function (data) {
-
-        check=data.msg.validAction;
-
-        if (check ==true){
-            var city=eval(data.city);
-             players.players[data.playerName].move(city.xPos,city.yPos);
-	    }
-	    else{
-	        alert(data.msg.errorMessage);
-	    }
-    });
+//
+//socket.on('airliftChecked', function (data) {
+//
+//        check=data.msg.validAction;
+//
+//        if (check ==true){
+//            var city=eval(data.city);
+//             players.players[data.playerName].move(city.xPos,city.yPos);
+//	    }
+//	    else{
+//	        alert(data.msg.errorMessage);
+//	    }
+//    });
 
 socket.on('oneQuietNightChecked', function (data) {
 
@@ -384,6 +472,23 @@ socket.on('resilientPopulationChecked', function (data) {
 	    }
     });
 
+function dispatcherMove(){
+
+    var playerName = prompt("Enter Name of player you wish to move: ");
+    var cityName= prompt("Enter Name of city you wish to move player to: ");
+    socket.emit('dispatcherMove',{player:playerName,city:cityName});
+
+}
+
+function operationExpert(){
+
+    var cardName = prompt("Enter name of card you wish to discard: ");
+    var citytoMoveTo= prompt("Enter name of city you wish to move to")
+    socket.emit('operationExpert',{card:cardName,city:citytoMoveTo})
+
+
+}
+
 
 
 
@@ -397,11 +502,15 @@ socket.on('clicked', function (data) {
 	
 	
 socket.on('gotPlayer',function(data){
+
+    thisPlayerRole=data.playerType
+    //alert(thisPlayerRole);
 	//console.log('data is: ',data )
 	//console.log("you are the player",data.playerName);
 	//console.log("you are the player",data.playerType);
 	// players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:ATLANTA.xPos,yPos:ATLANTA.yPos});
 });
+
 
 socket.on('gamePlayerInitilization',function(data){
 	//console.log('data is: ',data )
@@ -414,6 +523,7 @@ socket.on('gamePlayerInitilization',function(data){
 	console.log("playersName",players.players[data.playerName])
 	
 	playerPortraits.addPlayerPortrait({playerType:data.playerType});
+
 });
 
 socket.on('InfectedCities',function(data){
@@ -439,7 +549,7 @@ socket.on('InfectedCities',function(data){
 
 socket.on('gotInitialHands',function(data){
 	console.log(data)
-
+	thisPlayerName=data.username;
     for (var player in data["playerhand"]) {
 		console.log(player)
 		console.log(data["playerhand"])
