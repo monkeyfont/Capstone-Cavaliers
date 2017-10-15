@@ -2,24 +2,23 @@ import unittest
 from unittest import TestCase
 from game import *
 
-class TestGameBoard(TestCase):
 
+class TestGameBoardInitFunctions(TestCase):
     def setUp(self):
         """ Create the gameBoard, add players """
-
         d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
         self.testGameBoard = GameBoard(d, initialize = False)
 
     def test_generateCities(self):
         self.assertEqual(self.testGameBoard.generateCities().__len__(), 48)
 
-
     def test_generatePlayerDeck(self):
         # test to make sure all 48 player cards are in the player deck list
         self.assertEqual(self.testGameBoard.generatePlayerDeck().__len__(), 48)
-        
+
     def test_generateInfectionDeck(self):
         self.assertEqual(self.testGameBoard.generateInfectionDeck().__len__(), 48)
+
 
     def test_distributeHand(self):
         # test num of cards for 4 players
@@ -28,7 +27,29 @@ class TestGameBoard(TestCase):
         for player in self.testGameBoard.players:
             self.assertEqual(self.testGameBoard.players[player].hand.__len__(), 2)
 
+    def test_placeEpidemicCards(self):
+        """ Ensure that epidemic cards are successfully placed into the deck. For the DEFAULT difficulty of 0, it should be 4."""
+        self.testGameBoard.placeEpidemicCards()
+        # check that the player deck contains 4 epidemic cards
+        count = 0
+        for card in self.testGameBoard.playerDeck:
+            if card.type == "epidemic":
+                count += 1
+        self.assertEqual(count, 4)
 
+    def test_setDifficultyEpidemicPlace(self):
+        """
+        Ensure that for difficutly of 1, there are 5 epidemic cards in the player deck.
+        This test ensures the difficulty selector works.
+        """
+        self.testGameBoard.difficulty = 1
+        print self.testGameBoard.difficulty
+        self.testGameBoard.placeEpidemicCards()
+        count = 0
+        for card in self.testGameBoard.playerDeck:
+            if card.type == "epidemic":
+                count += 1
+        self.assertEqual(count, 5)
 
     def test_infectCitiesStage(self):
         self.testGameBoard.cities = self.testGameBoard.generateCities()
@@ -39,8 +60,108 @@ class TestGameBoard(TestCase):
         self.assertEqual(self.testGameBoard.infectionDiscarded.__len__(),9)
 
 
-    def test_placeEpidemicCards(self):
-        self.fail()
+    def test_startingLocation(self):
+        pass
+
+
+
+
+
+class TestGameActions(TestCase):
+    def setUp(self):
+        pass
+
+    def test_move(self):
+        pass
+
+    def test_shuttleFlight(self):
+        pass
+
+    def test_directFlight(self):
+        pass
+
+    def test_pass(self):
+        """ Tests for the pass action."""
+        pass
+
+    def test_charterFlight(self):
+        pass
+
+    def test_shareKnowledgeGive(self):
+        pass
+
+    def test_shareKnowledgeTake(self):
+        pass
+
+    def test_discoverCure(self):
+        pass
+
+    def test_treatDisease(self):
+        pass
+
+    def test_buildResearchStation(self):
+        pass
+
+    def test_playerDiscard(self):
+        pass
+
+    def test_playerDiscardFail(self):
+        pass
+
+
+
+class TestGameCoordinator(TestCase):
+    def setUp(self):
+        pass
+
+    def test_infectCity(self):
+        pass
+
+    def test_outbreak(self):
+        pass
+
+    def test_processEpidemic(self):
+        pass
+
+class TestGameSpecialRoleActions(TestCase):
+    def setUp(self):
+        pass
+
+class TestGameEventActions(TestCase):
+    def setUp(self):
+        pass
+
+    def test_governmentGrant(self):
+        pass
+
+    def test_airLift(self):
+        pass
+
+    def test_skipInfectStage(self):
+        pass
+
+    def removeInfectionCard(self):
+        pass
+
+
+
+class TestGameEndOfRound(TestCase):
+    def setUp(self):
+        pass
+
+class TestGameMisc(TestCase):
+    def setUp(self):
+        pass
+
+
+class TestGameBoard(TestCase):
+
+    def setUp(self):
+        """ Create the gameBoard, add players """
+
+        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(d, initialize = False)
+
 
     def test_endTurnDrawCards(self):
         self.testGameBoard.playerDeck = self.testGameBoard.generatePlayerDeck()
@@ -53,7 +174,6 @@ class TestGameBoard(TestCase):
         #after turn ends two more cards are added to players hand
         for i in range(1,5):
             self.assertEqual(self.testGameBoard.players[i].hand.__len__(), 4)
-
 
 
     def test_endTurnInfectCities(self):

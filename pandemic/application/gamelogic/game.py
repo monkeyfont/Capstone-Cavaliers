@@ -382,7 +382,7 @@ class GameBoard:
     def __setStartingLocation(self):
         for playerkey in self.players:
             playerObj=self.players[playerkey]
-            playerObj.setLocation("ATLANTA")
+            playerObj.location = "ATLANTA"
 
     def __setRoles(self):
         roles=["dispatcher","medic","contingencyPlanner","operationsExpert","quarantineSpecialist","researcher","scientist"]
@@ -408,6 +408,7 @@ class GameBoard:
         #now need to place epidemic cards ( has to be done after hand has been delt)
         self.placeEpidemicCards()
         self.__setRoles()
+        self.__setStartingLocation()
         self.initialized = 1
 
 
