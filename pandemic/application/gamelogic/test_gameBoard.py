@@ -61,7 +61,11 @@ class TestGameBoardInitFunctions(TestCase):
 
 
     def test_startingLocation(self):
-        pass
+        """ Test that all players start in atlanta."""
+        self.testGameBoard.setStartingLocation()
+        for p in self.testGameBoard.players:
+            playerObj = self.testGameBoard.players[p]
+            self.assertEqual(playerObj.location, "ATLANTA")
 
 
 
@@ -69,190 +73,86 @@ class TestGameBoardInitFunctions(TestCase):
 
 class TestGameActions(TestCase):
     def setUp(self):
-        pass
-
-    def test_move(self):
-        pass
-
-    def test_shuttleFlight(self):
-        pass
-
-    def test_directFlight(self):
-        pass
-
-    def test_pass(self):
-        """ Tests for the pass action."""
-        pass
-
-    def test_charterFlight(self):
-        pass
-
-    def test_shareKnowledgeGive(self):
-        pass
-
-    def test_shareKnowledgeTake(self):
-        pass
-
-    def test_discoverCure(self):
-        pass
-
-    def test_treatDisease(self):
-        pass
-
-    def test_buildResearchStation(self):
-        pass
-
-    def test_playerDiscard(self):
-        pass
-
-    def test_playerDiscardFail(self):
-        pass
-
-
-
-class TestGameCoordinator(TestCase):
-    def setUp(self):
-        pass
-
-    def test_infectCity(self):
-        pass
-
-    def test_outbreak(self):
-        pass
-
-    def test_processEpidemic(self):
-        pass
-
-class TestGameSpecialRoleActions(TestCase):
-    def setUp(self):
-        pass
-
-class TestGameEventActions(TestCase):
-    def setUp(self):
-        pass
-
-    def test_governmentGrant(self):
-        pass
-
-    def test_airLift(self):
-        pass
-
-    def test_skipInfectStage(self):
-        pass
-
-    def removeInfectionCard(self):
-        pass
-
-
-
-class TestGameEndOfRound(TestCase):
-    def setUp(self):
-        pass
-
-class TestGameMisc(TestCase):
-    def setUp(self):
-        pass
-
-
-class TestGameBoard(TestCase):
-
-    def setUp(self):
         """ Create the gameBoard, add players """
-
         d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
         self.testGameBoard = GameBoard(d, initialize = False)
 
-
-    def test_endTurnDrawCards(self):
-        self.testGameBoard.playerDeck = self.testGameBoard.generatePlayerDeck()
-        self.testGameBoard.distributeHand()
-
-        #players should have 4 cards in hand after initial deal
-        for i in range(1,5):
-            self.assertEqual(self.testGameBoard.players[i].hand.__len__(), 2)
-        self.testGameBoard.endTurnDrawCards()
-        #after turn ends two more cards are added to players hand
-        for i in range(1,5):
-            self.assertEqual(self.testGameBoard.players[i].hand.__len__(), 4)
-
-
-    def test_endTurnInfectCities(self):
-        self.fail()
-
-    def test_resetPlayerActions(self):
-        for k in self.testGameBoard.players:
-            self.testGameBoard.players[k].actions=0
-            self.testGameBoard.resetPlayerActions()
-            self.assertEqual(self.testGameBoard.players[k].actions, 4)
-
-    def test_totalPlayerActions(self):
-
-        for k in self.testGameBoard.players:
-            self.testGameBoard.players[k].actions = 0
-        self.assertEqual(self.testGameBoard.totalPlayerActions(), 0)
-        for k in self.testGameBoard.players:
-            self.testGameBoard.players[k].actions = 2
-        self.assertEqual(self.testGameBoard.totalPlayerActions(), 8)
-
     def test_movePlayer(self):
-
         self.testGameBoard.cities = self.testGameBoard.generateCities()
-        # test from starting position
-        self.assertEqual(self.testGameBoard.movePlayer(1,"WASHINGTON"), True)
-        #test from a different position on board that should be able to move t
-        self.testGameBoard.players[1].location="LONDON"
-        #self.assertEqual(self.testGameBoard.movePlayer(1, "PARIS"), True)
-        self.assertTrue(self.testGameBoard.movePlayer(1, "PARIS"))
-        # should return false as SEOUL is not connected to PARIS
-        self.assertFalse(self.testGameBoard.movePlayer(1, "SEOUL"))
 
+        # test from starting position
+        self.testGameBoard.movePlayer(1, "WASHINGTON")
+        self.assertEqual(self.testGameBoard.players[1].location, "WASHINGTON")
+        #test from a different position on board that should be able to move to.
+        self.testGameBoard.players[1].location="LONDON"
+        self.assertEqual(self.testGameBoard.players[1].location, "LONDON")
+
+
+    def test_movePlayerFail(self):
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        # should not be equal. The player shouldn't be able to move from ATLANTA to SEOUL.
+        self.testGameBoard.movePlayer(1, "SEOUL")
+        self.assertNotEqual(self.testGameBoard.players[1].location, "SEOUL")
 
 
     def test_directFlight(self):
-
-        card1=PlayerCard("SANFRANCISCO","blue","","","")
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card1 = PlayerCard("SANFRANCISCO","blue","","","")
         self.testGameBoard.players[1].hand.append(card1)
         self.testGameBoard.players[1].location = "SEOUL"
         # should assert true as player 1 has sanfran card in their deck
-        self.assertTrue(self.testGameBoard.directFlight(1,"SANFRANCISCO"))
-        # should return false as player does not have chicago card in their deck
-        self.assertFalse(self.testGameBoard.directFlight(1, "CHICAGO"))
+        self.testGameBoard.directFlight(1, "SANFRANCISCO")
+        self.assertTrue(self.testGameBoard.players[1].location, "SANFRANCISCO")
 
+    def test_directFlightFail(self):
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card1 = PlayerCard("SANFRANCISCO", "blue", "", "", "")
+        # should assert False as player doesn't have chicago in their hand.
+        self.testGameBoard.directFlight(1, "CHICAGO")
+        self.assertTrue(self.testGameBoard.players[1].location, "CHICAGO")
 
 
     def test_charterFlight(self):
-
         card1 = PlayerCard("SANFRANCISCO", "blue", "", "", "")
         self.testGameBoard.players[1].hand.append(card1)
         self.testGameBoard.players[1].location = "SANFRANCISCO"
-        self.assertTrue(self.testGameBoard.charterFlight(1, "SANFRANCISCO","SHANGHAI"))
+        self.testGameBoard.charterFlight(1, "SANFRANCISCO", "SHANGHAI")
+        self.assertTrue(self.testGameBoard.players[1].location, "SHANGHAI")
 
 
 
     def test_shuttleFlight(self):
         self.testGameBoard.cities = self.testGameBoard.generateCities()
 
-        paris=self.testGameBoard.cities['PARIS']
-        seoul=self.testGameBoard.cities['SEOUL']
-        paris.researchStation=1
-        seoul.researchStation=1
+        paris = self.testGameBoard.cities['PARIS']
+        seoul = self.testGameBoard.cities['SEOUL']
+        paris.researchStation = 1
+        seoul.researchStation = 1
         self.testGameBoard.players[1].location = "PARIS"
-        self.assertTrue(self.testGameBoard.shuttleFlight(1,"SEOUL"))
+        self.testGameBoard.shuttleFlight(1, "SEOUL")
         self.assertEqual(self.testGameBoard.players[1].location,"SEOUL")
+
+    def test_shuttleFlightFail(self):
+        """ Same as test above, but there is no research station in seoul. """
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+
+        paris = self.testGameBoard.cities['PARIS']
+        seoul = self.testGameBoard.cities['SEOUL']
+        paris.researchStation = 1
         seoul.researchStation = 0
-        self.assertFalse(self.testGameBoard.shuttleFlight(1, "SEOUL"))
+        self.testGameBoard.players[1].location = "PARIS"
+        self.testGameBoard.shuttleFlight(1, "SEOUL")
+        self.assertNotEqual(self.testGameBoard.players[1].location, "SEOUL")
 
 
     def test_buildResearchStation(self):
-
         self.testGameBoard.cities = self.testGameBoard.generateCities()
         card1 = PlayerCard("SANFRANCISCO", "blue", "", "", "")
         self.testGameBoard.players[1].hand.append(card1)
         self.testGameBoard.players[1].location = "SANFRANCISCO"
 
-
         self.assertEqual(self.testGameBoard.cities["SANFRANCISCO"].researchStation, 0)
-        self.assertTrue(self.testGameBoard.buildResearchStation(1,"SANFRANCISCO"))
+        self.testGameBoard.buildResearchStation(1,"SANFRANCISCO")
         self.assertEqual(self.testGameBoard.cities["SANFRANCISCO"].researchStation,1)
 
 
@@ -297,10 +197,54 @@ class TestGameBoard(TestCase):
         self.assertTrue(self.testGameBoard.discoverCure(1,cities))
 
 
+    def test_pass(self):
+        """ Tests for the pass action."""
+        pass
+
     def test_treatDisease(self):
-        self.fail()
+        pass
+
+    def test_playerDiscard(self):
+        pass
+
+    def test_playerDiscardFail(self):
+        pass
 
 
+
+class TestGameCoordinator(TestCase):
+    def setUp(self):
+        """ Create the gameBoard, add players """
+        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(d, initialize = False)
+
+    def test_outBreak(self):
+        pass
+
+    def test_processEpidemic(self):
+        pass
+
+    def test_resetPlayerActions(self):
+        for k in self.testGameBoard.players:
+            self.testGameBoard.players[k].actions=0
+            self.testGameBoard.resetPlayerActions()
+            self.assertEqual(self.testGameBoard.players[k].actions, 4)
+
+    def test_endTurnDrawCards(self):
+        # Each player should get 2 cards.
+        self.testGameBoard.playerDeck = self.testGameBoard.generatePlayerDeck()
+        self.testGameBoard.distributeHand()
+
+        # get current number of cards in the hand.
+        currentCards = len(self.testGameBoard.players[1].hand)
+        # draw cards for all players.
+        self.testGameBoard.endTurnDrawCards()
+        #after turn ends two more cards are added to EACH player's hand
+        for i in range(1,5):
+            self.assertEqual(len(self.testGameBoard.players[i].hand), currentCards + 2)
+
+    def test_endTurnInfectCities(self):
+        pass
 
     def test_infectCity(self):
         self.testGameBoard.cities = self.testGameBoard.generateCities()
@@ -311,13 +255,53 @@ class TestGameBoard(TestCase):
 
         self.assertEqual(testCity.getInfections("blue"),1)
 
+class TestGameSpecialRoleActions(TestCase):
+    def setUp(self):
+        pass
 
-    def test_cityOutBreak(self):
-        self.testGameBoard.cities = self.testGameBoard.generateCities()
-        city=self.testGameBoard.cities["SYDNEY"]
-        self.testGameBoard.cityOutBreak(city,city.colour)
+class TestGameEventActions(TestCase):
+    def setUp(self):
+        pass
+
+    def test_governmentGrant(self):
+        pass
+
+    def test_airLift(self):
+        pass
+
+    def test_skipInfectStage(self):
+        pass
+
+    def removeInfectionCard(self):
+        pass
+
+class TestGameEndOfRound(TestCase):
+    def setUp(self):
+        pass
+
+class TestGameUtils(TestCase):
+    def setUp(self):
+        pass
+
+    def isPlayerAtResearchStation(self):
+        pass
 
 
+class TestGameBoardMisc(TestCase):
+    """ Testing for legacy / misc functions that don't fall into the categories above."""
+
+    def setUp(self):
+        """ Create the gameBoard, add players """
+        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(d, initialize = False)
+
+    def test_totalPlayerActions(self):
+        for k in self.testGameBoard.players:
+            self.testGameBoard.players[k].actions = 0
+        self.assertEqual(self.testGameBoard.totalPlayerActions(), 0)
+        for k in self.testGameBoard.players:
+            self.testGameBoard.players[k].actions = 2
+        self.assertEqual(self.testGameBoard.totalPlayerActions(), 8)
 
 if __name__ == '__main__':
     unittest.main()
