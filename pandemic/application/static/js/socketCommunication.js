@@ -550,6 +550,7 @@ socket.on('InfectedCities',function(data){
 socket.on('gotInitialHands',function(data){
 	console.log(data)
 	thisPlayerName=data.username;
+	playerHandHTML = ""
     for (var player in data["playerhand"]) {
 		console.log(player)
 		console.log(data["playerhand"])
@@ -558,21 +559,24 @@ socket.on('gotInitialHands',function(data){
 		var playerId = player
 		var cards=data["playerhand"][player]
 		console.log("Player "+playerId + "has the cards: ")
-		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
-
+//		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
+        playerHandHTML = playerHandHTML + "<p class ='playerHand' id = '" + playerId + " ' >"
 		for (var card in cards) {
 			console.log(card);
 			if (cards.hasOwnProperty(card)) {
 				console.log(cards[card]);
 				if (data.username==player){
 					playersHand.addCard({cardName:cards[card]})
+					
 				}
 			// if you want to access each individial card then get in here through cards[card]
 			// if you want the list of player cards get it through just "cards"
-
-			$('#cards').val($('#cards').val() + cards[card] + '\n');
+            playerHandHTML = playerHandHTML + "<p> " + cards[card] + "</p>"
+//			$('#cards').val($('#cards').val() +  + '\n');
 						  }
 					 }
+					 playerHandHTML = playerHandHTML + "</p>"
         // }
     }
+    document.getElementById("playerCards").innerHTML = playerHandHTML ;
  });

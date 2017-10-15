@@ -168,6 +168,31 @@ def getMessages():
         leave_room(roomStart+"GetMessage")
         join_room(roomStart)
 
+
+@socketio.on('getPlayerCards')
+def getPlayerCards():
+    if lobbies == {}:
+        return
+    else:
+        roomStart = session["roomname"]
+        gameObject = games[roomStart]
+        players = gameObject.players
+        htmlAllCards = ""
+        for k in players.keys:
+            playerHand = players[k].hand
+            htmlAllCards = htmlAllCards + "<p class = 'player'>"
+            for cards in playerHand:
+                htmlFormat = "<p>"+cards+"</p>"
+                htmlAllCards = htmlAllCards+htmlFormat
+            htmlAllCards = htmlAllCards + "</p>"
+        roomStart = session["roomname"]
+        leave_room(roomStart)
+        join_room(roomStart+"GetMessage")
+        emit('showCards', {'msg' : htmlAllCards }, room=roomStart+"GetMessage")
+        leave_room(roomStart+"GetMessage")
+        join_room(roomStart)
+
+
 # this will received the message by the user
 # add it to the message history
 # and then return the whole history
