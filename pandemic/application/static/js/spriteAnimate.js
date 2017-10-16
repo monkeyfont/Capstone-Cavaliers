@@ -165,8 +165,8 @@ var deck = new sprite({
     height: 280,
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
-	xPos:2300,
-	yPos:1100,
+	xPos:2000,
+	yPos:1000,
 	xScale:1,
 	yScale:1,
     image: CardImage
@@ -208,17 +208,10 @@ playerActionsMenu = new playerActionsBar({
 	context: canvas.getContext("2d"),
 	height: 400,
 	width: 1920,
-	yPos: 1080
+	yPos: 1000
 
 });
 
-playerActionsMenu = new playerActionsBar({
-	context: canvas.getContext("2d"),
-	height: 400,
-	width: 1920,
-	yPos: 1080
-
-});
 
 
 

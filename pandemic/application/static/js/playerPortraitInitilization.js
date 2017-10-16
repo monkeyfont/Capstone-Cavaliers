@@ -9,7 +9,7 @@ var scientistPortrait = new Image(); scientistPortrait.src = 'static/images/Play
 
 playerRoles = {contingencyPlannerPortrait,dispatcherPortrait,medicPortrait,operationsExpertPortrait,quarantineSpecialistPortrait,researcherPortrait,scientistPortrait}
 function portraitInitilization(options){
-	this.xPos = 2560 
+	this.xPos = 2190 
 	this.yPos = 20
 	this.playerPortraits = {}
 	this.addPlayerPortrait = function(options){

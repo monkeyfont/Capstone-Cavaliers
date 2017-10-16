@@ -67,7 +67,7 @@ KOLKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL
 
 function playerHand(){
 	this.xPos = 960;
-	this.yPos = 1080-100;
+	this.yPos = 1080-150;
 
 	this.cards = {};
 
