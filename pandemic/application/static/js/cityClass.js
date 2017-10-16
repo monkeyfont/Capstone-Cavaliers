@@ -11,6 +11,8 @@ var quarantineSpecialist = new Image(); quarantineSpecialist.src = 'static/image
 var researcher = new Image(); researcher.src = 'static/images/PlayerIcons/researcher.png';
 var scientist = new Image(); scientist.src = 'static/images/PlayerIcons/scientist.png';
 
+var researchStationIcon = new Image(); researchStationIcon.src = 'static/images/Research Station.png';
+
 playerTypeImages = {contingencyPlanner,dispatcher,medic,operationsExpert,quarantineSpecialist,researcher,scientist}
 
 infectionImages = {blueInfection,blackInfection,redInfection,yellowInfection}
@@ -263,6 +265,18 @@ function city(options){
 		context.strokeStyle = this.colour;
 		context.stroke();
 		
+		if (this.researchStation){
+			this.context.drawImage(			
+			researchStationIcon, //image to use
+			0, // x position to start clipping 
+			0, // y position to start clipping
+			40, //width of clipped image
+			40, // height of clipped image
+			this.xPos-40, //x position for image on canvas
+			this.yPos, // y position for image on canvas
+			40*1, // width of image to use 
+			40*1);
+		}
 		
 		canvas.getContext("2d").font = "22px Sans-serif"
 		canvas.getContext("2d").strokeStyle = 'black';//'green';

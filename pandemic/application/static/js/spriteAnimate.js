@@ -213,7 +213,7 @@ playerActionsMenu = new playerActionsBar({
 });
 
 
-
+// locations.SANFRANCISCO.addResearchStation();
 
 
 var load = document.getElementById("load");
