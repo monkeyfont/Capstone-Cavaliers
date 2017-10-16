@@ -143,9 +143,24 @@ function city(options){
 		if (this.timeActive > 60*4){
 			console.log("activate dropdown")
 			infectionNumbers = this.activeInfections();
-			numberOfElements = Object.keys(infectionNumbers).length + Object.keys(this.players).length
+			
+			infectionLength = Object.keys(infectionNumbers).length
+			playersLength = Object.keys(this.players).length
+			
+			numberOfElements = infectionLength + playersLength
+			
+			if (playersLength!=0){
+				numberOfElements = numberOfElements + 1
+			}
+			if (infectionLength!=0){
+				numberOfElements = numberOfElements + 1
+			}
+			
+			if (this.researchStation){
+				numberOfElements = numberOfElements + 2
+			}
 			this.context.fillStyle = "rgba(0,0,0,.6)";
-			this.context.fillRect(this.xPos,this.yPos,120,80*numberOfElements);
+			this.context.fillRect(this.xPos,this.yPos,120,60*numberOfElements);
 			
 			startPosition = this.yPos
 			
@@ -240,6 +255,34 @@ function city(options){
 				startPosition = startPosition+256*0.2+10
 				
 			}
+			
+			
+			if (this.researchStation){
+				
+				this.context.font = "22px Sans-serif"
+				this.context.strokeStyle = 'black';//'green';
+				this.context.lineWidth = 8;
+				this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+				this.context.miterLimit=3;
+
+				this.context.strokeText("Station",this.xPos,startPosition+30);
+				this.context.fillStyle = 'white';//this.colour;
+
+				this.context.fillText("Station",this.xPos,startPosition+30);
+					
+				startPosition = startPosition + 30;
+				
+				this.context.drawImage(			
+				researchStationIcon, //image to use
+				0, // x position to start clipping 
+				0, // y position to start clipping
+				40, //width of clipped image
+				40, // height of clipped image
+				this.xPos, //x position for image on canvas
+				startPosition, // y position for image on canvas
+				40*1, // width of image to use 
+				40*1);
+		}
 			
 			
 			console.log("activeinfections",this.activeInfections())

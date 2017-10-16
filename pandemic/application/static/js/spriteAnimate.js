@@ -212,8 +212,13 @@ playerActionsMenu = new playerActionsBar({
 
 });
 
+locations.SANFRANCISCO.addResearchStation();
 
-// locations.SANFRANCISCO.addResearchStation();
+locations.ATLANTA.infect({colour:"red"})
+locations.ATLANTA.infect({colour:"blue"})
+locations.ATLANTA.infect({colour:"yellow"})
+locations.ATLANTA.infect({colour:"black"})
+locations.ATLANTA.addResearchStation();
 
 
 var load = document.getElementById("load");
