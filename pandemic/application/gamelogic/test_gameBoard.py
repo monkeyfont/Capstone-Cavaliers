@@ -68,14 +68,15 @@ class TestGameBoardInitFunctions(TestCase):
             self.assertEqual(playerObj.location, "ATLANTA")
 
 
-
-
-
 class TestGameActions(TestCase):
     def setUp(self):
         """ Create the gameBoard, add players """
         d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
         self.testGameBoard = GameBoard(d, initialize = False)
+
+    def test_Actions(self):
+         # user should start with 4 actions.
+        self.assertEquals(self.testGameBoard.players[1].actions, 4)
 
     def test_movePlayer(self):
         self.testGameBoard.cities = self.testGameBoard.generateCities()
@@ -196,13 +197,114 @@ class TestGameActions(TestCase):
 
         self.assertTrue(self.testGameBoard.discoverCure(1,cities))
 
-
     def test_pass(self):
-        """ Tests for the pass action."""
-        pass
+        """ user should have no actions after using passTurn."""
+        self.testGameBoard.passTurn(1)
+        self.assertEquals(self.testGameBoard.players[1].actions, 0)
 
-    def test_treatDisease(self):
-        pass
+    def test_treatDiseaseBlue(self):
+        """
+        ensure that the validAction dictionary is correct.
+        Also tests a blue city ( ATLANTA ) is infected successfully.
+        """
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("ATLANTA", "blue", "", "", "")
+        self.testGameBoard.players[1].location = "ATLANTA"
+        # infect atlanta
+        atlanta = self.testGameBoard.cities['ATLANTA']
+        atlanta.blue = 1
+        result = self.testGameBoard.treatDisease(amount=1, colour="blue", playerId=1, targetCity="ATLANTA")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(atlanta.blue, 0)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
+
+    def test_treatDiseaseRed(self):
+        """ Test for red (SHANGHAI)"""
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("SHANGHAI", "red", "", "", "")
+        self.testGameBoard.players[1].location = "SHANGHAI"
+        # infect atlanta
+        shanghai = self.testGameBoard.cities['SHANGHAI']
+        shanghai.red = 1
+        result = self.testGameBoard.treatDisease(amount=1, colour="red", playerId=1, targetCity="SHANGHAI")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(shanghai.red, 0)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
+
+    def test_treatDiseaseYellow(self):
+        """ Test for yellow (MIAMI)"""
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("MIAMI", "yellow", "", "", "")
+        self.testGameBoard.players[1].location = "MIAMI"
+        # infect atlanta
+        miami = self.testGameBoard.cities['MIAMI']
+        miami.yellow = 1
+        result = self.testGameBoard.treatDisease(amount=1, colour="yellow", playerId=1, targetCity="MIAMI")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(miami.yellow, 0)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
+
+    def test_treatDiseaseBlack(self):
+        """ Test for black (KOLKATA)"""
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("KOULKATA", "black", "", "", "")
+        self.testGameBoard.players[1].location = "KOULKATA"
+        # infect atlanta
+        koulkata = self.testGameBoard.cities['KOULKATA']
+        koulkata.black = 1
+        result = self.testGameBoard.treatDisease(amount=1, colour="black", playerId=1, targetCity="KOULKATA")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(koulkata.black, 0)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
+
+    def test_treatDiseaseFail(self):
+        """ the return dictionary from treatDisease should have validAction == False"""
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        self.testGameBoard.players[1].location = "ATLANTA"
+        result = self.testGameBoard.treatDisease(amount=1, colour="blue", playerId=1, targetCity="ATLANTA")
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], False)
+
+    def test_treatDiseaseMultiple(self):
+        """ Tests that treatDisease works for multiples."""
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("ATLANTA", "blue", "", "", "")
+        self.testGameBoard.players[1].location = "ATLANTA"
+        # infect atlanta
+        atlanta = self.testGameBoard.cities['ATLANTA']
+        atlanta.blue = 3
+        result = self.testGameBoard.treatDisease(amount=2, colour="blue", playerId=1, targetCity="ATLANTA")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(atlanta.blue, 1)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
+
+    def test_treatDiseaseMultiple2(self):
+        """ Tests that treatDisease works for multiples, even if the city doesn't have that many infections.
+            Checking that treatDisease(amount=3) works for a city with only 1 infection.
+        """
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("ATLANTA", "blue", "", "", "")
+        self.testGameBoard.players[1].location = "ATLANTA"
+        # infect atlanta
+        atlanta = self.testGameBoard.cities['ATLANTA']
+        atlanta.blue = 1
+        result = self.testGameBoard.treatDisease(amount=3, colour="blue", playerId=1, targetCity="ATLANTA")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(atlanta.blue, 0)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
 
     def test_playerDiscard(self):
         pass
@@ -258,6 +360,40 @@ class TestGameCoordinator(TestCase):
 class TestGameSpecialRoleActions(TestCase):
     def setUp(self):
         pass
+
+    def test_medicMoveAfterCure(self):
+        pass
+
+    def test_reseracherGive(self):
+        pass
+
+    def test_researcherTake(self):
+        pass
+
+    def test_operationsBuild(self):
+        pass
+
+    def test_operationsTeleport(self):
+        pass
+
+    def test_quarantinePreventInfect(self):
+        pass
+
+    def test_medicPreventInfect(self):
+        pass
+
+    def test_dispacterMoveOther(self):
+        pass
+
+    def test_dispatcherTeleportOther(self):
+        pass
+
+    def test_scientistDiscoverCure(self):
+        pass
+
+    def test_medicCureDisease(self):
+        pass
+
 
 class TestGameEventActions(TestCase):
     def setUp(self):
