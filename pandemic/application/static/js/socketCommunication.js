@@ -570,7 +570,11 @@ socket.on('gotInitialHands',function(data){
 			console.log(card);
 			cardInfo = {}
 			cardInfo.cardName = cards[card]
-			cardInfo.colour = "none"
+			try{
+				cardInfo.colour = locations[cards[card]].colour
+			}catch(err){
+				cardInfo.colour = "none"
+			}
 			playerCardInfo.cards.push(cardInfo)
 			if (cards.hasOwnProperty(card)) {
 				console.log(cards[card]);
