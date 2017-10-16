@@ -433,8 +433,8 @@ class GameBoard:
         for k in PLAYER_CARDS: #name,colour,population,area,country
             cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
-        # for k in EVENT_CARDS: #id, name, description
-        #     cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+        for k in EVENT_CARDS: #id, name, description
+            cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
 
         return cards
 
