@@ -1,8 +1,8 @@
 var scrnWidth = window.innerWidth;//screen.width;
 var scrnHeight = window.innerHeight;//screen.height;
 console.log("Total Width: "+scrnWidth+" Total Height: "+scrnHeight)
-var optimalScreenWidth = 2560; //1920
-var optimalScreenHeight = 1440; //1080;
+var optimalScreenWidth = 2196;//2560; //1920
+var optimalScreenHeight = 1235;//1440; //1080;
 
 var screenHeightPercentage = scrnHeight/optimalScreenHeight;
 var screenWidthPercentage = scrnWidth/optimalScreenWidth;

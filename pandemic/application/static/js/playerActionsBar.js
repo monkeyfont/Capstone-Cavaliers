@@ -33,7 +33,7 @@ function playerActionsBar(options){
 	this.width = options.width;	
 	this.yPos = options.yPos;
 	this.iconPosX = 200;
-	this.iconPosY = this.yPos+100;
+	this.iconPosY = this.yPos+50;
 	this.iconScale = 1.5;
 	this.iconWidth = 70;
 	this.iconHeight = 90;
