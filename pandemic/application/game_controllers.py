@@ -114,6 +114,7 @@ def getPlayersHands():
         playerHand=playerObj.hand
         playerCardNames=[]
         for card in playerHand:
+            print (card)
             cardname=card.name
             playerCardNames.append(cardname)
         playersHands[players[playerK].name]=playerCardNames
