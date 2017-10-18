@@ -1,6 +1,9 @@
     var socket;
     $(document).ready(function () {
 
+
+
+
     socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('connect', function () {
         socket.emit('getMessages');
@@ -12,6 +15,11 @@
         $('#message_input').val("");
         // submit that value
         socket.emit('sendMessage', {message:value})
+
+    });
+
+    $("#gameStarter").click(function(){
+        socket.emit('startGame')
 
     });
 
@@ -28,10 +36,32 @@
         location.href ="/game";
 
     });
+    socket.on('roleSet', function (data) {
 
-
-    $("#gameStarter").click(function(){
-        socket.emit('startGame')
+        //$("#showRoleOptions").hide();
+        document.getElementById("showRoleOptions").innerHTML = "<h2>You are now the "+data.msg+"</h2>";
 
     });
+
+
+     socket.on('changeRoleAvailibility', function (data) {
+//     try {
+//        var elem = document.getElementById(data.msg).innerHTML = data.msg+" role is already taken!";
+//            }
+//    catch(err) {
+//
+//        }
+
+     });
+
+
     });
+
+
+    function setRole(){
+
+     var role= $('input[name=role]:checked', '#myForm').val()
+     socket.emit('setRole', {roleChoice:role})
+
+
+    }

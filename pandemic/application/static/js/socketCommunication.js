@@ -267,10 +267,13 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-    var colour = prompt("Enter colour of infection you wish to treat: ");
+    var res = prompt("Enter colour of infection you wish to treat: ");
+    var colour = res.toLowerCase();
     socket.emit('treatDisease', {InfectionColour:colour})
 
-}
+    }
+
+
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
