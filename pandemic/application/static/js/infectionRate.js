@@ -11,8 +11,8 @@ function infectionRate(options) {
 	this.infectionStage = 0;
 	this.rateArray = [2,2,2,3,3,4,4]
 	
-	this.advanceStage = function(){
-		this.infectionStage++;
+	this.setStage = function(options){
+		this.infectionStage = options.infectionStage;
 	}
 
 	this.render = function () {
