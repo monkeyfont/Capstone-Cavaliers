@@ -362,9 +362,11 @@ class GameBoard:
 
             result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
+            result["cubesUsed"]=[]
             result["infections"]+=infections[0]
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
+                result["cubesUsed"].append({colour:self.cubesUsed[colour]})
                 if self.cubesUsed[colour] > self.maxCubeCount:
                     result["gameLoss"] = True
                     result["gameLossReason"].append("Out of " + colour + " cubes")
@@ -376,6 +378,8 @@ class GameBoard:
             if self.outBreakLevel >= self.maxOutBreakLevel:
                 result["gameLoss"] = True
                 result["gameLossReason"].append("Outbreak level")
+
+        #print result
         return result
 
 
@@ -492,6 +496,7 @@ class GameBoard:
             cityObj = self.cities[cityName] # get the city object with the key that matches card city name.
             colour = cityObj.colour
             cityObj.infect(colour, infectionAmount)
+            self.cubesUsed[colour] += infectionAmount
             print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
             # discard the 9 infection cards.
         for i in range(9):
@@ -799,10 +804,12 @@ class GameBoard:
         if playerObj.role == "medic":
             # if that colour is cured, remove all infections on that city of that colour.
             for colour in self.cures:
-                amount = cityObj.getInfections(colour)
-                if amount > 0: # only cure if greater than 0.
-                    cityObj.treat(colour, amount)
-                    result = {"cityName":cityObj.name, "amount":amount, "colour":colour}
+                if self.cures[colour] == 1:
+                    amount = cityObj.getInfections(colour)
+                    if amount > 0: # only cure if greater than 0.
+                        cityObj.treat(colour, amount)
+                        self.cubesUsed[colour]-=amount
+                        result = {"cityName":cityObj.name, "amount":amount, "colour":colour}
         return result
 
     def dispatcherTeleportOther(self, playerId, targetPlayerId, targetCity):
@@ -1231,6 +1238,7 @@ class GameBoard:
 
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
+            self.cubesUsed[colour] -= amount
             responseDict["cityName"] = targetCity
             responseDict["amount"] = amount
             responseDict["colour"] = colour
@@ -1288,6 +1296,7 @@ class GameBoard:
             # the city needs to be infected AND an outbreak will occur.
             infectAmount = 3 - currentInfections
             cityObj.infect(colour, infectAmount)
+            self.cubesUsed[colour]+=infectAmount
             # add the infected city.
             infections.append({"city":targetCity, "colour":colour, "amount":amount})
             # add the outbreak cities.
@@ -1295,6 +1304,7 @@ class GameBoard:
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour,amount)
+            self.cubesUsed[colour] += amount
             infections.append({"city":targetCity, "colour":colour, "amount":amount})
         return infections
 
@@ -1346,6 +1356,7 @@ class GameBoard:
                 # check if the infection is blocked by specialist abilities.
                 if self.canInfectionBePrevented(city, colour) == False:
                     city.infect(colour, 1)
+                    self.cubesUsed[colour] += amount
                     # add to the infections list. (note: path is a list comprehension of the cityObjs)
                     infections.append({"city":city.name, "path":[c.name for c in cityOutBreaks], "colour":colour, "amount":1})
             else:

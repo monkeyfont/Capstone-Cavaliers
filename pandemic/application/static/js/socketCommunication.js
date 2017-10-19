@@ -51,6 +51,30 @@ function endOfRound(info){
 						  }
 					 }
     }
+
+
+    // CUBE METER STUFF
+    console.log(info["cubesUsed"])
+    for (var i=0;i<info["cubesUsed"].length;i++){
+        for (key in info["cubesUsed"][i]){
+            infectionM.alterInfectionStatus({"colour":key,"amount":info["cubesUsed"][i][key]})
+            //{"amount":info["cubesUsed"][i][key]}
+        }
+    }
+    
+    //OUBREAK LEVEL STUFF
+
+    var outbreakLevel;
+    outbreakLevel= info["outBreakLevel"]
+    // do whatever with that number
+
+
+    //INFECTION RATE STUFF
+    var infectionLevel;
+    infectionLevel=info["infectionLevel"]
+    // do front end stuff to update it
+
+
 }
 
 
