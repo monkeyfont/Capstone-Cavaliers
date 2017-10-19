@@ -41,6 +41,14 @@
     color:white;
 
 }
+
+
+#gameStarter{
+
+    position:fixed;
+    height:4%;
+}
+
 #lobbyMessageHistory::-webkit-scrollbar{
 width:16px;
 background-color:rgba(0,0,0,0.3);
@@ -56,7 +64,4 @@ border:1px solid #333333;
 #lobbyMessageHistory::-webkit-scrollbar-thumb:active{
 background-color:white;
 border:1px solid #333333;
-}
-#myCanvas {
-    margin: 0xp;
 }

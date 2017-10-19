@@ -114,6 +114,7 @@ def getPlayersHands():
         playerHand=playerObj.hand
         playerCardNames=[]
         for card in playerHand:
+            print (card)
             cardname=card.name
             playerCardNames.append(cardname)
         playersHands[players[playerK].name]=playerCardNames
@@ -160,7 +161,6 @@ def getMessages():
         return
     else:
         roomStart = session["roomname"]
-        print roomStart
         LobbyInstance = lobbies[roomStart]
         previousMessages = LobbyInstance.messageHistory
         leave_room(roomStart)
@@ -169,24 +169,20 @@ def getMessages():
         leave_room(roomStart+"GetMessage")
         join_room(roomStart)
 
-# this will received the message by the user
-# add it to the message history
-# and then return the whole history
 @socketio.on('sendMessage')
 def handleMessage(msg):
-    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     player = session["username"]
     room = session["roomname"]
     message = msg["message"]
-    messageSent = time + "  :: "+ player + " said: "+message
+    messageSent = "<p> " + player + ": "+message + "</p>"
     LobbyInstance = lobbies[room]
     if LobbyInstance.messageHistory == "":
         LobbyInstance.messageHistory = messageSent
     else:
-        LobbyInstance.messageHistory = LobbyInstance.messageHistory + " &#013 "+messageSent
+        LobbyInstance.messageHistory = LobbyInstance.messageHistory + messageSent
     #print "All of the chat history: " + LobbyInstance.messageHistory
-    emit('messageReceived', {'msg' : messageSent}, room=room)
+    emit('messageReceived', {'msg' : LobbyInstance.messageHistory }, room=room)
 
 @socketio.on('click')
 def handleclick(msg):
@@ -616,7 +612,7 @@ def lobby():
                     print"Lobby does not exist"
                     return (render_template("home.html", error="Sorry this room does not exist try another room"))
 
-            return (render_template("intermission.html",room=session['roomname']))
+            return (render_template("intermission.html",room=session['roomname'],messages =  lobby.messageHistory))
     return (render_template("home.html"))
 
 print("imported")

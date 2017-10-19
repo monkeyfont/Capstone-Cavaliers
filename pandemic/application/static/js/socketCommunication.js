@@ -548,31 +548,50 @@ socket.on('InfectedCities',function(data){
        });
 
 socket.on('gotInitialHands',function(data){
-	console.log(data)
+	console.log("data",data)
 	thisPlayerName=data.username;
+	playerHandHTML = ""
+	playersHands = []
+	// playersHands = [{playername:"",cards:[{cardName:""colour:""},{cardName:""colour:""}]}
     for (var player in data["playerhand"]) {
+		playerCardInfo = {}
+		playerCardInfo.playerName = player
+		playerCardInfo.cards = []
 		console.log(player)
 		console.log(data["playerhand"])
 		console.log(data["playerhand"][player])
     // if (data.hasOwnProperty(player)) {
 		var playerId = player
 		var cards=data["playerhand"][player]
-		console.log("Player "+playerId + "has the cards: ")
-		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
-
+		console.log("Player "+playerId + " has the cards: ")
+//		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
+        playerHandHTML = playerHandHTML + "<p class ='playerHand' id = '" + playerId + " ' >"
 		for (var card in cards) {
 			console.log(card);
+			cardInfo = {}
+			cardInfo.cardName = cards[card]
+			try{
+				cardInfo.colour = locations[cards[card]].colour
+			}catch(err){
+				cardInfo.colour = "none"
+			}
+			playerCardInfo.cards.push(cardInfo)
 			if (cards.hasOwnProperty(card)) {
 				console.log(cards[card]);
 				if (data.username==player){
 					playersHand.addCard({cardName:cards[card]})
+					
 				}
 			// if you want to access each individial card then get in here through cards[card]
 			// if you want the list of player cards get it through just "cards"
-
-			$('#cards').val($('#cards').val() + cards[card] + '\n');
+            playerHandHTML = playerHandHTML + "<p> " + cards[card] + "</p>"
+//			$('#cards').val($('#cards').val() +  + '\n');
 						  }
 					 }
+					 playersHands.push(playerCardInfo)
+					 playerHandHTML = playerHandHTML + "</p>"
         // }
     }
+	console.log("playerCardJSON ",playersHands)
+    document.getElementById("playerCards").innerHTML = playerHandHTML ;
  });

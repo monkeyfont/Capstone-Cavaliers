@@ -15,13 +15,19 @@
 
     });
 
+
     socket.on('messageReceived', function (data) {
-        $('#log').val($('#log').val() + data.msg + '\n');
+//        $('#log').val($('#log').val() + data.msg + '\n');
+
+        document.getElementById("lobbyMessageHistory").innerHTML = data.msg ;
+        var messageBody = document.querySelector('#lobbyMessageHistory');
+        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
     });
 
-     socket.on('playerJoined', function (data) {
-        $('#log').val($('#log').val() + data.msg + '\n');
-    });
+//     socket.on('playerJoined', function (data) {
+//        $('#log').val($('#log').val() + data.msg + '\n');
+//    });
 
     socket.on('gameStarted', function (data) {
 

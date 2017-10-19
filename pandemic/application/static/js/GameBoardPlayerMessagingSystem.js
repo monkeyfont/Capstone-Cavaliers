@@ -15,12 +15,22 @@ $(document).ready(function () {
 
     });
 
+
     socket.on('messageReceived', function (data) {
-        $('#log').val($('#log').val() + data.msg + '\n');
+//        $('#log').val($('#log').val() + data.msg + '\n');
+
+        document.getElementById("lobbyMessageHistory").innerHTML = data.msg ;
+        var messageBody = document.querySelector('#lobbyMessageHistory');
+        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+        var res = data.msg.split("<p>");
+        document.getElementById("newMessage").style["visibility"] = "visible";
+        document.getElementById("newMessage").innerHTML = res[res.length-1];
+        setTimeout(function(){document.getElementById("newMessage").style["visibility"] = "hidden";}, 3000);
+
+//        window.setTimeout('runMoreCode()',timeInMilliseconds);
+
     });
 
-    socket.on('created', function (data) {
-        $('#log').val($('#log').val() + data.msg + '\n');
-    });
+
 
 });

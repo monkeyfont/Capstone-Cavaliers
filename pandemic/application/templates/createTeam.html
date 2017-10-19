@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
     <link rel="stylesheet" href="static/css/home.css">
+    <link rel="stylesheet" href="static/css/newTeam.css">
 
     <title>Pandemic | New team</title>
 
@@ -20,24 +21,30 @@
             <form action = "/lobby" method = "post">
                 <div class="row">
                     <div class="col-sm-12"><h2>Team Name</h2></div>
-                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="privacy" value="public">Public</div>
-                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="privacy" value="private" checked="checked">Private</div>
-
-                    </br>
-                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="difficulty" value="Easy" checked="checked">Easy</div>
-                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="difficulty" value="Medium">Medium</div>
-                    <div class="col-sm-12"><input  class = "bullets" type="radio" name="difficulty" value="Hard">Hard</div>
-
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "roomname"></div>
+                    <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "roomname" value="Mexico"></div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12"><h2>Team Privacy</h2></div>
+                     <div class="col-sm-6"><input  class = "privacy-bullets" type="radio" name="privacy" value="public" id="public">Public</div>
+                    <div class="col-sm-6"><input  class = "privacy-bullets" type="radio" name="privacy" value="private" checked="checked">Private</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12"><h2>Game Difficulty</h2></div>
+
+                    <div class="col-sm-4"><input  class = "difficulty-bullets" type="radio" name="difficulty" value="Easy" checked="checked">Easy</div>
+                    <div class="col-sm-4"><input  class = "difficulty-bullets" type="radio" name="difficulty" value="Medium">Medium</div>
+                    <div class="col-sm-4"><input  class = "difficulty-bullets" type="radio" name="difficulty" value="Hard">Hard</div>
+                </div>
+
                 <div class="row">
                     <div class="col-sm-12"><h2>Your Name</h2></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12"><input class="messageHere" type = "text"  placeholder= "" name = "username" ></div>
+                    <div class="col-sm-12"><input class="messageHere" type = "text"  placeholder= "" name = "username" value="Jorge"></div>
                 </div>
                 <div class="row">
                 <h1>{{error}}</h1>
