@@ -161,14 +161,14 @@ cardFront.src = 'static/images/infection-Front.png';
 var deck = new sprite({
 	id:"Infection Deck",
 	context: canvas.getContext("2d"),
-    width: 584,
-    height: 800,
+    width: 200,
+    height: 280,
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
-	xPos:2300,
-	yPos:1100,
-	xScale:0.4,
-	yScale:0.4,
+	xPos:2000,
+	yPos:1000,
+	xScale:1,
+	yScale:1,
     image: CardImage
 
 })
@@ -209,17 +209,10 @@ playerActionsMenu = new playerActionsBar({
 	context: canvas.getContext("2d"),
 	height: 400,
 	width: 1920,
-	yPos: 1080
+	yPos: 1000
 
 });
 
-playerActionsMenu = new playerActionsBar({
-	context: canvas.getContext("2d"),
-	height: 400,
-	width: 1920,
-	yPos: 1080
-
-});
 
 
 

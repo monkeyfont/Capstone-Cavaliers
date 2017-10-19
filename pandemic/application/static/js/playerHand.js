@@ -9,7 +9,7 @@ var ATLANTA = new Image();  ATLANTA.src =  'static/images/Cards/player/Blue/ATLA
 var WASHINGTON = new Image();  WASHINGTON.src = 'static/images/Cards/player/Blue/WASHINGTON.png';
 var LONDON = new Image();  LONDON.src = 'static/images/Cards/player/Blue/LONDON.png';
 var ESSEN = new Image();  ESSEN.src = 'static/images/Cards/player/Blue/ESSEN.png';
-var STPETERSBURG = new Image();  STPETERSBURG.src = 'static/images/Cards/player/Blue/STPETERSBURG.png';
+var STPETERSBURG = new Image();  STPETERSBURG.src = 'static/images/Cards/player/Blue/ST_PETERSBURG.png';
 var MADRID = new Image();  MADRID.src = 'static/images/Cards/player/Blue/MADRID.png';
 var PARIS = new Image();  PARIS.src = 'static/images/Cards/player/Blue/PARIS.png';
 var MILAN = new Image();  MILAN.src = 'static/images/Cards/player/Blue/MILAN.png';
@@ -40,7 +40,7 @@ var SHANGHAI = new Image(); SHANGHAI.src = 'static/images/Cards/player/Red/SHANG
 var SEOUL = new Image();  SEOUL.src = 'static/images/Cards/player/Red/SEOUL.png';
 var BEIJING = new Image();  BEIJING.src = 'static/images/Cards/player/Red/BEIJING.png';
 
-var KOULKATA = new Image(); KOULKATA.src = 'static/images/Cards/player/Black/KOULKATA.png';
+var KOLKATA = new Image(); KOLKATA.src = 'static/images/Cards/player/Black/KOLKATA.png';
 var CHENNAI = new Image();  CHENNAI.src = 'static/images/Cards/player/Black/CHENNAI.png';
 var DELHI = new Image();  DELHI.src = 'static/images/Cards/player/Black/DELHI.png';
 var MUMBAI = new Image();  MUMBAI.src = 'static/images/Cards/player/Black/MUMBAI.png';
@@ -63,11 +63,11 @@ var Resilent_Population = new Image(); Resilent_Population.src = 'static/images/
 var allPossiblePlayerCards = {testCard:testCardImage,SANFRANCISCO,CHICAGO,MONTREAL,NEWYORK,ATLANTA,WASHINGTON,LONDON,ESSEN,STPETERSBURG,MADRID,PARIS,MILAN,
 LOSANGELES,MEXICOCITY,MIAMI,BOGOTA,LIMA,SANTIAGO,BUENOSAIRES,SAOPAULO,LAGOS,KHARTOUM,KINSHASA,JOHANNESBURG,
 SYDNEY,JAKARTA,MANILA,HOCHIMINHCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,SEOUL,BEIJING,
-KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS,Airlift,Epidemic,Forecast,Government_Grant,One_Quiet_Night,Resilent_Population}
+KOLKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS,Airlift,Epidemic,Forecast,Government_Grant,One_Quiet_Night,Resilent_Population}
 
 function playerHand(){
 	this.xPos = 960;
-	this.yPos = 1080-100;
+	this.yPos = 1080-150;
 
 	this.cards = {};
 
@@ -77,14 +77,14 @@ function playerHand(){
 			newPlayerCard = new playerCard({
 			id:"Infection player Card ",
 			context: canvas.getContext("2d"),
-			width: 500,
-			height: 700,
+			width: 200,
+			height: 280,
 			numberOfFrames: 1,
 			ticksPerFrame: 1,
 			xPos:1600,
 			yPos:40,
-			xScale:0.4,
-			yScale:0.4,
+			xScale:1,
+			yScale:1,
 			imageBack: CardImage,
 			imageFront: cardFront
 		});
