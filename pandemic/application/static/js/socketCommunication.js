@@ -35,6 +35,7 @@ function endOfRound(info){
 			}
 
                 }
+                }
      for (var player in info["cardDraw"]) {
 		var cards=info["cardDraw"][player]
 		for (var card in cards) {
@@ -61,11 +62,12 @@ function endOfRound(info){
             //{"amount":info["cubesUsed"][i][key]}
         }
     }
-    
+
     //OUBREAK LEVEL STUFF
 
     var outbreakLevel;
     outbreakLevel= info["outBreakLevel"]
+
     // do whatever with that number
 
 
@@ -74,9 +76,7 @@ function endOfRound(info){
     infectionLevel=info["infectionLevel"]
     // do front end stuff to update it
 
-
-}
-
+    
 
     socket.emit('roundOverDone')
 
