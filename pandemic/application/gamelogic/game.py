@@ -1196,6 +1196,7 @@ class GameBoard:
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
         responseDict["validAction"] = True
+        responseDict["colourCured"] = colour
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
         return responseDict
