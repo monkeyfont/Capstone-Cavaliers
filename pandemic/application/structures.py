@@ -8,3 +8,5 @@ class Lobby:
         self.playerCount=0
         self.messageHistory = ""
         self.gameStarted=False
+        self.playerRoles={"dispatcher":0,"medic":0,"contingencyPlanner":0,"operationsExpert":0,"quarantineSpecialist":0,"researcher":0,"scientist":0}
+

@@ -42,6 +42,7 @@ def game():
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
+        print username, "GOIN IN HURRRRR"
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         currentLobby.gameStarted=True
@@ -219,11 +220,6 @@ def HandleDiscardCard(msg):
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
             else:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
-
-
-
-
-
 
 
 @socketio.on('checkMove')
@@ -546,6 +542,25 @@ def handle_message(msg):
 
 
 
+@socketio.on('setRole') # use for testing client side messages.
+def setRole(msg):
+    roleToSet=msg["roleChoice"]
+    room = str(session['roomname'])
+    username = str(session["username"])
+    lobby = lobbies[str(session['roomname'])]
+    print username, room, lobby.name
+    print lobby.players, "   players"
+    for player in lobby.players:
+        if lobby.players[player].name == username:
+            roles=lobby.playerRoles
+            if roles[msg["roleChoice"]]==0:
+                roles[roleToSet]=1
+                lobby.players[player].role=msg["roleChoice"]
+                print roles
+                emit('roleSet', {'playerName': username, 'msg': msg["roleChoice"]})
+                emit('changeRoleAvailibility', {'msg': msg["roleChoice"]}, room=room)
+
+            #return (render_template("home.html", error="This username is already taken, chose another"))
 
 
 
@@ -581,6 +596,7 @@ def lobby():
                 lobby.privacy=request.form['privacy']
                 lobby.difficulty = request.form["difficulty"]
                 print ("THis room privacy is :" + lobby.privacy)
+
                 #add lobby to dictionary
 
                 lobby.playerCount=1
@@ -591,6 +607,8 @@ def lobby():
                 playerIDs = playerIDs + 1
 
                 lobbies[str(session['roomname'])] = lobby
+
+                print lobby.players, "   playersSTART"
 
             else: # if user is joining a game
                 try:
@@ -605,7 +623,7 @@ def lobby():
                         print lobby.players[player]
                         print session['username']
                         if lobby.players[player].name==session['username']:
-                            return (render_template("lobby.html", error="This username is already taken, chose another"))
+                            return (render_template("home.html", error="This username is already taken, chose another"))
 
 
                     lobby.playerCount += 1
@@ -614,8 +632,12 @@ def lobby():
                 except:
                     print"Lobby does not exist"
                     return (render_template("home.html", error="Sorry this room does not exist try another room"))
-
-            return (render_template("intermission.html",room=session['roomname'],messages =  lobby.messageHistory))
+#
+# <<<<<<< HEAD
+#             return (render_template("intermission.html",room=session['roomname'],messages =  lobby.messageHistory))
+# =======
+            return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
+# >>>>>>> refs/remotes/origin/AddPLayerRolesChoice
     return (render_template("home.html"))
 
 print("imported")

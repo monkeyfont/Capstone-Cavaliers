@@ -35,6 +35,7 @@ function endOfRound(info){
 			}
 
                 }
+                }
      for (var player in info["cardDraw"]) {
 		var cards=info["cardDraw"][player]
 		for (var card in cards) {
@@ -51,8 +52,31 @@ function endOfRound(info){
 						  }
 					 }
     }
-}
 
+
+    // CUBE METER STUFF
+    console.log(info["cubesUsed"])
+    for (var i=0;i<info["cubesUsed"].length;i++){
+        for (key in info["cubesUsed"][i]){
+            infectionM.alterInfectionStatus({"colour":key,"amount":info["cubesUsed"][i][key]})
+            //{"amount":info["cubesUsed"][i][key]}
+        }
+    }
+
+    //OUBREAK LEVEL STUFF
+
+    var outbreakLevel;
+    outbreakLevel= info["outBreakLevel"]
+
+    // do whatever with that number
+
+
+    //INFECTION RATE STUFF
+    var infectionLevel;
+    infectionLevel=info["infectionLevel"]
+    // do front end stuff to update it
+
+    
 
     socket.emit('roundOverDone')
 
@@ -267,10 +291,13 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-    var colour = prompt("Enter colour of infection you wish to treat: ");
+    var res = prompt("Enter colour of infection you wish to treat: ");
+    var colour = res.toLowerCase();
     socket.emit('treatDisease', {InfectionColour:colour})
 
-}
+    }
+
+
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
