@@ -613,8 +613,12 @@ socket.on('gotInitialHands',function(data){
 		var cards=data["playerhand"][player]
 		console.log("Player "+playerId + " has the cards: ")
 //		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
-        playerHandHTML = playerHandHTML + "<div id = '" + playerRoll[player] + "'" + " class = playerHand>"
-        playerHandHTML = playerHandHTML + "<p id = 'name'>" + playerId + "</p>"
+        playerHandHTML = playerHandHTML + "<div class = playerHand>"
+        playerHandHTML = playerHandHTML + "<div class = playerSection>"
+        playerHandHTML = playerHandHTML + "<p class = '" + playerRoll[player] + "' id = 'playerName'>" + playerId + "</p>"
+        playerHandHTML = playerHandHTML + "<p id = '" + playerRoll[player] + "'>" + playerRoll[player] + "</p>"
+        playerHandHTML = playerHandHTML + "</div>"
+
 		for (var card in cards) {
 			console.log(card);
 			cardInfo = {}
