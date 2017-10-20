@@ -234,7 +234,7 @@ class Player:
     def __init__(self, id, name = "Player"):
         self.id = id
         self.name = name
-        self.role = 0
+        self.role = ""
         self.hand = []
         self.location = "ATLANTA"
         self.host = 0

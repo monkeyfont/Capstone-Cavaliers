@@ -106,6 +106,7 @@ def getPlayersHands():
     username = session["username"]
     gameboard = games[roomname]
     playersHands={}
+    playerRoll = ""
     players=gameboard.players
     print"players", players
     for playerK in players:
@@ -113,6 +114,7 @@ def getPlayersHands():
         playerObj= players[playerK]
         playerHand=playerObj.hand
         playerCardNames=[]
+        playerRoll = players[playerK].role
         for card in playerHand:
             print (card)
             cardname=card.name
@@ -123,7 +125,8 @@ def getPlayersHands():
     print playersHands
 
     print ('gotInitialHands',{"playerhand":playersHands,"username":username})
-    emit('gotInitialHands',{"playerhand":playersHands,"username":username})
+    # emit('gotInitialHands',{"playerhand":playersHands,"username":username})
+    emit('gotInitialHands',{"playerhand":playersHands,"username":username,"playerRoll":playerRoll})
 
 
 @socketio.on('getPlayerObject')

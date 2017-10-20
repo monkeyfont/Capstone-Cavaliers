@@ -550,6 +550,7 @@ socket.on('InfectedCities',function(data){
 socket.on('gotInitialHands',function(data){
 	console.log("data",data)
 	thisPlayerName=data.username;
+	playerRoll = data.playerRoll
 	playerHandHTML = ""
 	playersHands = []
 	// playersHands = [{playername:"",cards:[{cardName:""colour:""},{cardName:""colour:""}]}
@@ -565,7 +566,8 @@ socket.on('gotInitialHands',function(data){
 		var cards=data["playerhand"][player]
 		console.log("Player "+playerId + " has the cards: ")
 //		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
-        playerHandHTML = playerHandHTML + "<div class ='playerHand' >"+ playerId + "</div>"
+        playerHandHTML = playerHandHTML + "<div id = '" + playerRoll + "'" + " class = playerHand>"
+        playerHandHTML = playerHandHTML + "<p id = 'name'>" + playerId + "</p>"
 		for (var card in cards) {
 			console.log(card);
 			cardInfo = {}
@@ -584,12 +586,14 @@ socket.on('gotInitialHands',function(data){
 				}
 			// if you want to access each individial card then get in here through cards[card]
 			// if you want the list of player cards get it through just "cards"
-            playerHandHTML = playerHandHTML + "<p> " + cards[card] + "</p>"
+            playerHandHTML = playerHandHTML + "<p class = ' " +cardInfo.colour+ "'>" + cards[card] + "</p>"
+
 //			$('#cards').val($('#cards').val() +  + '\n');
 						  }
 					 }
+					  playerHandHTML = playerHandHTML + "</div>"
+
 					 playersHands.push(playerCardInfo)
-					 playerHandHTML = playerHandHTML + "</p>"
         // }
     }
 	console.log("playerCardJSON ",playersHands)
