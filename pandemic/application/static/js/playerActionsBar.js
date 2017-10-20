@@ -38,8 +38,8 @@ function playerActionsBar(options){
 	this.iconWidth = 70;
 	this.iconHeight = 90;
 	this.currentAction = null;
-	this.actionsDisplayPlayers = ["give","take"]
-	this.actionsDisplayColours = ["treat"]
+	this.actionsDisplayPlayers = ["Give","Take"]
+	this.actionsDisplayColours = ["Treat"]
 	this.activateAction = function(options){
 		xPos = options.x;
 		yPos = options.y;
@@ -58,26 +58,8 @@ function playerActionsBar(options){
 				}		
 				this.currentAction = chosenAction;
 				console.log('chosen action is: ',chosenAction)
-				// if(chosenAction == "Treat"){					
-					// treatDisease()					
-				// }else if(chosenAction == "Build"){
-					// buildResearch()
-				// }else if(chosenAction == "CharterFlight"){
-					// charterFlight()
-				// }else if(chosenAction == "Cure"){
-					// discoverCure()
-				// }else if(chosenAction == "DirectFlight"){
-					// directFlight(city)
-				// }else if(chosenAction == "Give"){
-					// shareKnowledgeGive()
-				// }else if(chosenAction == "Pass"){
-					// PassTurn()
-				// }else if(chosenAction == "ShuttleFlight"){
-					// shuttleFlight()
-				// }else if(chosenAction == "Take"){
-					// shareKnowledgeTake()
-				// }
-				
+		
+				return chosenAction
 			}	
 		}
 		
@@ -110,23 +92,45 @@ function playerActionsBar(options){
 			this.iconPosY, // y position for image on canvas
 			this.iconWidth*this.iconScale, // width of image to use 
 			this.iconHeight*this.iconScale); // height of image to use
-			if (this.currentAction == i && this.currentAction in this.actionsDisplayPlayers){	
-				
+			
+			if (this.currentAction == i &&  this.actionsDisplayPlayers.includes(this.currentAction)){	
+				writePosY = this.iconPosY-(60*actionState.players.length) - 20
+				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
 				this.context.fillStyle = "rgba(0,0,0,.6)";
-				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY,120,60);
+				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.players.length),120,60*actionState.players.length);
 				console.log(actionState.players)
-				for (i in actionState.players){
-					console.log("current name is",actionState.players[i])
+				for (x in actionState.players){
+					writePosY = writePosY + 60
+					console.log("current name is",actionState.players[x])
 					this.context.font = "22px Sans-serif"
 					this.context.strokeStyle = 'black';//'green';
 					this.context.lineWidth = 8;
 					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
 					this.context.miterLimit=3;
 
-					this.context.strokeText(actionState.players[i],this.iconPosX,this.iconPosY);
+					this.context.strokeText(actionState.players[x],writePosX,writePosY);
 					this.context.fillStyle = 'white';//this.colour;
 
-					this.context.fillText(actionState.players[i],this.iconPosX,this.iconPosY);
+					this.context.fillText(actionState.players[x],writePosX,writePosY);
+				}
+			}else if (this.currentAction == i &&  this.actionsDisplayColours.includes(this.currentAction)){	
+				writePosY = this.iconPosY-(60*actionState.infectionColours.length) - 20
+				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
+				this.context.fillStyle = "rgba(0,0,0,.6)";
+				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.infectionColours.length),120,60*actionState.infectionColours.length);
+				for (x in actionState.infectionColours){
+					writePosY = writePosY + 60
+					console.log("current name is",actionState.infectionColours[x])
+					this.context.font = "22px Sans-serif"
+					this.context.strokeStyle = 'black';//'green';
+					this.context.lineWidth = 8;
+					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+					this.context.miterLimit=3;
+
+					this.context.strokeText(actionState.infectionColours[x],writePosX,writePosY);
+					this.context.fillStyle = 'white';//this.colour;
+
+					this.context.fillText(actionState.infectionColours[x],writePosX,writePosY);
 				}
 			}
 			
