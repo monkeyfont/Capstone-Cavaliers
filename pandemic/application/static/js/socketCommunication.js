@@ -9,6 +9,16 @@ function endOfRound(info){
 //    //epidemic has been drawn so do epidemic front end stuff...
 //    }
     //do some stuff
+
+    if (info["gameLoss"]==true){ // game is over !!!!
+
+    //insert logic into here to deal with a game over situation.
+
+
+    }
+
+
+
 	console.log("info",info)
     for (var i=0;i<info.infections.length;i++){
         var cityName=info.infections[i].city;
@@ -58,7 +68,8 @@ function endOfRound(info){
     console.log(info["cubesUsed"])
     for (var i=0;i<info["cubesUsed"].length;i++){
         for (key in info["cubesUsed"][i]){
-            infectionM.alterInfectionStatus({"colour":key,"amount":info["cubesUsed"][i][key]})
+            infectionsMeterDisplay.alterInfectionStatus({colour:key,amount:info["cubesUsed"][i][key]})
+            //infectionsMeterDisplay.alterInfectionStatus({colour:"yellow",amount:20})
             //{"amount":info["cubesUsed"][i][key]}
         }
     }
@@ -67,6 +78,7 @@ function endOfRound(info){
 
     var outbreakLevel;
     outbreakLevel= info["outBreakLevel"]
+    outbreakCount.setStage({outbreakStage:outbreakLevel})
 
     // do whatever with that number
 
@@ -74,7 +86,11 @@ function endOfRound(info){
     //INFECTION RATE STUFF
     var infectionLevel;
     infectionLevel=info["infectionLevel"]
+    infectRate.setStage({infectionStage:infectionLevel})
     // do front end stuff to update it
+
+
+
 
     
 
@@ -349,12 +365,16 @@ socket.on('cureDiscovered', function (data) {
         check=data.msg.validAction;
         var city=eval(data.city);
         if (check ==true){
+
+            cureBar.changeStatus({colour:data.msg.colourCured,status:'Discovered'})
             //addResearchStation(city);
             alert("A cure has been discovered!")
-            playersHand.removeCard
+            alert(data.msg.colourCured)
+            //playersHand.removeCard
             for (var card in data.cardsToDiscard) {
-			if (cards.hasOwnProperty(card)) {
-				if (data.playerName==player){
+			if (data.cardsToDiscard.hasOwnProperty(card)) {
+				if (data.playerName==thisPlayerName){
+				    alert(data.cardsToDiscard[card])
 					playersHand.removeCard({cardName:data.cardsToDiscard[card]})
 				}
 						  }

@@ -50,12 +50,12 @@
 
 
      socket.on('changeRoleAvailibility', function (data) {
-//     try {
-//        var elem = document.getElementById(data.msg).innerHTML = data.msg+" role is already taken!";
-//            }
-//    catch(err) {
-//
-//        }
+     try {
+        var elem = document.getElementById(data.msg).innerHTML = data.msg+" role is already taken!";
+            }
+    catch(err) {
+
+        }
 
      });
 
