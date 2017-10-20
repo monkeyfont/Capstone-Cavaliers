@@ -68,9 +68,20 @@ KOLKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL
 function playerHand(){
 	this.xPos = 960;
 	this.yPos = 1080-150;
+	this.activeCards = {}
 
 	this.cards = {};
 
+	this.toggleCardActivation = function(options){
+		if (options.cardName in this.activeCards){
+			delete this.activeCards[options.cardName]
+			
+		}else{
+			this.activeCards[options.cardName] = options.cardName
+		}
+		
+	}
+	
 	this.addCard = function (options){
 		//options = {cardname:cardName}
 		cardFront = allPossiblePlayerCards[options.cardName];
@@ -110,26 +121,61 @@ function playerHand(){
 					break
 				}
 			}
-			console.log(chosenCard)
-			socket.emit('discardCard', {cardName:chosenCard})
-			this.removeCard({cardname:chosenCard})
+			if ( chosenCard != 'none'){
+				console.log(chosenCard)
+				socket.emit('discardCard', {cardName:chosenCard})
+				this.removeCard({cardname:chosenCard})
+				return true;
+			}else{
+				return false;
+			}
 			}
 		}
 
 	}
-
+	
+	this.cardClick = function (options){
+		if (options.y > this.yPos && options.y < this.yPos+60){
+			console.log('selecting a card')
+			startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
+			cardNumber = Math.floor((options.x-startPoint)/(510*0.4))
+			xStart = (510*0.4*(cardNumber+1))+startPoint-50
+			console.log('xstart:',xStart)
+			
+			console.log(cardNumber)
+			chosenCard = 'none'
+			for ( i in this.cards){
+				pos = Object.keys(this.cards).indexOf(i)
+				if (pos == cardNumber){
+					chosenCard = i;
+					break
+				}
+			}
+			console.log(chosenCard)
+			
+			this.toggleCardActivation({cardName:chosenCard})
+		}
+	}
 
 	this.removeCard = function (options){
 		//options = {cardname:cardName}
 		delete this.cards[options.cardname];
+		delete this.activeCards[options.cardname]
 	}
+	
 	this.render = function(){
 		startPoint = this.xPos-(Object.keys(this.cards).length)/2*(510*0.4)
 		pos = 0;
 		for(i in this.cards){
+			
 			this.cards[i].move (startPoint+510*0.4*pos,this.yPos)
 			this.cards[i].render();
+			if (i in this.activeCards){
+				canvas.getContext("2d").fillStyle = 'rgba(0,225,0,0.5)';
+				canvas.getContext("2d").fillRect(startPoint+510*0.4*pos,this.yPos,200,280);				
+			}
 			pos++;
+			
 		}
 		// console.log((Object.keys(this.cards).length)/2)
 	}

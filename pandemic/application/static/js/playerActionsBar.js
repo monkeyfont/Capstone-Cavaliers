@@ -23,7 +23,7 @@ actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFli
 //    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
 //}
 
-actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
+actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,ShuttleFlight,Take,Treat};
 
 
 
@@ -37,7 +37,9 @@ function playerActionsBar(options){
 	this.iconScale = 1.5;
 	this.iconWidth = 70;
 	this.iconHeight = 90;
-	
+	this.currentAction = null;
+	this.actionsDisplayPlayers = ["give","take"]
+	this.actionsDisplayColours = ["treat"]
 	this.activateAction = function(options){
 		xPos = options.x;
 		yPos = options.y;
@@ -53,27 +55,28 @@ function playerActionsBar(options){
 						chosenAction = i;
 						break
 					}
-				}				
+				}		
+				this.currentAction = chosenAction;
 				console.log('chosen action is: ',chosenAction)
-				if(chosenAction == "Treat"){
-					treatDisease()
-				}else if(chosenAction == "Build"){
-					buildResearch()
-				}else if(chosenAction == "CharterFlight"){
-					charterFlight()
-				}else if(chosenAction == "Cure"){
-					discoverCure()
-				}else if(chosenAction == "DirectFlight"){
-					directFlight(city)
-				}else if(chosenAction == "Give"){
-					shareKnowledgeGive()
-				}else if(chosenAction == "Pass"){
-					PassTurn()
-				}else if(chosenAction == "ShuttleFlight"){
-					shuttleFlight()
-				}else if(chosenAction == "Take"){
-					shareKnowledgeTake()
-				}
+				// if(chosenAction == "Treat"){					
+					// treatDisease()					
+				// }else if(chosenAction == "Build"){
+					// buildResearch()
+				// }else if(chosenAction == "CharterFlight"){
+					// charterFlight()
+				// }else if(chosenAction == "Cure"){
+					// discoverCure()
+				// }else if(chosenAction == "DirectFlight"){
+					// directFlight(city)
+				// }else if(chosenAction == "Give"){
+					// shareKnowledgeGive()
+				// }else if(chosenAction == "Pass"){
+					// PassTurn()
+				// }else if(chosenAction == "ShuttleFlight"){
+					// shuttleFlight()
+				// }else if(chosenAction == "Take"){
+					// shareKnowledgeTake()
+				// }
 				
 			}	
 		}
@@ -107,7 +110,25 @@ function playerActionsBar(options){
 			this.iconPosY, // y position for image on canvas
 			this.iconWidth*this.iconScale, // width of image to use 
 			this.iconHeight*this.iconScale); // height of image to use
-			
+			if (this.currentAction == i && this.currentAction in this.actionsDisplayPlayers){	
+				
+				this.context.fillStyle = "rgba(0,0,0,.6)";
+				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY,120,60);
+				console.log(actionState.players)
+				for (i in actionState.players){
+					console.log("current name is",actionState.players[i])
+					this.context.font = "22px Sans-serif"
+					this.context.strokeStyle = 'black';//'green';
+					this.context.lineWidth = 8;
+					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+					this.context.miterLimit=3;
+
+					this.context.strokeText(actionState.players[i],this.iconPosX,this.iconPosY);
+					this.context.fillStyle = 'white';//this.colour;
+
+					this.context.fillText(actionState.players[i],this.iconPosX,this.iconPosY);
+				}
+			}
 			
 			
 		}

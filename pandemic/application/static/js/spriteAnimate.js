@@ -46,6 +46,15 @@ canvas.addEventListener('click', function(evt) {
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 	console.log(message);
 
+	//is the deck clicked?
+	
+	if (mousePos.x >= 1970 && mousePos.x <= 1970 + 200 
+		&& mousePos.y >= 950 && mousePos.y <= 950 +280){
+			console.log("deck was clicked");
+			discardPile.toggleActive();
+		}
+
+	
 
 	for (var i in spriteList){
 		// is the click on the image?
@@ -70,7 +79,11 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
-	playersHand.cardX(mousePos)
+	if (playersHand.cardX(mousePos)){
+		
+	}else{
+		playersHand.cardClick(mousePos)
+	}
 	playerActionsMenu.activateAction(mousePos)
 
 
@@ -165,12 +178,14 @@ var deck = new sprite({
     height: 280,
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
-	xPos:2000,
-	yPos:1000,
+	xPos:1970,
+	yPos:950,
 	xScale:1,
 	yScale:1,
     image: CardImage
 
+
+	
 })
 
 outbreakCount = new outbreakCounter({});
@@ -204,6 +219,8 @@ cureBar = new cureStatusBar({
 	yScale:0.4
 });
 
+
+
 playerActionsMenu = new playerActionsBar({
 	context: canvas.getContext("2d"),
 	height: 400,
@@ -211,6 +228,18 @@ playerActionsMenu = new playerActionsBar({
 	yPos: 1000
 
 });
+
+
+
+discardPile = new discardPile({
+	context: canvas.getContext("2d")
+});
+
+messageAlert = new messageAlert ({
+	context: canvas.getContext("2d")
+});
+actionState = new actionState({});
+
 
 locations.SANFRANCISCO.addResearchStation();
 
@@ -225,6 +254,8 @@ var load = document.getElementById("load");
 var thisPlayerName;
 var thisPlayerRole;
 canvas.style="display:none;"
+
+
 
 window.onload = function (){
 	socket.emit('getPlayerObject')
