@@ -107,15 +107,18 @@ def getPlayersHands():
     username = session["username"]
     gameboard = games[roomname]
     playersHands={}
-    playerRoll = ""
+    playerRoll = {}
     players=gameboard.players
-    print"players", players
     for playerK in players:
         print "one player", players[playerK].name
         playerObj= players[playerK]
         playerHand=playerObj.hand
         playerCardNames=[]
-        playerRoll = players[playerK].role
+        print (players[playerK].role)
+        print playerK
+        value =(players[playerK].role)
+        playerRoll[players[playerK].name]= value
+        print ("His roll is: " ,playerRoll)
         for card in playerHand:
             print (card)
             cardname=card.name
@@ -125,7 +128,7 @@ def getPlayersHands():
 
     print playersHands
 
-    print ('gotInitialHands',{"playerhand":playersHands,"username":username})
+    print ('gotInitialHands',{"playerhand":playersHands,"username":username,"Player roll":playerRoll})
     # emit('gotInitialHands',{"playerhand":playersHands,"username":username})
     emit('gotInitialHands',{"playerhand":playersHands,"username":username,"playerRoll":playerRoll})
 
@@ -632,12 +635,9 @@ def lobby():
                 except:
                     print"Lobby does not exist"
                     return (render_template("home.html", error="Sorry this room does not exist try another room"))
-#
-# <<<<<<< HEAD
-#             return (render_template("intermission.html",room=session['roomname'],messages =  lobby.messageHistory))
-# =======
+
+
             return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
-# >>>>>>> refs/remotes/origin/AddPLayerRolesChoice
     return (render_template("home.html"))
 
 print("imported")
