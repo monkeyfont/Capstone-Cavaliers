@@ -65,6 +65,55 @@ function playerActionsBar(options){
 		
 	}
 	
+	this.clickSubMenu = function(options){
+		console.log("subMenu clicked")
+		xPos = options.x;
+		yPos = options.y;
+		menuType = null;
+		if (this.actionsDisplayPlayers.includes(this.currentAction) ){
+			writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos
+			writePosY = this.iconPosY-(60*actionState.players.length)
+			console.log("checking players")
+			console.log("is ",xPos," between ",writePosX," and ",writePosX + 120)
+			console.log("is ",yPos," between ",writePosY," and ",writePosY+actionState.players.length*60 )
+			
+			if (xPos >= writePosX && xPos <= writePosX + 120
+				&& yPos >= writePosY && yPos <=writePosY+actionState.players.length*60){
+					console.log("insideBoundries")		
+					chosenPosition = Math.floor((yPos - writePosY) / 60)
+					console.log(Math.floor((yPos - writePosY) / 60))
+					console.log("_______________________",actionState.players[chosenPosition])
+				}
+			
+			menuType = "player"
+		}else if(this.actionsDisplayColours.includes(this.currentAction)){
+			writePosY = this.iconPosY-(60*actionState.infectionColours.length)
+			writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos
+			console.log("checking colours")
+			console.log("is ",xPos," between ",writePosX," and ",writePosX + 120)
+			console.log("is ",yPos," between ",writePosY," and ",writePosY+actionState.infectionColours.length*60 )
+			console.log(xPos >= writePosX && xPos <= writePosX + 120
+				&& yPos >= writePosY && yPos <=writePosY+actionState.infectionColours.length*60)
+			
+			
+			if (xPos >= writePosX && xPos <= writePosX + 120
+				&& yPos >= writePosY && yPos <=writePosY+actionState.infectionColours.length*60){
+					console.log("insideBoundries")
+					chosenPosition = Math.floor((yPos - writePosY) / 60)
+					console.log(Math.floor((yPos - writePosY) / 60))
+					console.log("_______________________",actionState.infectionColours[chosenPosition])
+				}
+			menuType = "colour"
+		}else{
+			return false;
+		}
+		
+		
+		// distance from top of rectangle/60
+		
+		Math.floor()
+	}
+	
 	
 	this.render = function(){
 		this.context.beginPath();
@@ -98,10 +147,9 @@ function playerActionsBar(options){
 				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
 				this.context.fillStyle = "rgba(0,0,0,.6)";
 				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.players.length),120,60*actionState.players.length);
-				console.log(actionState.players)
+				// console.log(actionState.players)
 				for (x in actionState.players){
 					writePosY = writePosY + 60
-					console.log("current name is",actionState.players[x])
 					this.context.font = "22px Sans-serif"
 					this.context.strokeStyle = 'black';//'green';
 					this.context.lineWidth = 8;
@@ -120,7 +168,6 @@ function playerActionsBar(options){
 				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.infectionColours.length),120,60*actionState.infectionColours.length);
 				for (x in actionState.infectionColours){
 					writePosY = writePosY + 60
-					console.log("current name is",actionState.infectionColours[x])
 					this.context.font = "22px Sans-serif"
 					this.context.strokeStyle = 'black';//'green';
 					this.context.lineWidth = 8;

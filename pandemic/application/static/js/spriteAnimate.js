@@ -79,11 +79,14 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
+	playerActionsMenu.clickSubMenu(mousePos)
 	if (playersHand.cardX(mousePos)){
 		
 	}else{
 		playersHand.cardClick(mousePos)
 	}
+	
+	
 	actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
 
 
