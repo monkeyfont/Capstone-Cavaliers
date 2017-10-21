@@ -97,7 +97,13 @@ def getInfections():
         playerName = playerObj.name
         if playerName==username:
             citiesInfected=gameboard.getAllCurrentInfectedCities()
-            emit('InfectedCities',citiesInfected)
+            infectionLevel= gameboard.infectionLevel
+            outbreakLevel= gameboard.outBreakLevel
+            cubesUsed = []
+            for colour in gameboard.cubesUsed:
+                cubesUsed.append({colour: gameboard.cubesUsed[colour]})
+
+            emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,"outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed})
 
 
 
@@ -152,8 +158,21 @@ def startGame():
     roomname = session["roomname"]
     username = session["username"]
     lobbies[roomname].messageHistory = ""
+    lobby=lobbies[roomname]
+    for player in lobby.players:
+        if lobby.players[player].name == username:
+            numplayers = len(lobby.players)
+            numRolesChosen = 0
+            for role in lobby.playerRoles:
+                if lobby.playerRoles[role] == 1:
+                    numRolesChosen += 1
+            print numRolesChosen,"Num roles chosen "
+            print numplayers, " num players"
+            if (numplayers==numRolesChosen):
+                emit('gameStarted', {}, room=roomname)
+            else:
+                emit('gameStartFailed',{})
 
-    emit('gameStarted',{},room=roomname)
 
 @socketio.on('getMessages')
 def getMessages():
@@ -338,19 +357,27 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityCardToShare=msg["cityName"]
+
     playerTakingName= msg["playerTaking"]
     gameObject = games[room]
-
     #print playerid, otherPlayerid
     playerDictionary = gameObject.players
 
+    playerLocation=""
+    playerid=""
+    otherPlayerid=""
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             playerid=playerObject.id
+            playerLocation=playerObject.location
         elif playerObject.name== playerTakingName:
             otherPlayerid=playerObject.id
+
+    if "cityName" in msg:
+        cityCardToShare = msg["cityName"]
+    else:
+        cityCardToShare=playerLocation
     response = gameObject.shareKnowledgeGive(playerid,otherPlayerid,cityCardToShare)
 
     if response["validAction"] == True:
@@ -359,24 +386,34 @@ def handleclick(msg):
         emit('giveKnowledgeShared', {'msg': response})
 
 
+
 @socketio.on('shareKnowledgeTake')
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityCardToShare=msg["cityName"]
+
     playerGivingName= msg["playerGiving"]
     gameObject = games[room]
-
-    #print playerid, otherPlayerid
     playerDictionary = gameObject.players
+    playerLocation = ""
+    playerid = ""
+    otherPlayerid = ""
 
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             playerid=playerObject.id
+            playerLocation=playerObject.location
         elif playerObject.name== playerGivingName:
             otherPlayerid=playerObject.id
+
+    if "cityName" in msg:
+        cityCardToShare = msg["cityName"]
+    else:
+        cityCardToShare=playerLocation
+
     response = gameObject.shareKnowledgeTake(playerid,otherPlayerid,cityCardToShare)
+    #print response
     if response["validAction"] == True:
         emit('takeKnowledgeShared', {'msg':response}, room=room)
     else:
@@ -558,8 +595,15 @@ def setRole(msg):
                 roles[roleToSet]=1
                 lobby.players[player].role=msg["roleChoice"]
                 print roles
+                numplayers = len(lobby.players)
+                numRolesChosen = 0
+                for role in lobby.playerRoles:
+                    if lobby.playerRoles[role] == 1:
+                        numRolesChosen += 1
+                print numRolesChosen,"Num roles chosen "
+                print numplayers, " num players"
                 emit('roleSet', {'playerName': username, 'msg': msg["roleChoice"]})
-                emit('changeRoleAvailibility', {'msg': msg["roleChoice"]}, room=room)
+                emit('changeRoleAvailibility', {'msg': msg["roleChoice"],"rolesChosenCount":numRolesChosen,"playersInLobbyCount":numplayers}, room=room)
 
             #return (render_template("home.html", error="This username is already taken, chose another"))
 

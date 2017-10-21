@@ -16,7 +16,7 @@
                     <form id="myForm">
                     {%for role in playerRoles %}
                     {% if playerRoles[role] == 0 %}
-                        <div id="{{role}}"class="col-sm-12"><input  class = "bullets" type="radio" name="role" value="{{role}}">{{role}}</div>
+                        <div id="{{role}}"class="col-sm-12"><input class = "bullets" type="radio" name="role" value="{{role}}" required>{{role}}</div>
                     {% else %}
                         {{role}} is already taken! {{playerRoles[role]}}
                     {% endif %}
