@@ -6,7 +6,7 @@ function messageAlert(options){
 	this.fadeTime = 2*60;
 	this.context = options.context;
 	this.currentMessage = null;
-	this.showMessage = true;
+	this.showMessage = false;
 	
 	
 	this.newMessage = function(options){
