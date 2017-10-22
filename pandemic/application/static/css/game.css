@@ -10,7 +10,7 @@ body{
 }
 #messageBox{
     width:30%;
-    height:30%;
+    height:22em;
     position:fixed;
     display:block;
     background-color:rgba(0,0,0,0.8);

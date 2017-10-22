@@ -3,6 +3,7 @@
 }
 .playerHand{
     width:100%;
+    border:0.2em solid black;
 }
 .playerHand p {
     margin:0px;
@@ -40,7 +41,7 @@
     background-color: rgba(102,255,255,0.8);
 }
 #scientist {
-    background-color: rgb(102,255,255);
+    background-color: rgba(102,255,255,0.8);
 }
 
 .dispatcher{
@@ -86,13 +87,14 @@
 #playerCards{
     color:white;
     width:20%;
-    height:30%;
+    height:22em;
     display:block;
     z-index:2;
     float:right;
     overflow-x: hidden;
     overflow-y: scroll;
     background-color:rgba(0,0,0,0.8);
+
 }
 #playerCards::-webkit-scrollbar{
 width:16px;
@@ -108,4 +110,24 @@ border:1px solid #333333;
 #playerCards::-webkit-scrollbar-thumb:active{
 background-color:white;
 border:1px solid #333333;
+}
+.red{
+    background-image: url("../images/colors/red.png");
+    background-size: 2em;
+    background-repeat: no-repeat;
+}
+.black{
+    background-image: url("../images/colors/black.png");
+    background-size: 2em;
+    background-repeat: no-repeat;
+}
+.blue{
+    background-image: url("../images/colors/blue.png");
+    background-size: 2em;
+    background-repeat: no-repeat;
+}
+.yellow{
+    background-image: url("../images/colors/yellow.png");
+    background-size: 2em;
+    background-repeat: no-repeat;
 }
