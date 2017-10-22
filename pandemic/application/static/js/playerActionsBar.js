@@ -102,6 +102,8 @@ function playerActionsBar(options){
 					chosenPosition = Math.floor((yPos - writePosY) / 60)
 					console.log(Math.floor((yPos - writePosY) / 60))
 					console.log("_______________________",actionState.infectionColours[chosenPosition])
+					
+					messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
 				}
 			menuType = "colour"
 		}else{

@@ -156,7 +156,7 @@ function gameLoop(){
 	cureBar.render();
 	playerActionsMenu.render()
 	infectionsMeterDisplay.render();
-
+	messageAlert.render();
 	if (!previousLocation == false){
 		locations[previousLocation].renderMenu();
 	}
@@ -239,7 +239,9 @@ discardPile = new discardPile({
 });
 
 messageAlert = new messageAlert ({
-	context: canvas.getContext("2d")
+	context: canvas.getContext("2d"),
+	xPos: 940,
+	yPos: 590
 });
 actionState = new actionState({});
 
