@@ -70,7 +70,9 @@ function playerActionsBar(options){
 		xPos = options.x;
 		yPos = options.y;
 		menuType = null;
+		
 		if (this.actionsDisplayPlayers.includes(this.currentAction) ){
+			pos = Object.keys(actions).indexOf(this.currentAction)
 			writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos
 			writePosY = this.iconPosY-(60*actionState.players.length)
 			console.log("checking players")
@@ -83,10 +85,12 @@ function playerActionsBar(options){
 					chosenPosition = Math.floor((yPos - writePosY) / 60)
 					console.log(Math.floor((yPos - writePosY) / 60))
 					console.log("_______________________",actionState.players[chosenPosition])
+					return true
 				}
 			
 			menuType = "player"
 		}else if(this.actionsDisplayColours.includes(this.currentAction)){
+			pos = Object.keys(actions).indexOf(this.currentAction)
 			writePosY = this.iconPosY-(60*actionState.infectionColours.length)
 			writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos
 			console.log("checking colours")
@@ -104,6 +108,7 @@ function playerActionsBar(options){
 					console.log("_______________________",actionState.infectionColours[chosenPosition])
 					
 					messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
+					return true
 				}
 			menuType = "colour"
 		}else{

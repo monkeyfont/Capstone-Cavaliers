@@ -79,8 +79,9 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
-	playerActionsMenu.clickSubMenu(mousePos)
-	if (playersHand.cardX(mousePos)){
+	if(playerActionsMenu.clickSubMenu(mousePos)){
+		
+	}else if (playersHand.cardX(mousePos)){
 		
 	}else{
 		playersHand.cardClick(mousePos)
@@ -158,8 +159,9 @@ function gameLoop(){
 	infectionsMeterDisplay.render();
 	messageAlert.render();
 	if (!previousLocation == false){
-		locations[previousLocation].renderMenu();
+		locations[previousLocation].renderMenu();	
 	}
+	
 }
 
 // locations["ATLANTA"].infect({});
