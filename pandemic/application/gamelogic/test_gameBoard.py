@@ -580,7 +580,9 @@ class TestGameCoordinator(TestCase):
 
 class TestGameSpecialRoleActions(TestCase):
     def setUp(self):
-        pass
+        """ Create the gameBoard, add players """
+        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(d, initialize = False)
 
     def test_medicMoveAfterCure(self):
         pass
@@ -603,8 +605,56 @@ class TestGameSpecialRoleActions(TestCase):
     def test_medicPreventInfect(self):
         pass
 
-    def test_dispacterMoveOther(self):
-        pass
+    def test_dispatcherMoveOther(self):
+        """
+         When the dispatcher moves another player, the dispatcher should lose a move,
+         and the target player should be moved to the new location.
+         The dispatcher should stay at the current location.
+         """
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        player1 = self.testGameBoard.players[1]
+        player2 = self.testGameBoard.players[2]
+        # both players start in atlanta.
+
+        # assign player 1 to be the dispatcher
+        player1.role = "dispatcher"
+
+        # use the dispatcher move to move player 2 to washington (connected to atlanta)
+        result = self.testGameBoard.dispatcherMoveOther(1,2,"WASHINGTON")
+
+        self.assertTrue(result['validAction'])
+        self.assertEquals(player1.location, "ATLANTA")
+        self.assertEquals(player2.location, "WASHINGTON")
+        # player1 should have used a move
+        self.assertEquals(player1.actions, 3)
+        # player2 shouldn't have used a move.
+        self.assertEquals(player2.actions, 4)
+
+    def test_dispatcherMoveOtherFail(self):
+        """
+        This test checks moving another player fails if the target city is not connected to the target players current
+        location.
+         """
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        player1 = self.testGameBoard.players[1]
+        player2 = self.testGameBoard.players[2]
+        # both players start in atlanta.
+
+        # assign player 1 to be the dispatcher
+        player1.role = "dispatcher"
+
+        # use the dispatcher move to move player 2 to washington (connected to atlanta)
+        result = self.testGameBoard.dispatcherMoveOther(1,2,"PARIS")
+
+        # the result should fail.
+        self.assertFalse(result['validAction'])
+        # neither player should have moved location.
+        self.assertEquals(player1.location, "ATLANTA")
+        self.assertEquals(player2.location, "ATLANTA")
+        # Neither player should have used an action.
+        self.assertEquals(player1.actions, 4)
+        self.assertEquals(player2.actions, 4)
+
 
     def test_dispatcherTeleportOther(self):
         pass
