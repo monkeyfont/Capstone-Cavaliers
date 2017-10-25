@@ -16,7 +16,14 @@ function infectionMeter(options){
 	
 	this.alterInfectionStatus = function(options){
 		//{colour,amount}
-		this.infectionBarStatus[options.colour].amount = options.amount;
+		//alert(options.colour+" "+ options.amount)
+		var curAmount= 24-options.amount;
+		if (curAmount>0){
+		this.infectionBarStatus[options.colour].amount = curAmount;
+		}
+		else{
+		    this.infectionBarStatus[options.colour].amount = 0;
+		}
 	}
 				
 
