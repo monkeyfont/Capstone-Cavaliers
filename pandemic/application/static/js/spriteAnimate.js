@@ -198,6 +198,9 @@ infectRate = new infectionRate({});
 playersHand = new playerHand();
 players = new playerInitilization();
 playerPortraits = new portraitInitilization({});
+infectionsMeterDisplay= new infectionMeter({});
+outbreakCount = new outbreakCounter({});
+infectRate = new infectionRate({});
 
 // card,
 spriteList = [deck];

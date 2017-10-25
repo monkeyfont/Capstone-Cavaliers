@@ -11,6 +11,23 @@
 </head>
 <body>
 
+                <div class="col-sm-12"><h2>Chose a character role you wish to play as!</h2></div>
+                <div id="showRoleOptions"class="row">
+                    <form id="myForm">
+                    {%for role in playerRoles %}
+                    {% if playerRoles[role] == 0 %}
+                        <div id="{{role}}"class="col-sm-12"><input class = "bullets" type="radio" name="role" value="{{role}}" required>{{role}}</div>
+                    {% else %}
+                        {{role}} is already taken! {{playerRoles[role]}}
+                    {% endif %}
+                    {% endfor %}
+                    </form>
+                    <br/><br/>
+                    <button onclick="setRole()" id="lockIn" type="button">Lock in your player Role!</button>
+
+                </div>
+
+
 <h1>Chat room for team {{ room }} </h1>
 
         <h3>Message</h3>

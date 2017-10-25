@@ -42,6 +42,7 @@ def game():
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
+        print username, "GOIN IN HURRRRR"
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         currentLobby.gameStarted=True
@@ -96,7 +97,13 @@ def getInfections():
         playerName = playerObj.name
         if playerName==username:
             citiesInfected=gameboard.getAllCurrentInfectedCities()
-            emit('InfectedCities',citiesInfected)
+            infectionLevel= gameboard.infectionLevel
+            outbreakLevel= gameboard.outBreakLevel
+            cubesUsed = []
+            for colour in gameboard.cubesUsed:
+                cubesUsed.append({colour: gameboard.cubesUsed[colour]})
+
+            emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,"outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed})
 
 
 
@@ -151,8 +158,21 @@ def startGame():
     roomname = session["roomname"]
     username = session["username"]
     lobbies[roomname].messageHistory = ""
+    lobby=lobbies[roomname]
+    for player in lobby.players:
+        if lobby.players[player].name == username:
+            numplayers = len(lobby.players)
+            numRolesChosen = 0
+            for role in lobby.playerRoles:
+                if lobby.playerRoles[role] == 1:
+                    numRolesChosen += 1
+            print numRolesChosen,"Num roles chosen "
+            print numplayers, " num players"
+            if (numplayers==numRolesChosen):
+                emit('gameStarted', {}, room=roomname)
+            else:
+                emit('gameStartFailed',{})
 
-    emit('gameStarted',{},room=roomname)
 
 @socketio.on('getMessages')
 def getMessages():
@@ -220,11 +240,6 @@ def HandleDiscardCard(msg):
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
             else:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
-
-
-
-
-
 
 
 @socketio.on('checkMove')
@@ -342,19 +357,27 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityCardToShare=msg["cityName"]
+
     playerTakingName= msg["playerTaking"]
     gameObject = games[room]
-
     #print playerid, otherPlayerid
     playerDictionary = gameObject.players
 
+    playerLocation=""
+    playerid=""
+    otherPlayerid=""
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             playerid=playerObject.id
+            playerLocation=playerObject.location
         elif playerObject.name== playerTakingName:
             otherPlayerid=playerObject.id
+
+    if "cityName" in msg:
+        cityCardToShare = msg["cityName"]
+    else:
+        cityCardToShare=playerLocation
     response = gameObject.shareKnowledgeGive(playerid,otherPlayerid,cityCardToShare)
 
     if response["validAction"] == True:
@@ -363,24 +386,34 @@ def handleclick(msg):
         emit('giveKnowledgeShared', {'msg': response})
 
 
+
 @socketio.on('shareKnowledgeTake')
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityCardToShare=msg["cityName"]
+
     playerGivingName= msg["playerGiving"]
     gameObject = games[room]
-
-    #print playerid, otherPlayerid
     playerDictionary = gameObject.players
+    playerLocation = ""
+    playerid = ""
+    otherPlayerid = ""
 
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             playerid=playerObject.id
+            playerLocation=playerObject.location
         elif playerObject.name== playerGivingName:
             otherPlayerid=playerObject.id
+
+    if "cityName" in msg:
+        cityCardToShare = msg["cityName"]
+    else:
+        cityCardToShare=playerLocation
+
     response = gameObject.shareKnowledgeTake(playerid,otherPlayerid,cityCardToShare)
+    #print response
     if response["validAction"] == True:
         emit('takeKnowledgeShared', {'msg':response}, room=room)
     else:
@@ -547,6 +580,32 @@ def handle_message(msg):
 
 
 
+@socketio.on('setRole') # use for testing client side messages.
+def setRole(msg):
+    roleToSet=msg["roleChoice"]
+    room = str(session['roomname'])
+    username = str(session["username"])
+    lobby = lobbies[str(session['roomname'])]
+    print username, room, lobby.name
+    print lobby.players, "   players"
+    for player in lobby.players:
+        if lobby.players[player].name == username:
+            roles=lobby.playerRoles
+            if roles[msg["roleChoice"]]==0:
+                roles[roleToSet]=1
+                lobby.players[player].role=msg["roleChoice"]
+                print roles
+                numplayers = len(lobby.players)
+                numRolesChosen = 0
+                for role in lobby.playerRoles:
+                    if lobby.playerRoles[role] == 1:
+                        numRolesChosen += 1
+                print numRolesChosen,"Num roles chosen "
+                print numplayers, " num players"
+                emit('roleSet', {'playerName': username, 'msg': msg["roleChoice"]})
+                emit('changeRoleAvailibility', {'msg': msg["roleChoice"],"rolesChosenCount":numRolesChosen,"playersInLobbyCount":numplayers}, room=room)
+
+            #return (render_template("home.html", error="This username is already taken, chose another"))
 
 
 
@@ -582,6 +641,7 @@ def lobby():
                 lobby.privacy=request.form['privacy']
                 lobby.difficulty = request.form["difficulty"]
                 print ("THis room privacy is :" + lobby.privacy)
+
                 #add lobby to dictionary
 
                 lobby.playerCount=1
@@ -592,6 +652,8 @@ def lobby():
                 playerIDs = playerIDs + 1
 
                 lobbies[str(session['roomname'])] = lobby
+
+                print lobby.players, "   playersSTART"
 
             else: # if user is joining a game
                 try:
@@ -606,7 +668,7 @@ def lobby():
                         print lobby.players[player]
                         print session['username']
                         if lobby.players[player].name==session['username']:
-                            return (render_template("lobby.html", error="This username is already taken, chose another"))
+                            return (render_template("home.html", error="This username is already taken, chose another"))
 
 
                     lobby.playerCount += 1
@@ -616,7 +678,7 @@ def lobby():
                     print"Lobby does not exist"
                     return (render_template("home.html", error="Sorry this room does not exist try another room"))
 
-            return (render_template("intermission.html",room=session['roomname']))
+            return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
     return (render_template("home.html"))
 
 print("imported")
