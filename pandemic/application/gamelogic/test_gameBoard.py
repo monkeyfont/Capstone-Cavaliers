@@ -366,8 +366,8 @@ class TestGameActions(TestCase):
 class TestGameCoordinator(TestCase):
     def setUp(self):
         """ Create the gameBoard, add players """
-        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
-        self.testGameBoard = GameBoard(d, initialize = False)
+        self.players = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(self.players, initialize = False)
 
 
     def test_forcedOutBreak(self):
@@ -587,15 +587,32 @@ class TestGameCoordinator(TestCase):
             self.assertEqual(len(self.testGameBoard.players[i].hand), currentCards + 2)
 
     def test_endTurnInfectCities(self):
-        pass
+        """ This overwrites the current gameboard with a new one. The default initilization is applied.
+            This is required as the game board has to be instantiated for the infections at the end of the round to work.
+        """
+        self.testGameBoard = GameBoard(self.players)
+        infections = self.testGameBoard.endTurnInfectCities()
+        # make sure that infections are returning.
+        self.assertNotEqual(infections, {})
+        self.assertNotEqual(infections, [{}])
+
+    def test_endTurnInfectCities2(self):
+        """
+        This checks that the amount of infections for the default difficulty is 4, and they contain the correct keys.
+        """
+        self.testGameBoard = GameBoard(self.players)
+        infections = self.testGameBoard.endTurnInfectCities()[0] #TODO remove the [0] index once updated.
+        # Can't check what the infections are because they are random. However can check that there is the right amount,
+        # and that they contain the correct keys.
+        self.assertEqual(len(infections), 4) # base 4 infections for default difficulty.
+        for i in infections:
+            self.assertTrue('city' in i and 'colour' in i and 'amount' in i)
 
     def test_infectCity(self):
         self.testGameBoard.cities = self.testGameBoard.generateCities()
         testCity = self.testGameBoard.cities["WASHINGTON"]
         self.assertEqual(testCity.getInfections("blue"),0)
-
         self.testGameBoard.infectCity("WASHINGTON")
-
         self.assertEqual(testCity.getInfections("blue"),1)
 
 class TestGameSpecialRoleActions(TestCase):
@@ -986,20 +1003,69 @@ class TestGameSpecialRoleActions(TestCase):
 
 
 class TestGameEventActions(TestCase):
+    """ Event cards use no action. But they must be in a players hand to use it. It should be removed from their hand afterwards."""
     def setUp(self):
-        pass
+        """ Create the gameBoard, add players """
+        self.players = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.players[1].actions = 4
+        self.testGameBoard = GameBoard(self.players, initialize = False)
+        self.cities = self.testGameBoard.cities = self.testGameBoard.generateCities()
+        self.testGameBoard.initialized = 1 # this sets the game to think it is initialized. This is required for the preventInfection checks
 
     def test_governmentGrant(self):
-        pass
+        """ Government grants allows a research station to be placed on any city."""
+        event_card = EventCard(1, "Government_Grant", "Government_Grant")
+        self.players[1].hand.append(event_card)
+        result = self.testGameBoard.governmentGrant(1, "Government_Grant", "SYDNEY")
+        self.assertTrue(self.cities["SYDNEY"].researchStation)
+        # check JSON is as expected.
+        self.assertTrue(result["validAction"])
+
+    def test_governmentGrant2(self):
+        """ This should fail as the player doesn't have the card."""
+        result = self.testGameBoard.governmentGrant(1, "Government_Grant", "SYDNEY")
+        self.assertFalse(self.cities["SYDNEY"].researchStation)
+        # check JSON is as expected.
+        self.assertFalse(result["validAction"])
 
     def test_airLift(self):
-        pass
+        """ Air lift moves a player to any city."""
+        event_card = EventCard(2, "Airlift", "Airlift")
+        self.players[1].hand.append(event_card)
+        result = self.testGameBoard.airLift(1,2,"MIAMI")
+        self.assertTrue(self.players[2].location, "MIAMI")
+        # check JSON is as expected.
+        self.assertTrue(result["validAction"])
+
+    def test_airLift2(self):
+        """Checks if the player can move themselves with the card"""
+        event_card = EventCard(2, "Airlift", "Airlift")
+        self.players[1].hand.append(event_card)
+        result = self.testGameBoard.airLift(1,1,"MIAMI")
+        self.assertTrue(self.players[1].location, "MIAMI")
+        # check JSON is as expected.
+        self.assertTrue(result["validAction"])
+
+    def test_airLiftFail(self):
+        """ This should fail as the player doesn't have the card in their hand."""
+        result = self.testGameBoard.airLift(1,2,"MIAMI")
+        self.assertNotEqual(self.players[2].location, "MIAMI")
+        # check JSON is as expected.
+        self.assertFalse(result["validAction"])
 
     def test_skipInfectStage(self):
-        pass
-
-    def removeInfectionCard(self):
-        pass
+        """ When the skip cities card is played, the next infection round should be completely skipped."""
+        event_card = EventCard(3, 'One_Quiet_Night', 'One_Quiet_Night')
+        self.players[1].hand.append(event_card)
+        # call the event card. this should change the board state.
+        result = self.testGameBoard.skipInfectStage(1)
+        # there state of skipInfectCities should be changed.
+        self.assertEqual(self.testGameBoard.skipInfectCities,1)
+        # it should also be a valid action.
+        self.assertTrue(result["validAction"])
+        # Now call end of turn's infect cities...
+        result = self.testGameBoard.endTurnInfectCities()
+        self.assertEqual(result, {})
 
 class TestGameEndOfRound(TestCase):
     def setUp(self):
@@ -1051,10 +1117,6 @@ class TestGameUtils(TestCase):
         result = self.testGameBoard.canInfectionBePrevented(miami, "yellow")
         self.assertTrue(result)
 
-
-
-    def test_isPlayerAtResearchStation(self):
-        pass
 
 
 class TestGameBoardMisc(TestCase):

@@ -158,9 +158,7 @@ PLAYER_CARDS = {
 EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
     2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
-    3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"},
-    4:{"name": "Forecast", "description": "Examine top 6 cards of the infection draw pile. Rearrange them in order of your choice, and place them back on the pile"},
-    5:{"name": "Resilent_Population", "description": "Take a card from the infection discard pile and remove it from the game"}
+    3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"}
 }
 
 
@@ -1366,23 +1364,29 @@ class GameBoard:
         responseDict = {}
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
+        # check the player has the government grant card
         for card in playerHand:
-            if(card.name == eventCardName):#they do have the card
-                    curCityObj = self.cities[cityName]
-                    if curCityObj.researchStation==1:
-                        responseDict["errorMessage"] = "ERROR: This city already has a research station on it"
-                        responseDict["validAction"] = False
-                        return responseDict
-                    elif self.researchStationsBuilt>=5:
-                        responseDict["errorMessage"] = "ERROR: Max number of research stations have been built"
-                        responseDict["validAction"] = False
-                        return responseDict
-                    else:
-                        responseDict["validAction"] = True
-                        curCityObj.researchStation =1
-                        playerHand.remove(card)
-                        self.playerDiscarded.append(card)
-                        return responseDict
+            if(card.name == "Government_Grant"):
+                for card in playerHand:
+                    if(card.name == eventCardName):#they do have the card
+                            curCityObj = self.cities[cityName]
+                            if curCityObj.researchStation==1:
+                                responseDict["errorMessage"] = "ERROR: This city already has a research station on it"
+                                responseDict["validAction"] = False
+                                return responseDict
+                            elif self.researchStationsBuilt>=5:
+                                responseDict["errorMessage"] = "ERROR: Max number of research stations have been built"
+                                responseDict["validAction"] = False
+                                return responseDict
+                            else:
+                                responseDict["validAction"] = True
+                                curCityObj.researchStation =1
+                                playerHand.remove(card)
+                                self.playerDiscarded.append(card)
+                                return responseDict
+        responseDict["errorMessage"] = "ERROR: You don't have the government grant card!"
+        responseDict["validAction"] = False
+        return responseDict
 
     def airLift(self,playerId,playerToMoveId,cityToMoveTo):
         responseDict = {}
@@ -1408,7 +1412,7 @@ class GameBoard:
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         for card in playerHand:
-            if (card.name == "One Quiet Night"):
+            if (card.name == "One_Quiet_Night"):
                 self.skipInfectCities=True
                 responseDict["validAction"] = True
                 playerHand.remove(card)
