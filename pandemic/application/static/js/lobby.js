@@ -15,6 +15,11 @@ $("#goBack").click(function(){
         socket.emit('goBack')
 
 });
+$("#jNewGame").click(function(){
+        socket.emit('secretRoom')
+
+});
+
 $("#menuBottomRight").click(function(){
         socket.emit('existingRoom')
 
@@ -32,6 +37,15 @@ $("#menuBottomRight").click(function(){
 
 $("#goBack").click(function(){
         location.href = "/home";
+});
+$("#goBackOnce").click(function(){
+        location.href = "/join";
+});
+
+
+socket.on('joinSecret', function () {
+    console.log ("Join Team")
+    location.href ="/secret";
 
 });
 socket.on('joinR', function () {

@@ -87,7 +87,7 @@
 #playerCards{
     color:white;
     width:20%;
-    height:22em;
+    height:auto;
     display:block;
     z-index:2;
     float:right;

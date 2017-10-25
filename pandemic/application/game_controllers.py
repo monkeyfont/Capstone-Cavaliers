@@ -22,6 +22,9 @@ def joinTeam():
 @app.route('/')
 def defaultRoute():
     return (redirect(url_for('home')))
+@app.route('/secret')
+def newSecret():
+    return (render_template("joinSecretTeam.html"))
 
 @app.route('/join')
 def newTeamRedirect():
@@ -152,6 +155,9 @@ def getPlayerObject():
 @socketio.on('newRoom')
 def newRoom():
     emit('createNewRoom')
+@socketio.on('secretRoom')
+def newRoom():
+    emit('joinSecret')
 
 
 @socketio.on('startGame')
@@ -640,4 +646,43 @@ def lobby():
             return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
     return (render_template("home.html"))
 
-print("imported")
+
+
+
+#---------------------------------------
+
+@app.route('/secret', methods = ['GET', 'POST'])
+def secret():
+    session["username"] = (random.randint(0,100000000))
+    global playerIDs
+
+    if request.method == 'POST':
+
+            session['username'] = request.form['username']
+            session['roomname'] = request.form['roomname']
+
+            try:
+                lobby = lobbies[str(session['roomname'])]
+
+                if lobby.playerCount==4:
+                    return (render_template("joinSecretTeam.html",error="Sorry this room is full! Please join another"))
+                if lobby.gameStarted==True:
+                    return (render_template("joinSecretTeam.html", error="This game has already started please Join or create another game"))
+
+                for player in lobby.players:
+                    print lobby.players[player]
+                    print session['username']
+                    if lobby.players[player].name==session['username']:
+                        return (render_template("joinSecretTeam.html", error="This username is already taken, chose another"))
+
+
+                lobby.playerCount += 1
+                newPlayer = Player(lobby.playerCount, str(session['username']))
+                lobby.players[lobby.playerCount]=newPlayer
+            except:
+                print"Lobby does not exist"
+                return (render_template("joinSecretTeam.html", error="Sorry this room does not exist try another room"))
+
+
+            return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
+    return (render_template("joinSecretTeam.html"))
