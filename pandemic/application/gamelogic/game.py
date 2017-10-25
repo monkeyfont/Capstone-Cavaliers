@@ -1392,6 +1392,7 @@ class GameBoard:
         for card in playerHand:
             if(card.name == "Airlift"):
                 playerToMoveObj.location = cityToMoveTo
+                responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[cityToMoveTo])
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
