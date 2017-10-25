@@ -19,30 +19,40 @@
         <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
         <div id="existingGame">
             <form action = "/lobby" method = "post">
+                <div class="col-sm-12"><h1 class="errorMessage">{{error}}</h1></div>
+
                 <div class="row">
                     <div class="col-sm-12"><h2>Your Name</h2></div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12"><input class = "messageHere" placeholder="" name = "username"></div>
                 </div>
+                {%if availableRooms != []%}
+
                 <div class="row" id="roomOptions">
                     <table>
                       <tr>
                         <th id="rightTableSide"></th>
                         <th id="leftTableSide" class="tname">Team Name</th>
                         <th class="dif">Difficulty</th>
-                        <th class="npla"># of Players Needed</th>
+                        <th class="npla">Players in game</th>
                       </tr>
                         {%for rooms in availableRooms %}
+
                             <tr>
                                 <td id="rightTableSideTwo"><input class="optionalRooms" type="radio" name="roomname" value="{{rooms}}"></td>
                                 <td id="leftTableSideTwo"class="tname">{{rooms}}</td>
                                 <td class="dif">{{allRooms[rooms].difficulty}}</td>
-                                <td class="npla">{{(4- allRooms[rooms].playerCount)}}</td>
+                                <td class="npla">{{(allRooms[rooms].playerCount)}}</td>
                             </tr>
                         {% endfor %}
                     </table>
                 </div>
+                {% endif %}
+                {% if availableRooms == [] %}
+                <input class="optionalRooms" type="hidden" name="roomname" value="" visibility="hidden">
+                {% endif %}
+
                 <input type="hidden" name="roomtype" value="join">
                 <div class="row" id = "lasttoo">
                     <div class="col-sm-4" id="newGameBottomLeft"> <button class="bottomLeftButton" type="button" id="goBack">Go Back</button></div>

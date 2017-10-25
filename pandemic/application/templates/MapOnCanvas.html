@@ -5,27 +5,40 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <link rel="stylesheet" href="static/css/game.css">
     <link rel="stylesheet" href="static/css/gamePlayerCards.css">
+    <script>
+        function fade(){
+            $("#lobbyMessageBox").fadeToggle();
+        }
+        function tuggleBox(){
+            $('#messageBox').animate({width: 'toggle'});
+        }
+        function tugglehand(){
+            $('#playerCards').animate({width: 'toggle'});
+        }
 
+    </script>
 </head>
 <body style="margin:0px;">
 
 <h1 id="load"> Loading </h1>
-<!--<div id="hideBoards">-->
+<div id="hideBoards">
 
-<!--<div id = "messageBox">-->
+<div id = "messageBox">
 
-        <!--<div id = "lobbyMessageHistory">-->
+        <div id = "lobbyMessageHistory">
 
-        <!--</div>-->
+        </div>
 
-        <!--<div id="lobbyMessageBox">-->
-                <!--<input class = "typeMessageHere" id="message_input" placeholder="">-->
-                <!--<input class="three"id="message_button" type="button" value="Send">-->
-        <!--</div>-->
-<!--</div>-->
-<!--<div id="playerCards"></div>-->
-<!--</div>-->
+        <div id="lobbyMessageBox">
+                <input class = "typeMessageHere" id="message_input" placeholder="">
+                <input class="three"id="message_button" type="button" value="Send">
+        </div>
+</div>
+<div id="playerCards"></div>
+</div>
 <!--<h3 id="newMessage"></h3>-->
+<button id = "showMessages" onclick="fade();setTimeout(tuggleBox, 500);">Show Message Board</button>
+<button id = "showHand" onclick="tugglehand()">Show Message Board</button>
 
 <canvas id="myCanvas" width="1920" height="1080">
 </canvas>
