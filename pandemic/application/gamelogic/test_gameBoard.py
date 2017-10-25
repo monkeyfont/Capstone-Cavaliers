@@ -581,11 +581,72 @@ class TestGameCoordinator(TestCase):
 class TestGameSpecialRoleActions(TestCase):
     def setUp(self):
         """ Create the gameBoard, add players """
-        d = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
-        self.testGameBoard = GameBoard(d, initialize = False)
+        self.players = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.testGameBoard = GameBoard(self.players, initialize = False)
+        self.cities = self.testGameBoard.cities = self.testGameBoard.generateCities()
 
-    def test_medicMoveAfterCure(self):
-        pass
+    def test_curedMedicMove(self):
+        """ Tests that after the medic moves, and a cure if found for that city, it removes ALL tokens of that colour"""
+        self.players[1].role = "medic"
+        # # infect washington.
+        washington = self.cities["WASHINGTON"]
+        washington.blue = 3
+        self.testGameBoard.cures["blue"] = 1
+        # use the move function to move the medic to washington.
+        self.testGameBoard.movePlayer(1, "WASHINGTON")
+        self.assertEqual(washington.blue, 0)
+
+    def test_curedMedicMoveFail(self):
+        """ Tests that after the medic moves, and a cure IS NOT FOUND, the infections remain."""
+        self.players[1].role = "medic"
+        # # infect washington.
+        washington = self.cities["WASHINGTON"]
+        washington.blue = 3
+        self.testGameBoard.cures["blue"] = 0
+        # use the move function to move the medic to washington.
+        self.testGameBoard.movePlayer(1, "WASHINGTON")
+        self.assertEqual(washington.blue, 3)
+
+    def test_curedMedicDirectFlight(self):
+        """ Tests that after a direct flight, if the player is a medic and the cure is found, that city is cured."""
+        miami = self.cities["MIAMI"]
+        miami.yellow = 3
+        self.players[1].role = "medic"
+        self.testGameBoard.cures["yellow"] = 1
+        card1 = PlayerCard("MIAMI","yellow","","","")
+        # add card to the medics hand, and move them to a different city.
+        self.testGameBoard.players[1].hand.append(card1)
+        self.testGameBoard.players[1].location = "SEOUL"
+        # directflight ( discard miami card)
+        self.testGameBoard.directFlight(1, "MIAMI")
+        self.assertTrue(self.testGameBoard.players[1].location, "MIAMI")
+        self.assertEqual(miami.yellow, 0)
+
+
+    def test_curedMedicCharterFlight(self):
+        shanghai = self.cities["SHANGHAI"]
+        shanghai.red = 3
+        self.players[1].role = "medic"
+        self.testGameBoard.cures["red"] = 1
+        card1 = PlayerCard("ATLANTA", "blue", "", "", "")
+        self.testGameBoard.players[1].hand.append(card1)
+        self.testGameBoard.players[1].location = "ATLANTA"
+        self.testGameBoard.charterFlight(1, "ATLANTA", "SHANGHAI")
+        self.assertTrue(self.testGameBoard.players[1].location, "SHANGHAI")
+        self.assertEqual(shanghai.red, 0)
+
+    def test_curedMedicCharterFlightFail(self):
+        """ Move the player to shanghai from sanfransico."""
+        shanghai = self.cities["SHANGHAI"]
+        shanghai.red = 3
+        self.players[1].role = "medic"
+        # no cure this test. it shouldn't remove any tokens from shanghai
+        card1 = PlayerCard("ATLANTA", "blue", "", "", "")
+        self.testGameBoard.players[1].hand.append(card1)
+        self.testGameBoard.players[1].location = "ATLANTA"
+        self.testGameBoard.charterFlight(1, "ATLANTA", "SHANGHAI")
+        self.assertTrue(self.testGameBoard.players[1].location, "SHANGHAI")
+        self.assertNotEqual(shanghai.red, 0)
 
     def test_reseracherGive(self):
         pass
