@@ -246,9 +246,20 @@ socket.on('researchBuildChecked', function (data) {
 
 function shareKnowledgeGive() {
 
-    var city = prompt("Enter card you wish to swap: ");
-    var otherPlayer = prompt("Enter name of player you want to swap with: ");
-    socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
+
+    if (thisPlayerRole=="researcher"){
+
+        var city = prompt("Enter card you wish to swap: ");
+        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
+
+    }
+    else{
+        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        socket.emit('shareKnowledgeGive', {playerTaking:otherPlayer})
+    }
+
+
 
 }
 
@@ -277,9 +288,21 @@ socket.on('giveKnowledgeShared', function (data) {
 
 function shareKnowledgeTake() {
 
-    var city = prompt("Enter card you wish to take: ");
     var otherPlayer = prompt("Enter name of player's card you want to take: ");
-    socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+    var type= players.players[otherPlayer].playerType
+    //alert(type)
+
+    if (type=="researcher"){
+        var city = prompt("Enter card you wish to take: ");
+        socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+        }
+    else{
+
+    socket.emit('shareKnowledgeTake', {playerGiving:otherPlayer})
+
+    }
+
+
 
 }
 
@@ -578,11 +601,11 @@ socket.on('InfectedCities',function(data){
     var amount;
 
     //this is all just to loop through a json Object which is quite annoying
-    for (var city in data) {
-        if (data.hasOwnProperty(city)) {
-             for (var colour in data[city]){
-                if (data[city].hasOwnProperty(colour)) {
-                amount=data[city][colour];
+    for (var city in data.infected) {
+        if (data.infected.hasOwnProperty(city)) {
+             for (var colour in data.infected[city]){
+                if (data.infected[city].hasOwnProperty(colour)) {
+                amount=data.infected[city][colour];
                 // here loop through the amount which is number of times the city needs to be infected
                 for (var x=0;x<amount;x++){
                 // get the city from locations and infect it with karls .infect function
@@ -592,6 +615,30 @@ socket.on('InfectedCities',function(data){
         }
        }
        }
+
+        var outbreakLevel;
+        outbreakLevel= data.outbreakLevel
+        outbreakCount.setStage({outbreakStage:outbreakLevel})
+
+        // do whatever with that number
+
+
+        //INFECTION RATE STUFF
+        var infectionLevel;
+        infectionLevel=data.infectLevel
+        infectRate.setStage({infectionStage:infectionLevel})
+        // do front end stuff to update it
+        console.log(data.cubesUsed)
+
+        for (var i=0;i<data.cubesUsed.length;i++){
+        for (key in data.cubesUsed[i]){
+            infectionsMeterDisplay.alterInfectionStatus({colour:key,amount:data.cubesUsed[i][key]})
+            //infectionsMeterDisplay.alterInfectionStatus({colour:"yellow",amount:20})
+            //{"amount":info["cubesUsed"][i][key]}
+        }
+    }
+
+
        });
 
 socket.on('gotInitialHands',function(data){
@@ -610,6 +657,7 @@ socket.on('gotInitialHands',function(data){
 		console.log(data["playerhand"][player])
     // if (data.hasOwnProperty(player)) {
 		var playerId = player
+		actionState.addPlayer({playerName:player})
 		var cards=data["playerhand"][player]
 		console.log("Player "+playerId + " has the cards: ")
 //		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');

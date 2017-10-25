@@ -80,4 +80,9 @@ border:1px solid #333333;
     display:block;
     position:absolute;
     width:100%;
+    margin: auto;
 }
+body{
+	margin:0px;
+}
+
