@@ -592,6 +592,8 @@ class TestGameCoordinator(TestCase):
             This is required as the game board has to be instantiated for the infections at the end of the round to work.
         """
         self.testGameBoard = GameBoard(self.players)
+        for k in self.players:
+            self.players[k].location = "" # need to clear roles, incase they interfere with initial infections.
         infections = self.testGameBoard.endTurnInfectCities()
         # make sure that infections are returning.
         self.assertNotEqual(infections, {})
@@ -602,9 +604,13 @@ class TestGameCoordinator(TestCase):
         This checks that the amount of infections for the default difficulty is 4, and they contain the correct keys.
         """
         self.testGameBoard = GameBoard(self.players)
+        #clear the player roles, as they may be messing with the infections!
+        for k in self.players:
+            self.players[k].location = ""
         infections = self.testGameBoard.endTurnInfectCities()[0] #TODO remove the [0] index once updated.
         # Can't check what the infections are because they are random. However can check that there is the right amount,
         # and that they contain the correct keys.
+        print(infections)
         self.assertEqual(len(infections), 6) # base 6 infections for default difficulty.
         for i in infections:
             self.assertTrue('city' in i and 'colour' in i and 'amount' in i)
@@ -798,7 +804,20 @@ class TestGameSpecialRoleActions(TestCase):
         self.players[1].hand.append(sydneyCard)
         result = self.testGameBoard.operationsTeleport(playerId=1, cardName="SYDNEY", destinationCity="CHENNAI")
         # this should fail, the player isn't the operations expert.
-        self.assertFalse(result['validAction']) #TODO fix this - it currently fails because this isn't a key.
+        self.assertFalse(result['validAction'])
+
+    def test_operationsTeleportFail2(self):
+        """ If the player is not on a research station, it should fail."""
+        # place a research station in london. move player there.
+        self.players[1].role = "operationsExpert"
+        london = self.cities["LONDON"]
+        self.players[1].location = "LONDON"
+        # add a player card to the user's hand.
+        sydneyCard = PlayerCard("SYDNEY", "", "", "", "")
+        self.players[1].hand.append(sydneyCard)
+        result = self.testGameBoard.operationsTeleport(playerId=1, cardName="SYDNEY", destinationCity="CHENNAI")
+        # the attempt should have failed.
+        self.assertFalse(result['validAction'])
 
     def test_quarantinePreventInfect(self):
         """ when a city is infected, if the medic is on it and a cure for that colour has been found, then that city shouldn't be infected."""

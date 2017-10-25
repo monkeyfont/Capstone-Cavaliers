@@ -581,11 +581,14 @@ class GameBoard:
             return infectedCities
         print"The infections for this round are not getting skipped!"
 
+
         amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
         for i in range(amountToDraw):
+            print(i)
             # Draw the infection card from the top of the deck.
             infectCard = self.infectionDeck.pop(0)
             cityName = infectCard.name
+            print(" i should be infecting", cityName)
             cityObject = self.cities[cityName]
             cityColour = cityObject.colour
             amount=1
@@ -974,11 +977,13 @@ class GameBoard:
         # check the player is a operations expert
         if playerObj.role != "operationsExpert":
             responseDict["errorMessage"] = "ERROR: You are not an operations expert."
+            responseDict["validAction"] = False
             return responseDict
 
         # check the player is on a research station
         if curCityObj.researchStation == 0:
             responseDict["errorMessage"] = "ERROR: You are not at a research station!"
+            responseDict["validAction"] = False
             return responseDict
 
         # check the player has the card, and the card is a city type (player type).
