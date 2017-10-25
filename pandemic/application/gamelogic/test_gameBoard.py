@@ -582,8 +582,11 @@ class TestGameSpecialRoleActions(TestCase):
     def setUp(self):
         """ Create the gameBoard, add players """
         self.players = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.players[1].actions = 4
         self.testGameBoard = GameBoard(self.players, initialize = False)
         self.cities = self.testGameBoard.cities = self.testGameBoard.generateCities()
+        self.testGameBoard.initialized = 1 # this sets the game to think it is initialized. This is required for the preventInfection checks
+
 
     def test_curedMedicMove(self):
         """ Tests that after the medic moves, and a cure if found for that city, it removes ALL tokens of that colour"""
@@ -631,12 +634,15 @@ class TestGameSpecialRoleActions(TestCase):
         card1 = PlayerCard("ATLANTA", "blue", "", "", "")
         self.testGameBoard.players[1].hand.append(card1)
         self.testGameBoard.players[1].location = "ATLANTA"
-        self.testGameBoard.charterFlight(1, "ATLANTA", "SHANGHAI")
+        result = self.testGameBoard.charterFlight(1, "ATLANTA", "SHANGHAI")
         self.assertTrue(self.testGameBoard.players[1].location, "SHANGHAI")
         self.assertEqual(shanghai.red, 0)
+        #check the JSON is as intended.
+        self.assertTrue(result["validAction"])
+        self.assertEqual(result["medicTreatments"], {'amount': 3, 'cityName': 'SHANGHAI', 'colour': 'red'})
 
     def test_curedMedicCharterFlightFail(self):
-        """ Move the player to shanghai from sanfransico."""
+        """ Move the player to shanghai. No treatments should happen as a cure is not found"""
         shanghai = self.cities["SHANGHAI"]
         shanghai.red = 3
         self.players[1].role = "medic"
@@ -644,27 +650,133 @@ class TestGameSpecialRoleActions(TestCase):
         card1 = PlayerCard("ATLANTA", "blue", "", "", "")
         self.testGameBoard.players[1].hand.append(card1)
         self.testGameBoard.players[1].location = "ATLANTA"
-        self.testGameBoard.charterFlight(1, "ATLANTA", "SHANGHAI")
+        result = self.testGameBoard.charterFlight(1, "ATLANTA", "SHANGHAI")
         self.assertTrue(self.testGameBoard.players[1].location, "SHANGHAI")
         self.assertNotEqual(shanghai.red, 0)
+        # check the JSON is as intended.
+        self.assertTrue(result["validAction"])
+        self.assertTrue('medicTreatments' not in result)
+
 
     def test_reseracherGive(self):
-        pass
+        """ The researcher should be able to give ANY card from their hand to a player on the same city"""
+        card = PlayerCard("MIAMI", "yellow", "", "", "")
+        self.testGameBoard.players[1].role = "researcher"
+        self.players[1].hand.append(card)
+        self.players[1].location = self.players[2].location ="ATLANTA"
+        result = self.testGameBoard.shareKnowledgeGive(1,2,"MIAMI")
+        self.assertTrue(card in self.players[2].hand)
+        # this should use an action from the reseracher.
+        self.assertEqual(self.players[1].actions, 3)
+        # but the other player should have all actions remaining.
+        self.assertEqual(self.players[2].actions, 4)
+        # check the JSON is as intended
+        self.assertTrue(result["validAction"])
+
+
+    def test_reseracherGiveFail(self):
+        """ This should fail because the player's aren't on the same city."""
+        card = PlayerCard("MIAMI", "yellow", "", "", "")
+        self.testGameBoard.players[1].role = "researcher"
+        self.players[1].hand.append(card)
+        self.players[1].location = "NEWYORK"
+        self.players[2].location = "ATLANTA"
+        result = self.testGameBoard.shareKnowledgeGive(1,2,"MIAMI")
+        self.assertFalse(card in self.players[2].hand)
+        self.assertFalse(result["validAction"])
+        # the researcher should still have 4 actions.
+        self.assertEqual(self.players[1].actions, 4)
+        # check the JSON is as intended
+        self.assertFalse(result["validAction"])
+
+    def test_reseracherGiveFail2(self):
+        """ This should fail because the player doesn't have the target card."""
+        card = PlayerCard("SHANGHAI", "red", "", "", "")
+        self.testGameBoard.players[1].role = "researcher"
+        self.players[1].actions = 4
+        self.players[1].hand.append(card)
+        self.players[1].location = self.players[2].location ="ATLANTA"
+        result = self.testGameBoard.shareKnowledgeGive(1,2,"MIAMI")
+        self.assertFalse(result["validAction"])
+        # all actions should remain.
+        self.assertEqual(self.players[1].actions, 4)
+        # check the JSON is as intended
+        self.assertFalse(result["validAction"])
 
     def test_researcherTake(self):
-        pass
+        """ Another player should be able to take any card from the researchers hand, if they are on the same city."""
+        self.players[1].role = "researcher"
+        card = PlayerCard("CAIRO", "black", "", "", "")
+        self.players[1].hand.append(card)
+        self.players[1].location = self.players[2].location = "ATLANTA"
+        result = self.testGameBoard.shareKnowledgeTake(2,1,"CAIRO")
+        # check the JSON is as intended
+        self.assertTrue(result["validAction"])
 
     def test_operationsBuild(self):
-        pass
+        self.players[1].role = "operationsExpert"
+        self.players[1].location = "MEXICOCITY"
+        result = self.testGameBoard.buildResearchStation(1, "MEXICOCITY")
+        # this should use an action..
+        self.assertEqual(self.players[1].actions,3)
+        # check the JSON is as intended
+        self.assertTrue(result["validAction"])
+
+    def test_operationsBuild2(self):
+        self.players[1].role = "operationsExpert"
+        self.players[1].location = "MEXICOCITY"
+        result = self.testGameBoard.buildResearchStation(1, "MEXICOCITY")
+        # check the JSON is as intended
+        self.assertTrue(result["validAction"])
 
     def test_operationsTeleport(self):
-        pass
+        """ On a research station, the operations expert can discard any city card to move to any city."""
+        # place a research station in london. move player there.
+        self.players[1].role = "operationsExpert"
+        london = self.cities["LONDON"]
+        london.researchStation = 1
+        self.players[1].location = "LONDON"
+        # add a player card to the user's hand.
+        sydneyCard = PlayerCard("SYDNEY", "", "", "", "")
+        self.players[1].hand.append(sydneyCard)
+        result = self.testGameBoard.operationsTeleport(playerId=1, cardName="SYDNEY", destinationCity="CHENNAI")
+        # the player should now be in chennai.
+        self.assertEqual(self.players[1].location, "CHENNAI")
+        # the card should be removed from the players hand
+        self.assertTrue(sydneyCard not in self.players[1].hand)
+        # the player should have used a move.
+        self.assertEqual(self.players[1].actions, 3)
+        # check the JSON is as intended
+        self.assertTrue(result["validAction"])
+
+    def test_operationsTeleportFail(self):
+        """ The player is not set to be the operations expert. the action should fail."""
+        # place a research station in london. move player there.
+        london = self.cities["LONDON"]
+        london.researchStation = 1
+        self.players[1].location = "LONDON"
+        # add a player card to the user's hand.
+        sydneyCard = PlayerCard("SYDNEY", "", "", "", "")
+        self.players[1].hand.append(sydneyCard)
+        result = self.testGameBoard.operationsTeleport(playerId=1, cardName="SYDNEY", destinationCity="CHENNAI")
+        # this should fail, the player isn't the operations expert.
+        self.assertFalse(result['validAction']) #TODO fix this - it currently fails because this isn't a key.
 
     def test_quarantinePreventInfect(self):
-        pass
+        """ when a city is infected, if the medic is on it and a cure for that colour has been found, then that city shouldn't be infected."""
+        self.players[1].location = "SYDNEY"
+        self.players[1].role = "quarantineSpecialist"
+        self.testGameBoard.cures["red"] = 1
+        self.testGameBoard.infectCity("SYDNEY", 2)
+        self.assertEqual(self.cities["SYDNEY"].red, 0)
 
     def test_medicPreventInfect(self):
-        pass
+        """ when a city is infected, if the medic is on it and a cure for that colour has been found, then that city shouldn't be infected."""
+        self.players[1].location = "SYDNEY"
+        self.players[1].role = "medic"
+        self.testGameBoard.cures["red"] = 1
+        self.testGameBoard.infectCity("SYDNEY", 2)
+        self.assertEqual(self.cities["SYDNEY"].red, 0)
 
     def test_dispatcherMoveOther(self):
         """
@@ -749,9 +861,53 @@ class TestGameEndOfRound(TestCase):
 
 class TestGameUtils(TestCase):
     def setUp(self):
-        pass
+        """ Create the gameBoard, add players """
+        self.players = {1: Player(1, "p1"), 2: Player(2, "p2"), 3: Player(3, "p3"), 4: Player(4, "p4")}
+        self.players[1].actions = 4
+        self.testGameBoard = GameBoard(self.players, initialize = False)
 
-    def isPlayerAtResearchStation(self):
+
+    def test_canInfectionBePrevented(self):
+        """ When a player is a medic with a colour cured, they should prevent infections on that city for that colour."""
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        miami = self.testGameBoard.cities["MIAMI"]
+        self.players[1].location = "MIAMI"
+        self.players[1].role = "medic"
+        self.testGameBoard.cures["yellow"] = 1
+        self.testGameBoard.initialized = 1 # the game must be initialized so the prevention works.
+        result = self.testGameBoard.canInfectionBePrevented(miami, "yellow")
+        self.assertTrue(result)
+
+    def test_canInfectionBePrevented2(self):
+        """ When a player is the quarantine specialist they should prevent infections on that city (and connected cities) for that colour.
+            A cure does NOT need to be found.
+        """
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        miami = self.testGameBoard.cities["MIAMI"]
+        self.players[1].location = "MIAMI"
+        self.players[1].role = "quarantineSpecialist"
+        self.testGameBoard.initialized = 1 # the game must be initialized so the prevention works.
+        result = self.testGameBoard.canInfectionBePrevented(miami, "yellow")
+        result2 = self.testGameBoard.canInfectionBePrevented(miami, "red")
+        result3 = self.testGameBoard.canInfectionBePrevented(miami, "blue")
+        result4 = self.testGameBoard.canInfectionBePrevented(miami, "black")
+        self.assertTrue((result and result2 and result3 and result4))
+
+    def test_canInfectionBePrevented3(self):
+        """
+        Tests that the quarantine specialist prevents surrounding infections.
+        """
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        miami = self.testGameBoard.cities["MIAMI"]
+        self.players[1].location = "MIAMI"
+        self.players[1].role = "quarantineSpecialist"
+        self.testGameBoard.initialized = 1 # the game must be initialized so the prevention works.
+        result = self.testGameBoard.canInfectionBePrevented(miami, "yellow")
+        self.assertTrue(result)
+
+
+
+    def test_isPlayerAtResearchStation(self):
         pass
 
 
