@@ -636,14 +636,28 @@ def lobby():
 
     if request.method == 'POST':
 
-            session['username'] = request.form['username']
-            session['roomname'] = request.form['roomname']
             if request.form['roomtype']=="create":
+                if request.form['username'].isspace() or request.form['username']=="":
+                    print ("HERE")
+                    return (render_template("createTeam.html",error="Please type in your name."))
+                elif (request.form['roomname'] == ""):
+                    print ("OR here")
+                    return (render_template("createTeam.html",error="No public games available"))
+                elif request.form['roomname'].isspace() or request.form['roomname']=="":
+                    print ("HERE")
+                    return (render_template("createTeam.html", error="Select a room to join."))
+                elif len(request.form['username'])>10:
+                    print
+                    return (render_template("createTeam.html", error="Your name can't be that long."))
+                elif len(request.form['roomname'])>10:
+                    print
+                    return (render_template("createTeam.html", error="Your room name is too long."))
 
+                session['username'] = request.form['username']
+                session['roomname'] = request.form['roomname']
 
                 if session['roomname'] in lobbies:
-                    return (render_template("home.html", error="Sorry this room name is already taken chose another"))
-
+                    return (render_template("createTeam.html", error="Sorry this room name is already taken chose another"))
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
@@ -665,12 +679,28 @@ def lobby():
 
             else: # if user is joining a game
                 try:
+                    if request.form['username'].isspace() or request.form['username']=="":
+                        print ("HERE")
+                        return (render_template("joinTeam.html",error="Please type in your name."))
+                    elif (request.form['roomname'] == ""):
+                        print ("OR here")
+                        return (render_template("joinTeam.html",error="No public games available"))
+                    elif request.form['roomname'].isspace() or request.form['roomname']=="":
+                        print ("HERE")
+                        return (render_template("joinTeam.html", error="Select a room to join."))
+                    elif len(request.form['username'])>10:
+                        return (render_template("joinTeam.html", error="Your name can't be that long."))
+
+                    print ("Passed here")
+                    session['username'] = request.form['username']
+                    session['roomname'] = request.form['roomname']
+
                     lobby = lobbies[str(session['roomname'])]
 
                     if lobby.playerCount==4:
-                        return (render_template("home.html",error="Sorry this room is full! Please join another"))
+                        return (render_template("joinTeam.html",error="Sorry this room is full! Please join another"))
                     if lobby.gameStarted==True:
-                        return (render_template("home.html", error="This game has already started please Join or create another game"))
+                        return (render_template("joinTeam.html", error="This game has already started please Join or create another game"))
 
                     for player in lobby.players:
                         print lobby.players[player]
