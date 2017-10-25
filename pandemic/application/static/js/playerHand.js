@@ -53,7 +53,7 @@ var CAIRO = new Image();  CAIRO.src = 'static/images/Cards/player/Black/CAIRO.pn
 var ISTANBUL = new Image();  ISTANBUL.src = 'static/images/Cards/player/Black/ISTANBUL.png';
 var ALGIERS = new Image(); ALGIERS.src = 'static/images/Cards/player/Black/ALGIERS.png';
 
-var Airlift = new Image(); Airlift.src = 'static/images/Cards/special/AIRLIFT.png';
+var AirLift = new Image(); AirLift.src = 'static/images/Cards/special/AirLift.png';
 var Epidemic = new Image(); Epidemic.src = 'static/images/Cards/special/EPIDEMIC.png';
 var Forecast = new Image(); Forecast.src = 'static/images/Cards/special/FORECAST.png';
 var Government_Grant = new Image(); Government_Grant.src = 'static/images/Cards/special/GOVERNMENT_GRANT.png';
@@ -63,7 +63,7 @@ var Resilent_Population = new Image(); Resilent_Population.src = 'static/images/
 var allPossiblePlayerCards = {testCard:testCardImage,SANFRANCISCO,CHICAGO,MONTREAL,NEWYORK,ATLANTA,WASHINGTON,LONDON,ESSEN,STPETERSBURG,MADRID,PARIS,MILAN,
 LOSANGELES,MEXICOCITY,MIAMI,BOGOTA,LIMA,SANTIAGO,BUENOSAIRES,SAOPAULO,LAGOS,KHARTOUM,KINSHASA,JOHANNESBURG,
 SYDNEY,JAKARTA,MANILA,HOCHIMINHCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,SEOUL,BEIJING,
-KOLKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS,Airlift,Epidemic,Forecast,Government_Grant,One_Quiet_Night,Resilent_Population}
+KOLKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS,AirLift,Epidemic,Forecast,Government_Grant,One_Quiet_Night,Resilent_Population}
 
 function playerHand(){
 	this.xPos = 960;
