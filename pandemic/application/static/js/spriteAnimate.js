@@ -48,11 +48,11 @@ canvas.addEventListener('click', function(evt) {
 
 	//is the deck clicked?
 	
-	if (mousePos.x >= 1970 && mousePos.x <= 1970 + 200 
-		&& mousePos.y >= 950 && mousePos.y <= 950 +280){
-			console.log("deck was clicked");
-			discardPile.toggleActive();
-		}
+	// if (mousePos.x >= 1970 && mousePos.x <= 1970 + 200 
+		// && mousePos.y >= 950 && mousePos.y <= 950 +280){
+			// console.log("deck was clicked");
+			// discardPile.toggleActive();
+		// }
 
 	
 
@@ -79,7 +79,10 @@ canvas.addEventListener('click', function(evt) {
 			}
 
 	}
-	if(playerActionsMenu.clickSubMenu(mousePos)){
+	
+	if(discardPile.click(mousePos)){
+		
+	}else if(playerActionsMenu.clickSubMenu(mousePos)){
 		
 	}else if (playersHand.cardX(mousePos)){
 		
@@ -162,6 +165,8 @@ function gameLoop(){
 		locations[previousLocation].renderMenu();	
 	}
 	
+	discardPile.render();
+	
 }
 
 // locations["ATLANTA"].infect({});
@@ -174,6 +179,19 @@ var CardImage = new Image();
 CardImage.src = 'static/images/Cards/special/PLAYER_BACK.png';
 var cardFront = new Image();
 cardFront.src = 'static/images/infection-Front.png';
+
+discardPile = new discardPile({
+	context: canvas.getContext("2d"),
+	xPos: optimalScreenWidth/2,
+	yPos: 500, 
+})
+
+discardPile.addCard({cardName:'SANFRANCISCO'})
+discardPile.addCard({cardName:'CHICAGO'})
+discardPile.addCard({cardName:'MONTREAL'})
+discardPile.addCard({cardName:'NEWYORK'})
+discardPile.addCard({cardName:'ATLANTA'})
+
 
 
 var deck = new sprite({
@@ -237,11 +255,6 @@ playerActionsMenu = new playerActionsBar({
 
 });
 
-
-
-discardPile = new discardPile({
-	context: canvas.getContext("2d")
-});
 
 messageAlert = new messageAlert ({
 	context: canvas.getContext("2d"),
