@@ -1419,25 +1419,6 @@ class GameBoard:
         responseDict["validAction"] = False
         return responseDict
 
-    def removeInfectionCard(self,playerId,infectCardName): # this is for Resilient population
-
-        responseDict = {}
-        playerObj = self.players[playerId]
-        playerHand = playerObj.hand
-        for card in playerHand:
-            if (card.name == "Resilient Population"):
-                for cardName in self.infectionDiscarded:
-                    if cardName.name==infectCardName: #is the card actually in the discard pile
-                        self.infectionDiscarded.remove(cardName) # remove card from discard pile
-                        responseDict["validAction"] = True
-                        playerHand.remove(card)
-                        return responseDict
-                        # it is now not in any deck so basicaly out of the game
-
-        responseDict["errorMessage"] = "ERROR: You do not have this card"
-        responseDict["validAction"] = False
-        return responseDict
-
 class PlayerCard:
     """ Player City Card Definition """
     def __init__(self, name, colour, population, area, country):
