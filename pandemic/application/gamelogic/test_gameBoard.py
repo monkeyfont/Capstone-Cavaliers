@@ -43,7 +43,6 @@ class TestGameBoardInitFunctions(TestCase):
         This test ensures the difficulty selector works.
         """
         self.testGameBoard.difficulty = 1
-        print self.testGameBoard.difficulty
         self.testGameBoard.placeEpidemicCards()
         count = 0
         for card in self.testGameBoard.playerDeck:
@@ -194,8 +193,29 @@ class TestGameActions(TestCase):
         for card in cities:
             pcard=PlayerCard(card, "blue", "", "", "")
             self.testGameBoard.players[1].hand.append(pcard)
+        result = self.testGameBoard.discoverCure(1,cities)
+        # player should have used a move
+        self.assertEqual(self.testGameBoard.players[1].actions, 3)
+        # should be a validAction.
+        self.assertTrue(result["validAction"])
 
-        self.assertTrue(self.testGameBoard.discoverCure(1,cities))
+
+    def test_discoverCureFail(self):
+        """ This test only adds 4 cards to the player hand. It should fail."""
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        paris = self.testGameBoard.cities['PARIS']
+        paris.researchStation = 1
+        self.testGameBoard.players[1].location = "PARIS"
+        cities = ["SANFRANCISCO", "CHICAGO", "MONTREAL", "NEWYORK"]
+        for card in cities:
+            pcard=PlayerCard(card, "blue", "", "", "")
+            self.testGameBoard.players[1].hand.append(pcard)
+        result = self.testGameBoard.discoverCure(1,cities)
+        # player actions should remain unchanged
+        self.assertEqual(self.testGameBoard.players[1].actions, 4)
+
+        # the JSON should return "validAction" = False...
+        self.assertFalse(result["validAction"])
 
     def test_pass(self):
         """ user should have no actions after using passTurn."""
@@ -655,7 +675,7 @@ class TestGameSpecialRoleActions(TestCase):
         self.assertNotEqual(shanghai.red, 0)
         # check the JSON is as intended.
         self.assertTrue(result["validAction"])
-        self.assertTrue('medicTreatments' not in result)
+        self.assertEqual(result['medicTreatments'], {})
 
 
     def test_reseracherGive(self):
@@ -784,7 +804,6 @@ class TestGameSpecialRoleActions(TestCase):
          and the target player should be moved to the new location.
          The dispatcher should stay at the current location.
          """
-        self.testGameBoard.cities = self.testGameBoard.generateCities()
         player1 = self.testGameBoard.players[1]
         player2 = self.testGameBoard.players[2]
         # both players start in atlanta.
@@ -808,7 +827,6 @@ class TestGameSpecialRoleActions(TestCase):
         This test checks moving another player fails if the target city is not connected to the target players current
         location.
          """
-        self.testGameBoard.cities = self.testGameBoard.generateCities()
         player1 = self.testGameBoard.players[1]
         player2 = self.testGameBoard.players[2]
         # both players start in atlanta.
@@ -830,13 +848,141 @@ class TestGameSpecialRoleActions(TestCase):
 
 
     def test_dispatcherTeleportOther(self):
-        pass
+        """ The dispatcher can move (or 'teleport') a pawn to a city with another pawn as an action.
+            This test checks that the dispatcher can move player 2 to player 3.
+        """
+        self.players[1].role = "dispatcher"
+        self.players[2].location = "TOKYO"
+        self.players[3].location = "CHENNAI"
+        result = self.testGameBoard.dispatcherTeleportOther(1,2,"CHENNAI")
+        # the 2nd player should now be in the location of the 3rd player.
+        self.assertEqual(self.players[2].location, "CHENNAI")
+        # the dispatcher should have used an action.
+        self.players[1].actions = 3
+        # check JSON
+        self.assertTrue(result["validAction"])
+
+
+    def test_dispatcherTeleportOther2(self):
+        """ Checks that the dispatcher can move another player to themselves """
+        self.players[1].role = "dispatcher"
+        self.players[1].location = "SYDNEY"
+        self.players[2].location = "LONDON"
+        result = self.testGameBoard.dispatcherTeleportOther(1,2,"SYDNEY")
+        # the 2nd player should now be in the location of the 3rd player.
+        self.assertEqual(self.players[1].location, "SYDNEY")
+        # the dispatcher should have used an action.
+        self.players[1].actions = 3
+        # check JSON
+        self.assertTrue(result["validAction"])
+
+    def test_dispatcherTeleportOther3(self):
+        """ Checks that the dispatcher can move themselves to another player. """
+        """ Checks that the dispatcher can move another player to themselves """
+        self.players[1].role = "dispatcher"
+        self.players[1].location = "SYDNEY"
+        self.players[2].location = "LONDON"
+        result = self.testGameBoard.dispatcherTeleportOther(1,1,"LONDON")
+        # the 2nd player should now be in the location of the 3rd player.
+        self.assertEqual(self.players[1].location, "LONDON")
+        # the dispatcher should have used an action.
+        self.players[1].actions = 3
+        # check JSON
+        self.assertTrue(result["validAction"])
+
+    def test_dispatcherTeleportOtherFail(self):
+        """ The dispatcher can move (or 'teleport') a pawn to a city with another pawn as an action.
+            This test checks that the dispatcher can move player 2 to player 3.
+        """
+        self.players[1].role = "dispatcher"
+        self.players[2].location = "TOKYO"
+        self.players[3].location = "CHENNAI"
+        result = self.testGameBoard.dispatcherTeleportOther(1,2,"NEWYORK")
+        # the 2nd player should remain in TOKYO
+        self.assertEqual(self.players[2].location, "TOKYO")
+        # the dispatcher should have used no actions.
+        self.players[1].actions = 4
+        # check JSON
+        self.assertFalse(result["validAction"])
 
     def test_scientistDiscoverCure(self):
-        pass
+        """
+        The scientist only needs 4 cards of the same colour, while at a research station
+        to discover a cure.
+        """
+        self.testGameBoard.players[1].location = "PARIS"
+        self.testGameBoard.players[1].role = "scientist"
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        paris = self.testGameBoard.cities['PARIS']
+        paris.researchStation = 1
+        cities = ["SANFRANCISCO", "CHICAGO", "MONTREAL", "NEWYORK"]
+        for card in cities:
+            pcard=PlayerCard(card, "blue", "", "", "")
+            self.testGameBoard.players[1].hand.append(pcard)
+        result = self.testGameBoard.discoverCure(1,cities)
+        # player should have used a move
+        self.assertEqual(self.testGameBoard.players[1].actions, 3)
+        # should be a validAction.
+        self.assertTrue(result["validAction"])
+
+    def test_scientistDiscoverCureFail(self):
+        """
+        The scientist only needs 4 cards of the same colour, while at a research station
+        to discover a cure.
+        If they pass in 5 cards, it should return as an invalid action.
+        """
+        self.testGameBoard.players[1].location = "PARIS"
+        self.testGameBoard.players[1].role = "scientist"
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        paris = self.testGameBoard.cities['PARIS']
+        paris.researchStation = 1
+        cities = ["SANFRANCISCO", "CHICAGO", "MONTREAL", "NEWYORK", "LONDON"]
+        for card in cities:
+            pcard=PlayerCard(card, "blue", "", "", "")
+            self.testGameBoard.players[1].hand.append(pcard)
+        result = self.testGameBoard.discoverCure(1,cities)
+
+        # player moves should remain the same.
+        self.assertEqual(self.testGameBoard.players[1].actions, 4)
+        # should be a validAction.
+        self.assertFalse(result["validAction"])
+
+    def test_scientistDiscoverCureFail2(self):
+        """
+        The scientist only needs 4 cards of the same colour, while at a research station
+        to discover a cure.
+        If they pass in 3 cards, it should return as an invalid action.
+        """
+        self.testGameBoard.players[1].location = "PARIS"
+        self.testGameBoard.players[1].role = "scientist"
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        paris = self.testGameBoard.cities['PARIS']
+        paris.researchStation = 1
+        cities = ["SANFRANCISCO", "CHICAGO", "MONTREAL"]
+        for card in cities:
+            pcard=PlayerCard(card, "blue", "", "", "")
+            self.testGameBoard.players[1].hand.append(pcard)
+        result = self.testGameBoard.discoverCure(1,cities)
+
+        # player removes should remain the same.
+        self.assertEqual(self.testGameBoard.players[1].actions, 4)
+        # should be a validAction.
+        self.assertFalse(result["validAction"])
 
     def test_medicCureDisease(self):
-        pass
+        """ The medic should cure all tiles on a city."""
+        # generate requirements
+        self.testGameBoard.cities = self.testGameBoard.generateCities()
+        card = PlayerCard("MIAMI", "yellow", "", "", "")
+        self.testGameBoard.players[1].location = "MIAMI"
+        # infect atlanta
+        miami = self.testGameBoard.cities['MIAMI']
+        miami.yellow = 3
+        result = self.testGameBoard.treatDisease(1,"MIAMI", colour="yellow")
+        # Make sure the infection is removed from the object.
+        self.assertEquals(miami.yellow, 0)
+        # Make sure the action JSON returns True.
+        self.assertEquals(result["validAction"], True)
 
 
 class TestGameEventActions(TestCase):

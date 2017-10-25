@@ -832,16 +832,19 @@ class GameBoard:
         # if there is another player on the target city, move the target player there.
         for id in self.players:
             player = self.players[id]
-            if player.location == cityObj.location:
+            if player.location == cityObj.name:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
                 playerObj.actions -= 1
                 # check if the medics secondary power removes any infections.
                 responseDict["medicTreatments"] = self.medicCureAfterMove(targetPlayerObj, cityObj)
-
+                endOfGameCheck = self.__endOfRound()
+                responseDict.update(endOfGameCheck)
                 return responseDict
         # fall through
         responseDict["errorMessage"] = "ERROR: There is no player at the target location"
+        responseDict["validAction"] = False
+
         return responseDict
 
 
@@ -1133,8 +1136,6 @@ class GameBoard:
             return False
 
     def discoverCure(self,playerId,cities):
-
-
 
         """
         at any research station, discard 5 city cards of the same disease colour to cure that disease
