@@ -28,18 +28,18 @@ var SYDNEY = new city({id:'SYDNEY', colour:'red', xPos:1670, yPos:904, connectio
 var JAKARTA= new city({id:'JAKARTA', colour:'red', xPos:1430, yPos:730, connections:['SYDNEY','HOCHIMINHCITY','BANGKOK','CHENNAI']});
 var MANILA = new city({id:'MANILA', colour:'red', xPos:1510, yPos:590, connections:['SYDNEY','SANFRANCISCO','HOCHIMINHCITY','HONGKONG']});
 var HOCHIMINHCITY = new city({id:'HOCHIMINHCITY', colour:'red', xPos:1430, yPos:630, connections:['MANILA','JAKARTA','BANGKOK','HONGKONG']});
-var BANGKOK = new city({id:'BANGKOK', colour:'red', xPos:1360, yPos:570, connections:['KOULKATA','HONGKONG','HOCHIMINHCITY','JAKARTA','CHENNAI']});
+var BANGKOK = new city({id:'BANGKOK', colour:'red', xPos:1360, yPos:570, connections:['KOLKATA','HONGKONG','HOCHIMINHCITY','JAKARTA','CHENNAI']});
 var TAIPEI  = new city({id:'TAIPEI', colour:'red', xPos:1520, yPos:540, connections:['OSAKA','SHANGHAI','HONGKONG','MANILA']});
 var OSAKA = new city({id:'OSAKA', colour:'red', xPos:1546, yPos:480, connections:['TOKYO','TAIPEI']});
 var TOKYO = new city({id:'TOKYO', colour:'red', xPos:1590, yPos:400, connections:['SEOUL','OSAKA','SANFRANCISCO','SHANGHAI']});
-var HONGKONG = new city({id:'HONGKONG', colour:'red', xPos:1430, yPos:520, connections:['SHANGHAI','TAIPEI','MANILA','HOCHIMINHCITY','BANGKOK','KOULKATA']});
+var HONGKONG = new city({id:'HONGKONG', colour:'red', xPos:1430, yPos:520, connections:['SHANGHAI','TAIPEI','MANILA','HOCHIMINHCITY','BANGKOK','KOLKATA']});
 var SHANGHAI = new city({id:'SHANGHAI', colour:'red', xPos:1400, yPos:440, connections:['BEIJING','SEOUL','TOKYO','TAIPEI','HONGKONG']});
 var SEOUL = new city({id:'SEOUL', colour:'red', xPos:1485, yPos:365, connections:['TOKYO','SHANGHAI','BEIJING']});
 var BEIJING = new city({id:'BEIJING', colour:'red', xPos:1345, yPos:375, connections:['SEOUL','SHANGHAI']});
 
-var KOULKATA = new city({id:'KOULKATA', colour:'black', xPos:1315, yPos:490, connections:['HONGKONG','BANGKOK','CHENNAI','DELHI']});
-var CHENNAI = new city({id:'CHENNAI', colour:'black', xPos:1280, yPos:606, connections:['DELHI','KOULKATA','BANGKOK','JAKARTA','MUMBAI']});
-var DELHI = new city({id:'DELHI', colour:'black', xPos:1270, yPos:405, connections:['KOULKATA','CHENNAI','MUMBAI','KARACHI','TEHRAN']});
+var KOLKATA = new city({id:'KOLKATA', colour:'black', xPos:1315, yPos:490, connections:['HONGKONG','BANGKOK','CHENNAI','DELHI']});
+var CHENNAI = new city({id:'CHENNAI', colour:'black', xPos:1280, yPos:606, connections:['DELHI','KOLKATA','BANGKOK','JAKARTA','MUMBAI']});
+var DELHI = new city({id:'DELHI', colour:'black', xPos:1270, yPos:405, connections:['KOLKATA','CHENNAI','MUMBAI','KARACHI','TEHRAN']});
 var MUMBAI = new city({id:'MUMBAI', colour:'black', xPos:1245, yPos:540, connections:['KARACHI','DELHI','CHENNAI']});
 var KARACHI = new city({id:'KARACHI', colour:'black', xPos:1190, yPos:460, connections:['TEHRAN','DELHI','MUMBAI','RIYADH','BAGHDAD']});
 var RIYADH = new city({id:'RIYADH', colour:'black', xPos:1090, yPos:555, connections:['BAGHDAD','KARACHI','CAIRO']});
@@ -54,5 +54,5 @@ var ALGIERS = new city({id:'ALGEIRS', colour:'black', xPos:900, yPos:500, connec
 var locations = {SANFRANCISCO,CHICAGO,MONTREAL,NEWYORK,ATLANTA,WASHINGTON,LONDON,ESSEN,STPETERSBURG,MADRID,PARIS,MILAN,
 LOSANGELES,MEXICOCITY,MIAMI,BOGOTA,LIMA,SANTIAGO,BUENOSAIRES,SAOPAULO,LAGOS,KHARTOUM,KINSHASA,JOHANNESBURG,
 SYDNEY,JAKARTA,MANILA,HOCHIMINHCITY,BANGKOK,TAIPEI,OSAKA,TOKYO,HONGKONG,SHANGHAI,SEOUL,BEIJING,
-KOULKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS
+KOLKATA,CHENNAI,DELHI,MUMBAI,KARACHI,RIYADH,TEHRAN,MOSCOW,BAGHDAD,CAIRO,ISTANBUL,ALGIERS
 };

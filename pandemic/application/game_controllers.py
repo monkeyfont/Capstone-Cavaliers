@@ -22,6 +22,9 @@ def joinTeam():
 @app.route('/')
 def defaultRoute():
     return (redirect(url_for('home')))
+@app.route('/secret')
+def newSecret():
+    return (render_template("joinSecretTeam.html"))
 
 @app.route('/join')
 def newTeamRedirect():
@@ -42,6 +45,7 @@ def game():
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
+        print username, "GOIN IN HURRRRR"
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         currentLobby.gameStarted=True
@@ -106,14 +110,20 @@ def getPlayersHands():
     username = session["username"]
     gameboard = games[roomname]
     playersHands={}
+    playerRoll = {}
     players=gameboard.players
-    print"players", players
     for playerK in players:
         print "one player", players[playerK].name
         playerObj= players[playerK]
         playerHand=playerObj.hand
         playerCardNames=[]
+        print (players[playerK].role)
+        print playerK
+        value =(players[playerK].role)
+        playerRoll[players[playerK].name]= value
+        print ("His roll is: " ,playerRoll)
         for card in playerHand:
+            print (card)
             cardname=card.name
             playerCardNames.append(cardname)
         playersHands[players[playerK].name]=playerCardNames
@@ -121,8 +131,9 @@ def getPlayersHands():
 
     print playersHands
 
-    print ('gotInitialHands',{"playerhand":playersHands,"username":username})
-    emit('gotInitialHands',{"playerhand":playersHands,"username":username})
+    print ('gotInitialHands',{"playerhand":playersHands,"username":username,"Player roll":playerRoll})
+    # emit('gotInitialHands',{"playerhand":playersHands,"username":username})
+    emit('gotInitialHands',{"playerhand":playersHands,"username":username,"playerRoll":playerRoll})
 
 
 @socketio.on('getPlayerObject')
@@ -144,6 +155,9 @@ def getPlayerObject():
 @socketio.on('newRoom')
 def newRoom():
     emit('createNewRoom')
+@socketio.on('secretRoom')
+def newRoom():
+    emit('joinSecret')
 
 
 @socketio.on('startGame')
@@ -160,7 +174,6 @@ def getMessages():
         return
     else:
         roomStart = session["roomname"]
-        print roomStart
         LobbyInstance = lobbies[roomStart]
         previousMessages = LobbyInstance.messageHistory
         leave_room(roomStart)
@@ -169,24 +182,20 @@ def getMessages():
         leave_room(roomStart+"GetMessage")
         join_room(roomStart)
 
-# this will received the message by the user
-# add it to the message history
-# and then return the whole history
 @socketio.on('sendMessage')
 def handleMessage(msg):
-    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     player = session["username"]
     room = session["roomname"]
     message = msg["message"]
-    messageSent = time + "  :: "+ player + " said: "+message
+    messageSent = "<p> " + player + ": "+message + "</p>"
     LobbyInstance = lobbies[room]
     if LobbyInstance.messageHistory == "":
         LobbyInstance.messageHistory = messageSent
     else:
-        LobbyInstance.messageHistory = LobbyInstance.messageHistory + " &#013 "+messageSent
+        LobbyInstance.messageHistory = LobbyInstance.messageHistory + messageSent
     #print "All of the chat history: " + LobbyInstance.messageHistory
-    emit('messageReceived', {'msg' : messageSent}, room=room)
+    emit('messageReceived', {'msg' : LobbyInstance.messageHistory }, room=room)
 
 @socketio.on('click')
 def handleclick(msg):
@@ -220,11 +229,6 @@ def HandleDiscardCard(msg):
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
             else:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
-
-
-
-
-
 
 
 @socketio.on('checkMove')
@@ -547,6 +551,25 @@ def handle_message(msg):
 
 
 
+@socketio.on('setRole') # use for testing client side messages.
+def setRole(msg):
+    roleToSet=msg["roleChoice"]
+    room = str(session['roomname'])
+    username = str(session["username"])
+    lobby = lobbies[str(session['roomname'])]
+    print username, room, lobby.name
+    print lobby.players, "   players"
+    for player in lobby.players:
+        if lobby.players[player].name == username:
+            roles=lobby.playerRoles
+            if roles[msg["roleChoice"]]==0:
+                roles[roleToSet]=1
+                lobby.players[player].role=msg["roleChoice"]
+                print roles
+                emit('roleSet', {'playerName': username, 'msg': msg["roleChoice"]})
+                emit('changeRoleAvailibility', {'msg': msg["roleChoice"]}, room=room)
+
+            #return (render_template("home.html", error="This username is already taken, chose another"))
 
 
 
@@ -582,6 +605,7 @@ def lobby():
                 lobby.privacy=request.form['privacy']
                 lobby.difficulty = request.form["difficulty"]
                 print ("THis room privacy is :" + lobby.privacy)
+
                 #add lobby to dictionary
 
                 lobby.playerCount=1
@@ -592,6 +616,8 @@ def lobby():
                 playerIDs = playerIDs + 1
 
                 lobbies[str(session['roomname'])] = lobby
+
+                print lobby.players, "   playersSTART"
 
             else: # if user is joining a game
                 try:
@@ -606,7 +632,7 @@ def lobby():
                         print lobby.players[player]
                         print session['username']
                         if lobby.players[player].name==session['username']:
-                            return (render_template("lobby.html", error="This username is already taken, chose another"))
+                            return (render_template("home.html", error="This username is already taken, chose another"))
 
 
                     lobby.playerCount += 1
@@ -616,7 +642,47 @@ def lobby():
                     print"Lobby does not exist"
                     return (render_template("home.html", error="Sorry this room does not exist try another room"))
 
-            return (render_template("intermission.html",room=session['roomname']))
+
+            return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
     return (render_template("home.html"))
 
-print("imported")
+
+
+
+#---------------------------------------
+
+@app.route('/secret', methods = ['GET', 'POST'])
+def secret():
+    session["username"] = (random.randint(0,100000000))
+    global playerIDs
+
+    if request.method == 'POST':
+
+            session['username'] = request.form['username']
+            session['roomname'] = request.form['roomname']
+
+            try:
+                lobby = lobbies[str(session['roomname'])]
+
+                if lobby.playerCount==4:
+                    return (render_template("joinSecretTeam.html",error="Sorry this room is full! Please join another"))
+                if lobby.gameStarted==True:
+                    return (render_template("joinSecretTeam.html", error="This game has already started please Join or create another game"))
+
+                for player in lobby.players:
+                    print lobby.players[player]
+                    print session['username']
+                    if lobby.players[player].name==session['username']:
+                        return (render_template("joinSecretTeam.html", error="This username is already taken, chose another"))
+
+
+                lobby.playerCount += 1
+                newPlayer = Player(lobby.playerCount, str(session['username']))
+                lobby.players[lobby.playerCount]=newPlayer
+            except:
+                print"Lobby does not exist"
+                return (render_template("joinSecretTeam.html", error="Sorry this room does not exist try another room"))
+
+
+            return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
+    return (render_template("joinSecretTeam.html"))

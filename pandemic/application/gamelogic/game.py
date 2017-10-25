@@ -31,17 +31,17 @@ CITIES_TEMPLATE = {
     "JAKARTA": {"colour": "red", "connections": ['SYDNEY','HOCHIMINHCITY','BANGKOK','CHENNAI']},
     "MANILA": {"colour": "red", "connections": ['SYDNEY','SANFRANCISCO','HOCHIMINHCITY','TAIPEI','HONGKONG']},
     "HOCHIMINHCITY": {"colour": "red", "connections": ['MANILA','JAKARTA','BANGKOK','HONGKONG']},
-    "BANGKOK": {"colour": "red", "connections": ['KOULKATA','HONGKONG','HOCHIMINHCITY','JAKARTA','CHENNAI']},
+    "BANGKOK": {"colour": "red", "connections": ['KOLKATA','HONGKONG','HOCHIMINHCITY','JAKARTA','CHENNAI']},
     "TAIPEI": {"colour": "red", "connections": ['OSAKA','SHANGHAI','HONGKONG','MANILA']},
     "OSAKA": {"colour": "red", "connections": ['TOKYO','TAIPEI']},
     "TOKYO": {"colour": "red", "connections": ['SEOUL','OSAKA','SANFRANCISCO','SHANGHAI']},
-    "HONGKONG": {"colour": "red", "connections": ['SHANGHAI','TAIPEI','MANILA','HOCHIMINHCITY','BANGKOK','KOULKATA']},
+    "HONGKONG": {"colour": "red", "connections": ['SHANGHAI','TAIPEI','MANILA','HOCHIMINHCITY','BANGKOK','KOLKATA']},
     "SHANGHAI": {"colour": "red", "connections": ['BEIJING','SEOUL','TOKYO','TAIPEI','HONGKONG']},
     "SEOUL": {"colour": "red", "connections": ['TOKYO','SHANGHAI','BEIJING']},
     "BEIJING": {"colour": "red", "connections": ['SEOUL','SHANGHAI']},
-    "KOULKATA": {"colour": "black", "connections": ['HONGKONG','BANGKOK','CHENNAI','DELHI']},
-    "CHENNAI": {"colour": "black", "connections": ['DELHI','KOULKATA','BANGKOK','JAKARTA','MUMBAI']},
-    "DELHI": {"colour": "black", "connections": ['KOULKATA','CHENNAI','MUMBAI','KARACHI','TEHRAN']},
+    "KOLKATA": {"colour": "black", "connections": ['HONGKONG','BANGKOK','CHENNAI','DELHI']},
+    "CHENNAI": {"colour": "black", "connections": ['DELHI','KOLKATA','BANGKOK','JAKARTA','MUMBAI']},
+    "DELHI": {"colour": "black", "connections": ['KOLKATA','CHENNAI','MUMBAI','KARACHI','TEHRAN']},
     "MUMBAI": {"colour": "black", "connections": ['KARACHI','DELHI','CHENNAI']},
     "KARACHI": {"colour": "black", "connections": ['TEHRAN','DELHI','MUMBAI','RIYADH','BAGHDAD']},
     "RIYADH": {"colour": "black", "connections": ['BAGHDAD','KARACHI','CAIRO']},
@@ -90,7 +90,7 @@ INFECTION_CARDS = {
     "SHANGHAI": {"colour": "red", "country": ""},
     "SEOUL": {"colour": "red", "country": ""},
     "BEIJING": {"colour": "red", "country": ""},
-    "KOULKATA": {"colour": "black", "country": ""},
+    "KOLKATA": {"colour": "black", "country": ""},
     "CHENNAI": {"colour": "black", "country": ""},
     "DELHI": {"colour": "black", "country": ""},
     "MUMBAI": {"colour": "black", "country": ""},
@@ -141,7 +141,7 @@ PLAYER_CARDS = {
     "SHANGHAI":{"colour":"red", "population":"", "area":"", "country": ""},
     "SEOUL":{"colour":"red", "population":"", "area":"", "country": ""},
     "BEIJING":{"colour":"red", "population":"", "area":"", "country": ""},
-    "KOULKATA":{"colour":"black", "population":"", "area":"", "country": ""},
+    "KOLKATA":{"colour":"black", "population":"", "area":"", "country": ""},
     "CHENNAI":{"colour":"black", "population":"", "area":"", "country": ""},
     "DELHI":{"colour":"black", "population":"", "area":"", "country": ""},
     "MUMBAI":{"colour":"black", "population":"", "area":"", "country": ""},
@@ -232,7 +232,7 @@ class Player:
     def __init__(self, id, name = "Player"):
         self.id = id
         self.name = name
-        self.role = 0
+        self.role = ""
         self.hand = []
         self.location = "ATLANTA"
         self.host = 0
@@ -360,9 +360,11 @@ class GameBoard:
 
             result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
+            result["cubesUsed"]=[]
             result["infections"]+=infections[0]
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
+                result["cubesUsed"].append({colour:self.cubesUsed[colour]})
                 if self.cubesUsed[colour] > self.maxCubeCount:
                     result["gameLoss"] = True
                     result["gameLossReason"].append("Out of " + colour + " cubes")
@@ -374,6 +376,8 @@ class GameBoard:
             if self.outBreakLevel >= self.maxOutBreakLevel:
                 result["gameLoss"] = True
                 result["gameLossReason"].append("Outbreak level")
+
+        #print result
         return result
 
 
@@ -432,8 +436,8 @@ class GameBoard:
         for k in PLAYER_CARDS: #name,colour,population,area,country
             cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
-        # for k in EVENT_CARDS: #id, name, description
-        #     cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+        for k in EVENT_CARDS: #id, name, description
+            cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
 
         return cards
 
@@ -491,6 +495,7 @@ class GameBoard:
             cityObj = self.cities[cityName] # get the city object with the key that matches card city name.
             colour = cityObj.colour
             cityObj.infect(colour, infectionAmount)
+            self.cubesUsed[colour] += infectionAmount
             print(cityName + " has been infected with " + str(infectionAmount) + " tokens")
             # discard the 9 infection cards.
         for i in range(9):
@@ -798,10 +803,12 @@ class GameBoard:
         if playerObj.role == "medic":
             # if that colour is cured, remove all infections on that city of that colour.
             for colour in self.cures:
-                amount = cityObj.getInfections(colour)
-                if amount > 0: # only cure if greater than 0.
-                    cityObj.treat(colour, amount)
-                    result = {"cityName":cityObj.name, "amount":amount, "colour":colour}
+                if self.cures[colour] == 1:
+                    amount = cityObj.getInfections(colour)
+                    if amount > 0: # only cure if greater than 0.
+                        cityObj.treat(colour, amount)
+                        self.cubesUsed[colour]-=amount
+                        result = {"cityName":cityObj.name, "amount":amount, "colour":colour}
         return result
 
     def dispatcherTeleportOther(self, playerId, targetPlayerId, targetCity):
@@ -1189,6 +1196,7 @@ class GameBoard:
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
         responseDict["validAction"] = True
+        responseDict["colourCured"] = colour
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
         return responseDict
@@ -1231,6 +1239,7 @@ class GameBoard:
 
         print('player ', playerId, ' successfully treated colour ', colour, ' for ', cityObj.name)
         if response:
+            self.cubesUsed[colour] -= amount
             responseDict["cityName"] = targetCity
             responseDict["amount"] = amount
             responseDict["colour"] = colour
@@ -1288,6 +1297,7 @@ class GameBoard:
             # the city needs to be infected AND an outbreak will occur.
             infectAmount = 3 - currentInfections
             cityObj.infect(colour, infectAmount)
+            self.cubesUsed[colour]+=infectAmount
             # add the infected city.
             infections.append({"city":targetCity, "colour":colour, "amount":amount})
             # add the outbreak cities.
@@ -1295,6 +1305,7 @@ class GameBoard:
         else:
             print (targetCity + " has been infected.")
             cityObj.infect(colour,amount)
+            self.cubesUsed[colour] += amount
             infections.append({"city":targetCity, "colour":colour, "amount":amount})
         return infections
 
@@ -1346,6 +1357,7 @@ class GameBoard:
                 # check if the infection is blocked by specialist abilities.
                 if self.canInfectionBePrevented(city, colour) == False:
                     city.infect(colour, 1)
+                    self.cubesUsed[colour] += amount
                     # add to the infections list. (note: path is a list comprehension of the cityObjs)
                     infections.append({"city":city.name, "path":[c.name for c in cityOutBreaks], "colour":colour, "amount":1})
             else:

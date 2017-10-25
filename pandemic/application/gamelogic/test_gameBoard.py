@@ -14,7 +14,8 @@ class TestGameBoardInitFunctions(TestCase):
 
     def test_generatePlayerDeck(self):
         # test to make sure all 48 player cards are in the player deck list
-        self.assertEqual(self.testGameBoard.generatePlayerDeck().__len__(), 48)
+        # currently 3 event cards aswsell. If more event cards are added in, this test needs to be updated!
+        self.assertEqual(self.testGameBoard.generatePlayerDeck().__len__(), 51)
 
     def test_generateInfectionDeck(self):
         self.assertEqual(self.testGameBoard.generateInfectionDeck().__len__(), 48)
@@ -274,14 +275,14 @@ class TestGameActions(TestCase):
         """ Test for black (KOLKATA)"""
         # generate requirements
         self.testGameBoard.cities = self.testGameBoard.generateCities()
-        card = PlayerCard("KOULKATA", "black", "", "", "")
-        self.testGameBoard.players[1].location = "KOULKATA"
+        card = PlayerCard("KOLKATA", "black", "", "", "")
+        self.testGameBoard.players[1].location = "KOLKATA"
         # infect atlanta
-        koulkata = self.testGameBoard.cities['KOULKATA']
-        koulkata.black = 1
-        result = self.testGameBoard.treatDisease(amount=1, colour="black", playerId=1, targetCity="KOULKATA")
+        kolkata = self.testGameBoard.cities['KOLKATA']
+        kolkata.black = 1
+        result = self.testGameBoard.treatDisease(amount=1, colour="black", playerId=1, targetCity="KOLKATA")
         # Make sure the infection is removed from the object.
-        self.assertEquals(koulkata.black, 0)
+        self.assertEquals(kolkata.black, 0)
         # Make sure the action JSON returns True.
         self.assertEquals(result["validAction"], True)
 
@@ -604,7 +605,7 @@ class TestGameCoordinator(TestCase):
         infections = self.testGameBoard.endTurnInfectCities()[0] #TODO remove the [0] index once updated.
         # Can't check what the infections are because they are random. However can check that there is the right amount,
         # and that they contain the correct keys.
-        self.assertEqual(len(infections), 4) # base 4 infections for default difficulty.
+        self.assertEqual(len(infections), 6) # base 6 infections for default difficulty.
         for i in infections:
             self.assertTrue('city' in i and 'colour' in i and 'amount' in i)
 
