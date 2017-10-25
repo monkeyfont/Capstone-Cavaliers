@@ -172,7 +172,7 @@ function discardPile(options){
 			this.context.fillStyle="rgba(0, 0, 0, 0.8)";
 			this.context.fillRect(0,0,optimalScreenWidth,optimalScreenHeight);
 			
-			this.context.font = "40px Sans-serif"
+			this.context.font = "40px Verdana"
 			this.context.strokeStyle = 'red';//'green';
 			this.context.strokeText('X',optimalScreenWidth-100,100);
 

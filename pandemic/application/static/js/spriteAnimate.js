@@ -166,7 +166,7 @@ function gameLoop(){
 	}
 	
 	discardPile.render();
-	// eventCardViewer.render();
+	eventCardViewer.render();
 	
 }
 
@@ -196,7 +196,7 @@ discardPile.addCard({cardName:'ATLANTA'})
 eventCardViewer = new eventCardViewer({
 	context:canvas.getContext("2d"),
 	xPos:848,
-	yPos:267
+	yPos:200
 })
 
 

@@ -39,10 +39,19 @@ function eventCardViewer(options){
 		if (this.active){
 			this.context.fillStyle="rgba(0, 0, 0, 0.8)";
 			this.context.fillRect(0,0,optimalScreenWidth,optimalScreenHeight);
-			this.context.fillStyle="black";
-			this.context.fillRect(this.xPos + 500,this.yPos,400,700)
+			this.context.fillStyle="white";
+			this.context.fillRect(this.xPos,this.yPos+700,500,120)
+			this.context.fillStyle = "black"
+			this.context.fillRect(this.xPos+20,this.yPos+700+20,500-40,120-40)
 			
-			this.context.fillRect(this.xPos + 500,this.yPos,400,700)
+			this.context.font="40px Verdana";
+			this.context.fillStyle = 'white';
+			this.context.fillText("Use Event Card",this.xPos+40,this.yPos+780);
+			
+			
+			this.context.font = "40px Verdana"
+			this.context.strokeStyle = 'red';//'green';
+			this.context.strokeText('X',optimalScreenWidth-100,100);
 			
 			
 		
