@@ -27,7 +27,9 @@ deploy:
     all_branches: false
 
 script:
-  - python -m unittest pandemic/application/gamelogic/run_tests
+  - cd pandemic/application/gamelogic/
+  - python -m unittest run_tests
+  - cd /
   - zip -r latest *
   - mkdir -p dpl_cd_upload
   - mv latest.zip dpl_cd_upload/latest.zip
