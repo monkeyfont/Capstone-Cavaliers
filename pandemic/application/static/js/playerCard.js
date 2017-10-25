@@ -100,8 +100,8 @@ function playerCard(options){
 				}
 				
 			}
-		}
 	}
+		}
 	this.render = function () {
 		if (this.flipping == true){
 			this.flip();

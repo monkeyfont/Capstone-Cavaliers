@@ -74,6 +74,10 @@ function discardPile(options){
 		}
 	}
 	
+	this.removeCard = function(options){
+		delete this.cards[options.cardName];
+	}
+	
 	this.addCard = function(options){
 		//options = {cardname:cardName}
 		cardFront = allPossibleInfectionCards[options.cardName];
@@ -122,6 +126,16 @@ function discardPile(options){
 				console.log("activated")
 			}
 			
+		this.context.font = "40px Sans-serif"
+			this.context.strokeStyle = 'red';//'green';
+			this.context.strokeText('X',optimalScreenWidth-100,100);
+			
+		if(xPos >=optimalScreenWidth-100 && xPos <= optimalScreenWidth-100+40
+			&& yPos >= 100-40 && yPos <= 100 && this.active){
+				console.log("close the discard viewer")
+				this.toggleActive({})
+			}
+			
 		a={x:100, y:this.yPos+90};
 		b={x:50, y:this.yPos+140};
 		c={x:100, y:this.yPos+190};		
@@ -158,6 +172,9 @@ function discardPile(options){
 			this.context.fillStyle="rgba(0, 0, 0, 0.8)";
 			this.context.fillRect(0,0,optimalScreenWidth,optimalScreenHeight);
 			
+			this.context.font = "40px Sans-serif"
+			this.context.strokeStyle = 'red';//'green';
+			this.context.strokeText('X',optimalScreenWidth-100,100);
 
 			
 			startPoint = (this.xPos-(Object.keys(this.cards).length)/2*(510*0.4))+510*0.4*this.cardPos
