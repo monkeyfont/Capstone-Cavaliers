@@ -166,6 +166,7 @@ function gameLoop(){
 	}
 	
 	discardPile.render();
+	eventCardViewer.render();
 	
 }
 
@@ -192,6 +193,11 @@ discardPile.addCard({cardName:'MONTREAL'})
 discardPile.addCard({cardName:'NEWYORK'})
 discardPile.addCard({cardName:'ATLANTA'})
 
+eventCardViewer = new eventCardViewer({
+	context:canvas.getContext("2d"),
+	xPos:848,
+	yPos:200
+})
 
 
 var deck = new sprite({

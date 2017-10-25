@@ -10,8 +10,9 @@ var Share = new Image(); Share.src = 'static/images/ActionIcons/Share.png';
 var ShuttleFlight = new Image(); ShuttleFlight.src = 'static/images/ActionIcons/Shuttle Flight.png';
 var Take = new Image(); Take.src = 'static/images/ActionIcons/Take.png';
 var Treat = new Image(); Treat.src = 'static/images/ActionIcons/Treat.png';
+var EventCard = new Image(); EventCard.src = 'static/images/ActionIcons/EventCard.png';
 
-actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
+actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,EventCard};
 
 //if (playerRole=="operationsExpert"){
 //    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,OperationMove};
@@ -23,7 +24,6 @@ actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFli
 //    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat};
 //}
 
-actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,ShuttleFlight,Take,Treat};
 
 
 
