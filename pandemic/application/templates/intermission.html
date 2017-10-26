@@ -7,7 +7,9 @@
     <script src="static/js/pregame.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/playerChoice.css"></head>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="static/css/home.css"  hidden >
+    <link rel="stylesheet" href="static/css/intermission.css"  hidden >
     <meta charset="UTF-8">
     <title>Team Lobby Page</title>
 </head>
@@ -89,17 +91,17 @@
 
 
 <h1>Chat room for team {{ room }} </h1>
+<div id = "messageBox">
 
-        <h3>Message</h3>
-        <div class="two">
-            <input class = "typeMessageHere" id="message_input" placeholder="">
-            <input class="three"id="message_button" type="button" value="Send">
+        <div id = "lobbyMessageHistory">
+
         </div>
 
-        <h3>Chat history</h3>
-        <textarea id="log"></textarea>
-
-
+        <div id="lobbyMessageBox">
+                <input class = "typeMessageHere" id="message_input" placeholder="">
+                <input class="three"id="message_button" type="button" value="Send">
+        </div>
+</div>
 <input id="gameStarter" type="button" value= "PLAY ">
 
 

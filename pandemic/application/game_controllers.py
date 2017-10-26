@@ -22,10 +22,24 @@ def joinTeam():
 @app.route('/')
 def defaultRoute():
     return (redirect(url_for('home')))
+@app.route('/secret')
+def newSecret():
+    return (render_template("joinSecretTeam.html"))
+@app.route('/help')
+def helpR():
+    return (render_template("helpPage.html"))
+@app.route('/rules')
+def rules():
+    return (render_template("rules.html"))
+@app.route('/videoTutorials')
+def videos():
+    return (render_template("videotutorials.html"))
+@app.route('/actions')
+def actions():
+    return (render_template("playerActions.html"))
 
 @app.route('/join')
 def newTeamRedirect():
-
     publicRooms = []
     for i in lobbies:
         if lobbies[i].privacy == "public":
@@ -117,14 +131,20 @@ def getPlayersHands():
     username = session["username"]
     gameboard = games[roomname]
     playersHands={}
+    playerRoll = {}
     players=gameboard.players
-    print"players", players
     for playerK in players:
         print "one player", players[playerK].name
         playerObj= players[playerK]
         playerHand=playerObj.hand
         playerCardNames=[]
+        print (players[playerK].role)
+        print playerK
+        value =(players[playerK].role)
+        playerRoll[players[playerK].name]= value
+        print ("His roll is: " ,playerRoll)
         for card in playerHand:
+            print (card)
             cardname=card.name
             playerCardNames.append(cardname)
         playersHands[players[playerK].name]=playerCardNames
@@ -132,8 +152,9 @@ def getPlayersHands():
 
     print playersHands
 
-    print ('gotInitialHands',{"playerhand":playersHands,"username":username})
-    emit('gotInitialHands',{"playerhand":playersHands,"username":username})
+    print ('gotInitialHands',{"playerhand":playersHands,"username":username,"Player roll":playerRoll})
+    # emit('gotInitialHands',{"playerhand":playersHands,"username":username})
+    emit('gotInitialHands',{"playerhand":playersHands,"username":username,"playerRoll":playerRoll})
 
 
 @socketio.on('getPlayerObject')
@@ -155,7 +176,13 @@ def getPlayerObject():
 @socketio.on('newRoom')
 def newRoom():
     emit('createNewRoom')
+@socketio.on('secretRoom')
+def newRoom():
+    emit('joinSecret')
 
+@socketio.on('help')
+def newRoom():
+    emit('helpRoom')
 
 @socketio.on('startGame')
 def startGame():
@@ -184,7 +211,6 @@ def getMessages():
         return
     else:
         roomStart = session["roomname"]
-        print roomStart
         LobbyInstance = lobbies[roomStart]
         previousMessages = LobbyInstance.messageHistory
         leave_room(roomStart)
@@ -193,24 +219,20 @@ def getMessages():
         leave_room(roomStart+"GetMessage")
         join_room(roomStart)
 
-# this will received the message by the user
-# add it to the message history
-# and then return the whole history
 @socketio.on('sendMessage')
 def handleMessage(msg):
-    time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
     player = session["username"]
     room = session["roomname"]
     message = msg["message"]
-    messageSent = time + "  :: "+ player + " said: "+message
+    messageSent = "<p> " + player + ": "+message + "</p>"
     LobbyInstance = lobbies[room]
     if LobbyInstance.messageHistory == "":
         LobbyInstance.messageHistory = messageSent
     else:
-        LobbyInstance.messageHistory = LobbyInstance.messageHistory + " &#013 "+messageSent
+        LobbyInstance.messageHistory = LobbyInstance.messageHistory + messageSent
     #print "All of the chat history: " + LobbyInstance.messageHistory
-    emit('messageReceived', {'msg' : messageSent}, room=room)
+    emit('messageReceived', {'msg' : LobbyInstance.messageHistory }, room=room)
 
 @socketio.on('click')
 def handleclick(msg):
@@ -632,14 +654,28 @@ def lobby():
 
     if request.method == 'POST':
 
-            session['username'] = request.form['username']
-            session['roomname'] = request.form['roomname']
             if request.form['roomtype']=="create":
+                if request.form['username'].isspace() or request.form['username']=="":
+                    print ("HERE")
+                    return (render_template("createTeam.html",error="Please type in your name."))
+                elif (request.form['roomname'] == ""):
+                    print ("OR here")
+                    return (render_template("createTeam.html",error="No public games available"))
+                elif request.form['roomname'].isspace() or request.form['roomname']=="":
+                    print ("HERE")
+                    return (render_template("createTeam.html", error="Select a room to join."))
+                elif len(request.form['username'])>10:
+                    print
+                    return (render_template("createTeam.html", error="Your name can't be that long."))
+                elif len(request.form['roomname'])>10:
+                    print
+                    return (render_template("createTeam.html", error="Your room name is too long."))
 
+                session['username'] = request.form['username']
+                session['roomname'] = request.form['roomname']
 
                 if session['roomname'] in lobbies:
-                    return (render_template("home.html", error="Sorry this room name is already taken chose another"))
-
+                    return (render_template("createTeam.html", error="Sorry this room name is already taken chose another"))
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
@@ -668,12 +704,28 @@ def lobby():
 
             else: # if user is joining a game
                 try:
+                    if request.form['username'].isspace() or request.form['username']=="":
+                        print ("HERE")
+                        return (render_template("joinTeam.html",error="Please type in your name."))
+                    elif (request.form['roomname'] == ""):
+                        print ("OR here")
+                        return (render_template("joinTeam.html",error="No public games available"))
+                    elif request.form['roomname'].isspace() or request.form['roomname']=="":
+                        print ("HERE")
+                        return (render_template("joinTeam.html", error="Select a room to join."))
+                    elif len(request.form['username'])>10:
+                        return (render_template("joinTeam.html", error="Your name can't be that long."))
+
+                    print ("Passed here")
+                    session['username'] = request.form['username']
+                    session['roomname'] = request.form['roomname']
+
                     lobby = lobbies[str(session['roomname'])]
 
                     if lobby.playerCount==4:
-                        return (render_template("home.html",error="Sorry this room is full! Please join another"))
+                        return (render_template("joinTeam.html",error="Sorry this room is full! Please join another"))
                     if lobby.gameStarted==True:
-                        return (render_template("home.html", error="This game has already started please Join or create another game"))
+                        return (render_template("joinTeam.html", error="This game has already started please Join or create another game"))
 
                     for player in lobby.players:
                         print lobby.players[player]
@@ -687,9 +739,49 @@ def lobby():
                     lobby.players[lobby.playerCount]=newPlayer
                 except:
                     print"Lobby does not exist"
-                    return (render_template("home.html", error="Sorry this room does not exist try another room"))
+                    return (render_template("home.html", error="Sorry no room exist. Create a new one."))
+
 
             return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
     return (render_template("home.html"))
 
-print("imported")
+
+
+
+#---------------------------------------
+
+@app.route('/secret', methods = ['GET', 'POST'])
+def secret():
+    session["username"] = (random.randint(0,100000000))
+    global playerIDs
+
+    if request.method == 'POST':
+
+            session['username'] = request.form['username']
+            session['roomname'] = request.form['roomname']
+
+            try:
+                lobby = lobbies[str(session['roomname'])]
+
+                if lobby.playerCount==4:
+                    return (render_template("joinSecretTeam.html",error="Sorry this room is full! Please join another"))
+                if lobby.gameStarted==True:
+                    return (render_template("joinSecretTeam.html", error="This game has already started please Join or create another game"))
+
+                for player in lobby.players:
+                    print lobby.players[player]
+                    print session['username']
+                    if lobby.players[player].name==session['username']:
+                        return (render_template("joinSecretTeam.html", error="This username is already taken, chose another"))
+
+
+                lobby.playerCount += 1
+                newPlayer = Player(lobby.playerCount, str(session['username']))
+                lobby.players[lobby.playerCount]=newPlayer
+            except:
+                print"Lobby does not exist"
+                return (render_template("joinSecretTeam.html", error="Sorry this room does not exist try another room"))
+
+
+            return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
+    return (render_template("joinSecretTeam.html"))

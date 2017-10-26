@@ -1,15 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
+        <link rel="icon" href="static/images/favicon.png">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <link rel="stylesheet" href="static/css/game.css">
-</head>
-<body>
+    <link rel="stylesheet" href="static/css/gamePlayerCards.css">
+    <script>
+        function fade(){
+            $("#lobbyMessageBox").fadeToggle();
+        }
+        function tuggleBox(){
+            $('#messageBox').animate({width: 'toggle'});
+        }
+        function tugglehand(){
+            $('#playerCards').animate({width: 'toggle'});
+        }
 
-<h1 id="load"> Loading </h1>
-<canvas id="myCanvas" width="1920" height="1080">
-</canvas>
+    </script>
+</head>
+<body style="margin:0px;">
+
+
+
+    <button id = "showMessages" onclick="fade();setTimeout(tuggleBox, 500);">Show Message Board</button>
+    <div id = "messageBox">
+            <div id = "lobbyMessageHistory">
+
+            </div>
+
+            <div id="lobbyMessageBox">
+                    <input class = "typeMessageHere" id="message_input" placeholder="">
+                    <input class="three"id="message_button" type="button" value="Send">
+            </div>
+    </div>
+        <button id = "showHand" onclick="tugglehand()">Show Message Board</button>
+    <div id="playerCards"></div>
+    <h3 id="newMessage" style="display:none"></h3>
+
+
+    <canvas id="myCanvas" width="1920" height="1080" style="display:none">
+    </canvas>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -42,6 +74,7 @@
 
 <script src="static/js/actionStateHolder.js"></script>
 <script src="static/js/spriteAnimate.js"></script>
+
 
 
 </body>
