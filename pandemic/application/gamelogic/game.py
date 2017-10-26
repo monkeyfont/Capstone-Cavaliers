@@ -1393,6 +1393,7 @@ class GameBoard:
                         responseDict["validAction"] = True
                         curCityObj.researchStation =1
                         playerHand.remove(card)
+                        print "GOVERNMENT GRANT HAS BEEN USED!!!"
                         self.playerDiscarded.append(card)
                         return responseDict
 
@@ -1407,6 +1408,7 @@ class GameBoard:
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                print "AIRLIFT HAS BEEN USED!!!"
                 return responseDict
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
@@ -1420,6 +1422,7 @@ class GameBoard:
         playerHand = playerObj.hand
         for card in playerHand:
             if (card.name == "One_Quiet_Night"):
+                print "SKIPPING INFECT HAS BEEN USED!!!"
                 self.skipInfectCities=True
                 responseDict["validAction"] = True
                 playerHand.remove(card)
