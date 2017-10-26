@@ -21,21 +21,26 @@ function outbreakCounter(options) {
         else{offSetYPos = 0;}
         
         this.context.beginPath();
+        this.context.arc(this.xPos+(this.radius*2*(i*0.9)), this.yPos+offSetYPos, this.radius+4, 0,Math.PI*2);
+        this.context.fillStyle = 'black';
+        this.context.fill();
+        
+        this.context.beginPath();
         this.context.arc(this.xPos+(this.radius*2*(i*0.9)), this.yPos+offSetYPos, this.radius, 0,Math.PI*2);
-        this.context.fillStyle = 'green';
+        this.context.fillStyle = 'white';
 
         if (i == this.outbreakStage){
-            this.context.fillStyle = 'orange';
+            this.context.fillStyle = '#59C655';
         }   
 		this.context.fill();
 		canvas.getContext("2d").font="55px Verdana";
 		canvas.getContext("2d").fillStyle = 'black';
 		textWidth = canvas.getContext("2d").measureText(i).width;
         
-		canvas.getContext("2d").fillText(i,this.xPos+(this.radius*2*(i*0.9))-(textWidth/2),this.yPos+offSetYPos*0.95+(this.radius));
+		canvas.getContext("2d").fillText(i,this.xPos+(this.radius*2*(i*0.9))-(textWidth/2),this.yPos+offSetYPos*0.85+(this.radius));
 	   }
 	canvas.getContext("2d").font="45px Verdana";
-	canvas.getContext("2d").fillStyle = 'green';
+	canvas.getContext("2d").fillStyle = 'black';
 	canvas.getContext("2d").fillText("Outbreak Counter",this.xPos-this.radius,this.yPos-(this.radius*1.5));
 	   
 	   

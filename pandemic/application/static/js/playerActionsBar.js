@@ -32,9 +32,9 @@ function playerActionsBar(options){
 	this.height = options.height;
 	this.width = options.width;	
 	this.yPos = options.yPos;
-	this.iconPosX = 200;
+	this.iconPosX = 50;
 	this.iconPosY = this.yPos+50;
-	this.iconScale = 1.5;
+	this.iconScale = 2;
 	this.iconWidth = 70;
 	this.iconHeight = 90;
 	this.currentAction = null;
@@ -156,8 +156,8 @@ function playerActionsBar(options){
 				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.players.length),120,60*actionState.players.length);
 				// console.log(actionState.players)
 				for (x in actionState.players){
-					writePosY = writePosY + 60
-					this.context.font = "22px Sans-serif"
+					writePosY = writePosY + 60;
+					this.context.font = "22px Sans-serif";
 					this.context.strokeStyle = 'black';//'green';
 					this.context.lineWidth = 8;
 					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
@@ -169,13 +169,13 @@ function playerActionsBar(options){
 					this.context.fillText(actionState.players[x],writePosX,writePosY);
 				}
 			}else if (this.currentAction == i &&  this.actionsDisplayColours.includes(this.currentAction)){	
-				writePosY = this.iconPosY-(60*actionState.infectionColours.length) - 20
-				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
+				writePosY = this.iconPosY-(60*actionState.infectionColours.length) - 20;
+				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10;
 				this.context.fillStyle = "rgba(0,0,0,.6)";
 				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.infectionColours.length),120,60*actionState.infectionColours.length);
 				for (x in actionState.infectionColours){
-					writePosY = writePosY + 60
-					this.context.font = "22px Sans-serif"
+					writePosY = writePosY + 60;
+					this.context.font = "22px Sans-serif";
 					this.context.strokeStyle = 'black';//'green';
 					this.context.lineWidth = 8;
 					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
