@@ -44,13 +44,15 @@ function eventCardViewer(options){
 		
 		if(this.active && xPos>= this.xPos+20 && xPos <=  this.xPos + 500-20 && yPos>= this.yPos+700+20&& yPos <= this.yPos+700+20+120-20){
 			console.log("clicked to use the card")
+			return true
+			
 			if (this.activeCard == "AirLift"){
 				this.showPlayerSelection = true;
 				// show a menu with player names
 				
 			}
 		}	
-			if (this.showPlayerSelection){
+			if (this.showPlayerSelection && this.active){
 				console.log("we are showing the player selection")
 				numberOfPlayers = Object.keys(players.players).length
 				xShow = this.xPos+500				
@@ -80,14 +82,14 @@ function eventCardViewer(options){
 					
 				}
 				
-				
+			return true
 				
 			}
 			
 			
 			
 			// PlayEventCard(this.activeCard)
-			return true
+			
 		
 		
 		// 
