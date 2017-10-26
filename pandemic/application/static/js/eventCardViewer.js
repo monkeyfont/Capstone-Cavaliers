@@ -14,7 +14,7 @@ function eventCardViewer(options){
 	this.xPos = options.xPos;
 	this.yPos = options.yPos;
 	this.showPlayerSelection = false;
-	this.active = true;
+	this.active = false;
 	this.activeCard = 'AirLift';
 	
 	
