@@ -37,6 +37,13 @@ function actionState(options){
 	}
 	
 	this.playerAndCardChosen = function (options){
+		console.log(options.card,options.researcherName)
+		if(this.currentState == "Take"){
+			shareKnowledgeTake({playerName:options.researcherName,card:options.card})
+		}else if (this.currentState == "Give"){
+			shareKnowledgeGive({playerName:options.researcherName,card:options.card})
+
+		}
 		// the researcher and a card have been chosen from the action bar so give or take them
 	}
 	
@@ -48,7 +55,7 @@ function actionState(options){
 	
 	this.redefinePlayers = function (){
 		this.players = locations[players.players[thisPlayerName].currentCity].players
-		// delete this.players[thisPlayerName]
+		delete this.players[thisPlayerName]
 		
 	}
 	
@@ -109,7 +116,7 @@ function actionState(options){
 	
 	
 	this.changeCurrentState = function(options){
-		console.log("______________changed state_______________",options.newState,options.player)
+		console.log("______________changed state_______________",options.newState,options.player,options.colour)
 		this.playerInvolved = options.player
 		this.currentState = options.newState		
 		cards = playersHand.activeCards;
@@ -121,8 +128,7 @@ function actionState(options){
 		return true
 		
 		}else if(this.currentState == "Treat"){
-			//colour			
-			treatDisease()					
+			treatDisease({colour:options.colour})					
 		}else if(this.currentState == "Build"){
 			buildResearch()
 		}else if(this.currentState == "CharterFlight"){

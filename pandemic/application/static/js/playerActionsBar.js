@@ -92,7 +92,7 @@ function playerActionsBar(options){
 					}
 				}
 				
-			actionState.playerAndCardChosen({})
+			actionState.playerAndCardChosen({researcherName:chosenPlayer,card:chosenCard})
 			console.log("clicked in the researchers hand", chosenCard)
 		}	
 		
@@ -159,8 +159,9 @@ function playerActionsBar(options){
 					chosenPosition = Math.floor((yPos - writePosY) / 60)
 					console.log(Math.floor((yPos - writePosY) / 60))
 					console.log("_______________________",actionState.infectionColours[chosenPosition])
-					
-					messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
+					actionState.changeCurrentState({newState:"Treat",colour:actionState.infectionColours[chosenPosition]})
+					this.currentAction = null;
+					// messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
 					return true
 				}
 			menuType = "colour"

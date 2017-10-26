@@ -69,14 +69,15 @@ function eventCardViewer(options){
 					chosenPosition = Math.floor((yPos - yShow )/60)					
 					console.log(chosenPosition)	
 						chosenPlayer = 'none'
+						console.log("these are the games players",players.players)
 						for ( i in players.players){
-							pos = Object.keys(actionState.players).indexOf(i)
+							pos = Object.keys(players.players).indexOf(i)
 							if (pos == chosenPosition){
 								chosenPlayer = i;
 								break
 							}
 						}
-						
+						console.log("the chosen player:",chosenPlayer)
 						actionState.changeCurrentState({newState:this.activeCard,player:chosenPlayer})
 						this.toggleActive();
 						console.log(chosenPlayer)

@@ -228,7 +228,7 @@ socket.on('researchBuildChecked', function (data) {
         }
 });
 
-function shareKnowledgeGive() {
+function shareKnowledgeGive(options) {
 
 
     if (thisPlayerRole=="researcher"){
@@ -270,7 +270,7 @@ socket.on('giveKnowledgeShared', function (data) {
     });
 
 
-function shareKnowledgeTake() {
+function shareKnowledgeTake(options) {
 
     var otherPlayer = prompt("Enter name of player's card you want to take: ");
     var type= players.players[otherPlayer].playerType
@@ -312,9 +312,9 @@ socket.on('takeKnowledgeShared', function (data) {
 
     });
 
-function treatDisease() {
+function treatDisease(options) {
 
-    var res = prompt("Enter colour of infection you wish to treat: ");
+    var res = options.colour;
     var colour = res.toLowerCase();
     socket.emit('treatDisease', {InfectionColour:colour})
 
