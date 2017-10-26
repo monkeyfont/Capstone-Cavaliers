@@ -151,7 +151,7 @@ function playerHand(){
 					break
 				}
 			}
-			console.log(chosenCard)
+			console.log(chosenCard," was chosen")
 			
 			this.toggleCardActivation({cardName:chosenCard})
 		}

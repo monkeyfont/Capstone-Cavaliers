@@ -90,6 +90,11 @@ function endOfRound(info){
     // do front end stuff to update it
 
 
+    // INFECTION DISCARDED
+
+    console.log(info.infectionDiscarded)
+
+
 
 
     
@@ -391,8 +396,8 @@ socket.on('cureDiscovered', function (data) {
 
             cureBar.changeStatus({colour:data.msg.colourCured,status:'Discovered'})
             //addResearchStation(city);
-            alert("A cure has been discovered!")
-            alert(data.msg.colourCured)
+            //alert("A cure has been discovered!")
+            //alert(data.msg.colourCured)
             //playersHand.removeCard
             for (var card in data.cardsToDiscard) {
 			if (data.cardsToDiscard.hasOwnProperty(card)) {
@@ -616,6 +621,26 @@ socket.on('InfectedCities',function(data){
        }
        }
 
+       // research stations
+
+//       console.log(data.researchLocations)
+       for (var i=0;i<data.researchLocations.length;i++){
+//            alert(data.researchLocations[i])
+            locations[data.researchLocations[i]].addResearchStation();
+
+       }
+
+
+
+       //cures
+
+       for (var i=0;i<data.curesFound.length;i++){
+//            alert(data.researchLocations[i])
+            cureBar.changeStatus({colour:data.curesFound[i],status:'Discovered'})
+
+
+       }
+
         var outbreakLevel;
         outbreakLevel= data.outbreakLevel
         outbreakCount.setStage({outbreakStage:outbreakLevel})
@@ -644,20 +669,16 @@ socket.on('InfectedCities',function(data){
 socket.on('gotInitialHands',function(data){
 	console.log("data",data)
 	thisPlayerName=data.username;
-	playerRoll = data.playerRoll
-	playerHandHTML = ""
-	playersHands = []
-	// playersHands = [{playername:"",cards:[{cardName:""colour:""},{cardName:""colour:""}]}
+	console.log(players)
+	console.log(data.username," is: ",players.players[data.username].playerType)
+	researcherHand = {};
     for (var player in data["playerhand"]) {
-		playerCardInfo = {}
-		playerCardInfo.playerName = player
-		playerCardInfo.cards = []
-		console.log(player)
+		console.log("players name", player)
 		console.log(data["playerhand"])
 		console.log(data["playerhand"][player])
     // if (data.hasOwnProperty(player)) {
 		var playerId = player
-		actionState.addPlayer({playerName:player})
+		// actionState.addPlayer({playerName:player})
 		var cards=data["playerhand"][player]
 		console.log("Player "+playerId + " has the cards: ")
 //		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
@@ -668,6 +689,11 @@ socket.on('gotInitialHands',function(data){
         playerHandHTML = playerHandHTML + "</div>"
 
 		for (var card in cards) {
+			if (players.players[player].playerType == "researcher"){
+				researcherHand[cards[card]] = cards[card]
+				console.log("added ",cards[card]," to researchers hand. its now:",researcherHand)
+			}
+			
 			console.log(card);
 			cardInfo = {}
 			cardInfo.cardName = cards[card]
@@ -697,4 +723,5 @@ socket.on('gotInitialHands',function(data){
     }
 	console.log("playerCardJSON ",playersHands)
     document.getElementById("playerCards").innerHTML = playerHandHTML ;
+	actionState = new actionState({});
  });

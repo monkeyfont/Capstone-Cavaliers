@@ -126,9 +126,9 @@ function discardPile(options){
 				console.log("activated")
 			}
 			
-		this.context.font = "40px Sans-serif"
-			this.context.strokeStyle = 'red';//'green';
-			this.context.strokeText('X',optimalScreenWidth-100,100);
+		// this.context.font = "40px Sans-serif"
+			// this.context.strokeStyle = 'red';//'green';
+			// this.context.strokeText('X',optimalScreenWidth-100,100);
 			
 		if(xPos >=optimalScreenWidth-100 && xPos <= optimalScreenWidth-100+40
 			&& yPos >= 100-40 && yPos <= 100 && this.active){

@@ -30,7 +30,15 @@ function eventCardViewer(options){
 	}	
 	
 	this.click = function(options){		
+	
+		xPos = options.x;
+		yPos = options.y;
 		
+		if(xPos >=optimalScreenWidth-100 && xPos <= optimalScreenWidth-100+40
+		&& yPos >= 100-40 && yPos <= 100 && this.active){
+			console.log("close the discard viewer")
+			this.toggleActive({})
+		}
 		
 	}
 	

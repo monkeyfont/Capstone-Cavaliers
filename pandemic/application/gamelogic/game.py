@@ -254,7 +254,7 @@ class GameBoard:
         self.players = playerDict # {id:playerObj}
         self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
         self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
-        self.cures = {"blue" : 0, "red" : 0, "yellow" : 1, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
+        self.cures = {"blue" : 1, "red" : 1, "yellow" : 1, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
@@ -344,6 +344,8 @@ class GameBoard:
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
 
+            result
+
             # Check if players now have epidemic cards.
             result.update(self.processEpidemics()) # Adds the keys "infections", "epidemic", "epidemicCities"
 
@@ -376,6 +378,12 @@ class GameBoard:
             if self.outBreakLevel >= self.maxOutBreakLevel:
                 result["gameLoss"] = True
                 result["gameLossReason"].append("Outbreak level")
+
+
+            result["infectionDiscarded"]=[]
+            for card in self.infectionDiscarded:
+                result["infectionDiscarded"].append({"cardName":card.name})
+
 
         #print result
         return result
@@ -456,7 +464,7 @@ class GameBoard:
         cardsPerPlayer = {1:6, 2:4, 3:3, 4:2}
         nPlayers = len(self.players)
         nCardsToDeal = cardsPerPlayer[nPlayers]
-        shuffle(self.playerDeck)
+        #shuffle(self.playerDeck)
         for id in self.players:
             playerHand = self.players[id].hand
             for i in range(nCardsToDeal):
@@ -1439,6 +1447,46 @@ class GameBoard:
         responseDict["errorMessage"] = "ERROR: You do not have this card"
         responseDict["validAction"] = False
         return responseDict
+
+
+    def removeInfectionCard(self,playerId,infectCardName): # this is for Resilient population
+
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if (card.name == "Resilient Population"):
+                for cardName in self.infectionDiscarded:
+                    if cardName.name==infectCardName: #is the card actually in the discard pile
+                        self.infectionDiscarded.remove(cardName) # remove card from discard pile
+                        responseDict["validAction"] = True
+                        playerHand.remove(card)
+                        return responseDict
+                        # it is now not in any deck so basicaly out of the game
+
+        responseDict["errorMessage"] = "ERROR: You do not have this card"
+        responseDict["validAction"] = False
+        return responseDict
+
+    def getResearchStations(self):
+        researchLocations=[]
+        for city in self.cities:
+            cityObject=self.cities[city]
+            if cityObject.researchStation==1:
+                researchLocations.append(cityObject.name)
+
+        return researchLocations
+
+
+    def getCures(self):
+
+        curesFound = []
+        for cure in self.cures:
+            if self.cures[cure]==1:
+                curesFound.append(cure)
+        return curesFound
+
+
 
 class PlayerCard:
     """ Player City Card Definition """
