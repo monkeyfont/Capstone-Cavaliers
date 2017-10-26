@@ -2,7 +2,7 @@ function actionState(options){
 	// console.log("-----------------------",thisPlayerName)
 	// console.log(players)
 	// console.log(players.players[thisPlayerName])
-	this.possibleEventCards = [AirLift,Epidemic,Forecast,Government_Grant,One_Quiet_Night,Resilent_Population]
+	this.possibleEventCards = ["AirLift","Epidemic","Forecast","Government_Grant","One_Quiet_Night","Resilent_Population"]
 	this.players = locations[players.players[thisPlayerName].currentCity].players
 	this.infectionColours = Object.keys(locations[players.players[thisPlayerName].currentCity].activeInfections())
 	this.currentState = null;
@@ -41,12 +41,18 @@ function actionState(options){
 
 	
 	this.checkStateChange = function(options){
-		
+		console.log("checking whether the state has changed")
 		if(this.currentState == "EventCard"){
+			console.log("we are in the eventcard state")
 			if (Object.keys(playersHand.activeCards).length == 1){
+				console.log("we have 1 card selected")
 				for (i in playersHand.activeCards){
-					if( i in this.possibleEventCards){
-						eventCardViewer.changeActiveCard(i)
+					console.log(i)
+					console.log(i in this.possibleEventCards)
+					console.log(this.possibleEventCards)
+					if(this.possibleEventCards.includes(i)){
+						console.log("changing the active card and turning event viewer on")
+						// eventCardViewer.changeActiveCard(i)
 						eventCardViewer.toggleActive()
 					}
 				}
