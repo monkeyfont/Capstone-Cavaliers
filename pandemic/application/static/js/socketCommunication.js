@@ -18,6 +18,7 @@ function endOfRound(info){
     }
 
 
+
 	console.log("info",info)
     for (var i=0;i<info.infections.length;i++){
         var cityName=info.infections[i].city;
@@ -180,8 +181,8 @@ socket.on('checked', function (data) {
 
 	    }
 	    else{
-	    //messageAlert.newMessage({message:data.msg.errorMessage})
-	    alert(data.msg.errorMessage);
+	    messageAlert.newMessage({message:data.msg.errorMessage})
+	    //alert(data.msg.errorMessage);
 	}
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
