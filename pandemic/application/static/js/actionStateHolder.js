@@ -18,6 +18,7 @@ function actionState(options){
 			PlayEventCard({cardName:"Government_Grant",city:cityName})
 		return true
 		}else if(this.currentState == "AirLift"){
+			console.log("wtf wtf wtf",this.playerInvolved,cityName)
 			PlayEventCard({cardName:"AirLift",player:this.playerInvolved,city:cityName})
 		return true
 		}else if(this.currentState == "One_Quiet_Night"){
@@ -108,9 +109,9 @@ function actionState(options){
 	
 	
 	this.changeCurrentState = function(options){
-		console.log("______________changed state_______________",options.newState)
-		this.currentState = options.newState
+		console.log("______________changed state_______________",options.newState,options.player)
 		this.playerInvolved = options.player
+		this.currentState = options.newState		
 		cards = playersHand.activeCards;
 		this.checkStateChange()
 		if(this.currentState == "One_Quiet_Night"){

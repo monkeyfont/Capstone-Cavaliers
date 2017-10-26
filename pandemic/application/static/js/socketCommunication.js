@@ -468,9 +468,8 @@ function PlayEventCard(options){
         socket.emit('PlayEventCard',{card:cardName,city:cityName});
     }
     else if (cardName=="AirLift"){
-        var playerName = prompt("Enter Name of player you wish to move: ");
-        var cityName= prompt("Enter Name of city you wish to move player to: ");
-        socket.emit('PlayEventCard',{card:cardName,player:playerName,city:cityName});
+        console.log("using airlift",cardName,options.player,options.city)
+        socket.emit('PlayEventCard',{card:cardName,player:options.player,city:options.city});
 
     }
 
