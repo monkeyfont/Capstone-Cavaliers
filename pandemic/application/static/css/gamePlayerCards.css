@@ -21,6 +21,12 @@
     background-repeat: no-repeat;
     background-color: rgb(205,133,63)
 }
+.none {
+    background-image: url("../images/colors/none.png");
+    background-size:2em;
+    background-repeat: no-repeat;
+    background-color: rgb(205,133,63)
+}
 #researcher {
     background-color:rgb(205,133,63);
 }
