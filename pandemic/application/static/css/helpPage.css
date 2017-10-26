@@ -1,0 +1,122 @@
+.bottomLeftButton{
+    margin-bottom:1em;
+}
+
+#goBack{
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    margin-bottom:1em;
+    margin-top:1em;
+    background-image: url("../images/arrowicon.png");
+    background-size: 2em;
+    height:2em;
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:2em;
+
+}
+html{
+    background: url("../images/background.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#actionCard{
+    display:block;
+    margin-left:20%;
+    margin-right:20%;
+    background-color: rgba(64, 22, 251, 0.4);
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:10px;
+}
+#logo{
+    display:block;
+    margin-left:30%;
+    margin-right:30%;
+    visibility: visible;
+    width:40%;
+}
+.cardTitle{
+    color:white;
+    font-weight:bold;
+    font-size:200%;
+    text-align: center;
+    text-shadow: 0px 0px 8px black;
+}
+.cardDescription{
+    color:white;
+    font-size:130%;
+
+    text-shadow: 0px 0px 8px black;
+}
+
+#driveFerry{
+    background-image: url("../images/ActionIcons/Move.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+
+}
+#directFlight{
+    background-image: url("../images/ActionIcons/Direct Flight.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+
+}
+#charterFlight{
+    background-image: url("../images/ActionIcons/Charter Flight.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+#shuttleFlight{
+    background-image: url("../images/ActionIcons/Shuttle Flight.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+#pass{
+    background-image: url("../images/ActionIcons/Pass.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+#buildResearchStation{
+    background-image: url("../images/ActionIcons/Build.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+#treatDisease{
+    background-image: url("../images/ActionIcons/Treat.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+#shareKnowledge{
+    background-image: url("../images/ActionIcons/Share.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+#discoverCure{
+    background-image: url("../images/ActionIcons/Cure.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+section{
+    padding-left:5em;
+    padding-right:5em;
+
+}
+iframe{
+    width:40em;
+    height:22.5em;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:2em;
+    margin-bottom:2em;
+}
+h1{
+    color:white;
+    font-weight:bold;
+    font-size:200%;
+    text-align: center;
+    text-shadow: 0px 0px 8px black;
+}

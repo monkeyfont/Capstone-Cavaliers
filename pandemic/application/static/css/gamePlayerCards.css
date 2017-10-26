@@ -84,17 +84,24 @@
     background-color: rgb(0,51,0);
 }
 
-#playerCards{
-    color:white;
+#pCards{
     width:20%;
     height:auto;
+    display:block;
+    z-index:2;
+    float:right;
+}
+#showHand{}
+#playerCards{
+    color:white;
+    width:100%;
+    height:10em;
     display:block;
     z-index:2;
     float:right;
     overflow-x: hidden;
     overflow-y: scroll;
     background-color:rgba(0,0,0,0.8);
-
 }
 #playerCards::-webkit-scrollbar{
 width:16px;

@@ -25,10 +25,21 @@ def defaultRoute():
 @app.route('/secret')
 def newSecret():
     return (render_template("joinSecretTeam.html"))
+@app.route('/help')
+def helpR():
+    return (render_template("helpPage.html"))
+@app.route('/rules')
+def rules():
+    return (render_template("rules.html"))
+@app.route('/videoTutorials')
+def videos():
+    return (render_template("videotutorials.html"))
+@app.route('/actions')
+def actions():
+    return (render_template("playerActions.html"))
 
 @app.route('/join')
 def newTeamRedirect():
-
     publicRooms = []
     for i in lobbies:
         if lobbies[i].privacy == "public":
@@ -165,6 +176,9 @@ def newRoom():
 def newRoom():
     emit('joinSecret')
 
+@socketio.on('help')
+def newRoom():
+    emit('helpRoom')
 
 @socketio.on('startGame')
 def startGame():
@@ -714,7 +728,7 @@ def lobby():
                     lobby.players[lobby.playerCount]=newPlayer
                 except:
                     print"Lobby does not exist"
-                    return (render_template("home.html", error="Sorry this room does not exist try another room"))
+                    return (render_template("home.html", error="Sorry no room exist. Create a new one."))
 
 
             return (render_template("intermission.html",room=session['roomname'],playerRoles=lobby.playerRoles))
