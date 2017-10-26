@@ -344,8 +344,6 @@ class GameBoard:
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
 
-            result
-
             # Check if players now have epidemic cards.
             result.update(self.processEpidemics()) # Adds the keys "infections", "epidemic", "epidemicCities"
 
@@ -384,8 +382,21 @@ class GameBoard:
             for card in self.infectionDiscarded:
                 result["infectionDiscarded"].append({"cardName":card.name})
 
+            playersHands = {}
+            players = self.players
+            for playerK in players:
+                playerObj = players[playerK]
+                playerHand = playerObj.hand
+                playerCardNames = []
+                for card in playerHand:
+                    cardname = card.name
+                    playerCardNames.append(cardname)
+                playersHands[players[playerK].name] = playerCardNames
 
-        #print result
+            result["playerHandsUpdated"]=playersHands
+
+
+        print result
         return result
 
 

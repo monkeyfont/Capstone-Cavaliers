@@ -94,6 +94,46 @@ function endOfRound(info){
 
     console.log(info.infectionDiscarded)
 
+    //update hands
+
+        playerHandHTML="";
+       for (var player in info["playerHandsUpdated"]) {
+		playerCardInfo = {}
+		playerCardInfo.playerName = player
+		playerCardInfo.cards = []
+		var playerId = player
+		var cards=info["playerHandsUpdated"][player]
+
+        playerHandHTML = playerHandHTML + "<div class = playerHand>"
+        playerHandHTML = playerHandHTML + "<div class = playerSection>"
+        playerHandHTML = playerHandHTML + "<p class = '" + playerRoll[player] + "' id = 'playerName'>" + playerId + "</p>"
+        playerHandHTML = playerHandHTML + "<p id = '" + playerRoll[player] + "'>" + playerRoll[player] + "</p>"
+        playerHandHTML = playerHandHTML + "</div>"
+        for (var card in cards) {
+
+			cardInfo = {}
+			cardInfo.cardName = cards[card]
+			try{
+				cardInfo.colour = locations[cards[card]].colour
+			}catch(err){
+				cardInfo.colour = "none"
+			}
+			playerCardInfo.cards.push(cardInfo)
+			if (cards.hasOwnProperty(card)) {
+
+            playerHandHTML = playerHandHTML + "<p class = ' " +cardInfo.colour+ "'>" + cards[card] + "</p>"
+
+						  }
+					 }
+			playerHandHTML = playerHandHTML + "</div>"
+
+			playersHands.push(playerCardInfo)
+        // }
+    }
+    $('#playerCards').empty();
+	//actionState = new actionState({});
+	//document.getElementById("playerCards").innerHTML = "HELLO" ;
+    document.getElementById("playerCards").innerHTML = playerHandHTML ;
 
 
 
@@ -607,8 +647,7 @@ socket.on('gotInitialHands',function(data){
 
 	thisPlayerName=data.username;
 	researcherHand = {};
-    for (var player in data["playerhand"]) {
-		console.log("players name", player)
+
 	playerRoll = data.playerRoll
 	playerHandHTML = ""
 	playersHands = []
@@ -650,11 +689,9 @@ socket.on('gotInitialHands',function(data){
 					playersHand.addCard({cardName:cards[card]})
 					
 				}
-			// if you want to access each individial card then get in here through cards[card]
-			// if you want the list of player cards get it through just "cards"
+
             playerHandHTML = playerHandHTML + "<p class = ' " +cardInfo.colour+ "'>" + cards[card] + "</p>"
 
-//			$('#cards').val($('#cards').val() +  + '\n');
 						  }
 					 }
 					  playerHandHTML = playerHandHTML + "</div>"
@@ -665,8 +702,10 @@ socket.on('gotInitialHands',function(data){
 
 	actionState = new actionState({});
 
-	console.log("playerCardJSON ",playersHands)
     document.getElementById("playerCards").innerHTML = playerHandHTML ;
 
- }
+    function updateCards(){
+
+
+                }
  });

@@ -124,6 +124,27 @@ def getInfections():
                                    "researchLocations":researchLocations,"curesFound":curesFound})
 
 
+@socketio.on('updateHands')
+def updateHands():
+    roomname = session["roomname"]
+    username = session["username"]
+    gameboard = games[roomname]
+    playersHands = {}
+    players = gameboard.players
+    for playerK in players:
+        playerObj = players[playerK]
+        playerHand = playerObj.hand
+        playerCardNames = []
+        for card in playerHand:
+
+            cardname = card.name
+            playerCardNames.append(cardname)
+        playersHands[players[playerK].name] = playerCardNames
+
+    emit('gotUpdate', {"playerhand": playersHands, "username": username})
+
+
+
 
 @socketio.on('getPlayersHands')
 def getPlayersHands():
@@ -153,7 +174,6 @@ def getPlayersHands():
     print playersHands
 
     print ('gotInitialHands',{"playerhand":playersHands,"username":username,"Player roll":playerRoll})
-    # emit('gotInitialHands',{"playerhand":playersHands,"username":username})
     emit('gotInitialHands',{"playerhand":playersHands,"username":username,"playerRoll":playerRoll})
 
 
