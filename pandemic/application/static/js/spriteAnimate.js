@@ -46,6 +46,15 @@ canvas.addEventListener('click', function(evt) {
 	var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 	console.log(message);
 
+	//is the deck clicked?
+	
+	// if (mousePos.x >= 1970 && mousePos.x <= 1970 + 200 
+		// && mousePos.y >= 950 && mousePos.y <= 950 +280){
+			// console.log("deck was clicked");
+			// discardPile.toggleActive();
+		// }
+
+	
 
 	for (var i in spriteList){
 		// is the click on the image?
@@ -64,14 +73,26 @@ canvas.addEventListener('click', function(evt) {
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
-				//console.log('city ', i ,' was clicked');
+				console.log('city ', i ,' was clicked');
+				actionState.selectedCity(i);
 				checkMove(i);
-
+				
 			}
 
 	}
-	playersHand.cardX(mousePos)
-	playerActionsMenu.activateAction(mousePos)
+	if (eventCardViewer.click(mousePos)){
+	}else if(discardPile.click(mousePos)){
+		
+	}else if(playerActionsMenu.clickSubMenu(mousePos)){
+		
+	}else if (playersHand.cardX(mousePos)){
+		
+	}else{
+		playersHand.cardClick(mousePos)
+	}
+	
+	
+	actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
 
 
 })
@@ -140,10 +161,14 @@ function gameLoop(){
 	cureBar.render();
 	playerActionsMenu.render()
 	infectionsMeterDisplay.render();
-
+	messageAlert.render();
 	if (!previousLocation == false){
-		locations[previousLocation].renderMenu();
+		locations[previousLocation].renderMenu();	
 	}
+	
+	discardPile.render();
+	eventCardViewer.render();
+	
 }
 
 // locations["ATLANTA"].infect({});
@@ -157,6 +182,24 @@ CardImage.src = 'static/images/Cards/special/PLAYER_BACK.png';
 var cardFront = new Image();
 cardFront.src = 'static/images/infection-Front.png';
 
+discardPile = new discardPile({
+	context: canvas.getContext("2d"),
+	xPos: optimalScreenWidth/2,
+	yPos: 500, 
+})
+
+discardPile.addCard({cardName:'SANFRANCISCO'})
+discardPile.addCard({cardName:'CHICAGO'})
+discardPile.addCard({cardName:'MONTREAL'})
+discardPile.addCard({cardName:'NEWYORK'})
+discardPile.addCard({cardName:'ATLANTA'})
+
+eventCardViewer = new eventCardViewer({
+	context:canvas.getContext("2d"),
+	xPos:848,
+	yPos:200
+})
+
 
 var deck = new sprite({
 	id:"Infection Deck",
@@ -165,12 +208,14 @@ var deck = new sprite({
     height: 280,
 	numberOfFrames: 1,
 	ticksPerFrame: 1,
-	xPos:2000,
-	yPos:1000,
+	xPos:1970,
+	yPos:950,
 	xScale:1,
 	yScale:1,
     image: CardImage
 
+
+	
 })
 
 outbreakCount = new outbreakCounter({});
@@ -207,6 +252,8 @@ cureBar = new cureStatusBar({
 	yScale:0.4
 });
 
+
+
 playerActionsMenu = new playerActionsBar({
 	context: canvas.getContext("2d"),
 	height: 400,
@@ -216,13 +263,29 @@ playerActionsMenu = new playerActionsBar({
 });
 
 
+messageAlert = new messageAlert ({
+	context: canvas.getContext("2d"),
+	xPos: 940,
+	yPos: 590
+});
 
+
+
+// locations.SANFRANCISCO.addResearchStation();
+
+locations.ATLANTA.infect({colour:"red"})
+locations.ATLANTA.infect({colour:"blue"})
+locations.ATLANTA.infect({colour:"yellow"})
+locations.ATLANTA.infect({colour:"black"})
+// locations.ATLANTA.addResearchStation();
 
 
 var load = document.getElementById("load");
 var thisPlayerName;
 var thisPlayerRole;
 canvas.style="display:none;"
+
+
 
 window.onload = function (){
 	socket.emit('getPlayerObject')
@@ -231,4 +294,5 @@ window.onload = function (){
 	socket.emit('getPlayersHands')
 	load.style="display:none;"
 	canvas.style="display:block;"
+
 	}

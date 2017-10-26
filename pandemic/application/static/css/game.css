@@ -1,4 +1,6 @@
 #myCanvas {
     margin: auto;
-    border: 3px solid red;
+}
+body{
+	margin:0px;
 }
