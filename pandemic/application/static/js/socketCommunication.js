@@ -644,8 +644,11 @@ socket.on('InfectedCities',function(data){
 socket.on('gotInitialHands',function(data){
 	console.log(data)
 	thisPlayerName=data.username;
+	console.log(players)
+	console.log(data.username," is: ",players.players[data.username].playerType)
+	researcherHand = {};
     for (var player in data["playerhand"]) {
-		console.log(player)
+		console.log("players name", player)
 		console.log(data["playerhand"])
 		console.log(data["playerhand"][player])
     // if (data.hasOwnProperty(player)) {
@@ -656,6 +659,11 @@ socket.on('gotInitialHands',function(data){
 		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
 
 		for (var card in cards) {
+			if (players.players[player].playerType == "researcher"){
+				researcherHand[cards[card]] = cards[card]
+				console.log("added ",cards[card]," to researchers hand. its now:",researcherHand)
+			}
+			
 			console.log(card);
 			if (cards.hasOwnProperty(card)) {
 				console.log(cards[card]);
