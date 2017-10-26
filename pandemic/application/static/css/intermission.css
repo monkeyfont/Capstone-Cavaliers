@@ -1,10 +1,20 @@
 #messageBox{
-    width:30%;
-    height:30%;
-    position:fixed;
+margin-left: 20%;
+    margin-right: 20%;
+    height: 30%;
+    top: 30em;
+    position: fixed;
+    display: block;
+    background-color: rgba(0,0,0,0.8);
+    margin-top: 4%;
+    width: 60%;
+}
+#logo{
     display:block;
-    background-color:rgba(0,0,0,0.8);
-    margin-top:4%;
+    margin-left:30%;
+    margin-right:30%;
+    visibility: visible;
+    width:40%;
 }
 #lobbyMessageHistory{
     height:90%;
@@ -22,7 +32,7 @@
 }
 #message_input{
     background-color:none;
-    width:25%;
+    width:50%;
     border:0px;
     padding:0px;
     display:block;
@@ -31,13 +41,13 @@
 }
 #message_button{
     background-color:rgba(0,0,0,0.8);
-    width:5%;
+    width:10%;
     border:0px;
     padding:0px;
     display:block;
     position:fixed;
     float:right;
-    margin-left: 25%;
+    margin-left: 50%;
     color:white;
 
 }
@@ -64,4 +74,53 @@ border:1px solid #333333;
 #lobbyMessageHistory::-webkit-scrollbar-thumb:active{
 background-color:white;
 border:1px solid #333333;
+}
+h1{
+    color:white;
+    font-weight:bold;
+    font-size:400%;
+    text-align: center;
+    text-shadow: 0px 0px 8px black;
+}
+button{
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+}
+#lockIn{
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom:0.5em;
+
+}
+#showMessages{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-bottom:0.5em;
+    color:red;
+    background-image: url("../images/bothdirections.png");
+    background-size: 3em;
+    background-repeat: no-repeat;
+    background-position: left;
+}
+#buttonsIntermission{
+    display:block;
+}
+#gameStarter{
+    box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
+    background-color: rgba(230, 0, 0,0.75);
+    width:10%;
+    margin-left:45%;
+    margin-right:45;
+    color:white;
+    font-weight:bold;
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:10px;
+}
+#showRoleOptions h2{
+    text-transform:uppercase;
 }
