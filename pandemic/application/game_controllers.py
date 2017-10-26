@@ -103,10 +103,11 @@ def getInfections():
             for colour in gameboard.cubesUsed:
                 cubesUsed.append({colour: gameboard.cubesUsed[colour]})
             researchLocations=gameboard.getResearchStations()
+            curesFound=gameboard.getCures()
 
-
-
-            emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,"outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed,"researchLocations":researchLocations})
+            emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,
+                                   "outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed,
+                                   "researchLocations":researchLocations,"curesFound":curesFound})
 
 
 

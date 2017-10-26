@@ -90,6 +90,11 @@ function endOfRound(info){
     // do front end stuff to update it
 
 
+    // INFECTION DISCARDED
+
+    console.log(info.infectionDiscarded)
+
+
 
 
     
@@ -391,8 +396,8 @@ socket.on('cureDiscovered', function (data) {
 
             cureBar.changeStatus({colour:data.msg.colourCured,status:'Discovered'})
             //addResearchStation(city);
-            alert("A cure has been discovered!")
-            alert(data.msg.colourCured)
+            //alert("A cure has been discovered!")
+            //alert(data.msg.colourCured)
             //playersHand.removeCard
             for (var card in data.cardsToDiscard) {
 			if (data.cardsToDiscard.hasOwnProperty(card)) {
@@ -624,7 +629,15 @@ socket.on('InfectedCities',function(data){
             locations[data.researchLocations[i]].addResearchStation();
 
        }
-       for (var city in data.researchLocations){
+
+
+
+       //cures
+
+       for (var i=0;i<data.curesFound.length;i++){
+//            alert(data.researchLocations[i])
+            cureBar.changeStatus({colour:data.curesFound[i],status:'Discovered'})
+
 
        }
 
