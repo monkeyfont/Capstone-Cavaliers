@@ -158,9 +158,7 @@ PLAYER_CARDS = {
 EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
     2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
-    3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"},
-    4:{"name": "Forecast", "description": "Examine top 6 cards of the infection draw pile. Rearrange them in order of your choice, and place them back on the pile"},
-    5:{"name": "Resilent_Population", "description": "Take a card from the infection discard pile and remove it from the game"}
+    3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"}
 }
 
 
@@ -271,7 +269,7 @@ class GameBoard:
         self.skipInfectCities = False #currently used for event card.
 
 
-    def __checkAction(self, playerId):
+    def checkAction(self, playerId):
         """ 
         Check if player has too many cards (they must discard before being able to perform an action)
         Checks that the player has available moves left from their action counter.
@@ -383,12 +381,12 @@ class GameBoard:
         return result
 
 
-    def __setStartingLocation(self):
+    def setStartingLocation(self):
         for playerkey in self.players:
             playerObj=self.players[playerkey]
-            playerObj.setLocation("ATLANTA")
+            playerObj.location = "ATLANTA"
 
-    def __setRoles(self):
+    def setRoles(self):
         roles=["dispatcher","medic","contingencyPlanner","operationsExpert","quarantineSpecialist","researcher","scientist"]
         shuffle(roles)
         for playerkey in self.players:
@@ -411,7 +409,8 @@ class GameBoard:
         self.distributeHand()
         #now need to place epidemic cards ( has to be done after hand has been delt)
         self.placeEpidemicCards()
-        #self.__setRoles()
+        self.setRoles()
+        self.setStartingLocation()
         self.initialized = 1
 
 
@@ -582,11 +581,14 @@ class GameBoard:
             return infectedCities
         print"The infections for this round are not getting skipped!"
 
+
         amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
         for i in range(amountToDraw):
+            print(i)
             # Draw the infection card from the top of the deck.
             infectCard = self.infectionDeck.pop(0)
             cityName = infectCard.name
+            print(" i should be infecting", cityName)
             cityObject = self.cities[cityName]
             cityColour = cityObject.colour
             amount=1
@@ -718,7 +720,7 @@ class GameBoard:
 
         responseDict={}
 
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
 
@@ -732,7 +734,7 @@ class GameBoard:
             print("PlayerID " + str(playerId) + " has successfully moved to " + nextCityName)
             responseDict["validAction"] = True
             # check if the medics secondary power removes any infections.
-            responseDict["medicTreatments"] = self.__medicCureAfterMove(playerObj, self.cities[nextCityName])
+            responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[nextCityName])
             playerObj.actions -= 1
             #print playerObj.actions
             endOfGameCheck = self.__endOfRound()
@@ -757,7 +759,7 @@ class GameBoard:
 
         responseDict={}
 
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
 
@@ -777,7 +779,7 @@ class GameBoard:
             targetPlayerObj.location = targetCityName
             responseDict["validAction"] = True
             # check if the medics secondary power removes any infections.
-            responseDict["medicTreatments"] = self.__medicCureAfterMove(targetPlayerObj, targetCityObj)
+            responseDict["medicTreatments"] = self.medicCureAfterMove(targetPlayerObj, targetCityObj)
             # remove the action from the DISPATCHER
             dispatcherObj.actions -= 1
             endOfGameCheck = self.__endOfRound()
@@ -789,7 +791,7 @@ class GameBoard:
             return responseDict
 
 
-    def __medicCureAfterMove(self, playerObj, cityObj):
+    def medicCureAfterMove(self, playerObj, cityObj):
         """
         Function is intended to be called after a movement (move, directFlight etc)
         This activates the medics secondary power:
@@ -822,7 +824,7 @@ class GameBoard:
         responseDict={}
 
         # check the dispatcher can make the move.
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
 
@@ -838,16 +840,19 @@ class GameBoard:
         # if there is another player on the target city, move the target player there.
         for id in self.players:
             player = self.players[id]
-            if player.location == cityObj.location:
+            if player.location == cityObj.name:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
                 playerObj.actions -= 1
                 # check if the medics secondary power removes any infections.
-                responseDict["medicTreatments"] = self.__medicCureAfterMove(targetPlayerObj, cityObj)
-
+                responseDict["medicTreatments"] = self.medicCureAfterMove(targetPlayerObj, cityObj)
+                endOfGameCheck = self.__endOfRound()
+                responseDict.update(endOfGameCheck)
                 return responseDict
         # fall through
         responseDict["errorMessage"] = "ERROR: There is no player at the target location"
+        responseDict["validAction"] = False
+
         return responseDict
 
 
@@ -857,7 +862,7 @@ class GameBoard:
     def directFlight(self,playerId,nextCityName):
         """ Discard a city card to move to the city named on the card """
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -870,7 +875,7 @@ class GameBoard:
                 self.playerDiscarded.append(card)
                 playerObj.actions -= 1
                 # check if the medics secondary power removes any infections.
-                responseDict["medicTreatments"] = self.__medicCureAfterMove(playerObj, self.cities[nextCityName])
+                responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[nextCityName])
                 print("player has successfully moved from" + currentLocation + " to " + playerObj.location)
                 responseDict["validAction"] = True
                 endOfGameCheck = self.__endOfRound()
@@ -885,7 +890,7 @@ class GameBoard:
     def charterFlight(self,playerId,curCityCard,destinationCity):
         """ Discard the city card that matches the city you are in to move to any city """
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -905,7 +910,7 @@ class GameBoard:
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
                     # check if the medics secondary power removes any infections.
-                    responseDict["medicTreatments"] = self.__medicCureAfterMove(playerObj, self.cities[destinationCity])
+                    responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[destinationCity])
                     print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
                     responseDict["validAction"] = True
                     endOfGameCheck = self.__endOfRound()
@@ -924,7 +929,7 @@ class GameBoard:
     def shuttleFlight(self,playerId,destinationCity):
         """ Move from a city with a research station to any other city that has a research station """
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -934,7 +939,7 @@ class GameBoard:
         if (curCityObj.researchStation == 1 and destCityObj.researchStation == 1):
             self.players[playerId].location = destinationCity
             # check if the medics secondary power removes any infections.
-            responseDict["medicTreatments"] = self.__medicCureAfterMove(playerObj, destCityObj)
+            responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, destCityObj)
             playerObj.actions -= 1
             print('player ' + str(playerId) + ' has successfully shuttleFlight\'d from ' + currentCityName + ' to ' + destinationCity)
             responseDict["validAction"] = True
@@ -956,7 +961,7 @@ class GameBoard:
         """
         responseDict = {}
         # check it is a valid action
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         # retrieve components
@@ -972,11 +977,13 @@ class GameBoard:
         # check the player is a operations expert
         if playerObj.role != "operationsExpert":
             responseDict["errorMessage"] = "ERROR: You are not an operations expert."
+            responseDict["validAction"] = False
             return responseDict
 
         # check the player is on a research station
         if curCityObj.researchStation == 0:
             responseDict["errorMessage"] = "ERROR: You are not at a research station!"
+            responseDict["validAction"] = False
             return responseDict
 
         # check the player has the card, and the card is a city type (player type).
@@ -1003,7 +1010,7 @@ class GameBoard:
 
         """
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -1059,7 +1066,7 @@ class GameBoard:
         SPECIAL CASE - if targetPlayer is the RESEARCHER it skips the check to make sure the city name matches the card city name.
         """
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -1098,7 +1105,7 @@ class GameBoard:
         SPECIAL CASE - if the player is the RESEARCHER it skips the check to make sure the city name matches the card city name.
         """
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -1140,8 +1147,6 @@ class GameBoard:
 
     def discoverCure(self,playerId,cities):
 
-
-
         """
         at any research station, discard 5 city cards of the same disease colour to cure that disease
         Returns a dictionary:
@@ -1151,7 +1156,7 @@ class GameBoard:
         """
         # TODO this code should probably be refactored.
 
-        responseDict = self.__checkAction(playerId) #validate its a legal player move. Dictionary.
+        responseDict = self.checkAction(playerId) #validate its a legal player move. Dictionary.
         if responseDict["validAction"] == False:
             return responseDict
         playerObj = self.players[playerId]
@@ -1215,7 +1220,7 @@ class GameBoard:
         """
         # TODO potentially need to see if a disease can actually be treated.
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
 
@@ -1259,7 +1264,7 @@ class GameBoard:
     def passTurn(self,playerId):
 
         responseDict = {}
-        validation = self.__checkAction(playerId)  # validate its a legal player move.
+        validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
             return validation
         playerObj = self.players[playerId]
@@ -1376,23 +1381,29 @@ class GameBoard:
         responseDict = {}
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
+        # check the player has the government grant card
         for card in playerHand:
-            if(card.name == eventCardName):#they do have the card
-                    curCityObj = self.cities[cityName]
-                    if curCityObj.researchStation==1:
-                        responseDict["errorMessage"] = "ERROR: This city already has a research station on it"
-                        responseDict["validAction"] = False
-                        return responseDict
-                    elif self.researchStationsBuilt>=5:
-                        responseDict["errorMessage"] = "ERROR: Max number of research stations have been built"
-                        responseDict["validAction"] = False
-                        return responseDict
-                    else:
-                        responseDict["validAction"] = True
-                        curCityObj.researchStation =1
-                        playerHand.remove(card)
-                        self.playerDiscarded.append(card)
-                        return responseDict
+            if(card.name == "Government_Grant"):
+                for card in playerHand:
+                    if(card.name == eventCardName):#they do have the card
+                            curCityObj = self.cities[cityName]
+                            if curCityObj.researchStation==1:
+                                responseDict["errorMessage"] = "ERROR: This city already has a research station on it"
+                                responseDict["validAction"] = False
+                                return responseDict
+                            elif self.researchStationsBuilt>=5:
+                                responseDict["errorMessage"] = "ERROR: Max number of research stations have been built"
+                                responseDict["validAction"] = False
+                                return responseDict
+                            else:
+                                responseDict["validAction"] = True
+                                curCityObj.researchStation =1
+                                playerHand.remove(card)
+                                self.playerDiscarded.append(card)
+                                return responseDict
+        responseDict["errorMessage"] = "ERROR: You don't have the government grant card!"
+        responseDict["validAction"] = False
+        return responseDict
 
     def airLift(self,playerId,playerToMoveId,cityToMoveTo):
         responseDict = {}
@@ -1402,6 +1413,7 @@ class GameBoard:
         for card in playerHand:
             if(card.name == "Airlift"):
                 playerToMoveObj.location = cityToMoveTo
+                responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[cityToMoveTo])
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
@@ -1417,31 +1429,12 @@ class GameBoard:
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         for card in playerHand:
-            if (card.name == "One Quiet Night"):
+            if (card.name == "One_Quiet_Night"):
                 self.skipInfectCities=True
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 return responseDict
-
-        responseDict["errorMessage"] = "ERROR: You do not have this card"
-        responseDict["validAction"] = False
-        return responseDict
-
-    def removeInfectionCard(self,playerId,infectCardName): # this is for Resilient population
-
-        responseDict = {}
-        playerObj = self.players[playerId]
-        playerHand = playerObj.hand
-        for card in playerHand:
-            if (card.name == "Resilient Population"):
-                for cardName in self.infectionDiscarded:
-                    if cardName.name==infectCardName: #is the card actually in the discard pile
-                        self.infectionDiscarded.remove(cardName) # remove card from discard pile
-                        responseDict["validAction"] = True
-                        playerHand.remove(card)
-                        return responseDict
-                        # it is now not in any deck so basicaly out of the game
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
         responseDict["validAction"] = False

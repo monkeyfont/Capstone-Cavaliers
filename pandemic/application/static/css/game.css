@@ -82,6 +82,7 @@ border:1px solid #333333;
     display:block;
     position:absolute;
     width:100%;
+    margin: auto;
 }
 #showMessages{
     position: inherit;
@@ -99,5 +100,8 @@ button{
     font-weight:bold;
     border:4px solid rgba(64, 102, 238, 0.8);
     border-radius:10px;
-
 }
+body{
+	margin:0px;
+}
+

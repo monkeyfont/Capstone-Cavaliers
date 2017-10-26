@@ -1,4 +1,4 @@
-function playerCard(options){
+function infectionCard(options){
 	this.id = options.id,			
 	this.context = options.context;
 	this.width = options.width;
@@ -6,7 +6,7 @@ function playerCard(options){
 	this.widthDraw = options.width;
 	this.heightDraw = options.height;
 	this.imageFront = options.imageFront;
-	this.imageBack = options.imageBack;
+	// this.imageBack = options.imageBack;
 	this.yPos = options.yPos || 0;
 	this.xPos = options.xPos || 0;
 	this.xScale = options.xScale || 1;
@@ -14,43 +14,43 @@ function playerCard(options){
 	this.moveX = this.xPos;
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
-	this.tempSpeed = 0;
-	this.flipping = false;
-	this.flipSpeed = options.flipSpeed || 20;
-	this.flipStage = 0;
-	this.toFlip = false;
-	this.currentImage = this.imageBack,
-	this.flip = function() {
-		// if the card is on its back flip to its front
-		// scale the card down
-		// swap the card
-		// scale the card up
-		this.flipping = true;
-		if (this.flipStage == 10){
+	// this.tempSpeed = 0;
+	// this.flipping = false;
+	// this.flipSpeed = options.flipSpeed || 20;
+	// this.flipStage = 0;
+	// this.toFlip = false;
+	this.currentImage = this.imageFront,
+	// this.flip = function() {
+		// // if the card is on its back flip to its front
+		// // scale the card down
+		// // swap the card
+		// // scale the card up
+		// this.flipping = true;
+		// if (this.flipStage == 10){
 
-		}else{
-			this.widthDraw -= this.width/this.flipSpeed;
-		}
-		if (this.widthDraw <0.1 && this.widthDraw > -0.1){
-			this.toFlip=true;
-		}
+		// }else{
+			// this.widthDraw -= this.width/this.flipSpeed;
+		// }
+		// if (this.widthDraw <0.1 && this.widthDraw > -0.1){
+			// this.toFlip=true;
+		// }
 
-		if (this.toFlip == true){
-			if (this.currentImage==this.imageBack){
-				this.currentImage = this.imageFront;
-			}else{
-				this.currentImage=this.imageBack;
-			}
-			this.toFlip = false;
-		}
+		// if (this.toFlip == true){
+			// if (this.currentImage==this.imageBack){
+				// this.currentImage = this.imageFront;
+			// }else{
+				// this.currentImage=this.imageBack;
+			// }
+			// this.toFlip = false;
+		// }
 
 
-		if (this.widthDraw <= -this.width){
-			this.flipping = false;
-			this.widthDraw = this.width;
-			this.xPos = this.xPos-(this.width*this.xScale);
-		}
-	}
+		// if (this.widthDraw <= -this.width){
+			// this.flipping = false;
+			// this.widthDraw = this.width;
+			// this.xPos = this.xPos-(this.width*this.xScale);
+		// }
+	// }
 	
 	
 	
@@ -100,12 +100,12 @@ function playerCard(options){
 				}
 				
 			}
+		}
 	}
-		}
 	this.render = function () {
-		if (this.flipping == true){
-			this.flip();
-		}
+		// if (this.flipping == true){
+			// this.flip();
+		// }
 		this.update();
         // Draw the animation
 		//console.log("image render",this.image.src)
@@ -120,11 +120,6 @@ function playerCard(options){
 		this.yPos, // y position for image on canvas
 		this.widthDraw*this.xScale, // width of image to use 
 		this.heightDraw*this.yScale); // height of image to use
-		if (this.flipping != true){
-			this.context.font = "22px Sans-serif"
-			this.context.strokeStyle = 'red';//'green';
-			this.context.strokeText('X',this.xPos+(this.width*this.xScale)-20,this.yPos+20);
-		}
 		
     };
 }
