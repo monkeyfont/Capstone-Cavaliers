@@ -616,6 +616,18 @@ socket.on('InfectedCities',function(data){
        }
        }
 
+       // research stations
+
+//       console.log(data.researchLocations)
+       for (var i=0;i<data.researchLocations.length;i++){
+//            alert(data.researchLocations[i])
+            locations[data.researchLocations[i]].addResearchStation();
+
+       }
+       for (var city in data.researchLocations){
+
+       }
+
         var outbreakLevel;
         outbreakLevel= data.outbreakLevel
         outbreakCount.setStage({outbreakStage:outbreakLevel})

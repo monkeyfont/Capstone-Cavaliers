@@ -1447,6 +1447,16 @@ class GameBoard:
         responseDict["validAction"] = False
         return responseDict
 
+    def getResearchStations(self):
+        researchLocations=[]
+        for city in self.cities:
+            cityObject=self.cities[city]
+            if cityObject.researchStation==1:
+                researchLocations.append(cityObject.name)
+
+        return researchLocations
+
+
 class PlayerCard:
     """ Player City Card Definition """
     def __init__(self, name, colour, population, area, country):
