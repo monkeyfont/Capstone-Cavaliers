@@ -74,9 +74,11 @@ canvas.addEventListener('click', function(evt) {
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
 				console.log('city ', i ,' was clicked');
-				actionState.selectedCity(i);
-				checkMove(i);
-				
+				if (actionState.selectedCity(i)){
+					
+				}else{
+					checkMove(i);
+				}
 			}
 
 	}
@@ -87,13 +89,11 @@ canvas.addEventListener('click', function(evt) {
 		
 	}else if (playersHand.cardX(mousePos)){
 		
+	}else if (playersHand.cardClick(mousePos)) {
+		
 	}else{
-		playersHand.cardClick(mousePos)
+		actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
 	}
-	
-	
-	actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
-
 
 })
 

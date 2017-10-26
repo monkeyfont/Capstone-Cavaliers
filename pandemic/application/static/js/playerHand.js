@@ -154,7 +154,9 @@ function playerHand(){
 			console.log(chosenCard," was chosen")
 			
 			this.toggleCardActivation({cardName:chosenCard})
+			return true
 		}
+		return false
 	}
 
 	this.removeCard = function (options){

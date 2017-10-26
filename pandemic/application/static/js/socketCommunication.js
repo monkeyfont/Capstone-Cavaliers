@@ -459,11 +459,11 @@ socket.on('passTurnChecked', function (data) {
 
     });
 
-function PlayEventCard(cardName){
-
+function PlayEventCard(options){
+		cardName = options.cardName
     // var cardName = prompt("Enter Name of event Card you want to play: ");
     if (cardName=="Government_Grant"){
-        var cityName = prompt("Enter Name of city you want to build a research station on: ");
+        var cityName = options.city;
         socket.emit('PlayEventCard',{card:cardName,city:cityName});
     }
     else if (cardName=="AirLift"){
