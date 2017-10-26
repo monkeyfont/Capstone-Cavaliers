@@ -26,6 +26,13 @@ function actionState(options){
 			
 			PlayEventCard({cardName:"One_Quiet_Night"})
 		return true
+		}else if (this.currentState == "ShuttleFlight "){
+			shuttleFlight(cityName)
+			return true
+		}else if (this.currentState == "CharterFlight"  ){
+			charterFlight(cityName)
+			// cityName
+			return true
 		}
 		
 		return false
@@ -90,27 +97,27 @@ function actionState(options){
 			// treatDisease()					
 		// }else 
 		if(this.currentState == "Build"){
-			buildResearch()
+			// buildResearch()
 		}else if(this.currentState == "CharterFlight"){
 			//city location
-			charterFlight()
+			// charterFlight()
 		}else if(this.currentState == "Cure"){
 			//cards
-			discoverCure()
+			// discoverCure()
 		}else if(this.currentState == "DirectFlight"){
 			//one card
-			directFlight(city)
+			// directFlighst(city)
 		}else if(this.currentState == "Give"){
 			// playerName
-			shareKnowledgeGive()
+			// shareKnowledgeGive()
 		}else if(this.currentState == "Pass"){
 			PassTurn()
 		}else if(this.currentState == "ShuttleFlight"){
 			//city Name
-			shuttleFlight()
+			// shuttleFlight()
 		}else if(this.currentState == "Take"){
 			// playerName
-			shareKnowledgeTake()
+			// shareKnowledgeTake()
 		}
 	}
 	
@@ -133,13 +140,23 @@ function actionState(options){
 			buildResearch()
 		}else if(this.currentState == "CharterFlight"){
 			//city location
-			charterFlight()
+			// charterFlight()
 		}else if(this.currentState == "Cure"){
-			//cards
-			discoverCure()
+			if(Object.keys(playersHand.activeCards).length =5)
+				discoverCure(playersHand.activeCards)
+			else if (Object.keys(playersHand.activeCards).length =4 && players.players[thisPlayerName].playerType == "Scientist"){
+				discoverCure(playersHand.activeCards)
+			}
 		}else if(this.currentState == "DirectFlight"){
 			//one card
-			directFlight(city)
+			if(Object.keys(playersHand.activeCards).length =1){
+				for (i in playersHand.activeCards){
+					directFlight(i)
+				}
+				
+			}
+			
+			
 		}else if(this.currentState == "Give"){
 			// playerName
 			shareKnowledgeGive()

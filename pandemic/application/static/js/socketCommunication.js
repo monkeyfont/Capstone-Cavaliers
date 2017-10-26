@@ -141,8 +141,6 @@ socket.on('checked', function (data) {
 });
 
 function directFlight(city) {
-
-    var city = prompt("Enter name of city card in your hand you would like to move to");
     socket.emit('checkDirectFlight', {cityName:city})
 }
 //socket.on('directFlightChecked', function (data) {
@@ -164,11 +162,9 @@ function directFlight(city) {
 
 
 
-function charterFlight() {
-
-    var cityCard = prompt("Enter name of card you would like to use");
-    var citytoMoveTo = prompt("Enter name of city you would like to move to");
-    socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
+function charterFlight(city) {
+	// alert("adasdsad")
+    socket.emit('checkCharterFlight', {destination:city})
 
 }
 //socket.on('charterFlightChecked', function (data) {
@@ -193,9 +189,8 @@ function charterFlight() {
 // });
 
 
-function shuttleFlight() {
+function shuttleFlight(city) {
 
-    var city = prompt("Enter name of city with research station you would like to move to");
     socket.emit('checkShuttleFlight', {cityName:city})
 
 }
@@ -344,23 +339,30 @@ socket.on('diseaseTreated', function (data) {
     });
 
 
-function discoverCure() {
-
+function discoverCure(options) {
+	console.log(options)
+	cardList = []
+	
+	for (i in options){
+		cardList.push(options[i])
+	}
+	console.log(cardList)
+	
     if (thisPlayerRole!="scientist"){
 
-    var card1 = prompt("Enter City name: ");
-    var card2 = prompt("Enter City name: ");
-    var card3 = prompt("Enter City name: ");
-    var card4 = prompt("Enter City name: ");
-    var card5 = prompt("Enter City name: ");
-    socket.emit('discoverCure', {cities:[card1,card2,card3,card4,card5]})
+    // var card1 = prompt("Enter City name: ");
+    // var card2 = prompt("Enter City name: ");
+    // var card3 = prompt("Enter City name: ");
+    // var card4 = prompt("Enter City name: ");
+    // var card5 = prompt("Enter City name: ");
+    socket.emit('discoverCure', {cities:cardList})
     }
     else{
-    var card1 = prompt("Enter City name: ");
-    var card2 = prompt("Enter City name: ");
-    var card3 = prompt("Enter City name: ");
-    var card4 = prompt("Enter City name: ");
-    socket.emit('discoverCure', {cities:[card1,card2,card3,card4]})
+    // var card1 = prompt("Enter City name: ");
+    // var card2 = prompt("Enter City name: ");
+    // var card3 = prompt("Enter City name: ");
+    // var card4 = prompt("Enter City name: ");
+    socket.emit('discoverCure', {cities:cardList})
 
     }
 
@@ -461,15 +463,7 @@ function PlayEventCard(options){
     else if (cardName=="One_Quiet_Night"){
         socket.emit('PlayEventCard',{card:cardName});
 
-    }
-
-    else if (cardName=="Resilient_Population"){
-        var infectCardName= prompt("Enter Name of infect card in the discard pile you wish to remove from the game: ");
-        socket.emit('PlayEventCard',{card:cardName,player:playerName,infectCard:infectCardName});
-
-    }
-
-    else{
+    }else{
     socket.emit('PlayEventCard',{card:cardName});
     }
 

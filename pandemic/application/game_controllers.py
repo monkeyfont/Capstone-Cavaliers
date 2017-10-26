@@ -292,16 +292,15 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityCardName=msg["cityName"]
     cityToMove= msg["destination"]
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
-            print(playerObject.name," wants to use the card", cityCardName ," to move to ",cityToMove)
+            print(playerObject.name," wants to use the card", playerObject.location ," to move to ",cityToMove)
 
-            response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
+            response = gameObject.charterFlight(playerObject.id, playerObject.location, cityToMove)
             # if response["validAction"] == True:
             #     emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
             # else:
