@@ -12,17 +12,21 @@ body{
     width:30%;
     height:22em;
     position:fixed;
+    top:22%;
     display:block;
     background-color:rgba(0,0,0,0.8);
-
 }
+
 #lobbyMessageHistory{
     height:90%;
     display:block;
     color:white;
     overflow-x: hidden;
     overflow-y: scroll;
+    padding-left:3em;
+
 }
+
 #lobbyMessageBox{
     display:block;
     background-color:rgba(250,250,250,0.8);
@@ -49,8 +53,8 @@ body{
     float:right;
     margin-left: 25%;
     color:white;
-
 }
+
 #lobbyMessageHistory::-webkit-scrollbar{
 width:16px;
 }
@@ -67,8 +71,8 @@ background-color:white;
 border:1px solid #333333;
 }
 #myCanvas {
-    margin-left:auto;
-    margin-right:auto;
+    margin:auto;
+    z-index:-1;
 }
 #hideBoards{
     display:block;
@@ -82,7 +86,27 @@ border:1px solid #333333;
     width:100%;
     margin: auto;
 }
-body{
-	margin:0px;
+
+#canvas-wrapper{
+    position:relative;
 }
 
+#showMessages{
+    display: block;
+    position:fixed;
+    top:35%;
+    transform: rotate(90deg);
+    width: 10em;
+    height: 3em;
+    left: -3.5em;
+    z-index:3;
+    margin-top:4em;
+}
+button{
+    background-color: rgba(64, 22, 251, 0.4);
+    color:white;
+    font-weight:bold;
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:10px;
+
+}

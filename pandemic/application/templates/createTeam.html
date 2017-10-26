@@ -3,6 +3,8 @@
 <head>
     <link rel="icon" href="static/images/favicon.png">
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/newTeamPage.css">
     <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
@@ -45,7 +47,7 @@
 
                 <input type="hidden" name="roomtype" value="create">
                 <div class="row" id = "last">
-                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" id="goBack" type="button" onclick="goBack">Go Back</button></div>
+                    <div class="col-sm-6" id="newGameBottomLeft"> <button class="bottomLeftButton" id="goBack" type="button">Go Back</button></div>
                     <div class="col-sm-6" id="newGameBottomRight"><input class="bottomRightButton" id = "goGame" type= "submit" value= "Create Team"></div>
                 </div>
             </form>

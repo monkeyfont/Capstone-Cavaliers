@@ -291,6 +291,5 @@ window.onload = function (){
 	socket.emit('getGameInitialization')
 	socket.emit('getInfections')
 	socket.emit('getPlayersHands')
-	load.style="display:none;"
 	canvas.style="display:block;"
 	}

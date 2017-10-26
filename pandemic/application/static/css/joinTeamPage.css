@@ -127,6 +127,18 @@ input[type=radio]:checked{
 #startGame{
     width:100%;
 }
+#goBack,#goBackOnce{
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    margin-bottom:1em;
+    background-image: url("../images/arrowicon.png");
+    background-size: 2em;
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:2em;
+
+}
 /*
 * === All Classes go here ===
 */

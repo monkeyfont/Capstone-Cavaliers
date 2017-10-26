@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="icon" href="static/images/favicon.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/welcomePage.css"  hidden >
+    <link rel="stylesheet" href="static/css/helpPage.css"  hidden >
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+
+    <title>Pandemic | Help</title>
+
+</head>
+<body>
+    <div id="container">
+        <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
+    </div>
+    <div id="menu">
+        <div class="btn-group">
+
+            <button class="bottomLeftButton"id="showVideoPage" type="button" >Video Tutorials</button>
+            <button class="bottomLeftButton"id="showActionsPage" type="button">Player Actions Explained</button>
+            <button class="bottomLeftButton" id = "showRules" type= "button">Rules Explained</button>
+        </div>
+            <button id = "goBack" type= "button">Go Back</button>
+
+    </div>
+</body>
+</html>
