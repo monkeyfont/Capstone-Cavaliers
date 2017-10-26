@@ -90,6 +90,8 @@ button:hover{
 
 }
 .rollAbility{
+    margin-left:10%;
+    margin-right:10%;
     display:block;
     text-align: center;
 }
