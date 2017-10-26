@@ -1,10 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <link rel="icon" href="static/images/favicon.png">
+    <link rel="stylesheet" href="static/css/welcomePage.css"  hidden >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lobby.js') }}"></script>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Pandemic | Actions</title>
+    <link rel="stylesheet" href="static/css/helpPage.css">
+
 </head>
 <body>
+
+        <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
+
+<div id="actionCard">
+    <section id="driveFerry">
+        <h1 class="cardTitle">Move</h1>
+        <p class="cardDescription">Move your pawn to an adjacent city. Cities are adjacent if they are connected by a red line. Red lines that go off the edge of the board “wrap around” to the opposite board edge and continue to the indicated city. (For example, Sydney and Los Angeles are considered to be adjacent)</p>
+        <!--Move to a city connected by a white line.-->
+    </section>
+    <section id="directFlight">
+        <h1 class="cardTitle">Direct Flight </h1>
+        <p class="cardDescription">Play a card from your hand and move your pawn to the pictured city. Discard the card to the Player Discard pile.
+</p>
+        <!--Discard a City card to move to the city named on the card -->
+    </section>
+    <section id ="charterFlight">
+        <h1 class="cardTitle">Charter Flight </h1>
+        <p class="cardDescription">Play the card corresponding to your pawn’s current location, and move to any city on the board. Discard the card to the Player Discard pile.
+</p>
+                <!--Discard the City card that matches the city you are in to move to any city.-->
+
+    </section>
+    <section id="shuttleFlight">
+        <h1 class="cardTitle">Shuttle Flight </h1>
+        <p class="cardDescription">If your pawn is in a city with a Research Station, move it to any other city with a Research Station.</p>
+                <!-- Move from a city with a research station to any other city that has a research station.-->
+
+    </section>
+    <section id="pass">
+        <h1 class="cardTitle">Pass </h1>
+        <p class="cardDescription">A player may also elect to pass (and do nothing) for an action.
+</p>
+                <!-- A player may also elect to pass (and do nothing) for an action.-->
+
+    </section>
+        <section id="buildResearchStation">
+        <h1 class="cardTitle">Build A Research Station</h1>
+        <p class="cardDescription">Building Research Stations helps your team move from place to place. Research Stations are also required for discovering cures. Play the card corresponding to the city your pawn currently occupies, then place a Research Station in that city. Discard the card to the Player Discard Pile. If there aren’t any Research Stations left in the supply, select one of the Research Stations already in play and transfer it to the city your pawn occupies.<br>Thee Operations Expert does not have to play the card matching the city his pawn occupies when performing the Build A Research Station action. He simply spends an action to add a Research Station to his current city.</p>
+            <!-- Discard the City card that <i>matches</i> the city you are in to place a research station there. -->
+        </section>
+    <section id="treatDisease">
+        <h1 class="cardTitle">Treat Disease</h1>
+        <p class="cardDescription">Over the course of the game, your team can treat diseases to buy the time needed to discover cures. Remove a disease cube from the city your pawn occupies. (Each removed cube costs one action.) Place the removed cube back into the stock by the side of the board. If players have discovered a cure, instead of one cube, remove all cubes of a cured disease in your current city for one action.</p>
+            <!--<h4>Eradicating a Disease</h4>-->
+        <!--If a cure for a given disease has been discovered and all of the disease cubes of that color have been removed from the board, flip the Cure marker for the disease to the “Sunset” side. From now on, cards of this color have no effect when drawn on the Infector’s turn. Take all of the cubes of the eradicated color and place them back in the box—they will not be used again for the rest of the game.<br>-->
+            <!--The Medic may remove all the cubes of a single color (instead of 1) when performing the Treat Disease action. Also, if the Medic at any time finds herself in a city that contains cubes of a disease that has been cured, she may immediately remove all of those cubes. is unique ability is in effect during all players’ turns and does not cost any actions to perform.-->
+                <!-- Remove 1 disease icon from the cty you are in If this color is <i>cured</i>,remove all cubes <i>of that color</i>from the city.-->
+
+    </section>
+    <section id="shareKnowledge">
+        <h1 class="cardTitle">Share Knowledge </h1>
+        <p class="cardDescription">Transfer a card from one player to another. Every card transferred costs 1 action. Both your pawn and your fellow player’s pawn must be in the same city, and you may only transfer the card of the city that you are in together. (For example, if you are together in Moscow, only the Moscow card may be transferred from one player to the other.) If either player holds more than 7 cards as the result of a transfer, the excess cards must be immediately discarded to the Player Discard Pile.<br>
+            The Researcher may give a fellow player any card from his hand when involved in a Share Knowledge action. He is not restricted to giving the card of the current jointly-occupied city, like other players are. is freedom only applies when the Researcher is giving a card—he always receives a card with the same restriction as other players. The Researcher can utilize this ability when involved in Share Knowledge actions on any player’s turn.</p>
+                <!--Either: <i>give</i>the card that<i>matches</i> the city you are in to another player, or take that card from another player. The player must also be in the city with you.-->
+
+    </section>
+    <section id="discoverCure">
+        <h1 class="cardTitle">Discover Cure</h1>
+        <p class="cardDescription">Once your team has discovered all four cures, you win! If your pawn is in a city with a Research Station, discard 5 cards of the same color to cure the corresponding disease. Take a Cure marker and place it (vial-side up) on the Discovered Cures area of the board to indicate which disease has been cured. Place the spent cards into the Player Discard Pile.<br>
+            The Scientist only needs 4 cards of a color to discover the cure of the corresponding disease when performing the Discover Cure action.</p>
+        <!--At <i>any</i> research station,discard 5 City cards of the same disease color to cure that disease. -->
+        </section>
+</div>
+            <button id = "goBack" type= "button">Home</button>
 
 </body>
 </html>

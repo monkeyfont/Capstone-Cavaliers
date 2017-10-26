@@ -42,6 +42,17 @@ $("#goBack").click(function(){
 $("#goBackOnce").click(function(){
         location.href = "/join";
 });
+$("#showVideoPage").click(function(){
+        location.href = "/videoTutorials";
+});
+$("#showActionsPage").click(function(){
+        location.href = "/actions";
+});
+$("#showRules").click(function(){
+        location.href = "/rules";
+});
+
+
 
 socket.on('joinSecret', function () {
     console.log ("Join Team")

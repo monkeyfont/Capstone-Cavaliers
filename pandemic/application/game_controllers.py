@@ -30,13 +30,14 @@ def helpR():
     return (render_template("helpPage.html"))
 @app.route('/rules')
 def rules():
-    return (render_template("helpPage.html"))
+    return (render_template("rules.html"))
 @app.route('/videoTutorials')
-def helpR():
-    return (render_template("helpPage.html"))
+def videos():
+    return (render_template("videotutorials.html"))
 @app.route('/actions')
-def helpR():
-    return (render_template("helpPage.html"))
+def actions():
+    return (render_template("playerActions.html"))
+
 @app.route('/join')
 def newTeamRedirect():
     publicRooms = []

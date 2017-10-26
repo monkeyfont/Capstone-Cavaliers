@@ -91,9 +91,7 @@
     z-index:2;
     float:right;
 }
-#showHand{
-    transform: rotate(90deg);
-}
+#showHand{}
 #playerCards{
     color:white;
     width:100%;
