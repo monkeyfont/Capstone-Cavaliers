@@ -25,7 +25,7 @@ CITIES_TEMPLATE = {
     "SAOPAULO": {"colour": "yellow", "connections": ['BOGOTA','BUENOSAIRES','LAGOS','MADRID']},
     "LAGOS": {"colour": "yellow", "connections": ['SAOPAULO','KINSHASA','KHARTOUM']},
     "KHARTOUM": {"colour": "yellow", "connections": ['LAGOS','JOHANNESBURG','CAIRO']},
-    "KINSHASA": {"colour": "yellow", "connections": ['LAGOS','JOHANNESBURG','KHARTOUM']},
+    "KINSHASA": {"colour": "yellow", "connections": ['LAGOS','JOHANNESBURG','KHARTOUM', "KINSHASA"]},
     "JOHANNESBURG": {"colour": "yellow", "connections": ['KINSHASA','KHARTOUM']},
     "SYDNEY": {"colour": "red", "connections": ['MANILA','JAKARTA','LOSANGELES']},
     "JAKARTA": {"colour": "red", "connections": ['SYDNEY','HOCHIMINHCITY','BANGKOK','CHENNAI']},

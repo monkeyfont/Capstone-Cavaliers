@@ -91,14 +91,26 @@
     z-index:2;
     float:right;
 }
-#showHand{}
+#showHand{
+    left: 100%;
+    transform-origin: left top;
+    top:35%;
+    width:7%;
+    position:fixed;
+    transform: rotate(90deg);
+    z-index:3;
+}
+
+
 #playerCards{
+    top:32%;
+    position:fixed;
     color:white;
-    width:100%;
+    width:20%;
     height:10em;
     display:block;
     z-index:2;
-    float:right;
+    right:0;
     overflow-x: hidden;
     overflow-y: scroll;
     background-color:rgba(0,0,0,0.8);

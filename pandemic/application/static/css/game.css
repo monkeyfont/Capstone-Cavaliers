@@ -12,6 +12,7 @@ body{
     width:30%;
     height:22em;
     position:fixed;
+    top:22%;
     display:block;
     background-color:rgba(0,0,0,0.8);
 }
@@ -71,7 +72,7 @@ border:1px solid #333333;
 }
 #myCanvas {
     margin:auto;
-    width:100%;
+    z-index:-1;
 }
 #hideBoards{
     display:block;
@@ -91,8 +92,9 @@ border:1px solid #333333;
 }
 
 #showMessages{
-    position: inherit;
     display: block;
+    position:fixed;
+    top:35%;
     transform: rotate(90deg);
     width: 10em;
     height: 3em;

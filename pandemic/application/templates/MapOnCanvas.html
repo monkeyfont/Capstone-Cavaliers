@@ -22,7 +22,8 @@
 </head>
 <body style="margin:0px;">
 
-<div id="canvas-wrapper">
+
+
     <button id = "showMessages" onclick="fade();setTimeout(tuggleBox, 500);">Show Message Board</button>
     <div id = "messageBox">
             <div id = "lobbyMessageHistory">
@@ -35,13 +36,13 @@
             </div>
     </div>
         <button id = "showHand" onclick="tugglehand()">Show Message Board</button>
-        <div id="playerCards"></div>
+    <div id="playerCards"></div>
     <h3 id="newMessage" style="display:none"></h3>
 
-    <canvas id="myCanvas" width="1920" height="1080">
+
+    <canvas id="myCanvas" width="1920" height="1080" style="display:none">
     </canvas>
 
-</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
