@@ -157,8 +157,9 @@ PLAYER_CARDS = {
 
 EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
-    2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
+    2:{"name":"AirLift", "description":"Move any 1 pawn to any city"},
     3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"}
+
 }
 
 
@@ -254,7 +255,7 @@ class GameBoard:
         self.players = playerDict # {id:playerObj}
         self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
         self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
-        self.cures = {"blue" : 0, "red" : 0, "yellow" : 1, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
+        self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
@@ -358,10 +359,10 @@ class GameBoard:
             # invoke infect cities step
             infections = self.endTurnInfectCities()
 
-            result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
+            #result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
             result["cubesUsed"]=[]
-            result["infections"]+=infections[0]
+            result["infections"]+=infections
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
                 result["cubesUsed"].append({colour:self.cubesUsed[colour]})
@@ -377,7 +378,26 @@ class GameBoard:
                 result["gameLoss"] = True
                 result["gameLossReason"].append("Outbreak level")
 
-        #print result
+
+            result["infectionDiscarded"]=[]
+            for card in self.infectionDiscarded:
+                result["infectionDiscarded"].append({"cardName":card.name})
+
+            playersHands = {}
+            players = self.players
+            for playerK in players:
+                playerObj = players[playerK]
+                playerHand = playerObj.hand
+                playerCardNames = []
+                for card in playerHand:
+                    cardname = card.name
+                    playerCardNames.append(cardname)
+                playersHands[players[playerK].name] = playerCardNames
+
+            result["playerHandsUpdated"]=playersHands
+
+
+        print result
         return result
 
 
@@ -433,11 +453,13 @@ class GameBoard:
     def generatePlayerDeck(self):
         """ Returns a list containing player card objects and event card objects. Epidemic cards are NOT added."""
         cards = []
-        for k in PLAYER_CARDS: #name,colour,population,area,country
-            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
         for k in EVENT_CARDS: #id, name, description
             cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+
+        for k in PLAYER_CARDS: #name,colour,population,area,country
+            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
+
 
         return cards
 
@@ -456,7 +478,7 @@ class GameBoard:
         cardsPerPlayer = {1:6, 2:4, 3:3, 4:2}
         nPlayers = len(self.players)
         nCardsToDeal = cardsPerPlayer[nPlayers]
-        shuffle(self.playerDeck)
+        #shuffle(self.playerDeck)
         for id in self.players:
             playerHand = self.players[id].hand
             for i in range(nCardsToDeal):
@@ -474,7 +496,7 @@ class GameBoard:
         These cards are then added to the discard pile
          """
         # First shuffle the infection cards
-        #shuffle(self.infectionDeck)
+        shuffle(self.infectionDeck)
         # draw first 3 cards, place 3 disease markers
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
@@ -601,7 +623,7 @@ class GameBoard:
             # add the card to the discard pile
             self.infectionDiscarded.append(infectCard)
         #return infectedCitiesNew
-        return (infectedCitiesNew, infectedCities)
+        return infectedCitiesNew
 
 
     def resetPlayerActions(self):
@@ -1397,6 +1419,7 @@ class GameBoard:
                                 return responseDict
                             else:
                                 responseDict["validAction"] = True
+                                responseDict["location"] = curCityObj.name
                                 curCityObj.researchStation =1
                                 playerHand.remove(card)
                                 self.playerDiscarded.append(card)
@@ -1405,18 +1428,20 @@ class GameBoard:
         responseDict["validAction"] = False
         return responseDict
 
+
     def airLift(self,playerId,playerToMoveId,cityToMoveTo):
         responseDict = {}
         playerObj = self.players[playerId]
         playerToMoveObj=self.players[playerToMoveId]
         playerHand=playerObj.hand
         for card in playerHand:
-            if(card.name == "Airlift"):
+            if(card.name == "AirLift"):
                 playerToMoveObj.location = cityToMoveTo
                 responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[cityToMoveTo])
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                print "AIRLIFT HAS BEEN USED!!!"
                 return responseDict
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
@@ -1439,6 +1464,44 @@ class GameBoard:
         responseDict["errorMessage"] = "ERROR: You do not have this card"
         responseDict["validAction"] = False
         return responseDict
+
+
+    def removeInfectionCard(self,playerId,infectCardName): # this is for Resilient population
+
+        responseDict = {}
+        playerObj = self.players[playerId]
+        playerHand = playerObj.hand
+        for card in playerHand:
+            if (card.name == "Resilient_Population"):
+                for cardName in self.infectionDiscarded:
+                    if cardName.name==infectCardName: #is the card actually in the discard pile
+                        self.infectionDiscarded.remove(cardName) # remove card from discard pile
+                        responseDict["validAction"] = True
+                        playerHand.remove(card)
+                        return responseDict
+                        # it is now not in any deck so basicaly out of the game
+
+        responseDict["errorMessage"] = "ERROR: You do not have this card"
+        responseDict["validAction"] = False
+        return responseDict
+
+    def getResearchStations(self):
+        researchLocations=[]
+        for city in self.cities:
+            cityObject=self.cities[city]
+            if cityObject.researchStation==1:
+                researchLocations.append(cityObject.name)
+
+        return researchLocations
+
+
+    def getCures(self):
+
+        curesFound = []
+        for cure in self.cures:
+            if self.cures[cure]==1:
+                curesFound.append(cure)
+        return curesFound
 
 class PlayerCard:
     """ Player City Card Definition """

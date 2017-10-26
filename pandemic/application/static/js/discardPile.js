@@ -78,9 +78,10 @@ function discardPile(options){
 		delete this.cards[options.cardName];
 	}
 	
-	this.addCard = function(options){
+	this.addCard = function(options){		
+		for ( i in options){
 		//options = {cardname:cardName}
-		cardFront = allPossibleInfectionCards[options.cardName];
+		cardFront = allPossibleInfectionCards[options[i].cardName];
 			newPlayerCard = new infectionCard({
 			id:"Infection player Card ",
 			context:this.context,
@@ -95,9 +96,10 @@ function discardPile(options){
 			imageBack: CardImage,
 			imageFront: cardFront
 		});
-		cardName = options.cardName;
+		cardName = options[i].cardName;
 		this.cards[cardName] = newPlayerCard;
 		this.cards[cardName].flipping = true;
+		}
 	}
 	
 	this.intpoint_inside_trigon = function(s, a, b, c){
@@ -126,9 +128,9 @@ function discardPile(options){
 				console.log("activated")
 			}
 			
-		this.context.font = "40px Sans-serif"
-			this.context.strokeStyle = 'red';//'green';
-			this.context.strokeText('X',optimalScreenWidth-100,100);
+		// this.context.font = "40px Sans-serif"
+			// this.context.strokeStyle = 'red';//'green';
+			// this.context.strokeText('X',optimalScreenWidth-100,100);
 			
 		if(xPos >=optimalScreenWidth-100 && xPos <= optimalScreenWidth-100+40
 			&& yPos >= 100-40 && yPos <= 100 && this.active){

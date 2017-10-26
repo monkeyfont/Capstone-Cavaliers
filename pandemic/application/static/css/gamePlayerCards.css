@@ -4,6 +4,9 @@
 .playerHand{
     width:100%;
     border:0.2em solid black;
+    margin-bottom:auto;
+    margin-top:auto;
+    display:block;
 }
 .playerHand p {
     margin:0px;
@@ -14,6 +17,12 @@
 }
 .researcher {
     background-image: url("../images/PlayerPortraits/Researcher.png");
+    background-size:2em;
+    background-repeat: no-repeat;
+    background-color: rgb(205,133,63)
+}
+.none {
+    background-image: url("../images/colors/none.png");
     background-size:2em;
     background-repeat: no-repeat;
     background-color: rgb(205,133,63)
@@ -95,19 +104,21 @@
     left: 100%;
     transform-origin: left top;
     top:35%;
-    width:7%;
+    width:12%;
     position:fixed;
     transform: rotate(90deg);
     z-index:3;
+    padding-top:0.5em;
+    padding-bottom:0.5em;
 }
 
 
 #playerCards{
-    top:32%;
+    top:22%;
     position:fixed;
     color:white;
     width:20%;
-    height:10em;
+    height:22em;
     display:block;
     z-index:2;
     right:0;

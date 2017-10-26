@@ -56,7 +56,6 @@ def game():
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
-        print username, "GOIN IN HURRRRR"
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         currentLobby.gameStarted=True
@@ -64,6 +63,7 @@ def game():
         if roomname not in games:
             gameobject = GameBoard(playerdict)
             gameobject.gameID = roomname
+            gameobject.difficulty=currentLobby.difficulty
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/home'></b>" + \
@@ -116,8 +116,33 @@ def getInfections():
             cubesUsed = []
             for colour in gameboard.cubesUsed:
                 cubesUsed.append({colour: gameboard.cubesUsed[colour]})
+            researchLocations=gameboard.getResearchStations()
+            curesFound=gameboard.getCures()
 
-            emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,"outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed})
+            emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,
+                                   "outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed,
+                                   "researchLocations":researchLocations,"curesFound":curesFound})
+
+
+@socketio.on('updateHands')
+def updateHands():
+    roomname = session["roomname"]
+    username = session["username"]
+    gameboard = games[roomname]
+    playersHands = {}
+    players = gameboard.players
+    for playerK in players:
+        playerObj = players[playerK]
+        playerHand = playerObj.hand
+        playerCardNames = []
+        for card in playerHand:
+
+            cardname = card.name
+            playerCardNames.append(cardname)
+        playersHands[players[playerK].name] = playerCardNames
+
+    emit('gotUpdate', {"playerhand": playersHands, "username": username})
+
 
 
 
@@ -149,7 +174,6 @@ def getPlayersHands():
     print playersHands
 
     print ('gotInitialHands',{"playerhand":playersHands,"username":username,"Player roll":playerRoll})
-    # emit('gotInitialHands',{"playerhand":playersHands,"username":username})
     emit('gotInitialHands',{"playerhand":playersHands,"username":username,"playerRoll":playerRoll})
 
 
@@ -303,7 +327,7 @@ def handleclick(msg):
             print playerObject.id,"player id!"
             response = gameObject.directFlight(playerObject.id, cityToMove)
             if response["validAction"]==True:
-                emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+                emit('checked', {'playerName':username,'msg':response,'city':cityToMove,'cardName':cityToMove},room=room)
             else:
                 emit('checked', {'playerName': username, 'msg': response, 'city': cityToMove})
 
@@ -314,22 +338,21 @@ def handleclick(msg):
 def handleclick(msg):
     room = str(session['roomname'])
     username = str(session["username"])
-    cityCardName=msg["cityName"]
     cityToMove= msg["destination"]
     gameObject = games[room]
     playerDictionary = gameObject.players
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
-            print(playerObject.name," wants to use the card", cityCardName ," to move to ",cityToMove)
+            print(playerObject.name," wants to use the card", playerObject.location ," to move to ",cityToMove)
 
-            response = gameObject.charterFlight(playerObject.id, cityCardName, cityToMove)
+            response = gameObject.charterFlight(playerObject.id, playerObject.location, cityToMove)
             # if response["validAction"] == True:
             #     emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
             # else:
             #     emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
             if response["validAction"]==True:
-                emit('checked', {'playerName':username,'msg':response,'city':cityToMove},room=room)
+                emit('checked', {'playerName':username,'msg':response,'city':cityToMove,'cardName':playerObject.location},room=room)
             else:
                 emit('checked', {'playerName': username, 'msg': response, 'city': cityToMove})
 
@@ -369,7 +392,7 @@ def handleclick(msg):
         if playerObject.name == username:
             response= gameObject.buildResearchStation(playerObject.id,cityToBuildOn)
             if response["validAction"] == True:
-                emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn}, room=room)
+                emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn,'cardName':cityToBuildOn}, room=room)
             else:
                 emit('researchBuildChecked', {'playerName': username, 'msg': response, 'city': cityToBuildOn})
 
@@ -506,7 +529,7 @@ def handleclick(msg):
 
     playerDictionary = gameObject.players
 
-    if eventCardName== "Government Grant":
+    if eventCardName== "Government_Grant":
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
@@ -514,21 +537,25 @@ def handleclick(msg):
                 response=gameObject.governmentGrant(playerObject.id,eventCardName,cityToBuildOn)
                 emit('governmentGrantChecked', {'msg': response},room=room)
 
-    elif eventCardName== "Airlift":
+    elif eventCardName== "AirLift":
         playerToMove = msg["player"]
         cityToMoveTo = msg["city"]
+        print "PLAYER TO MOVE IS", playerToMove
+        print " I AM ,", username
         playerId=""
         playerToMoveId=""
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
                 playerId = playerObject.id
-            elif playerObject.name == playerToMove:
+            if playerObject.name == playerToMove:
                 playerToMoveId = playerObject.id
+        print "PLAYER TO MOVE IS", playerToMoveId
+        print " I AM ,", playerId
         response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
-        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
+        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo, 'cardName':"AirLift"}, room=room)
 
-    elif eventCardName == "One Quiet Night":
+    elif eventCardName == "One_Quiet_Night":
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
@@ -675,7 +702,15 @@ def lobby():
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
-                lobby.difficulty = request.form["difficulty"]
+                difficulty = request.form["difficulty"]
+                if difficulty=="Normal":
+                    lobby.difficulty=0
+                elif difficulty=="Hard":
+                    lobby.difficulty=1
+                else:
+                    lobby.difficulty=2
+
+                print(lobby.difficulty, " is the diffculty")
                 print ("THis room privacy is :" + lobby.privacy)
 
                 #add lobby to dictionary
@@ -689,7 +724,6 @@ def lobby():
 
                 lobbies[str(session['roomname'])] = lobby
 
-                print lobby.players, "   playersSTART"
 
             else: # if user is joining a game
                 try:

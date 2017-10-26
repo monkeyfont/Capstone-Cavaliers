@@ -73,26 +73,27 @@ canvas.addEventListener('click', function(evt) {
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
-				//console.log('city ', i ,' was clicked');
-				checkMove(i);
-
+				console.log('city ', i ,' was clicked');
+				if (actionState.selectedCity(i)){
+					
+				}else{
+					checkMove(i);
+				}
 			}
 
 	}
-	
-	if(discardPile.click(mousePos)){
+	if (eventCardViewer.click(mousePos)){
+	}else if(discardPile.click(mousePos)){
 		
 	}else if(playerActionsMenu.clickSubMenu(mousePos)){
 		
 	}else if (playersHand.cardX(mousePos)){
 		
+	}else if (playersHand.cardClick(mousePos)) {
+		
 	}else{
-		playersHand.cardClick(mousePos)
+		actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
 	}
-	
-	
-	actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
-
 
 })
 
@@ -166,7 +167,7 @@ function gameLoop(){
 	}
 	
 	discardPile.render();
-	// eventCardViewer.render();
+	eventCardViewer.render();
 	
 }
 
@@ -187,11 +188,8 @@ discardPile = new discardPile({
 	yPos: 500, 
 })
 
-discardPile.addCard({cardName:'SANFRANCISCO'})
-discardPile.addCard({cardName:'CHICAGO'})
-discardPile.addCard({cardName:'MONTREAL'})
-discardPile.addCard({cardName:'NEWYORK'})
-discardPile.addCard({cardName:'ATLANTA'})
+discardPile.addCard([{cardName:'SANFRANCISCO'},{cardName:'CHICAGO'},{cardName:'MONTREAL'},{cardName:'NEWYORK'},{cardName:'ATLANTA'}])
+
 
 eventCardViewer = new eventCardViewer({
 	context:canvas.getContext("2d"),
@@ -218,7 +216,6 @@ var deck = new sprite({
 })
 
 outbreakCount = new outbreakCounter({});
-infectRate = new infectionRate({});
 playersHand = new playerHand();
 players = new playerInitilization();
 playerPortraits = new portraitInitilization({});
@@ -236,14 +233,14 @@ mapImage.addEventListener("load", gameLoop);
 
 infectionsMeterDisplay = new infectionMeter({
 	context: canvas.getContext("2d"),
-	xPos:1600,
+	xPos:1220,
 	yPos:80
 })
 
 
 cureBar = new cureStatusBar({
 	context: canvas.getContext("2d"),
-	xPos:680,
+	xPos:425,
 	yPos:70,
 	height:256,
 	width:256,
@@ -267,16 +264,16 @@ messageAlert = new messageAlert ({
 	xPos: 940,
 	yPos: 590
 });
-actionState = new actionState({});
 
 
-locations.SANFRANCISCO.addResearchStation();
+
+// locations.SANFRANCISCO.addResearchStation();
 
 locations.ATLANTA.infect({colour:"red"})
 locations.ATLANTA.infect({colour:"blue"})
 locations.ATLANTA.infect({colour:"yellow"})
 locations.ATLANTA.infect({colour:"black"})
-locations.ATLANTA.addResearchStation();
+// locations.ATLANTA.addResearchStation();
 
 
 var load = document.getElementById("load");
@@ -292,4 +289,5 @@ window.onload = function (){
 	socket.emit('getInfections')
 	socket.emit('getPlayersHands')
 	canvas.style="display:block;"
+
 	}

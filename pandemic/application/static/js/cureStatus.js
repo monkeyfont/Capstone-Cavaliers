@@ -32,7 +32,6 @@ function cureStatusBar(options){
 	this.render = function () {
 		for (i in this.infection){
 			currentImage = cureImages[i+this.infection[i]];
-			// console.log(i)
 			this.context.drawImage(
 			currentImage, //image to use
 			0, // x position to start clipping 

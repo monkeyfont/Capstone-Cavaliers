@@ -12,7 +12,7 @@ var Take = new Image(); Take.src = 'static/images/ActionIcons/Take.png';
 var Treat = new Image(); Treat.src = 'static/images/ActionIcons/Treat.png';
 var EventCard = new Image(); EventCard.src = 'static/images/ActionIcons/EventCard.png';
 
-actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,EventCard};
+actions = {Build,CharterFlight,Cure,DirectFlight,Give,Pass,ShuttleFlight,Take,Treat,EventCard};
 
 //if (playerRole=="operationsExpert"){
 //    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,OperationMove};
@@ -38,6 +38,7 @@ function playerActionsBar(options){
 	this.iconWidth = 70;
 	this.iconHeight = 90;
 	this.currentAction = null;
+	this.researcherHand = false;
 	this.actionsDisplayPlayers = ["Give","Take"]
 	this.actionsDisplayColours = ["Treat"]
 	this.activateAction = function(options){
@@ -71,21 +72,73 @@ function playerActionsBar(options){
 		yPos = options.y;
 		menuType = null;
 		
+		pos = Object.keys(actions).indexOf(this.currentAction)
+		xSub = (70* this.iconScale)+this.iconPosX+this.iconWidth*this.iconScale*pos
+		ySub = this.iconPosY-(60*Object.keys(researcherHand).length)
+			// 120
+			// 60*Object.keys(researcherHand).length
+		
+		if (xPos >= xSub && xPos <= xSub + 120 && 
+			yPos >= ySub && yPos <= ySub+60*Object.keys(researcherHand).length && this.researcherHand){
+			console.log(yPos - ySub)
+			chosenCardPos = Math.floor((yPos - ySub )/60)
+			console.log("the card position is: ", chosenCardPos)
+			chosenCard = 'none'
+				for ( i in researcherHand){
+					pos = Object.keys(researcherHand).indexOf(i)
+					if (pos == chosenCardPos){
+						chosenCard = i;
+						break
+					}
+				}
+				
+			actionState.playerAndCardChosen({researcherName:chosenPlayer,card:chosenCard})
+			console.log("clicked in the researchers hand", chosenCard)
+		}	
+		
+		
+		
+		
+		
+		
 		if (this.actionsDisplayPlayers.includes(this.currentAction) ){
 			pos = Object.keys(actions).indexOf(this.currentAction)
 			writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos
-			writePosY = this.iconPosY-(60*actionState.players.length)
+			writePosY = this.iconPosY-(60*Object.keys(actionState.players).length)
 			console.log("checking players")
 			console.log("is ",xPos," between ",writePosX," and ",writePosX + 120)
-			console.log("is ",yPos," between ",writePosY," and ",writePosY+actionState.players.length*60 )
+			console.log("is ",yPos," between ",writePosY," and ",writePosY+Object.keys(actionState.players).length*60 )
 			
 			if (xPos >= writePosX && xPos <= writePosX + 120
-				&& yPos >= writePosY && yPos <=writePosY+actionState.players.length*60){
+				&& yPos >= writePosY && yPos <=writePosY+Object.keys(actionState.players).length*60){
 					console.log("insideBoundries")		
 					chosenPosition = Math.floor((yPos - writePosY) / 60)
 					console.log(Math.floor((yPos - writePosY) / 60))
 					console.log("_______________________",actionState.players[chosenPosition])
-					return true
+					// // if this means hes selected the researcher then wait up
+					// return true
+					chosenPlayer = 'none'
+						for ( i in actionState.players){
+							pos = Object.keys(actionState.players).indexOf(i)
+							if (pos == chosenPosition){
+								chosenPlayer = i;
+								break
+							}
+						}
+					console.log("the chosen player is", chosenPlayer)
+					
+					if (players.players[chosenPlayer].playerType == "researcher" && this.currentAction == "Take"){
+						this.researcherHand = true;
+					}
+					
+					if (players.players[thisPlayerName].playerType == researcher && this.currentAction == "Give"){
+						this.researcherHand = true;
+					}					
+					
+					
+					// if the player chosen is the researcher and youre taking , or youre trying give, adn you are the researcher
+					//this.currentAction
+					
 				}
 			
 			menuType = "player"
@@ -106,8 +159,9 @@ function playerActionsBar(options){
 					chosenPosition = Math.floor((yPos - writePosY) / 60)
 					console.log(Math.floor((yPos - writePosY) / 60))
 					console.log("_______________________",actionState.infectionColours[chosenPosition])
-					
-					messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
+					actionState.changeCurrentState({newState:"Treat",colour:actionState.infectionColours[chosenPosition]})
+					this.currentAction = null;
+					// messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
 					return true
 				}
 			menuType = "colour"
@@ -150,12 +204,16 @@ function playerActionsBar(options){
 			this.iconHeight*this.iconScale); // height of image to use
 			
 			if (this.currentAction == i &&  this.actionsDisplayPlayers.includes(this.currentAction)){	
-				writePosY = this.iconPosY-(60*actionState.players.length) - 20
+				actionState.redefinePlayers();
+				// console.log(actionState.players)
+			
+				writePosY = this.iconPosY-(60*Object.keys(actionState.players).length) - 20
 				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
 				this.context.fillStyle = "rgba(0,0,0,.6)";
-				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.players.length),120,60*actionState.players.length);
+				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*Object.keys(actionState.players).length),120,60*Object.keys(actionState.players).length);
 				// console.log(actionState.players)
 				for (x in actionState.players){
+					// console.log(actionState.players[x])
 					writePosY = writePosY + 60
 					this.context.font = "22px Sans-serif"
 					this.context.strokeStyle = 'black';//'green';
@@ -168,7 +226,41 @@ function playerActionsBar(options){
 
 					this.context.fillText(actionState.players[x],writePosX,writePosY);
 				}
-			}else if (this.currentAction == i &&  this.actionsDisplayColours.includes(this.currentAction)){	
+				
+				if (this.researcherHand){
+					// draw a box
+					// show the researchers cards
+					Object.keys(researcherHand).length
+					
+					writePosY = this.iconPosY-(60*Object.keys(researcherHand).length) - 20
+					writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10 + (70* this.iconScale)
+					
+					this.context.fillStyle = "rgba(0,0,0,.6)";
+					this.context.fillRect((70* this.iconScale)+this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*Object.keys(researcherHand).length),120,60*Object.keys(researcherHand).length);
+				
+					
+					
+					for (x in researcherHand){
+					// console.log(actionState.players[x])
+					writePosY = writePosY + 60
+					this.context.font = "22px Sans-serif"
+					this.context.strokeStyle = 'black';//'green';
+					this.context.lineWidth = 8;
+					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+					this.context.miterLimit=3;
+
+					this.context.strokeText(researcherHand[x],writePosX,writePosY);
+					this.context.fillStyle = 'white';//this.colour;
+
+					this.context.fillText(researcherHand[x],writePosX,writePosY);
+				}
+					
+				}
+				
+				
+			}else if (this.currentAction == i &&  this.actionsDisplayColours.includes(this.currentAction)){
+				actionState.redefineColours();
+				
 				writePosY = this.iconPosY-(60*actionState.infectionColours.length) - 20
 				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
 				this.context.fillStyle = "rgba(0,0,0,.6)";
