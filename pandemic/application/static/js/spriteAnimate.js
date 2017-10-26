@@ -167,7 +167,7 @@ function gameLoop(){
 	}
 	
 	discardPile.render();
-	// eventCardViewer.render();
+	eventCardViewer.render();
 	
 }
 

@@ -174,6 +174,11 @@ socket.on('checked', function (data) {
 			locations[player.currentCity].removePlayer({playerName:data.playerName})
 			locations[data.city].addPlayer({playerName:data.playerName})
 			player.currentCity = data.city
+
+            if (data.cardName){
+			playersHand.removeCard({cardname:data.cardName})
+			}
+
 	    }
 	    else{
 	    alert(data.msg.errorMessage);
@@ -187,7 +192,6 @@ socket.on('checked', function (data) {
 
 function directFlight(city) {
 
-    var city = prompt("Enter name of city card in your hand you would like to move to");
     socket.emit('checkDirectFlight', {cityName:city})
 }
 
@@ -195,9 +199,7 @@ function directFlight(city) {
 
 function charterFlight() {
 
-    var cityCard = prompt("Enter name of card you would like to use");
-    var citytoMoveTo = prompt("Enter name of city you would like to move to");
-    socket.emit('checkCharterFlight', {cityName:cityCard,destination:citytoMoveTo})
+     socket.emit('checkCharterFlight', {destination:city})
 
 }
 
@@ -205,7 +207,6 @@ function charterFlight() {
 
 function shuttleFlight() {
 
-    var city = prompt("Enter name of city with research station you would like to move to");
     socket.emit('checkShuttleFlight', {cityName:city})
 
 }
@@ -226,6 +227,7 @@ socket.on('researchBuildChecked', function (data) {
             //addResearchStation(city);
             console.log("Research station HAS BEEEN built here")
             locations[data.city].addResearchStation();
+            playersHand.removeCard({cardname:data.cardName})
 	    }
 	    else{
 
@@ -353,23 +355,21 @@ socket.on('diseaseTreated', function (data) {
     });
 
 
-function discoverCure() {
+function discoverCure(options) {
+	console.log(options)
+	cardList = []
+
+	for (i in options){
+		cardList.push(options[i])
+	}
 
     if (thisPlayerRole!="scientist"){
 
-    var card1 = prompt("Enter City name: ");
-    var card2 = prompt("Enter City name: ");
-    var card3 = prompt("Enter City name: ");
-    var card4 = prompt("Enter City name: ");
-    var card5 = prompt("Enter City name: ");
-    socket.emit('discoverCure', {cities:[card1,card2,card3,card4,card5]})
+    socket.emit('discoverCure', {cities:cardList})
     }
     else{
-    var card1 = prompt("Enter City name: ");
-    var card2 = prompt("Enter City name: ");
-    var card3 = prompt("Enter City name: ");
-    var card4 = prompt("Enter City name: ");
-    socket.emit('discoverCure', {cities:[card1,card2,card3,card4]})
+
+    socket.emit('discoverCure', {cities:cardList})
 
     }
 
@@ -391,7 +391,7 @@ socket.on('cureDiscovered', function (data) {
 			if (data.cardsToDiscard.hasOwnProperty(card)) {
 				if (data.playerName==thisPlayerName){
 				    alert(data.cardsToDiscard[card])
-					playersHand.removeCard({cardName:data.cardsToDiscard[card]})
+					playersHand.removeCard({cardname:data.cardsToDiscard[card]})
 				}
 						  }
 					 }
@@ -492,7 +492,8 @@ socket.on('governmentGrantChecked', function (data) {
         if (check==true){
             alert("research station built with event card")
             locations[data.msg.location].addResearchStation();
-            
+            playersHand.removeCard({cardname:"Government_Grant"})
+
             // here goes logic to draw the building
         }
         else{
@@ -508,6 +509,7 @@ socket.on('oneQuietNightChecked', function (data) {
 
         if (check ==true){
             alert("next infect cities will be skipped")
+            playersHand.removeCard({cardname:"One_Quiet_Night"})
 	    }
 	    else{
 	        alert(data.msg.errorMessage);
@@ -519,6 +521,7 @@ socket.on('resilientPopulationChecked', function (data) {
         check=data.msg.validAction;
         if (check ==true){
             alert("Card has been removed from the game")
+
 	    }
 	    else{
 	        alert(data.msg.errorMessage);

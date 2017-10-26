@@ -157,7 +157,7 @@ PLAYER_CARDS = {
 
 EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
-    2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
+    2:{"name":"AirLift", "description":"Move any 1 pawn to any city"},
     3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"}
 
 }
@@ -1419,6 +1419,7 @@ class GameBoard:
                                 return responseDict
                             else:
                                 responseDict["validAction"] = True
+                                responseDict["location"] = curCityObj.name
                                 curCityObj.researchStation =1
                                 playerHand.remove(card)
                                 self.playerDiscarded.append(card)
