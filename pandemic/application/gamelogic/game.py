@@ -159,6 +159,7 @@ EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
     2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
     3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"}
+
 }
 
 
@@ -358,10 +359,10 @@ class GameBoard:
             # invoke infect cities step
             infections = self.endTurnInfectCities()
 
-            result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
+            #result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
             result["cubesUsed"]=[]
-            result["infections"]+=infections[0]
+            result["infections"]+=infections
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
                 result["cubesUsed"].append({colour:self.cubesUsed[colour]})
@@ -452,11 +453,13 @@ class GameBoard:
     def generatePlayerDeck(self):
         """ Returns a list containing player card objects and event card objects. Epidemic cards are NOT added."""
         cards = []
-        for k in PLAYER_CARDS: #name,colour,population,area,country
-            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
         for k in EVENT_CARDS: #id, name, description
             cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+
+        for k in PLAYER_CARDS: #name,colour,population,area,country
+            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
+
 
         return cards
 
@@ -620,7 +623,7 @@ class GameBoard:
             # add the card to the discard pile
             self.infectionDiscarded.append(infectCard)
         #return infectedCitiesNew
-        return (infectedCitiesNew, infectedCities)
+        return infectedCitiesNew
 
 
     def resetPlayerActions(self):
@@ -1424,18 +1427,20 @@ class GameBoard:
         responseDict["validAction"] = False
         return responseDict
 
+
     def airLift(self,playerId,playerToMoveId,cityToMoveTo):
         responseDict = {}
         playerObj = self.players[playerId]
         playerToMoveObj=self.players[playerToMoveId]
         playerHand=playerObj.hand
         for card in playerHand:
-            if(card.name == "Airlift"):
+            if(card.name == "AirLift"):
                 playerToMoveObj.location = cityToMoveTo
                 responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[cityToMoveTo])
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                print "AIRLIFT HAS BEEN USED!!!"
                 return responseDict
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
@@ -1466,7 +1471,7 @@ class GameBoard:
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         for card in playerHand:
-            if (card.name == "Resilient Population"):
+            if (card.name == "Resilient_Population"):
                 for cardName in self.infectionDiscarded:
                     if cardName.name==infectCardName: #is the card actually in the discard pile
                         self.infectionDiscarded.remove(cardName) # remove card from discard pile

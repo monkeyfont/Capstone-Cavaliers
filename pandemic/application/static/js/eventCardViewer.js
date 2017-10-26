@@ -13,7 +13,7 @@ function eventCardViewer(options){
 	this.context = options.context;
 	this.xPos = options.xPos;
 	this.yPos = options.yPos;
-	
+	this.showPlayerSelection = false;
 	this.active = true;
 	this.activeCard = 'AirLift';
 	
@@ -27,6 +27,7 @@ function eventCardViewer(options){
 	
 	this.toggleActive = function(){
 		this.active = !this.active
+		this.showPlayerSelection = false
 	}	
 	
 	this.click = function(options){		
@@ -39,6 +40,65 @@ function eventCardViewer(options){
 			console.log("close the discard viewer")
 			this.toggleActive({})
 		}
+		
+		
+		if(this.active && xPos>= this.xPos+20 && xPos <=  this.xPos + 500-20 && yPos>= this.yPos+700+20&& yPos <= this.yPos+700+20+120-20){
+			console.log("clicked to use the card")
+			
+			
+			if (this.activeCard == "AirLift"){
+				this.showPlayerSelection = true;
+				// show a menu with player names
+				
+			}else{
+				actionState.changeCurrentState({newState:this.activeCard})
+				this.toggleActive()
+			}
+			return true
+		}	
+			if (this.showPlayerSelection && this.active){
+				console.log("we are showing the player selection")
+				numberOfPlayers = Object.keys(players.players).length
+				xShow = this.xPos+500				
+				yShow = this.yPos+700-(60*numberOfPlayers)
+				// console.log(xShow,yShow)
+				// console.log((xPos >= xShow && xPos <= xShow+400 && yPos >= yShow && yPos <= yShow+60*numberOfPlayers ))
+				if (xPos >= xShow && xPos <= xShow+400 && yPos >= yShow && yPos <= yShow+60*numberOfPlayers ){
+					console.log("interacting with the players")
+					
+					chosenPosition = Math.floor((yPos - yShow )/60)					
+					console.log(chosenPosition)	
+						chosenPlayer = 'none'
+						console.log("these are the games players",players.players)
+						for ( i in players.players){
+							pos = Object.keys(players.players).indexOf(i)
+							if (pos == chosenPosition){
+								chosenPlayer = i;
+								break
+							}
+						}
+						console.log("the chosen player:",chosenPlayer)
+						actionState.changeCurrentState({newState:this.activeCard,player:chosenPlayer})
+						this.toggleActive();
+						console.log(chosenPlayer)
+						
+					
+					
+					
+				}
+				
+			return true
+				
+			}
+			
+			
+			
+			// PlayEventCard(this.activeCard)
+			
+		
+		
+		// 
+		
 		
 	}
 	
@@ -73,6 +133,30 @@ function eventCardViewer(options){
 			this.yPos, // y position for image on canvas
 			500, // width of image to use 
 			700); // height of image to use
+			
+			if (this.showPlayerSelection){
+				// console.log("show me the players")
+				numberOfPlayers = Object.keys(players.players).length
+				// console.log(numberOfPlayers," players in the game")
+				this.context.fillStyle = "rgba(0,0,0,.6)";
+				this.context.fillRect(this.xPos+500,this.yPos+700-(60*numberOfPlayers),400,60*numberOfPlayers);
+				writePosY = this.yPos+700-(60*numberOfPlayers)-15
+				writePosX = this.xPos+500+20
+				for(i in  players.players){
+					writePosY = writePosY + 60
+					this.context.font = "40px Sans-serif"
+					this.context.strokeStyle = 'black';//'green';
+					this.context.lineWidth = 8;
+					this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
+					this.context.miterLimit=3;
+
+					this.context.strokeText(players.players[i].id,writePosX,writePosY);
+					this.context.fillStyle = 'white';//this.colour;
+
+					this.context.fillText(players.players[i].id,writePosX,writePosY);
+				}
+			}
+			
 		}	
 		
 	}	

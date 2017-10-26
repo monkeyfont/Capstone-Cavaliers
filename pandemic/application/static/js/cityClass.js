@@ -43,7 +43,7 @@ function city(options){
 	}
 	
 	this.addPlayer = function(options){
-		console.log("added player",options.playerName,this.id)
+		// console.log("added player",options.playerName,this.id)
 		this.players[options.playerName] = options.playerName
 	}
 	
@@ -140,8 +140,8 @@ function city(options){
 		if (this.active == true){
 			this.timeActive = this.timeActive + 1;
 		}
-		if (this.timeActive > 60*2){
-			console.log("activate dropdown")
+		if (this.timeActive > 60*1){
+			// console.log("activate dropdown")
 			infectionNumbers = this.activeInfections();
 			
 			infectionLength = Object.keys(infectionNumbers).length
@@ -285,7 +285,7 @@ function city(options){
 		}
 			
 			
-			console.log("activeinfections",this.activeInfections())
+			// console.log("activeinfections",this.activeInfections())
 			// this.context.fill();
 		}
 		

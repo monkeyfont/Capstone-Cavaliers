@@ -211,9 +211,6 @@ function shuttleFlight() {
 }
 
 
-
-
-
 function buildResearch() {
     //var city = prompt("Enter current city Name: ");
     socket.emit('buildResearchStation', {})
@@ -228,6 +225,7 @@ socket.on('researchBuildChecked', function (data) {
             var city=eval(data.city);
             //addResearchStation(city);
             console.log("Research station HAS BEEEN built here")
+            locations[data.city].addResearchStation();
 	    }
 	    else{
 
@@ -239,7 +237,7 @@ socket.on('researchBuildChecked', function (data) {
         }
 });
 
-function shareKnowledgeGive() {
+function shareKnowledgeGive(options) {
 
 
     if (thisPlayerRole=="researcher"){
@@ -281,7 +279,7 @@ socket.on('giveKnowledgeShared', function (data) {
     });
 
 
-function shareKnowledgeTake() {
+function shareKnowledgeTake(options) {
 
     var otherPlayer = prompt("Enter name of player's card you want to take: ");
     var type= players.players[otherPlayer].playerType
@@ -323,9 +321,9 @@ socket.on('takeKnowledgeShared', function (data) {
 
     });
 
-function treatDisease() {
+function treatDisease(options) {
 
-    var res = prompt("Enter colour of infection you wish to treat: ");
+    var res = options.colour;
     var colour = res.toLowerCase();
     socket.emit('treatDisease', {InfectionColour:colour})
 
@@ -454,26 +452,27 @@ socket.on('passTurnChecked', function (data) {
 
     });
 
-function PlayEventCard(){
-
-    var cardName = prompt("Enter Name of event Card you want to play: ");
-    if (cardName=="Government Grant"){
-        var cityName = prompt("Enter Name of city you want to build a research station on: ");
+function PlayEventCard(options){
+		cardName = options.cardName
+    // var cardName = prompt("Enter Name of event Card you want to play: ");
+    if (cardName=="Government_Grant"){
+        var cityName = options.city;
+		console.log("government grant not working",cardName,cityName)
         socket.emit('PlayEventCard',{card:cardName,city:cityName});
     }
-    else if (cardName=="Airlift"){
-        var playerName = prompt("Enter Name of player you wish to move: ");
-        var cityName= prompt("Enter Name of city you wish to move player to: ");
-        socket.emit('PlayEventCard',{card:cardName,player:playerName,city:cityName});
+    else if (cardName=="AirLift"){
+        console.log("using airlift",cardName,options.player,options.city)
+        alert(cardName+" "+options.player+" "+options.city)
+        socket.emit('PlayEventCard',{card:cardName,player:options.player,city:options.city});
 
     }
 
-    else if (cardName=="One Quiet Night"){
-        socket.emit('PlayEventCard',{card:cardName,player:playerName});
+    else if (cardName=="One_Quiet_Night"){
+        socket.emit('PlayEventCard',{card:cardName});
 
     }
 
-    else if (cardName=="Resilient Population"){
+    else if (cardName=="Resilient_Population"){
         var infectCardName= prompt("Enter Name of infect card in the discard pile you wish to remove from the game: ");
         socket.emit('PlayEventCard',{card:cardName,player:playerName,infectCard:infectCardName});
 
@@ -492,6 +491,8 @@ socket.on('governmentGrantChecked', function (data) {
         check=data.msg.validAction;
         if (check==true){
             alert("research station built with event card")
+            locations[data.msg.location].addResearchStation();
+            
             // here goes logic to draw the building
         }
         else{

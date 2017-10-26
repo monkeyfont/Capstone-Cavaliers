@@ -530,7 +530,7 @@ def handleclick(msg):
 
     playerDictionary = gameObject.players
 
-    if eventCardName== "Government Grant":
+    if eventCardName== "Government_Grant":
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
@@ -538,21 +538,25 @@ def handleclick(msg):
                 response=gameObject.governmentGrant(playerObject.id,eventCardName,cityToBuildOn)
                 emit('governmentGrantChecked', {'msg': response},room=room)
 
-    elif eventCardName== "Airlift":
+    elif eventCardName== "AirLift":
         playerToMove = msg["player"]
         cityToMoveTo = msg["city"]
+        print "PLAYER TO MOVE IS", playerToMove
+        print " I AM ,", username
         playerId=""
         playerToMoveId=""
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
                 playerId = playerObject.id
-            elif playerObject.name == playerToMove:
+            if playerObject.name == playerToMove:
                 playerToMoveId = playerObject.id
+        print "PLAYER TO MOVE IS", playerToMoveId
+        print " I AM ,", playerId
         response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
         emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo}, room=room)
 
-    elif eventCardName == "One Quiet Night":
+    elif eventCardName == "One_Quiet_Night":
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
