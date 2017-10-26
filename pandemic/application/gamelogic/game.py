@@ -255,7 +255,7 @@ class GameBoard:
         self.players = playerDict # {id:playerObj}
         self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
         self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
-        self.cures = {"blue" : 1, "red" : 1, "yellow" : 1, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
+        self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0

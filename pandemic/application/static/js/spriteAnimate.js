@@ -216,7 +216,6 @@ var deck = new sprite({
 })
 
 outbreakCount = new outbreakCounter({});
-infectRate = new infectionRate({});
 playersHand = new playerHand();
 players = new playerInitilization();
 playerPortraits = new portraitInitilization({});
@@ -234,14 +233,14 @@ mapImage.addEventListener("load", gameLoop);
 
 infectionsMeterDisplay = new infectionMeter({
 	context: canvas.getContext("2d"),
-	xPos:1600,
+	xPos:1220,
 	yPos:80
 })
 
 
 cureBar = new cureStatusBar({
 	context: canvas.getContext("2d"),
-	xPos:680,
+	xPos:425,
 	yPos:70,
 	height:256,
 	width:256,

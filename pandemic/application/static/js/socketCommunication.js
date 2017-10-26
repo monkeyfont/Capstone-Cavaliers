@@ -181,7 +181,8 @@ socket.on('checked', function (data) {
 
 	    }
 	    else{
-	    alert(data.msg.errorMessage);
+	    messageAlert.newMessage({message:data.msg.errorMessage})
+	    //alert(data.msg.errorMessage);
 	}
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
