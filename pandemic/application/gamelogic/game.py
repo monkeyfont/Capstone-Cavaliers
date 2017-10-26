@@ -1391,11 +1391,13 @@ class GameBoard:
                         return responseDict
                     else:
                         responseDict["validAction"] = True
+                        responseDict["location"]=cityName
                         curCityObj.researchStation =1
                         playerHand.remove(card)
                         print "GOVERNMENT GRANT HAS BEEN USED!!!"
                         self.playerDiscarded.append(card)
                         return responseDict
+
 
     def airLift(self,playerId,playerToMoveId,cityToMoveTo):
         responseDict = {}

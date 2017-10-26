@@ -200,23 +200,6 @@ function shuttleFlight() {
 
 }
 
-//socket.on('shuttleFlightChecked', function (data) {
-//        //alert(data.msg);
-//        check=data.msg.validAction;
-//
-//        if (check ==true){
-//            var city=eval(data.city);
-//             players.players[data.playerName].move(city.xPos,city.yPos);
-//	    }
-//	    else{
-//	        alert(data.msg.errorMessage);
-//	    }
-//	    if (data.msg.endRound==true){
-//            endOfRound(data.msg);
-//
-//        }
-//});
-
 
 
 function buildResearch() {
@@ -233,6 +216,7 @@ socket.on('researchBuildChecked', function (data) {
             var city=eval(data.city);
             //addResearchStation(city);
             console.log("Research station HAS BEEEN built here")
+            locations[data.city].addResearchStation();
 	    }
 	    else{
 
@@ -469,6 +453,7 @@ function PlayEventCard(options){
     }
     else if (cardName=="AirLift"){
         console.log("using airlift",cardName,options.player,options.city)
+        alert(cardName+" "+options.player+" "+options.city)
         socket.emit('PlayEventCard',{card:cardName,player:options.player,city:options.city});
 
     }
@@ -497,6 +482,8 @@ socket.on('governmentGrantChecked', function (data) {
         check=data.msg.validAction;
         if (check==true){
             alert("research station built with event card")
+            locations[data.msg.location].addResearchStation();
+            
             // here goes logic to draw the building
         }
         else{
