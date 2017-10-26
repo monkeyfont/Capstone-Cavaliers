@@ -496,7 +496,7 @@ class GameBoard:
         These cards are then added to the discard pile
          """
         # First shuffle the infection cards
-        #shuffle(self.infectionDeck)
+        shuffle(self.infectionDeck)
         # draw first 3 cards, place 3 disease markers
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
