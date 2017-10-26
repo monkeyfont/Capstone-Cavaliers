@@ -1,4 +1,4 @@
-var AirLift = new Image(); AirLift.src = 'static/images/Cards/special/AirLift.png';
+var AirLift = new Image(); AirLift.src = 'static/images/Cards/special/AIRLIFT.png';
 var Epidemic = new Image(); Epidemic.src = 'static/images/Cards/special/EPIDEMIC.png';
 var Forecast = new Image(); Forecast.src = 'static/images/Cards/special/FORECAST.png';
 var Government_Grant = new Image(); Government_Grant.src = 'static/images/Cards/special/GOVERNMENT_GRANT.png';

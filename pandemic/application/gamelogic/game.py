@@ -429,7 +429,7 @@ class GameBoard:
         self.distributeHand()
         #now need to place epidemic cards ( has to be done after hand has been delt)
         self.placeEpidemicCards()
-        self.setRoles()
+        #self.setRoles()
         self.setStartingLocation()
         self.initialized = 1
 
