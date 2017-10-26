@@ -52,7 +52,7 @@ function actionState(options){
 					console.log(this.possibleEventCards)
 					if(this.possibleEventCards.includes(i)){
 						console.log("changing the active card and turning event viewer on")
-						// eventCardViewer.changeActiveCard(i)
+						eventCardViewer.changeActiveCard({cardName:i})
 						eventCardViewer.toggleActive()
 					}
 				}

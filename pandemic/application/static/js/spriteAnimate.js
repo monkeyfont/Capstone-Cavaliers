@@ -188,11 +188,8 @@ discardPile = new discardPile({
 	yPos: 500, 
 })
 
-discardPile.addCard({cardName:'SANFRANCISCO'})
-discardPile.addCard({cardName:'CHICAGO'})
-discardPile.addCard({cardName:'MONTREAL'})
-discardPile.addCard({cardName:'NEWYORK'})
-discardPile.addCard({cardName:'ATLANTA'})
+discardPile.addCard([{cardName:'SANFRANCISCO'},{cardName:'CHICAGO'},{cardName:'MONTREAL'},{cardName:'NEWYORK'},{cardName:'ATLANTA'}])
+
 
 eventCardViewer = new eventCardViewer({
 	context:canvas.getContext("2d"),

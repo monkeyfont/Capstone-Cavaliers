@@ -459,26 +459,26 @@ socket.on('passTurnChecked', function (data) {
 
     });
 
-function PlayEventCard(){
+function PlayEventCard(cardName){
 
-    var cardName = prompt("Enter Name of event Card you want to play: ");
-    if (cardName=="Government Grant"){
+    // var cardName = prompt("Enter Name of event Card you want to play: ");
+    if (cardName=="Government_Grant"){
         var cityName = prompt("Enter Name of city you want to build a research station on: ");
         socket.emit('PlayEventCard',{card:cardName,city:cityName});
     }
-    else if (cardName=="Airlift"){
+    else if (cardName=="AirLift"){
         var playerName = prompt("Enter Name of player you wish to move: ");
         var cityName= prompt("Enter Name of city you wish to move player to: ");
         socket.emit('PlayEventCard',{card:cardName,player:playerName,city:cityName});
 
     }
 
-    else if (cardName=="One Quiet Night"){
+    else if (cardName=="One_Quiet_Night"){
         socket.emit('PlayEventCard',{card:cardName,player:playerName});
 
     }
 
-    else if (cardName=="Resilient Population"){
+    else if (cardName=="Resilient_Population"){
         var infectCardName= prompt("Enter Name of infect card in the discard pile you wish to remove from the game: ");
         socket.emit('PlayEventCard',{card:cardName,player:playerName,infectCard:infectCardName});
 

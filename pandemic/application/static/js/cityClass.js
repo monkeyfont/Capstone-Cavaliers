@@ -140,7 +140,7 @@ function city(options){
 		if (this.active == true){
 			this.timeActive = this.timeActive + 1;
 		}
-		if (this.timeActive > 60*2){
+		if (this.timeActive > 60*1){
 			console.log("activate dropdown")
 			infectionNumbers = this.activeInfections();
 			
