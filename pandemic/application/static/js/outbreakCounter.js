@@ -10,8 +10,8 @@ function outbreakCounter(options) {
 	this.yScale = options.yScale || 1;
 	this.outbreakStage = 0;
 
-	this.advanceStage = function(){
-		this.outbreakStage ++;
+	this.setStage = function(options){
+		this.outbreakStage = options.outbreakStage;
 	}
 	
 	this.render = function () {

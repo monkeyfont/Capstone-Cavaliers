@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 from  game import *
 
@@ -124,3 +125,5 @@ class TestCity(TestCase):
         self.assertEqual(self.testCity.red, 0)
 
 
+if __name__ == '__main__':
+    unittest.main()

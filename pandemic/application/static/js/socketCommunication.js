@@ -9,6 +9,16 @@ function endOfRound(info){
 //    //epidemic has been drawn so do epidemic front end stuff...
 //    }
     //do some stuff
+
+    if (info["gameLoss"]==true){ // game is over !!!!
+
+    //insert logic into here to deal with a game over situation.
+
+
+    }
+
+
+
 	console.log("info",info)
     for (var i=0;i<info.infections.length;i++){
         var cityName=info.infections[i].city;
@@ -35,6 +45,7 @@ function endOfRound(info){
 			}
 
                 }
+                }
      for (var player in info["cardDraw"]) {
 		var cards=info["cardDraw"][player]
 		for (var card in cards) {
@@ -51,8 +62,37 @@ function endOfRound(info){
 						  }
 					 }
     }
-}
 
+
+    // CUBE METER STUFF
+    console.log(info["cubesUsed"])
+    for (var i=0;i<info["cubesUsed"].length;i++){
+        for (key in info["cubesUsed"][i]){
+            infectionsMeterDisplay.alterInfectionStatus({colour:key,amount:info["cubesUsed"][i][key]})
+            //infectionsMeterDisplay.alterInfectionStatus({colour:"yellow",amount:20})
+            //{"amount":info["cubesUsed"][i][key]}
+        }
+    }
+
+    //OUBREAK LEVEL STUFF
+
+    var outbreakLevel;
+    outbreakLevel= info["outBreakLevel"]
+    outbreakCount.setStage({outbreakStage:outbreakLevel})
+
+    // do whatever with that number
+
+
+    //INFECTION RATE STUFF
+    var infectionLevel;
+    infectionLevel=info["infectionLevel"]
+    infectRate.setStage({infectionStage:infectionLevel})
+    // do front end stuff to update it
+
+
+
+
+    
 
     socket.emit('roundOverDone')
 
@@ -206,9 +246,20 @@ socket.on('researchBuildChecked', function (data) {
 
 function shareKnowledgeGive() {
 
-    var city = prompt("Enter card you wish to swap: ");
-    var otherPlayer = prompt("Enter name of player you want to swap with: ");
-    socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
+
+    if (thisPlayerRole=="researcher"){
+
+        var city = prompt("Enter card you wish to swap: ");
+        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
+
+    }
+    else{
+        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        socket.emit('shareKnowledgeGive', {playerTaking:otherPlayer})
+    }
+
+
 
 }
 
@@ -237,9 +288,21 @@ socket.on('giveKnowledgeShared', function (data) {
 
 function shareKnowledgeTake() {
 
-    var city = prompt("Enter card you wish to take: ");
     var otherPlayer = prompt("Enter name of player's card you want to take: ");
-    socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+    var type= players.players[otherPlayer].playerType
+    //alert(type)
+
+    if (type=="researcher"){
+        var city = prompt("Enter card you wish to take: ");
+        socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
+        }
+    else{
+
+    socket.emit('shareKnowledgeTake', {playerGiving:otherPlayer})
+
+    }
+
+
 
 }
 
@@ -267,10 +330,13 @@ socket.on('takeKnowledgeShared', function (data) {
 
 function treatDisease() {
 
-    var colour = prompt("Enter colour of infection you wish to treat: ");
+    var res = prompt("Enter colour of infection you wish to treat: ");
+    var colour = res.toLowerCase();
     socket.emit('treatDisease', {InfectionColour:colour})
 
-}
+    }
+
+
 
 socket.on('diseaseTreated', function (data) {
         //alert(data.msg);
@@ -322,12 +388,16 @@ socket.on('cureDiscovered', function (data) {
         check=data.msg.validAction;
         var city=eval(data.city);
         if (check ==true){
+
+            cureBar.changeStatus({colour:data.msg.colourCured,status:'Discovered'})
             //addResearchStation(city);
             alert("A cure has been discovered!")
-            playersHand.removeCard
+            alert(data.msg.colourCured)
+            //playersHand.removeCard
             for (var card in data.cardsToDiscard) {
-			if (cards.hasOwnProperty(card)) {
-				if (data.playerName==player){
+			if (data.cardsToDiscard.hasOwnProperty(card)) {
+				if (data.playerName==thisPlayerName){
+				    alert(data.cardsToDiscard[card])
 					playersHand.removeCard({cardName:data.cardsToDiscard[card]})
 				}
 						  }
@@ -531,11 +601,11 @@ socket.on('InfectedCities',function(data){
     var amount;
 
     //this is all just to loop through a json Object which is quite annoying
-    for (var city in data) {
-        if (data.hasOwnProperty(city)) {
-             for (var colour in data[city]){
-                if (data[city].hasOwnProperty(colour)) {
-                amount=data[city][colour];
+    for (var city in data.infected) {
+        if (data.infected.hasOwnProperty(city)) {
+             for (var colour in data.infected[city]){
+                if (data.infected[city].hasOwnProperty(colour)) {
+                amount=data.infected[city][colour];
                 // here loop through the amount which is number of times the city needs to be infected
                 for (var x=0;x<amount;x++){
                 // get the city from locations and infect it with karls .infect function
@@ -545,34 +615,86 @@ socket.on('InfectedCities',function(data){
         }
        }
        }
+
+        var outbreakLevel;
+        outbreakLevel= data.outbreakLevel
+        outbreakCount.setStage({outbreakStage:outbreakLevel})
+
+        // do whatever with that number
+
+
+        //INFECTION RATE STUFF
+        var infectionLevel;
+        infectionLevel=data.infectLevel
+        infectRate.setStage({infectionStage:infectionLevel})
+        // do front end stuff to update it
+        console.log(data.cubesUsed)
+
+        for (var i=0;i<data.cubesUsed.length;i++){
+        for (key in data.cubesUsed[i]){
+            infectionsMeterDisplay.alterInfectionStatus({colour:key,amount:data.cubesUsed[i][key]})
+            //infectionsMeterDisplay.alterInfectionStatus({colour:"yellow",amount:20})
+            //{"amount":info["cubesUsed"][i][key]}
+        }
+    }
+
+
        });
 
 socket.on('gotInitialHands',function(data){
-	console.log(data)
+	console.log("data",data)
 	thisPlayerName=data.username;
+	playerRoll = data.playerRoll
+	playerHandHTML = ""
+	playersHands = []
+	// playersHands = [{playername:"",cards:[{cardName:""colour:""},{cardName:""colour:""}]}
     for (var player in data["playerhand"]) {
+		playerCardInfo = {}
+		playerCardInfo.playerName = player
+		playerCardInfo.cards = []
 		console.log(player)
 		console.log(data["playerhand"])
 		console.log(data["playerhand"][player])
     // if (data.hasOwnProperty(player)) {
 		var playerId = player
+		actionState.addPlayer({playerName:player})
 		var cards=data["playerhand"][player]
-		console.log("Player "+playerId + "has the cards: ")
-		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
+		console.log("Player "+playerId + " has the cards: ")
+//		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
+        playerHandHTML = playerHandHTML + "<div class = playerHand>"
+        playerHandHTML = playerHandHTML + "<div class = playerSection>"
+        playerHandHTML = playerHandHTML + "<p class = '" + playerRoll[player] + "' id = 'playerName'>" + playerId + "</p>"
+        playerHandHTML = playerHandHTML + "<p id = '" + playerRoll[player] + "'>" + playerRoll[player] + "</p>"
+        playerHandHTML = playerHandHTML + "</div>"
 
 		for (var card in cards) {
 			console.log(card);
+			cardInfo = {}
+			cardInfo.cardName = cards[card]
+			try{
+				cardInfo.colour = locations[cards[card]].colour
+			}catch(err){
+				cardInfo.colour = "none"
+			}
+			playerCardInfo.cards.push(cardInfo)
 			if (cards.hasOwnProperty(card)) {
 				console.log(cards[card]);
 				if (data.username==player){
 					playersHand.addCard({cardName:cards[card]})
+					
 				}
 			// if you want to access each individial card then get in here through cards[card]
 			// if you want the list of player cards get it through just "cards"
+            playerHandHTML = playerHandHTML + "<p class = ' " +cardInfo.colour+ "'>" + cards[card] + "</p>"
 
-			$('#cards').val($('#cards').val() + cards[card] + '\n');
+//			$('#cards').val($('#cards').val() +  + '\n');
 						  }
 					 }
+					  playerHandHTML = playerHandHTML + "</div>"
+
+					 playersHands.push(playerCardInfo)
         // }
     }
+	console.log("playerCardJSON ",playersHands)
+    document.getElementById("playerCards").innerHTML = playerHandHTML ;
  });
