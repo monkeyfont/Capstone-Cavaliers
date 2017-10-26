@@ -42,7 +42,6 @@ def game():
     if 'username'and "roomname" in session:
 
         username = str(session['username'])
-        print username, "GOIN IN HURRRRR"
         roomname = str(session['roomname'])
         currentLobby = lobbies[roomname]
         currentLobby.gameStarted=True
@@ -50,6 +49,7 @@ def game():
         if roomname not in games:
             gameobject = GameBoard(playerdict)
             gameobject.gameID = roomname
+            gameobject.difficulty=currentLobby.difficulty
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/home'></b>" + \
@@ -639,7 +639,15 @@ def lobby():
 
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
-                lobby.difficulty = request.form["difficulty"]
+                difficulty = request.form["difficulty"]
+                if difficulty=="Normal":
+                    lobby.difficulty=0
+                elif difficulty=="Hard":
+                    lobby.difficulty=1
+                else:
+                    lobby.difficulty=2
+
+                print(lobby.difficulty, " is the diffculty")
                 print ("THis room privacy is :" + lobby.privacy)
 
                 #add lobby to dictionary
@@ -653,7 +661,6 @@ def lobby():
 
                 lobbies[str(session['roomname'])] = lobby
 
-                print lobby.players, "   playersSTART"
 
             else: # if user is joining a game
                 try:

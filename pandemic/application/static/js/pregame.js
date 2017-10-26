@@ -72,8 +72,15 @@
      socket.on('changeRoleAvailibility', function (data) {
      numPlayersInLobby= data.playersInLobbyCount
      numRolesChosen= data.rolesChosenCount
+
      try {
-        var elem = document.getElementById(data.msg).innerHTML = data.msg+" role is already taken!";
+        document.getElementById(data.msg).disabled="disabled";
+        //var x = eval(data.msg+"hi");
+        document.getElementById(data.msg).disabled="disabled";
+
+
+        //document.getElementsByClassName(rolle).style.visibility = 'hidden';
+        //var elem = document.getElementById(data.msg).innerHTML = data.msg+" role is already taken!";
             }
     catch(err) {
 
@@ -81,6 +88,7 @@
 
      });
 
+    //$('#example').tooltip('hover');
 
     });
 
