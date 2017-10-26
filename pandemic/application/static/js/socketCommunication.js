@@ -464,6 +464,7 @@ function PlayEventCard(options){
     // var cardName = prompt("Enter Name of event Card you want to play: ");
     if (cardName=="Government_Grant"){
         var cityName = options.city;
+		console.log("government grant not working",cardName,cityName)
         socket.emit('PlayEventCard',{card:cardName,city:cityName});
     }
     else if (cardName=="AirLift"){
@@ -474,7 +475,7 @@ function PlayEventCard(options){
     }
 
     else if (cardName=="One_Quiet_Night"){
-        socket.emit('PlayEventCard',{card:cardName,player:playerName});
+        socket.emit('PlayEventCard',{card:cardName});
 
     }
 

@@ -16,20 +16,20 @@ function actionState(options){
 		console.log(" a city has been selected, can we use the current action?")
 		if(this.currentState == "Government_Grant"){
 			PlayEventCard({cardName:"Government_Grant",city:cityName})
-		
+		return true
 		}else if(this.currentState == "AirLift"){
 			PlayEventCard({cardName:"AirLift",player:this.playerInvolved,city:cityName})
-		
+		return true
 		}else if(this.currentState == "One_Quiet_Night"){
 			
 			
 			PlayEventCard({cardName:"One_Quiet_Night"})
-			
+		return true
 		}
 		
+		return false
 		
 		
-		return true
 	}
 	this.playerChosen = function(player){
 		// a player has been selected from the action bar, so either give or take them
@@ -113,7 +113,13 @@ function actionState(options){
 		this.playerInvolved = options.player
 		cards = playersHand.activeCards;
 		this.checkStateChange()
-		if(this.currentState == "Treat"){
+		if(this.currentState == "One_Quiet_Night"){
+			
+			
+			PlayEventCard({cardName:"One_Quiet_Night"})
+		return true
+		
+		}else if(this.currentState == "Treat"){
 			//colour			
 			treatDisease()					
 		}else if(this.currentState == "Build"){

@@ -434,11 +434,13 @@ class GameBoard:
     def generatePlayerDeck(self):
         """ Returns a list containing player card objects and event card objects. Epidemic cards are NOT added."""
         cards = []
-        for k in PLAYER_CARDS: #name,colour,population,area,country
-            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
         for k in EVENT_CARDS: #id, name, description
             cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+
+        for k in PLAYER_CARDS: #name,colour,population,area,country
+            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
+
 
         return cards
 
@@ -457,7 +459,7 @@ class GameBoard:
         cardsPerPlayer = {1:6, 2:4, 3:3, 4:2}
         nPlayers = len(self.players)
         nCardsToDeal = cardsPerPlayer[nPlayers]
-        shuffle(self.playerDeck)
+        #shuffle(self.playerDeck)
         for id in self.players:
             playerHand = self.players[id].hand
             for i in range(nCardsToDeal):
@@ -1400,7 +1402,7 @@ class GameBoard:
         playerToMoveObj=self.players[playerToMoveId]
         playerHand=playerObj.hand
         for card in playerHand:
-            if(card.name == "Airlift"):
+            if(card.name == "AirLift"):
                 playerToMoveObj.location = cityToMoveTo
                 responseDict["validAction"] = True
                 playerHand.remove(card)
@@ -1417,7 +1419,7 @@ class GameBoard:
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         for card in playerHand:
-            if (card.name == "One Quiet Night"):
+            if (card.name == "One_Quiet_Night"):
                 self.skipInfectCities=True
                 responseDict["validAction"] = True
                 playerHand.remove(card)
@@ -1434,7 +1436,7 @@ class GameBoard:
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         for card in playerHand:
-            if (card.name == "Resilient Population"):
+            if (card.name == "Resilient_Population"):
                 for cardName in self.infectionDiscarded:
                     if cardName.name==infectCardName: #is the card actually in the discard pile
                         self.infectionDiscarded.remove(cardName) # remove card from discard pile
