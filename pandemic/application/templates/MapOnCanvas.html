@@ -22,6 +22,7 @@
 
 <h1 id="load"> Loading </h1>
 <div id="hideBoards">
+    <button id = "showMessages" onclick="fade();setTimeout(tuggleBox, 500);">Show Message Board</button>
 
 <div id = "messageBox">
 
@@ -33,12 +34,16 @@
                 <input class = "typeMessageHere" id="message_input" placeholder="">
                 <input class="three"id="message_button" type="button" value="Send">
         </div>
+
 </div>
-<div id="playerCards"></div>
+<div id="pCards">
+        <button id = "showHand" onclick="tugglehand()">Show Message Board</button>
+
+        <div id="playerCards"></div>
+</div>
+
 </div>
 <!--<h3 id="newMessage"></h3>-->
-<button id = "showMessages" onclick="fade();setTimeout(tuggleBox, 500);">Show Message Board</button>
-<button id = "showHand" onclick="tugglehand()">Show Message Board</button>
 
 <canvas id="myCanvas" width="1920" height="1080">
 </canvas>

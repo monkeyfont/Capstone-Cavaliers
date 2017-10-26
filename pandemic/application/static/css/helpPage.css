@@ -1,0 +1,16 @@
+.bottomLeftButton{
+    margin-bottom:1em;
+}
+#goBack{
+    margin-left:auto;
+    margin-right:auto;
+    display:block;
+    margin-bottom:1em;
+    background-image: url("../images/arrowicon.png");
+    background-size: 2em;
+    height:2em;
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:2em;
+
+}
