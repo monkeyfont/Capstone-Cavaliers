@@ -360,10 +360,10 @@ class GameBoard:
             # invoke infect cities step
             infections = self.endTurnInfectCities()
 
-            result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
+            #result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
             result["cubesUsed"]=[]
-            result["infections"]+=infections[0]
+            result["infections"]+=infections
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
                 result["cubesUsed"].append({colour:self.cubesUsed[colour]})
@@ -601,7 +601,7 @@ class GameBoard:
             # add the card to the discard pile
             self.infectionDiscarded.append(infectCard)
         #return infectedCitiesNew
-        return (infectedCitiesNew, infectedCities)
+        return infectedCitiesNew
 
 
     def resetPlayerActions(self):
