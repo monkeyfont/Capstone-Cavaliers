@@ -77,7 +77,7 @@ function city(options){
 				currentActive[i] = this.infectionStatus[i].length;
 			}
 		}
-		console.log("current active",currentActive);
+		// console.log("current active",currentActive);
 		return currentActive 
 	}
 	

@@ -650,7 +650,7 @@ socket.on('gotInitialHands',function(data){
 		console.log(data["playerhand"][player])
     // if (data.hasOwnProperty(player)) {
 		var playerId = player
-		actionState.addPlayer({playerName:player})
+		// actionState.addPlayer({playerName:player})
 		var cards=data["playerhand"][player]
 		console.log("Player "+playerId + "has the cards: ")
 		$('#cards').val($('#cards').val() + "player "+ player+" cards are:" + '\n');
@@ -670,4 +670,5 @@ socket.on('gotInitialHands',function(data){
 					 }
         // }
     }
+	actionState = new actionState({});
  });

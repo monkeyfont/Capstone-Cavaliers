@@ -73,14 +73,15 @@ canvas.addEventListener('click', function(evt) {
 	for (var i in locations){
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
-				//console.log('city ', i ,' was clicked');
+				console.log('city ', i ,' was clicked');
+				actionState.selectedCity(i);
 				checkMove(i);
-
+				
 			}
 
 	}
-	
-	if(discardPile.click(mousePos)){
+	if (eventCardViewer.click(mousePos)){
+	}else if(discardPile.click(mousePos)){
 		
 	}else if(playerActionsMenu.clickSubMenu(mousePos)){
 		
@@ -267,16 +268,16 @@ messageAlert = new messageAlert ({
 	xPos: 940,
 	yPos: 590
 });
-actionState = new actionState({});
 
 
-locations.SANFRANCISCO.addResearchStation();
+
+// locations.SANFRANCISCO.addResearchStation();
 
 locations.ATLANTA.infect({colour:"red"})
 locations.ATLANTA.infect({colour:"blue"})
 locations.ATLANTA.infect({colour:"yellow"})
 locations.ATLANTA.infect({colour:"black"})
-locations.ATLANTA.addResearchStation();
+// locations.ATLANTA.addResearchStation();
 
 
 var load = document.getElementById("load");
@@ -293,4 +294,5 @@ window.onload = function (){
 	socket.emit('getPlayersHands')
 	load.style="display:none;"
 	canvas.style="display:block;"
+
 	}

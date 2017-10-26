@@ -12,7 +12,7 @@ var Take = new Image(); Take.src = 'static/images/ActionIcons/Take.png';
 var Treat = new Image(); Treat.src = 'static/images/ActionIcons/Treat.png';
 var EventCard = new Image(); EventCard.src = 'static/images/ActionIcons/EventCard.png';
 
-actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,EventCard};
+actions = {Build,CharterFlight,Cure,DirectFlight,Give,Pass,ShuttleFlight,Take,Treat,EventCard};
 
 //if (playerRole=="operationsExpert"){
 //    actions = {Build,CharterFlight,Cure,DirectFlight,Give,Move,Pass,Share,ShuttleFlight,Take,Treat,OperationMove};
@@ -150,12 +150,16 @@ function playerActionsBar(options){
 			this.iconHeight*this.iconScale); // height of image to use
 			
 			if (this.currentAction == i &&  this.actionsDisplayPlayers.includes(this.currentAction)){	
-				writePosY = this.iconPosY-(60*actionState.players.length) - 20
+				actionState.redefinePlayers();
+				// console.log(actionState.players)
+			
+				writePosY = this.iconPosY-(60*Object.keys(actionState.players).length) - 20
 				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
 				this.context.fillStyle = "rgba(0,0,0,.6)";
-				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*actionState.players.length),120,60*actionState.players.length);
+				this.context.fillRect(this.iconPosX+this.iconWidth*this.iconScale*pos,this.iconPosY-(60*Object.keys(actionState.players).length),120,60*Object.keys(actionState.players).length);
 				// console.log(actionState.players)
 				for (x in actionState.players){
+					console.log(actionState.players[x])
 					writePosY = writePosY + 60
 					this.context.font = "22px Sans-serif"
 					this.context.strokeStyle = 'black';//'green';
@@ -168,7 +172,9 @@ function playerActionsBar(options){
 
 					this.context.fillText(actionState.players[x],writePosX,writePosY);
 				}
-			}else if (this.currentAction == i &&  this.actionsDisplayColours.includes(this.currentAction)){	
+			}else if (this.currentAction == i &&  this.actionsDisplayColours.includes(this.currentAction)){
+				actionState.redefineColours();
+				
 				writePosY = this.iconPosY-(60*actionState.infectionColours.length) - 20
 				writePosX = this.iconPosX+this.iconWidth*this.iconScale*pos + 10
 				this.context.fillStyle = "rgba(0,0,0,.6)";
