@@ -18,7 +18,6 @@ function endOfRound(info){
     }
 
 
-
 	console.log("info",info)
     for (var i=0;i<info.infections.length;i++){
         var cityName=info.infections[i].city;
@@ -181,8 +180,8 @@ socket.on('checked', function (data) {
 
 	    }
 	    else{
-	    messageAlert.newMessage({message:data.msg.errorMessage})
-	    //alert(data.msg.errorMessage);
+	    //messageAlert.newMessage({message:data.msg.errorMessage})
+	    alert(data.msg.errorMessage);
 	}
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
@@ -391,7 +390,7 @@ socket.on('cureDiscovered', function (data) {
             for (var card in data.cardsToDiscard) {
 			if (data.cardsToDiscard.hasOwnProperty(card)) {
 				if (data.playerName==thisPlayerName){
-				    alert(data.cardsToDiscard[card])
+//				    alert(data.cardsToDiscard[card])
 					playersHand.removeCard({cardname:data.cardsToDiscard[card]})
 				}
 						  }
@@ -463,7 +462,7 @@ function PlayEventCard(options){
     }
     else if (cardName=="AirLift"){
         console.log("using airlift",cardName,options.player,options.city)
-        alert(cardName+" "+options.player+" "+options.city)
+        //alert(cardName+" "+options.player+" "+options.city)
         socket.emit('PlayEventCard',{card:cardName,player:options.player,city:options.city});
 
     }
@@ -491,7 +490,7 @@ socket.on('governmentGrantChecked', function (data) {
 
         check=data.msg.validAction;
         if (check==true){
-            alert("research station built with event card")
+            //alert("research station built with event card")
             locations[data.msg.location].addResearchStation();
             playersHand.removeCard({cardname:"Government_Grant"})
 
@@ -521,7 +520,7 @@ socket.on('resilientPopulationChecked', function (data) {
 
         check=data.msg.validAction;
         if (check ==true){
-            alert("Card has been removed from the game")
+            //alert("Card has been removed from the game")
 
 	    }
 	    else{
