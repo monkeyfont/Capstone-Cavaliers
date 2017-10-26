@@ -8,104 +8,104 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/playerChoice.css"></head>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="static/css/home.css"  hidden >
+    <link rel="stylesheet" href="static/css/welcomePage.css"  hidden >
     <link rel="stylesheet" href="static/css/intermission.css"  hidden >
     <meta charset="UTF-8">
-    <title>Team Lobby Page</title>
+    <title>Pandemic | Team Lobby</title>
+
+    <script>
+
+        function fade(e){
+            $("#lobbyMessageBox").fadeToggle();
+        }
+        function tuggleBox(e){
+            $('#messageBox').animate({width: 'toggle'});
+        }
+        function gameName(e){
+            $("#teamName").fadeToggle();
+        }
+
+    </script>
 </head>
-<body>
+<body onload="fade();tuggleBox();">
 
-
-
-                <div class="col-sm-12"><h2>Chose a character role you wish to play as!</h2></div>
-                <div id="showRoleOptions">
-                    <form id="myForm">
-                        <div class="cc-selector-2">
-                    {%for role in playerRoles %}
-                    {% if playerRoles[role] == 0 %}
-
-
-                     <div class="col-sm-2">
-
-                            {% if role == "researcher" %}
-                            <p>Researcher</p>
-                             <div data-toggle="tooltip" data-placement="top" title="You may give a player cards from your hand for 1 action per card">
-
-                            {% elif role == "medic" %}
-                                 <p>Medic</p>
-                             <div data-toggle="tooltip" data-placement="top" title="You may give a player cards from your hand for 1 action per card.<br>
-                                   -Both of your pawns must be in the same city, but it doesn't matter which city you are in.">
-
-                            {% elif role == "scientist" %}
-                                 <p>scientist</p>
-                             <div data-toggle="tooltip" data-placement="top" title="-Remove all cubes of a single color when you treat a city.<br>
-                                   -Administer known cures for free.">
-
-
-                            {% elif role == "dispatcher" %}
-                                 <p>dispatcher</p>
-                             <div data-toggle="tooltip" data-placement="top" title="You only need 4 cards of the same color to discover a cure.">
-
-
-                            {% elif role == "operationsExpert" %}
-                                 <p>operationsExpert</p>
-                             <div data-toggle="tooltip" data-placement="top" title="You may build a Research Station in your current city for one action.">
-
-
-                            {% elif role == "quarantineSpecialist" %}
-                                 <p>quarantineSpecialist</p>
-                             <div data-toggle="tooltip" data-placement="top" title="Any city you are in and surrounding cities cannot get infected nor can it outbreak.">
-
-
-                            {% endif %}
-
-                            <input type="radio" id="{{role}}" name="role" value="{{role}}" />
-                            <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
-                                            </div>
-
-                                        </div>
-
-                    {% else %}
-
-                    {% endif %}
-                    {% endfor %}
-                            </div>
-
-
-                    </form>
-                    <br/><br/>
-                    <button onclick="setRole()" id="lockIn" type="button">Lock in your player Role!</button>
-
-
-                </div>
-                <!--<form>-->
-                    <!--<p>A simple mod:</p>-->
-                    <!--<div class="cc-selector-2">-->
-                        <!--<input id="visa2" type="radio" name="creditcard" value="visa" />-->
-                        <!--<label class="drinkcard-cc visa" for="visa2"></label>-->
-                        <!--<input id="mastercard2" type="radio" name="creditcard" value="mastercard" />-->
-                        <!--<label class="drinkcard-cc mastercard"for="mastercard2"></label>-->
-                    <!--</div>-->
-
-                <!--</form>-->
-
-
-<h1>Chat room for team {{ room }} </h1>
-<div id = "messageBox">
-
-        <div id = "lobbyMessageHistory">
-
-        </div>
-
-        <div id="lobbyMessageBox">
+        <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
+    <div id = "messageBox">
+            <div id = "lobbyMessageHistory"></div>
+            <div id="lobbyMessageBox">
                 <input class = "typeMessageHere" id="message_input" placeholder="">
                 <input class="three"id="message_button" type="button" value="Send">
-        </div>
+            </div>
+    </div>
+
+<div id="playerSelection">
+    <div id="showRoleOptions">
+        <h1>Choose your roll.</h1>
+
+        <form id="myForm">
+            <div class="cc-selector-2">
+                {%for role in playerRoles %}
+                {% if playerRoles[role] == 0 %}
+                    <div class="playersSelectionBox">
+                    {% if role == "researcher" %}
+                        <center><h2>Researcher</h2></center>
+                        <div title="Researcher">
+                            <input type="radio" id="{{role}}" name="role" value="{{role}}" />
+                            <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
+                            <p class="rollAbility">You may give a player cards from your hand for 1 action per card</p>
+                        </div>
+                    {% elif role == "medic" %}
+                        <center><h2>Medic</h2></center>
+                        <div title="Medic">
+                            <input type="radio" id="{{role}}" name="role" value="{{role}}" />
+                            <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
+                            <p class="rollAbility">You may give a player cards from your hand for 1 action per card</p>
+                        </div>
+                    {% elif role == "scientist" %}
+                         <center><h2>Scientist</h2></center>
+                        <div title="Scientist"></div>
+                            <input type="radio" id="{{role}}" name="role" value="{{role}}" />
+                            <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
+                            <p class="rollAbility">Remove all cubes of a single color when you treat a city.-Administer known cures for free</p>
+                        </div>
+                    {% elif role == "dispatcher" %}
+                         <center><h2>Dispatcher</h2></center>
+                         <div title="Dispatcher">
+                            <input type="radio" id="{{role}}" name="role" value="{{role}}" />
+                            <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
+                            <p class="rollAbility">You only need 4 cards of the same color to discover a cure.</p>
+                         </div>
+                    {% elif role == "operationsExpert" %}
+                         <center><h2>Operations Expert</h2></center>
+                            <div title="Operations Expert">
+                                <input type="radio" id="{{role}}" name="role" value="{{role}}" />
+                                <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
+                                <p class="rollAbility">You may build a Research Station in your current city for one action.</p>
+                            </div>
+                    {% elif role == "quarantineSpecialist" %}
+                        <center><h2>Quarantine Specialist</h2></center>
+                            <div title="Quarantince Specialist">
+                                <input type="radio" id="{{role}}" name="role" value="{{role}}" />
+                                <label class="drinkcard-cc {{role}}" for="{{role}}"></label>
+                                <p class="rollAbility">Any city you are in and surrounding cities cannot get infected nor can it outbreak.</p>
+                            </div>
+                            {% endif %}
+                    </div>
+                {% else %}
+                {% endif %}
+                {% endfor %}
+            <div id="buttonsIntermission">
+                            <button onclick="fade();tuggleBox();gameName();setRole();" id="lockIn" type="button">Lock in your player Role!</button>
+                            <button onclick="fade();setTimeout(tuggleBox, 500);" id="showMessages" type="button">Message Bar</button>
+                </div>
+
+    </div>
+                </form>
+
+
+    </div>
 </div>
-<input id="gameStarter" type="button" value= "PLAY ">
-
-
-
-
+    <h1 id ='teamName' style="display: none;">Chat room for team {{ room }} </h1>
+    <input id="gameStarter" type="button" value= "PLAY ">
 </body>
 </html>

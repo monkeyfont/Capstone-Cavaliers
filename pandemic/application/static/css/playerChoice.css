@@ -47,21 +47,35 @@
 
 
 .drinkcard-cc{
-    cursor:pointer;
-    background-size:contain;
-    background-repeat:no-repeat;
-    display:inline-block;
-    width:100px;height:70px;
-
+    margin-left: auto;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 20em;
+    height: 14em;
+    margin-right: auto;
 }
 .drinkcard-cc:hover{
     -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
             filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
-
+#playerSelection{
+    display: block;
+    margin-left: 10%;
+    margin-right: 10%;
+    visibility: visible;
+    height: 20%;
+    background-color: rgba(64, 22, 251, 0.4);
+    border:4px solid rgba(64, 102, 238, 0.8);
+    border-radius:10px;
+}
 /* Extras */
 a:visited{color:#888}
 a{color:#444;text-decoration:none;}
 p{margin-bottom:.3em;}
 
+h2{
+
+}
