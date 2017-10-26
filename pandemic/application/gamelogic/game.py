@@ -157,7 +157,7 @@ PLAYER_CARDS = {
 
 EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
-    2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
+    2:{"name":"AirLift", "description":"Move any 1 pawn to any city"},
     3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"},
     4:{"name": "Forecast", "description": "Examine top 6 cards of the infection draw pile. Rearrange them in order of your choice, and place them back on the pile"},
     5:{"name": "Resilent_Population", "description": "Take a card from the infection discard pile and remove it from the game"}

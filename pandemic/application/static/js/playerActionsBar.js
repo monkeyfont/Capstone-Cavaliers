@@ -91,8 +91,8 @@ function playerActionsBar(options){
 						break
 					}
 				}
-		
-			
+				
+			actionState.playerAndCardChosen({})
 			console.log("clicked in the researchers hand", chosenCard)
 		}	
 		
@@ -126,7 +126,19 @@ function playerActionsBar(options){
 							}
 						}
 					console.log("the chosen player is", chosenPlayer)
-					this.researcherHand = true;
+					
+					if (players.players[chosenPlayer].playerType == "researcher" && this.currentAction == "Take"){
+						this.researcherHand = true;
+					}
+					
+					if (players.players[thisPlayerName].playerType == researcher && this.currentAction == "Give"){
+						this.researcherHand = true;
+					}					
+					
+					
+					// if the player chosen is the researcher and youre taking , or youre trying give, adn you are the researcher
+					//this.currentAction
+					
 				}
 			
 			menuType = "player"
