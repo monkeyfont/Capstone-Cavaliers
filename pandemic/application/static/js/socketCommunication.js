@@ -270,10 +270,8 @@ function shareKnowledgeGive(options) {
 }
 
 socket.on('giveKnowledgeShared', function (data) {
-        //alert(data.msg);
         check=data.msg.validAction;
         if (check ==true){
-            //addResearchStation(city);
             if (thisPlayerName==data.playerGivingName){
                 playersHand.removeCard({cardname:data.cardName})
 
@@ -300,12 +298,9 @@ function shareKnowledgeTake(options) {
 	console.log("the options are ",options)
 	otherPlayer = options.playerName
 	city = options.cardName
-    // var otherPlayer = prompt("Enter name of player's card you want to take: ");
     var type= players.players[otherPlayer].playerType
-    //alert(type)
 
     if (type=="researcher"){
-        // var city = prompt("Enter card you wish to take: ");
         socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
         }
     else{
@@ -440,14 +435,16 @@ function discardCard(){
 socket.on('cardRemoved', function (data) {
 		
 		
-        check=data.msg;
+        check=data.msg.validAction;
         if (check == true){
 			playersHand.removeCard({cardname:data.cardToRemove})
+			updatePlayerHands(data.msg.playerHandsUpdated)
 			
         console.log(data.cardToRemove+" has been discarded from your hand")
         }
         else{
-        alert("cannot discard this card")
+        
+        messageAlert.newMessage({message:"cannot discard this card"})
         }
 
 

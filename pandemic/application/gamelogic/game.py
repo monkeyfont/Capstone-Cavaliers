@@ -687,8 +687,13 @@ class GameBoard:
             if(card.name == cardToBeDiscarded):
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
-                return True
-        return False
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
+                responseDict["validAction"] = True
+                return responseDict
+
+        responseDict["validAction"] = False
+        return responseDict
 
     def processEpidemics(self):
         """

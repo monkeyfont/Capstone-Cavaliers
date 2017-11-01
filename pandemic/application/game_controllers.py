@@ -282,7 +282,7 @@ def HandleDiscardCard(msg):
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response = gameObject.discardCard(playerObject.id, cardName)
-            if response==True:
+            if response["validAction"]==True:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
             else:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
