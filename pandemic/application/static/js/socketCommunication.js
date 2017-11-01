@@ -261,6 +261,7 @@ function shareKnowledgeGive(options) {
     }
     else{
         // var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        //alert(playerTaking)
         socket.emit('shareKnowledgeGive', {playerTaking:otherPlayer})
     }
 
@@ -281,6 +282,7 @@ socket.on('giveKnowledgeShared', function (data) {
                 playersHand.addCard({cardName:data.cardName})
 
             }
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	        messageAlert.newMessage({message:data.msg.errorMessage})
@@ -320,12 +322,15 @@ socket.on('takeKnowledgeShared', function (data) {
         //alert(data.msg);
         check=data.msg.validAction;
         if (check ==true){
-            //addResearchStation(city);
 
-            j=players
-            JSON.stringify(j);
-            console.log(j)
-            console.log("Cards have been swapped")
+            if (thisPlayerName==data.playerGivingName){
+                playersHand.removeCard({cardname:data.cardName})
+
+            }
+            else if (thisPlayerName==data.playerTakingName){
+                playersHand.addCard({cardName:data.cardName})
+            }
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 
