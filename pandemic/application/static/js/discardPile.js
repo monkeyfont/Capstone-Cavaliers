@@ -74,6 +74,16 @@ function discardPile(options){
 		}
 	}
 	
+	this.changeCards = function(options){
+		console.log("oi_____",options)
+		this.cards = {}
+		this.addCard(options)
+		// for (i in options){
+			// console.log("OI!!",options[i].cardName)
+			// this.addCard({options[i].cardName})
+		// }
+	}
+	
 	this.removeCard = function(options){
 		delete this.cards[options.cardName];
 	}
