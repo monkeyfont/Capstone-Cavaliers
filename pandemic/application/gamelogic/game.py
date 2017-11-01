@@ -291,6 +291,7 @@ class GameBoard:
         result["actionsCount"] = actionsCount = playerObj.actions
 
         # check if valid move.
+
         if cardsCount < 8 and actionsCount > 0:
             result["validAction"] = True
         else:
@@ -605,7 +606,7 @@ class GameBoard:
             [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
 
         """
-        infectedCities = {} #TODO REMOVE WHEN FIXED
+        infectedCities = {}
         infectedCitiesNew = [] # list of city infected objects.
         if self.skipInfectCities:
             print"The infections for this round are getting skipped!"
@@ -613,8 +614,8 @@ class GameBoard:
             return infectedCities
         print"The infections for this round are not getting skipped!"
 
-
-        amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
+        cardsPerPlayer = self.infectionRates[self.infectionLevel]
+        amountToDraw = len(self.players) * cardsPerPlayer
         for i in range(amountToDraw):
             print(i)
             # Draw the infection card from the top of the deck.
@@ -687,8 +688,13 @@ class GameBoard:
             if(card.name == cardToBeDiscarded):
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
-                return True
-        return False
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
+                responseDict["validAction"] = True
+                return responseDict
+
+        responseDict["validAction"] = False
+        return responseDict
 
     def processEpidemics(self):
         """
@@ -1151,7 +1157,7 @@ class GameBoard:
             return responseDict
         # If player has that city card, move it to players hand.
         for card in playerHand:
-            if card.name == targetCity or targetPlayer.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
+            if card.name == targetCity or playerObj.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
                 playerObj.actions -= 1
@@ -1298,6 +1304,7 @@ class GameBoard:
         responseDict = {}
         validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
+
             return validation
         playerObj = self.players[playerId]
         # set player actions count to 0
@@ -1305,6 +1312,7 @@ class GameBoard:
         responseDict["validAction"] = True
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
+
         return responseDict
 
 

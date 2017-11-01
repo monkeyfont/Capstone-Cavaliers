@@ -121,7 +121,7 @@ function actionState(options){
 			// playerName
 			// shareKnowledgeGive()
 		}else if(this.currentState == "Pass"){
-			PassTurn()
+			//PassTurn()
 		}else if(this.currentState == "ShuttleFlight"){
 			//city Name
 			// shuttleFlight()

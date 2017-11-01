@@ -282,7 +282,7 @@ def HandleDiscardCard(msg):
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             response = gameObject.discardCard(playerObject.id, cardName)
-            if response==True:
+            if response["validAction"]==True:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName}, room=roomName)
             else:
                 emit('cardRemoved', {'playerName': username, 'msg': response, 'cardToRemove': cardName})
@@ -514,8 +514,8 @@ def handleclick():
     for key in playerDictionary:
         playerObject = playerDictionary[key]
         if playerObject.name == username:
+            print "inital number of moves left are:   ", playerObject.actions
             response=gameObject.passTurn(playerObject.id)
-            print response
             if response["validAction"] == True:
                 emit('passTurnChecked', {'playerName': username,'msg':response},room=room)
             else:
