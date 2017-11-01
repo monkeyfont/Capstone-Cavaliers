@@ -74,13 +74,24 @@ function discardPile(options){
 		}
 	}
 	
+	this.changeCards = function(options){
+		console.log("oi_____",options)
+		this.cards = {}
+		this.addCard(options)
+		// for (i in options){
+			// console.log("OI!!",options[i].cardName)
+			// this.addCard({options[i].cardName})
+		// }
+	}
+	
 	this.removeCard = function(options){
 		delete this.cards[options.cardName];
 	}
 	
-	this.addCard = function(options){
+	this.addCard = function(options){		
+		for ( i in options){
 		//options = {cardname:cardName}
-		cardFront = allPossibleInfectionCards[options.cardName];
+		cardFront = allPossibleInfectionCards[options[i].cardName];
 			newPlayerCard = new infectionCard({
 			id:"Infection player Card ",
 			context:this.context,
@@ -95,9 +106,10 @@ function discardPile(options){
 			imageBack: CardImage,
 			imageFront: cardFront
 		});
-		cardName = options.cardName;
+		cardName = options[i].cardName;
 		this.cards[cardName] = newPlayerCard;
 		this.cards[cardName].flipping = true;
+		}
 	}
 	
 	this.intpoint_inside_trigon = function(s, a, b, c){

@@ -74,9 +74,11 @@ canvas.addEventListener('click', function(evt) {
 		if (mousePos.x >= locations[i].xPos-locations[i].radius && mousePos.x <= (locations[i].xPos+locations[i].radius) &&
 			mousePos.y >= locations[i].yPos-locations[i].radius && mousePos.y <= (locations[i].yPos+locations[i].radius)){
 				console.log('city ', i ,' was clicked');
-				actionState.selectedCity(i);
-				checkMove(i);
-				
+				if (actionState.selectedCity(i)){
+					
+				}else{
+					checkMove(i);
+				}
 			}
 
 	}
@@ -87,13 +89,11 @@ canvas.addEventListener('click', function(evt) {
 		
 	}else if (playersHand.cardX(mousePos)){
 		
+	}else if (playersHand.cardClick(mousePos)) {
+		
 	}else{
-		playersHand.cardClick(mousePos)
+		actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
 	}
-	
-	
-	actionState.changeCurrentState({newState:playerActionsMenu.activateAction(mousePos)})
-
 
 })
 
@@ -167,7 +167,7 @@ function gameLoop(){
 	}
 	
 	discardPile.render();
-	// eventCardViewer.render();
+	eventCardViewer.render();
 	
 }
 
@@ -188,11 +188,8 @@ discardPile = new discardPile({
 	yPos: 500, 
 })
 
-discardPile.addCard({cardName:'SANFRANCISCO'})
-discardPile.addCard({cardName:'CHICAGO'})
-discardPile.addCard({cardName:'MONTREAL'})
-discardPile.addCard({cardName:'NEWYORK'})
-discardPile.addCard({cardName:'ATLANTA'})
+discardPile.addCard([{cardName:'SANFRANCISCO'},{cardName:'CHICAGO'},{cardName:'MONTREAL'},{cardName:'NEWYORK'},{cardName:'ATLANTA'}])
+
 
 eventCardViewer = new eventCardViewer({
 	context:canvas.getContext("2d"),
@@ -219,7 +216,6 @@ var deck = new sprite({
 })
 
 outbreakCount = new outbreakCounter({});
-infectRate = new infectionRate({});
 playersHand = new playerHand();
 players = new playerInitilization();
 playerPortraits = new portraitInitilization({});
@@ -237,14 +233,14 @@ mapImage.addEventListener("load", gameLoop);
 
 infectionsMeterDisplay = new infectionMeter({
 	context: canvas.getContext("2d"),
-	xPos:1600,
+	xPos:1220,
 	yPos:80
 })
 
 
 cureBar = new cureStatusBar({
 	context: canvas.getContext("2d"),
-	xPos:680,
+	xPos:425,
 	yPos:70,
 	height:256,
 	width:256,

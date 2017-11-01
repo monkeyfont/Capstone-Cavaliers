@@ -10,6 +10,7 @@ function messageAlert(options){
 	
 	
 	this.newMessage = function(options){
+		// messageAlert.newMessage({message:"heres a fake message"})
 		console.log("new message is: ",options.message)
 		this.currentStage = 0;
 		this.showMessage = true;

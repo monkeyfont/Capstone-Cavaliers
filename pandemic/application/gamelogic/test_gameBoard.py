@@ -564,10 +564,6 @@ class TestGameCoordinator(TestCase):
         self.assertEquals(washington.blue, 3)
 
 
-
-    def test_processEpidemic(self):
-        pass
-
     def test_resetPlayerActions(self):
         for k in self.testGameBoard.players:
             self.testGameBoard.players[k].actions=0
@@ -607,10 +603,9 @@ class TestGameCoordinator(TestCase):
         #clear the player roles, as they may be messing with the infections!
         for k in self.players:
             self.players[k].location = ""
-        infections = self.testGameBoard.endTurnInfectCities()[0] #TODO remove the [0] index once updated.
+        infections = self.testGameBoard.endTurnInfectCities() #TODO remove the [0] index once updated.
         # Can't check what the infections are because they are random. However can check that there is the right amount,
         # and that they contain the correct keys.
-        print(infections)
         self.assertEqual(len(infections), 6) # base 6 infections for default difficulty.
         for i in infections:
             self.assertTrue('city' in i and 'colour' in i and 'amount' in i)
@@ -1010,7 +1005,7 @@ class TestGameSpecialRoleActions(TestCase):
         """ The medic should cure all tiles on a city."""
         # generate requirements
         self.testGameBoard.cities = self.testGameBoard.generateCities()
-        card = PlayerCard("MIAMI", "yellow", "", "", "")
+        self.testGameBoard.players[1].role = "medic"
         self.testGameBoard.players[1].location = "MIAMI"
         # infect atlanta
         miami = self.testGameBoard.cities['MIAMI']
@@ -1050,7 +1045,7 @@ class TestGameEventActions(TestCase):
 
     def test_airLift(self):
         """ Air lift moves a player to any city."""
-        event_card = EventCard(2, "Airlift", "Airlift")
+        event_card = EventCard(2, "AirLift", "AirLift")
         self.players[1].hand.append(event_card)
         result = self.testGameBoard.airLift(1,2,"MIAMI")
         self.assertTrue(self.players[2].location, "MIAMI")
@@ -1059,7 +1054,7 @@ class TestGameEventActions(TestCase):
 
     def test_airLift2(self):
         """Checks if the player can move themselves with the card"""
-        event_card = EventCard(2, "Airlift", "Airlift")
+        event_card = EventCard(2, "AirLift", "AirLift")
         self.players[1].hand.append(event_card)
         result = self.testGameBoard.airLift(1,1,"MIAMI")
         self.assertTrue(self.players[1].location, "MIAMI")
@@ -1087,9 +1082,6 @@ class TestGameEventActions(TestCase):
         result = self.testGameBoard.endTurnInfectCities()
         self.assertEqual(result, {})
 
-class TestGameEndOfRound(TestCase):
-    def setUp(self):
-        pass
 
 class TestGameUtils(TestCase):
     def setUp(self):

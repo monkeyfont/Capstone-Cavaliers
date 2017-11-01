@@ -157,8 +157,9 @@ PLAYER_CARDS = {
 
 EVENT_CARDS = {
     1:{"name":"Government_Grant", "description":"Add 1 research station to any city ( no city card needed )"},
-    2:{"name":"Airlift", "description":"Move any 1 pawn to any city"},
+    2:{"name":"AirLift", "description":"Move any 1 pawn to any city"},
     3:{"name": "One_Quiet_Night", "description": "Skip the next Infect Cities step (do not flip over any Infection Cards)"}
+
 }
 
 
@@ -254,7 +255,7 @@ class GameBoard:
         self.players = playerDict # {id:playerObj}
         self.cubesUsed = {"blue":0, "red":0, "yellow":0, "black":0}
         self.maxCubeCount = 20 # maximum number of cubes for individual colours. (if all used, loss happens.)
-        self.cures = {"blue" : 1, "red" : 1, "yellow" : 1, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
+        self.cures = {"blue" : 0, "red" : 0, "yellow" : 0, "black" : 0} # 0 = undiscovered, 1 = cured, 2 = eradicated. POTENTIALLY CHANGE TO STRINGS? makes more self documenting.
         self.outBreakLevel = 0
         self.maxOutBreakLevel = 9 # at this level, the game is over.
         self.infectionLevel = 0
@@ -290,6 +291,7 @@ class GameBoard:
         result["actionsCount"] = actionsCount = playerObj.actions
 
         # check if valid move.
+
         if cardsCount < 8 and actionsCount > 0:
             result["validAction"] = True
         else:
@@ -331,9 +333,12 @@ class GameBoard:
 
         # check for actions left
         actions = self.totalPlayerActions()
+
         #actions=0 #for testing
         if actions > 0:
             result["endRound"] =False
+            playerHands = self.getOtherHands()
+            result["playerHandsUpdated"] = playerHands
         else:
             result["gameLoss"] = False
             result["gameLossReason"] = []
@@ -343,8 +348,6 @@ class GameBoard:
 
             # invoke draw cards step
             result["cardDraw"] = self.endTurnDrawCards()
-
-            result
 
             # Check if players now have epidemic cards.
             result.update(self.processEpidemics()) # Adds the keys "infections", "epidemic", "epidemicCities"
@@ -360,10 +363,10 @@ class GameBoard:
             # invoke infect cities step
             infections = self.endTurnInfectCities()
 
-            result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
+            #result["infectedCities"] = infections[1] #TODO remove this once the 'infections' key is the only one being used.
 
             result["cubesUsed"]=[]
-            result["infections"]+=infections[0]
+            result["infections"]+=infections
             # check if cubes of any colour have run out.
             for colour in self.cubesUsed:
                 result["cubesUsed"].append({colour:self.cubesUsed[colour]})
@@ -384,9 +387,28 @@ class GameBoard:
             for card in self.infectionDiscarded:
                 result["infectionDiscarded"].append({"cardName":card.name})
 
+            playerHands=self.getOtherHands()
+            result["playerHandsUpdated"]=playerHands
 
-        #print result
+
+        print result
         return result
+
+
+
+    def getOtherHands(self):
+        playersHands = {}
+        players = self.players
+        for playerK in players:
+            playerObj = players[playerK]
+            playerHand = playerObj.hand
+            playerCardNames = []
+            for card in playerHand:
+                cardname = card.name
+                playerCardNames.append(cardname)
+            playersHands[players[playerK].name] = playerCardNames
+
+        return playersHands
 
 
     def setStartingLocation(self):
@@ -411,13 +433,14 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
+        self.cities["LAGOS"].researchStation = 1
         # just for testing on game page
         #self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
         self.distributeHand()
         #now need to place epidemic cards ( has to be done after hand has been delt)
         self.placeEpidemicCards()
-        self.setRoles()
+        #self.setRoles()
         self.setStartingLocation()
         self.initialized = 1
 
@@ -441,11 +464,13 @@ class GameBoard:
     def generatePlayerDeck(self):
         """ Returns a list containing player card objects and event card objects. Epidemic cards are NOT added."""
         cards = []
-        for k in PLAYER_CARDS: #name,colour,population,area,country
-            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
 
         for k in EVENT_CARDS: #id, name, description
             cards.append(EventCard(k, EVENT_CARDS[k]["name"], EVENT_CARDS[k]["description"]))
+
+        for k in PLAYER_CARDS: #name,colour,population,area,country
+            cards.append(PlayerCard(k, PLAYER_CARDS[k]["colour"], PLAYER_CARDS[k]["population"], PLAYER_CARDS[k]["area"], PLAYER_CARDS[k]["country"]))
+
 
         return cards
 
@@ -482,7 +507,7 @@ class GameBoard:
         These cards are then added to the discard pile
          """
         # First shuffle the infection cards
-        #shuffle(self.infectionDeck)
+        shuffle(self.infectionDeck)
         # draw first 3 cards, place 3 disease markers
         # draw the next 3 cards, place 2 disease markers
         # draw next 3 cards, place 1 disease marker.
@@ -581,7 +606,7 @@ class GameBoard:
             [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
 
         """
-        infectedCities = {} #TODO REMOVE WHEN FIXED
+        infectedCities = {}
         infectedCitiesNew = [] # list of city infected objects.
         if self.skipInfectCities:
             print"The infections for this round are getting skipped!"
@@ -589,8 +614,8 @@ class GameBoard:
             return infectedCities
         print"The infections for this round are not getting skipped!"
 
-
-        amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
+        cardsPerPlayer = self.infectionRates[self.infectionLevel]
+        amountToDraw = len(self.players) * cardsPerPlayer
         for i in range(amountToDraw):
             print(i)
             # Draw the infection card from the top of the deck.
@@ -609,7 +634,7 @@ class GameBoard:
             # add the card to the discard pile
             self.infectionDiscarded.append(infectCard)
         #return infectedCitiesNew
-        return (infectedCitiesNew, infectedCities)
+        return infectedCitiesNew
 
 
     def resetPlayerActions(self):
@@ -663,8 +688,13 @@ class GameBoard:
             if(card.name == cardToBeDiscarded):
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
-                return True
-        return False
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
+                responseDict["validAction"] = True
+                return responseDict
+
+        responseDict["validAction"] = False
+        return responseDict
 
     def processEpidemics(self):
         """
@@ -1127,7 +1157,7 @@ class GameBoard:
             return responseDict
         # If player has that city card, move it to players hand.
         for card in playerHand:
-            if card.name == targetCity or targetPlayer.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
+            if card.name == targetCity or playerObj.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
                 playerObj.actions -= 1
@@ -1274,6 +1304,7 @@ class GameBoard:
         responseDict = {}
         validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
+
             return validation
         playerObj = self.players[playerId]
         # set player actions count to 0
@@ -1281,6 +1312,7 @@ class GameBoard:
         responseDict["validAction"] = True
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
+
         return responseDict
 
 
@@ -1405,13 +1437,18 @@ class GameBoard:
                                 return responseDict
                             else:
                                 responseDict["validAction"] = True
+                                responseDict["location"] = curCityObj.name
                                 curCityObj.researchStation =1
                                 playerHand.remove(card)
                                 self.playerDiscarded.append(card)
+                                playerHands = self.getOtherHands()
+                                responseDict["playerHandsUpdated"] = playerHands
                                 return responseDict
+
         responseDict["errorMessage"] = "ERROR: You don't have the government grant card!"
         responseDict["validAction"] = False
         return responseDict
+
 
     def airLift(self,playerId,playerToMoveId,cityToMoveTo):
         responseDict = {}
@@ -1419,13 +1456,16 @@ class GameBoard:
         playerToMoveObj=self.players[playerToMoveId]
         playerHand=playerObj.hand
         for card in playerHand:
-            if(card.name == "Airlift"):
+            if(card.name == "AirLift"):
                 playerToMoveObj.location = cityToMoveTo
                 responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[cityToMoveTo])
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
                 return responseDict
+
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
         responseDict["validAction"] = False
@@ -1442,6 +1482,8 @@ class GameBoard:
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
                 return responseDict
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
@@ -1455,7 +1497,7 @@ class GameBoard:
         playerObj = self.players[playerId]
         playerHand = playerObj.hand
         for card in playerHand:
-            if (card.name == "Resilient Population"):
+            if (card.name == "Resilient_Population"):
                 for cardName in self.infectionDiscarded:
                     if cardName.name==infectCardName: #is the card actually in the discard pile
                         self.infectionDiscarded.remove(cardName) # remove card from discard pile

@@ -15,16 +15,16 @@ function portraitInitilization(options){
 	this.addPlayerPortrait = function(options){
 		this.playerPortraits[options.playerType]=new portrait({
 			id:"playerViewImage",
-			xPos:this.xPos-(420*0.5),
+			xPos:this.xPos-(420*0.4),
 			yPos:this.yPos,
-			xScale:0.5,
-			yScale:0.5,
+			xScale:0.4,
+			yScale:0.4,
 			height:340,
 			width:400,
 			image:playerRoles[options.playerType+"Portrait"],
 			context: canvas.getContext("2d")
 		});
-		this.xPos = this.xPos-(420*0.5)
+		this.xPos = this.xPos-(420*0.4)
 	}
 	
 	this.render = function(){

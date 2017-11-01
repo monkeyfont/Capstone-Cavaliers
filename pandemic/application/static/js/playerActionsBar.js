@@ -57,6 +57,7 @@ function playerActionsBar(options){
 						break
 					}
 				}		
+				this.researcherHand = false;
 				this.currentAction = chosenAction;
 				console.log('chosen action is: ',chosenAction)
 		
@@ -91,10 +92,23 @@ function playerActionsBar(options){
 						break
 					}
 				}
-		
-			
+				
+			actionState.playerAndCardChosen({researcherName:chosenPlayer,card:chosenCard})
 			console.log("clicked in the researchers hand", chosenCard)
-		}	
+			if (this.currentAction == "Take"){
+				console.log("take card from the researcher",chosenCard)
+				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
+				this.currentAction = null
+				this.researcherHand = false;
+				return true
+			}else if(this.currentAction == "Give"){
+				console.log("give card from the researcher",chosenCard)
+				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
+				this.currentAction = null
+				this.researcherHand = false;
+				return true
+			}
+		}
 		
 		
 		
@@ -126,7 +140,34 @@ function playerActionsBar(options){
 							}
 						}
 					console.log("the chosen player is", chosenPlayer)
-					this.researcherHand = true;
+					
+					if (players.players[chosenPlayer].playerType == "researcher" && this.currentAction == "Take"){
+						this.researcherHand = true;
+						console.log("taking from researcher")
+						actionState.changeCurrentState({player:chosenPlayer})
+						return true
+					}else if (players.players[thisPlayerName].playerType == "researcher" && this.currentAction == "Give"){
+						this.researcherHand = true;
+						console.log("giving from researcher")
+						actionState.changeCurrentState({player:chosenPlayer})
+						return true
+					}else if(this.currentAction == "Give"){
+						// give the chosenPlayer atlanta
+						actionState.changeCurrentState({player:chosenPlayer,newState:"Give"})
+						this.currentAction = null
+						return true
+						
+					}else if (this.currentAction == "Take"){
+						// take atlanta from the the chosenPlayer
+						actionState.changeCurrentState({player:chosenPlayer,newState:"Take"})
+						this.currentAction = null
+						return true
+					}					
+					
+					
+					// if the player chosen is the researcher and youre taking , or youre trying give, adn you are the researcher
+					//this.currentAction
+					
 				}
 			
 			menuType = "player"
@@ -147,8 +188,9 @@ function playerActionsBar(options){
 					chosenPosition = Math.floor((yPos - writePosY) / 60)
 					console.log(Math.floor((yPos - writePosY) / 60))
 					console.log("_______________________",actionState.infectionColours[chosenPosition])
-					
-					messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
+					actionState.changeCurrentState({newState:"Treat",colour:actionState.infectionColours[chosenPosition]})
+					this.currentAction = null;
+					// messageAlert.newMessage({message:actionState.infectionColours[chosenPosition]})
 					return true
 				}
 			menuType = "colour"
@@ -159,7 +201,7 @@ function playerActionsBar(options){
 		
 		// distance from top of rectangle/60
 		
-		Math.floor()
+		// Math.floor()
 	}
 	
 	

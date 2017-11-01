@@ -2,97 +2,184 @@ function actionState(options){
 	// console.log("-----------------------",thisPlayerName)
 	// console.log(players)
 	// console.log(players.players[thisPlayerName])
+	this.possibleEventCards = ["AirLift","Epidemic","Forecast","Government_Grant","One_Quiet_Night","Resilent_Population"]
 	this.players = locations[players.players[thisPlayerName].currentCity].players
 	this.infectionColours = Object.keys(locations[players.players[thisPlayerName].currentCity].activeInfections())
 	this.currentState = null;
-	
-	this.selectedCard = function(){
-		playersHand.cards 
+	this.playerInvolved = null;
+
+	this.selectedCard = function(options){
+		this.currentState = options.newState
+		console.log("we've selected the card, the state is",this.currentState)
+		
+		if(this.currentState == "Give"){
+			// playerName
+			shareKnowledgeGive({playerName:this.playerInvolved,cardName:options.cardName})
+		}else if(this.currentState == "Take"){
+			// playerName
+			shareKnowledgeTake({playerName:this.playerInvolved,cardName:options.cardName})
+		}
+
+		
+		
+		// a card has been selected, can we use the current action?
+
 	}
 	this.selectedCity = function(cityName){
-		
+		console.log(" a city has been selected, can we use the current action?")
+		if(this.currentState == "Government_Grant"){
+			PlayEventCard({cardName:"Government_Grant",city:cityName})
+		return true
+		}else if(this.currentState == "AirLift"){
+			console.log("wtf wtf wtf",this.playerInvolved,cityName)
+			PlayEventCard({cardName:"AirLift",player:this.playerInvolved,city:cityName})
+			return true
+		}else if (this.currentState == "ShuttleFlight"){
+			console.log("shutteling a flight")
+			shuttleFlight(cityName)
+			return true
+		}else if (this.currentState == "CharterFlight"  ){
+			console.log("chartering a flight")
+			charterFlight(cityName)
+			// cityName
+			return true
+		}
+
+		return false
+
+
 	}
 	this.playerChosen = function(player){
-		
+		// a player has been selected from the action bar, so either give or take them
 	}
-	
+
+	this.playerAndCardChosen = function (options){
+		console.log(options.card,options.researcherName)
+		if(this.currentState == "Take"){
+			shareKnowledgeTake({playerName:options.researcherName,card:options.card})
+		}else if (this.currentState == "Give"){
+			shareKnowledgeGive({playerName:options.researcherName,card:options.card})
+
+		}
+		// the researcher and a card have been chosen from the action bar so give or take them
+	}
+
 	this.colourChosen = function(colour){
-		
+		// a card has been chosen from the action bar so
+		// needs to treat the particular colour
+
 	}
-	
+
 	this.redefinePlayers = function (){
 		this.players = locations[players.players[thisPlayerName].currentCity].players
-		// delete this.players[thisPlayerName]
-		
+		delete this.players[thisPlayerName]
+
 	}
-	
+
 	this.redefineColours = function(){
 		this.infectionColours = Object.keys(locations[players.players[thisPlayerName].currentCity].activeInfections())
 	}
-	
 
-	
+
+
 	this.checkStateChange = function(options){
-		if(this.currentState == "Treat"){
-			//colour			
-			treatDisease()					
-		}else if(this.currentState == "Build"){
-			buildResearch()
+		console.log("checking whether the state has changed")
+		if(this.currentState == "EventCard"){
+			console.log("we are in the eventcard state")
+			if (Object.keys(playersHand.activeCards).length == 1){
+				console.log("we have 1 card selected")
+				for (i in playersHand.activeCards){
+					console.log(i)
+					console.log(i in this.possibleEventCards)
+					console.log(this.possibleEventCards)
+					if(this.possibleEventCards.includes(i)){
+						console.log("changing the active card and turning event viewer on")
+						eventCardViewer.changeActiveCard({cardName:i})
+						eventCardViewer.toggleActive()
+					}
+				}
+
+
+			}
+		}
+		// if(this.currentState == "Treat"){
+
+			// treatDisease()
+		// }else
+		if(this.currentState == "Build"){
+			// buildResearch()
 		}else if(this.currentState == "CharterFlight"){
 			//city location
-			charterFlight()
+			// charterFlight()
 		}else if(this.currentState == "Cure"){
 			//cards
-			discoverCure()
+			// discoverCure()
 		}else if(this.currentState == "DirectFlight"){
 			//one card
-			directFlight(city)
+			// directFlighst(city)
 		}else if(this.currentState == "Give"){
 			// playerName
-			shareKnowledgeGive()
+			// shareKnowledgeGive()
 		}else if(this.currentState == "Pass"){
-			PassTurn()
+			//PassTurn()
 		}else if(this.currentState == "ShuttleFlight"){
 			//city Name
-			shuttleFlight()
+			// shuttleFlight()
 		}else if(this.currentState == "Take"){
 			// playerName
-			shareKnowledgeTake()
+			// shareKnowledgeTake()
 		}
 	}
-	
-	
+
+
 	this.changeCurrentState = function(options){
-		console.log("______________changed state_______________",options.newState)
+		console.log("______________changed state_______________",options.newState,options.player,options.colour)
+		this.playerInvolved = options.player
 		this.currentState = options.newState
 		cards = playersHand.activeCards;
-		if(this.currentState == "Treat"){
-			//colour			
-			treatDisease()					
+		this.checkStateChange()
+		if(this.currentState == "One_Quiet_Night"){
+
+
+			PlayEventCard({cardName:"One_Quiet_Night"})
+		return true
+
+		}else if(this.currentState == "Treat"){
+			treatDisease({colour:options.colour})
 		}else if(this.currentState == "Build"){
 			buildResearch()
 		}else if(this.currentState == "CharterFlight"){
 			//city location
-			charterFlight()
+			// charterFlight()
 		}else if(this.currentState == "Cure"){
-			//cards
-			discoverCure()
+			if(Object.keys(playersHand.activeCards).length =5)
+				discoverCure(playersHand.activeCards)
+			else if (Object.keys(playersHand.activeCards).length =4 && players.players[thisPlayerName].playerType == "Scientist"){
+				discoverCure(playersHand.activeCards)
+			}
 		}else if(this.currentState == "DirectFlight"){
 			//one card
-			directFlight(city)
+			if(Object.keys(playersHand.activeCards).length =1){
+				for (i in playersHand.activeCards){
+					directFlight(i)
+				}
+
+			}
+
+
 		}else if(this.currentState == "Give"){
 			// playerName
-			shareKnowledgeGive()
+			shareKnowledgeGive({playerName:this.playerInvolved})
 		}else if(this.currentState == "Pass"){
 			PassTurn()
 		}else if(this.currentState == "ShuttleFlight"){
 			//city Name
-			shuttleFlight()
+			// shuttleFlight()
 		}else if(this.currentState == "Take"){
 			// playerName
-			shareKnowledgeTake()
+			shareKnowledgeTake({playerName:this.playerInvolved})
 		}
 
 	}
-	
+
 }
