@@ -426,7 +426,8 @@ def handleclick(msg):
     response = gameObject.shareKnowledgeGive(playerid,otherPlayerid,cityCardToShare)
 
     if response["validAction"] == True:
-        emit('giveKnowledgeShared', {'msg':response},room=room)
+        emit('giveKnowledgeShared', {'playerGivingName': username,'playerTakingName':playerTakingName,
+                                     'msg':response,'cardName':cityCardToShare},room=room)
     else:
         emit('giveKnowledgeShared', {'msg': response})
 

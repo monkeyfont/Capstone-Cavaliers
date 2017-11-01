@@ -272,11 +272,14 @@ socket.on('giveKnowledgeShared', function (data) {
         check=data.msg.validAction;
         if (check ==true){
             //addResearchStation(city);
+            if (thisPlayerName==data.playerGivingName){
+                playersHand.removeCard({cardname:data.cardName})
 
-            j=players
-            JSON.stringify(j);
-            console.log(j)
-            console.log("Cards have been swapped")
+            }
+            else if (thisPlayerName==data.playerTakingName){
+                playersHand.addCard({cardName:data.cardName})
+
+            }
 	    }
 	    else{
 	        messageAlert.newMessage({message:data.msg.errorMessage})
