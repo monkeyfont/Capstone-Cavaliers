@@ -79,13 +79,10 @@
      numRolesChosen= data.rolesChosenCount
 
      try {
+        alert(data.msg)
         document.getElementById(data.msg).disabled="disabled";
-        //var x = eval(data.msg+"hi");
-        document.getElementById(data.msg).disabled="disabled";
-
-
-        //document.getElementsByClassName(rolle).style.visibility = 'hidden';
-        //var elem = document.getElementById(data.msg).innerHTML = data.msg+" role is already taken!";
+        var x = document.getElementById("myForm");
+        x.getElementsByClassName(data.msg)[0].style.opacity = 0.4;
             }
     catch(err) {
 
