@@ -79,7 +79,7 @@
      numRolesChosen= data.rolesChosenCount
 
      try {
-        alert(data.msg)
+       
         document.getElementById(data.msg).disabled="disabled";
         var x = document.getElementById("myForm");
         x.getElementsByClassName(data.msg)[0].style.opacity = 0.4;
