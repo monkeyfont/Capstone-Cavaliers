@@ -9,6 +9,7 @@ function actionState(options){
 	this.playerInvolved = null;
 
 	this.selectedCard = function(options){
+		this.currentState = options.newState
 		console.log("we've selected the card, the state is",this.currentState)
 		
 		if(this.currentState == "Give"){
