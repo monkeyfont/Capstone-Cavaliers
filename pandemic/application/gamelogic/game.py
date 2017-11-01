@@ -1151,7 +1151,7 @@ class GameBoard:
             return responseDict
         # If player has that city card, move it to players hand.
         for card in playerHand:
-            if card.name == targetCity or targetPlayer.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
+            if card.name == targetCity or playerObj.role == "researcher": # SPECIAL CASE: if the player is the researcher, skip the card name check.
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
                 playerObj.actions -= 1
