@@ -438,8 +438,12 @@ function discardCard(){
 
 
 socket.on('cardRemoved', function (data) {
+		
+		
         check=data.msg;
         if (check == true){
+			playersHand.removeCard({cardname:data.cardToRemove})
+			
         console.log(data.cardToRemove+" has been discarded from your hand")
         }
         else{
@@ -515,7 +519,7 @@ socket.on('governmentGrantChecked', function (data) {
             locations[data.msg.location].addResearchStation();
             playersHand.removeCard({cardname:"Government_Grant"})
             updatePlayerHands(data.msg.playerHandsUpdated)
-
+			
             // here goes logic to draw the building
         }
         else{
