@@ -1312,7 +1312,7 @@ class GameBoard:
         responseDict["validAction"] = True
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
-      
+
         return responseDict
 
 

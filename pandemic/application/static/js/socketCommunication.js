@@ -19,6 +19,8 @@ function endOfRound(info){
 
 
 
+
+
 	console.log("info",info)
     for (var i=0;i<info.infections.length;i++){
         var cityName=info.infections[i].city;
