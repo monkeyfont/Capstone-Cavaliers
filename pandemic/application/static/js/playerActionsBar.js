@@ -57,6 +57,7 @@ function playerActionsBar(options){
 						break
 					}
 				}		
+				this.researcherHand = false;
 				this.currentAction = chosenAction;
 				console.log('chosen action is: ',chosenAction)
 		
@@ -94,7 +95,20 @@ function playerActionsBar(options){
 				
 			actionState.playerAndCardChosen({researcherName:chosenPlayer,card:chosenCard})
 			console.log("clicked in the researchers hand", chosenCard)
-		}	
+			if (this.currentAction == "Take"){
+				console.log("take card from the researcher",chosenCard)
+				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
+				this.currentAction = null
+				this.researcherHand = false;
+				return true
+			}else if(this.currentAction == "Give"){
+				console.log("give card from the researcher",chosenCard)
+				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
+				this.currentAction = null
+				this.researcherHand = false;
+				return true
+			}
+		}
 		
 		
 		
@@ -129,10 +143,25 @@ function playerActionsBar(options){
 					
 					if (players.players[chosenPlayer].playerType == "researcher" && this.currentAction == "Take"){
 						this.researcherHand = true;
-					}
-					
-					if (players.players[thisPlayerName].playerType == researcher && this.currentAction == "Give"){
+						console.log("taking from researcher")
+						actionState.changeCurrentState({player:chosenPlayer})
+						return true
+					}else if (players.players[thisPlayerName].playerType == "researcher" && this.currentAction == "Give"){
 						this.researcherHand = true;
+						console.log("giving from researcher")
+						actionState.changeCurrentState({player:chosenPlayer})
+						return true
+					}else if(this.currentAction == "Give"){
+						// give the chosenPlayer atlanta
+						actionState.changeCurrentState({player:chosenPlayer,newState:"Give"})
+						this.currentAction = null
+						return true
+						
+					}else if (this.currentAction == "Take"){
+						// take atlanta from the the chosenPlayer
+						actionState.changeCurrentState({player:chosenPlayer,newState:"Take"})
+						this.currentAction = null
+						return true
 					}					
 					
 					
@@ -172,7 +201,7 @@ function playerActionsBar(options){
 		
 		// distance from top of rectangle/60
 		
-		Math.floor()
+		// Math.floor()
 	}
 	
 	

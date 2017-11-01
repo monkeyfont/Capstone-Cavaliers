@@ -93,16 +93,29 @@ function endOfRound(info){
     // INFECTION DISCARDED
 
     console.log(info.infectionDiscarded)
-
+	discardPile.changeCards(info.infectionDiscarded)
     //update hands
 
-        playerHandHTML="";
-       for (var player in info["playerHandsUpdated"]) {
+    updatePlayerHands(info["playerHandsUpdated"])
+
+    socket.emit('roundOverDone')
+
+
+
+};
+
+
+
+function updatePlayerHands(infoPlayerHandsUpdated){
+
+
+     playerHandHTML="";
+       for (var player in infoPlayerHandsUpdated) {
 		playerCardInfo = {}
 		playerCardInfo.playerName = player
 		playerCardInfo.cards = []
 		var playerId = player
-		var cards=info["playerHandsUpdated"][player]
+		var cards=infoPlayerHandsUpdated[player]
 
         playerHandHTML = playerHandHTML + "<div class = playerHand>"
         playerHandHTML = playerHandHTML + "<div class = playerSection>"
@@ -137,13 +150,7 @@ function endOfRound(info){
 
 
 
-    
-
-    socket.emit('roundOverDone')
-
-
-
-};
+}
 
 function isEmpty(obj) {
     for(var prop in obj) {
@@ -178,7 +185,7 @@ socket.on('checked', function (data) {
             if (data.cardName){
 			playersHand.removeCard({cardname:data.cardName})
 			}
-
+			updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -198,16 +205,18 @@ function directFlight(city) {
 
 
 
-function charterFlight() {
-
-     socket.emit('checkCharterFlight', {destination:city})
+function charterFlight(options) {
+	console.log("chartering the flight socket",options)
+	city = options
+    socket.emit('checkCharterFlight', {destination:city})
 
 }
 
 
 
-function shuttleFlight() {
-
+function shuttleFlight(options) {
+	console.log("shuttelign the flight socket",options)
+	city = options
     socket.emit('checkShuttleFlight', {cityName:city})
 
 }
@@ -229,10 +238,12 @@ socket.on('researchBuildChecked', function (data) {
             console.log("Research station HAS BEEEN built here")
             locations[data.city].addResearchStation();
             playersHand.removeCard({cardname:data.cardName})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
             messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
+
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
 
@@ -240,17 +251,19 @@ socket.on('researchBuildChecked', function (data) {
 });
 
 function shareKnowledgeGive(options) {
-
-
+	console.log("the options are ",options)
+	otherPlayer = options.playerName
+	city = options.cardName
     if (thisPlayerRole=="researcher"){
 
-        var city = prompt("Enter card you wish to swap: ");
-        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        // var city = prompt("Enter card you wish to swap: ");
+        // var otherPlayer = prompt("Enter name of player you want to swap with: ");
         socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
 
     }
     else{
-        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        // var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        //alert(playerTaking)
         socket.emit('shareKnowledgeGive', {playerTaking:otherPlayer})
     }
 
@@ -263,11 +276,15 @@ socket.on('giveKnowledgeShared', function (data) {
         check=data.msg.validAction;
         if (check ==true){
             //addResearchStation(city);
+            if (thisPlayerName==data.playerGivingName){
+                playersHand.removeCard({cardname:data.cardName})
 
-            j=players
-            JSON.stringify(j);
-            console.log(j)
-            console.log("Cards have been swapped")
+            }
+            else if (thisPlayerName==data.playerTakingName){
+                playersHand.addCard({cardName:data.cardName})
+
+            }
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	        messageAlert.newMessage({message:data.msg.errorMessage})
@@ -282,13 +299,15 @@ socket.on('giveKnowledgeShared', function (data) {
 
 
 function shareKnowledgeTake(options) {
-
-    var otherPlayer = prompt("Enter name of player's card you want to take: ");
+	console.log("the options are ",options)
+	otherPlayer = options.playerName
+	city = options.cardName
+    // var otherPlayer = prompt("Enter name of player's card you want to take: ");
     var type= players.players[otherPlayer].playerType
     //alert(type)
 
     if (type=="researcher"){
-        var city = prompt("Enter card you wish to take: ");
+        // var city = prompt("Enter card you wish to take: ");
         socket.emit('shareKnowledgeTake', {cityName:city,playerGiving:otherPlayer})
         }
     else{
@@ -305,12 +324,15 @@ socket.on('takeKnowledgeShared', function (data) {
         //alert(data.msg);
         check=data.msg.validAction;
         if (check ==true){
-            //addResearchStation(city);
 
-            j=players
-            JSON.stringify(j);
-            console.log(j)
-            console.log("Cards have been swapped")
+            if (thisPlayerName==data.playerGivingName){
+                playersHand.removeCard({cardname:data.cardName})
+
+            }
+            else if (thisPlayerName==data.playerTakingName){
+                playersHand.addCard({cardName:data.cardName})
+            }
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 
@@ -395,6 +417,7 @@ socket.on('cureDiscovered', function (data) {
 				}
 						  }
 					 }
+			updatePlayerHands(data.msg.playerHandsUpdated)
 	}
 	else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -417,8 +440,12 @@ function discardCard(){
 
 
 socket.on('cardRemoved', function (data) {
+		
+		
         check=data.msg;
         if (check == true){
+			playersHand.removeCard({cardname:data.cardToRemove})
+			
         console.log(data.cardToRemove+" has been discarded from your hand")
         }
         else{
@@ -493,7 +520,8 @@ socket.on('governmentGrantChecked', function (data) {
             //alert("research station built with event card")
             locations[data.msg.location].addResearchStation();
             playersHand.removeCard({cardname:"Government_Grant"})
-
+            updatePlayerHands(data.msg.playerHandsUpdated)
+			
             // here goes logic to draw the building
         }
         else{
@@ -510,6 +538,7 @@ socket.on('oneQuietNightChecked', function (data) {
         if (check ==true){
             alert("next infect cities will be skipped")
             playersHand.removeCard({cardname:"One_Quiet_Night"})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	        messageAlert.newMessage({message:data.msg.errorMessage})
