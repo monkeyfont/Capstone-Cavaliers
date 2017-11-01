@@ -97,11 +97,11 @@ function playerActionsBar(options){
 			console.log("clicked in the researchers hand", chosenCard)
 			if (this.currentAction == "Take"){
 				console.log("take card from the researcher",chosenCard)
-				actionState.selectedCard({cardName:chosenCard})
+				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
 				return true
 			}else if(this.currentAction == "Give"){
 				console.log("give card from the researcher",chosenCard)
-				actionState.selectedCard({cardName:chosenCard})
+				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
 				return true
 			}
 		}
