@@ -535,7 +535,10 @@ def handleclick(msg):
             if playerObject.name == username:
                 cityToBuildOn = msg["city"]
                 response=gameObject.governmentGrant(playerObject.id,eventCardName,cityToBuildOn)
-                emit('governmentGrantChecked', {'msg': response},room=room)
+                if response["validAction"] == True:
+                    emit('governmentGrantChecked', {'msg': response},room=room)
+                else:
+                    emit('governmentGrantChecked', {'msg': response})
 
     elif eventCardName== "AirLift":
         playerToMove = msg["player"]
@@ -550,18 +553,24 @@ def handleclick(msg):
                 playerId = playerObject.id
             if playerObject.name == playerToMove:
                 playerToMoveId = playerObject.id
-        print "PLAYER TO MOVE IS", playerToMoveId
-        print " I AM ,", playerId
+
         response = gameObject.airLift(playerId,playerToMoveId, cityToMoveTo)
-        emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo, 'cardName':"AirLift"}, room=room)
+        if response["validAction"] == True:
+            emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo, 'cardName':"AirLift"}, room=room)
+        else:
+            emit('checked', {'playerName': playerToMove, 'msg': response, 'city': cityToMoveTo, 'cardName': "AirLift"})
+
 
     elif eventCardName == "One_Quiet_Night":
         for key in playerDictionary:
             playerObject = playerDictionary[key]
             if playerObject.name == username:
                 response=gameObject.skipInfectStage(playerObject.id)
+                if response["validAction"] == True:
+                    emit('oneQuietNightChecked', {'msg': response},room=room)
+                else:
+                    emit('oneQuietNightChecked', {'msg': response})
 
-                emit('oneQuietNightChecked', {'msg': response})
 
     elif eventCardName == "Resilient Population":
         cardToRemove=msg["infectCard"]

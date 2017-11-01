@@ -332,9 +332,12 @@ class GameBoard:
 
         # check for actions left
         actions = self.totalPlayerActions()
+
         #actions=0 #for testing
         if actions > 0:
             result["endRound"] =False
+            playerHands = self.getOtherHands()
+            result["playerHandsUpdated"] = playerHands
         else:
             result["gameLoss"] = False
             result["gameLossReason"] = []
@@ -383,22 +386,28 @@ class GameBoard:
             for card in self.infectionDiscarded:
                 result["infectionDiscarded"].append({"cardName":card.name})
 
-            playersHands = {}
-            players = self.players
-            for playerK in players:
-                playerObj = players[playerK]
-                playerHand = playerObj.hand
-                playerCardNames = []
-                for card in playerHand:
-                    cardname = card.name
-                    playerCardNames.append(cardname)
-                playersHands[players[playerK].name] = playerCardNames
-
-            result["playerHandsUpdated"]=playersHands
+            playerHands=self.getOtherHands()
+            result["playerHandsUpdated"]=playerHands
 
 
         print result
         return result
+
+
+
+    def getOtherHands(self):
+        playersHands = {}
+        players = self.players
+        for playerK in players:
+            playerObj = players[playerK]
+            playerHand = playerObj.hand
+            playerCardNames = []
+            for card in playerHand:
+                cardname = card.name
+                playerCardNames.append(cardname)
+            playersHands[players[playerK].name] = playerCardNames
+
+        return playersHands
 
 
     def setStartingLocation(self):
@@ -1423,7 +1432,10 @@ class GameBoard:
                                 curCityObj.researchStation =1
                                 playerHand.remove(card)
                                 self.playerDiscarded.append(card)
+                                playerHands = self.getOtherHands()
+                                responseDict["playerHandsUpdated"] = playerHands
                                 return responseDict
+
         responseDict["errorMessage"] = "ERROR: You don't have the government grant card!"
         responseDict["validAction"] = False
         return responseDict
@@ -1441,8 +1453,10 @@ class GameBoard:
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
-                print "AIRLIFT HAS BEEN USED!!!"
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
                 return responseDict
+
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"
         responseDict["validAction"] = False
@@ -1459,6 +1473,8 @@ class GameBoard:
                 responseDict["validAction"] = True
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
+                playerHands = self.getOtherHands()
+                responseDict["playerHandsUpdated"] = playerHands
                 return responseDict
 
         responseDict["errorMessage"] = "ERROR: You do not have this card"

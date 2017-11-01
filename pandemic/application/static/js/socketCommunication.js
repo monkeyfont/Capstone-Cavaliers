@@ -96,13 +96,26 @@ function endOfRound(info){
 
     //update hands
 
-        playerHandHTML="";
-       for (var player in info["playerHandsUpdated"]) {
+    updatePlayerHands(info["playerHandsUpdated"])
+
+    socket.emit('roundOverDone')
+
+
+
+};
+
+
+
+function updatePlayerHands(infoPlayerHandsUpdated){
+
+
+     playerHandHTML="";
+       for (var player in infoPlayerHandsUpdated) {
 		playerCardInfo = {}
 		playerCardInfo.playerName = player
 		playerCardInfo.cards = []
 		var playerId = player
-		var cards=info["playerHandsUpdated"][player]
+		var cards=infoPlayerHandsUpdated[player]
 
         playerHandHTML = playerHandHTML + "<div class = playerHand>"
         playerHandHTML = playerHandHTML + "<div class = playerSection>"
@@ -137,13 +150,7 @@ function endOfRound(info){
 
 
 
-    
-
-    socket.emit('roundOverDone')
-
-
-
-};
+}
 
 function isEmpty(obj) {
     for(var prop in obj) {
@@ -178,7 +185,7 @@ socket.on('checked', function (data) {
             if (data.cardName){
 			playersHand.removeCard({cardname:data.cardName})
 			}
-
+			updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -229,10 +236,12 @@ socket.on('researchBuildChecked', function (data) {
             console.log("Research station HAS BEEEN built here")
             locations[data.city].addResearchStation();
             playersHand.removeCard({cardname:data.cardName})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
             messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
+
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
 
@@ -395,6 +404,7 @@ socket.on('cureDiscovered', function (data) {
 				}
 						  }
 					 }
+			updatePlayerHands(data.msg.playerHandsUpdated)
 	}
 	else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -493,6 +503,7 @@ socket.on('governmentGrantChecked', function (data) {
             //alert("research station built with event card")
             locations[data.msg.location].addResearchStation();
             playersHand.removeCard({cardname:"Government_Grant"})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 
             // here goes logic to draw the building
         }
@@ -510,6 +521,7 @@ socket.on('oneQuietNightChecked', function (data) {
         if (check ==true){
             alert("next infect cities will be skipped")
             playersHand.removeCard({cardname:"One_Quiet_Night"})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	        messageAlert.newMessage({message:data.msg.errorMessage})
