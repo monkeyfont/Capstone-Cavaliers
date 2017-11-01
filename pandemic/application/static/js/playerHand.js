@@ -124,7 +124,7 @@ function playerHand(){
 			if ( chosenCard != 'none'){
 				console.log(chosenCard)
 				socket.emit('discardCard', {cardName:chosenCard})
-				this.removeCard({cardname:chosenCard})
+				
 				return true;
 			}else{
 				return false;
@@ -161,6 +161,9 @@ function playerHand(){
 
 	this.removeCard = function (options){
 		//options = {cardname:cardName}
+		if (players.players[thisPlayerName].playerType == "researcher"){
+				delete researcherHand[options.cardname]
+			}
 		delete this.cards[options.cardname];
 		delete this.activeCards[options.cardname]
 	}

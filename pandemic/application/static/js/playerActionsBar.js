@@ -98,10 +98,14 @@ function playerActionsBar(options){
 			if (this.currentAction == "Take"){
 				console.log("take card from the researcher",chosenCard)
 				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
+				this.currentAction = null
+				this.researcherHand = false;
 				return true
 			}else if(this.currentAction == "Give"){
 				console.log("give card from the researcher",chosenCard)
 				actionState.selectedCard({cardName:chosenCard, newState:this.currentAction})
+				this.currentAction = null
+				this.researcherHand = false;
 				return true
 			}
 		}
@@ -150,10 +154,13 @@ function playerActionsBar(options){
 					}else if(this.currentAction == "Give"){
 						// give the chosenPlayer atlanta
 						actionState.changeCurrentState({player:chosenPlayer,newState:"Give"})
+						this.currentAction = null
 						return true
+						
 					}else if (this.currentAction == "Take"){
 						// take atlanta from the the chosenPlayer
 						actionState.changeCurrentState({player:chosenPlayer,newState:"Take"})
+						this.currentAction = null
 						return true
 					}					
 					
