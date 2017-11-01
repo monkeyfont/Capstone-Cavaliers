@@ -231,8 +231,7 @@ socket.on('researchBuildChecked', function (data) {
             playersHand.removeCard({cardname:data.cardName})
 	    }
 	    else{
-
-	        alert(data.msg.errorMessage);
+            messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
@@ -271,7 +270,7 @@ socket.on('giveKnowledgeShared', function (data) {
             console.log("Cards have been swapped")
 	    }
 	    else{
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
@@ -315,7 +314,7 @@ socket.on('takeKnowledgeShared', function (data) {
 	    }
 	    else{
 
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
@@ -345,7 +344,7 @@ socket.on('diseaseTreated', function (data) {
 			locations[data.city].disinfect({'colour':colour,'amount':data.msg.amount});
 	}
 	else{
-	    alert(data.msg.errorMessage);
+	    messageAlert.newMessage({message:data.msg.errorMessage})
 	}
 
 	if (data.msg.endRound==true){
@@ -398,7 +397,7 @@ socket.on('cureDiscovered', function (data) {
 					 }
 	}
 	else{
-	    alert(data.msg.errorMessage);
+	    messageAlert.newMessage({message:data.msg.errorMessage})
 	}
 
 	if (data.msg.endRound==true){
@@ -442,7 +441,7 @@ socket.on('passTurnChecked', function (data) {
         console.log("turn passed no more actions left")
         }
         else{
-        alert(data.msg.errorMessage);
+        messageAlert.newMessage({message:data.msg.errorMessage})
         }
 
         if (data.msg.endRound==true){
@@ -498,7 +497,7 @@ socket.on('governmentGrantChecked', function (data) {
             // here goes logic to draw the building
         }
         else{
-            alert(data.msg.errorMessage);
+            messageAlert.newMessage({message:data.msg.errorMessage})
         }
     });
 
@@ -513,7 +512,7 @@ socket.on('oneQuietNightChecked', function (data) {
             playersHand.removeCard({cardname:"One_Quiet_Night"})
 	    }
 	    else{
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
     });
 
@@ -525,7 +524,7 @@ socket.on('resilientPopulationChecked', function (data) {
 
 	    }
 	    else{
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
     });
 

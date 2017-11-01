@@ -21,7 +21,9 @@
 }
 
 
-.researcher{background-image:url("../images/PlayerPortraits/Researcher.png");}
+.researcher{
+    background-image:url("../images/PlayerPortraits/Researcher.png");
+    }
 .medic{background-image:url("../images/PlayerPortraits/Medic.png");}
 .contingencyPlanner{background-image:url("../images/PlayerPortraits/Operations Expert.png");}
 .operationsExpert{background-image:url("../images/PlayerPortraits/Operations Expert.png");}
@@ -56,11 +58,25 @@
     height: 14em;
     margin-right: auto;
 }
+
+.drinkcard2-cc{
+    margin-left: auto;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    width: 20em;
+    height: 14em;
+    margin-right: auto;
+}
+
 .drinkcard-cc:hover{
     -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
        -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
             filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
+
+
 #playerSelection{
     display: block;
     margin-left: 10%;
@@ -78,4 +94,9 @@ p{margin-bottom:.3em;}
 
 h2{
 
+}
+
+.grayout{
+    opacity: 0.4;
+    filter: alpha(opacity = 60);
 }
