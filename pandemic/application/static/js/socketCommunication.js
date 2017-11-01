@@ -241,17 +241,17 @@ socket.on('researchBuildChecked', function (data) {
 });
 
 function shareKnowledgeGive(options) {
-
-
+	console.log("the options are ",options)
+	otherPlayer = options.playerName
     if (thisPlayerRole=="researcher"){
 
         var city = prompt("Enter card you wish to swap: ");
-        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        // var otherPlayer = prompt("Enter name of player you want to swap with: ");
         socket.emit('shareKnowledgeGive', {cityName:city,playerTaking:otherPlayer})
 
     }
     else{
-        var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        // var otherPlayer = prompt("Enter name of player you want to swap with: ");
         socket.emit('shareKnowledgeGive', {playerTaking:otherPlayer})
     }
 
@@ -283,8 +283,9 @@ socket.on('giveKnowledgeShared', function (data) {
 
 
 function shareKnowledgeTake(options) {
-
-    var otherPlayer = prompt("Enter name of player's card you want to take: ");
+	console.log("the options are ",options)
+	otherPlayer = options.playerName
+    // var otherPlayer = prompt("Enter name of player's card you want to take: ");
     var type= players.players[otherPlayer].playerType
     //alert(type)
 

@@ -8,7 +8,8 @@ function actionState(options){
 	this.currentState = null;
 	this.playerInvolved = null;
 
-	this.selectedCard = function(){
+	this.selectedCard = function(options){
+		options.cardName
 		// a card has been selected, can we use the current action?
 
 	}
@@ -20,12 +21,7 @@ function actionState(options){
 		}else if(this.currentState == "AirLift"){
 			console.log("wtf wtf wtf",this.playerInvolved,cityName)
 			PlayEventCard({cardName:"AirLift",player:this.playerInvolved,city:cityName})
-		return true
-		}else if(this.currentState == "One_Quiet_Night"){
-
-
-			PlayEventCard({cardName:"One_Quiet_Night"})
-		return true
+			return true
 		}else if (this.currentState == "ShuttleFlight "){
 			shuttleFlight(cityName)
 			return true
@@ -159,7 +155,7 @@ function actionState(options){
 
 		}else if(this.currentState == "Give"){
 			// playerName
-			shareKnowledgeGive()
+			shareKnowledgeGive({playerName:this.playerInvolved})
 		}else if(this.currentState == "Pass"){
 			PassTurn()
 		}else if(this.currentState == "ShuttleFlight"){
@@ -167,7 +163,7 @@ function actionState(options){
 			shuttleFlight()
 		}else if(this.currentState == "Take"){
 			// playerName
-			shareKnowledgeTake()
+			shareKnowledgeTake({playerName:this.playerInvolved})
 		}
 
 	}
