@@ -9,7 +9,18 @@ function actionState(options){
 	this.playerInvolved = null;
 
 	this.selectedCard = function(options){
-		options.cardName
+		console.log("we've selected the card, the state is",this.currentState)
+		
+		if(this.currentState == "Give"){
+			// playerName
+			shareKnowledgeGive({playerName:this.playerInvolved,cardName:options.cardName})
+		}else if(this.currentState == "Take"){
+			// playerName
+			shareKnowledgeTake({playerName:this.playerInvolved,cardName:options.cardName})
+		}
+
+		
+		
 		// a card has been selected, can we use the current action?
 
 	}
