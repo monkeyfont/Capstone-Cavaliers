@@ -96,13 +96,26 @@ function endOfRound(info){
 
     //update hands
 
-        playerHandHTML="";
-       for (var player in info["playerHandsUpdated"]) {
+    updatePlayerHands(info["playerHandsUpdated"])
+
+    socket.emit('roundOverDone')
+
+
+
+};
+
+
+
+function updatePlayerHands(infoPlayerHandsUpdated){
+
+
+     playerHandHTML="";
+       for (var player in infoPlayerHandsUpdated) {
 		playerCardInfo = {}
 		playerCardInfo.playerName = player
 		playerCardInfo.cards = []
 		var playerId = player
-		var cards=info["playerHandsUpdated"][player]
+		var cards=infoPlayerHandsUpdated[player]
 
         playerHandHTML = playerHandHTML + "<div class = playerHand>"
         playerHandHTML = playerHandHTML + "<div class = playerSection>"
@@ -137,13 +150,7 @@ function endOfRound(info){
 
 
 
-    
-
-    socket.emit('roundOverDone')
-
-
-
-};
+}
 
 function isEmpty(obj) {
     for(var prop in obj) {
@@ -178,7 +185,7 @@ socket.on('checked', function (data) {
             if (data.cardName){
 			playersHand.removeCard({cardname:data.cardName})
 			}
-
+			updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -229,11 +236,12 @@ socket.on('researchBuildChecked', function (data) {
             console.log("Research station HAS BEEEN built here")
             locations[data.city].addResearchStation();
             playersHand.removeCard({cardname:data.cardName})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
-
-	        alert(data.msg.errorMessage);
+            messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
+
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
 
@@ -253,6 +261,7 @@ function shareKnowledgeGive(options) {
     }
     else{
         // var otherPlayer = prompt("Enter name of player you want to swap with: ");
+        //alert(playerTaking)
         socket.emit('shareKnowledgeGive', {playerTaking:otherPlayer})
     }
 
@@ -265,14 +274,18 @@ socket.on('giveKnowledgeShared', function (data) {
         check=data.msg.validAction;
         if (check ==true){
             //addResearchStation(city);
+            if (thisPlayerName==data.playerGivingName){
+                playersHand.removeCard({cardname:data.cardName})
 
-            j=players
-            JSON.stringify(j);
-            console.log(j)
-            console.log("Cards have been swapped")
+            }
+            else if (thisPlayerName==data.playerTakingName){
+                playersHand.addCard({cardName:data.cardName})
+
+            }
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
@@ -309,16 +322,19 @@ socket.on('takeKnowledgeShared', function (data) {
         //alert(data.msg);
         check=data.msg.validAction;
         if (check ==true){
-            //addResearchStation(city);
 
-            j=players
-            JSON.stringify(j);
-            console.log(j)
-            console.log("Cards have been swapped")
+            if (thisPlayerName==data.playerGivingName){
+                playersHand.removeCard({cardname:data.cardName})
+
+            }
+            else if (thisPlayerName==data.playerTakingName){
+                playersHand.addCard({cardName:data.cardName})
+            }
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
 
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
 	    if (data.msg.endRound==true){
             endOfRound(data.msg);
@@ -348,7 +364,7 @@ socket.on('diseaseTreated', function (data) {
 			locations[data.city].disinfect({'colour':colour,'amount':data.msg.amount});
 	}
 	else{
-	    alert(data.msg.errorMessage);
+	    messageAlert.newMessage({message:data.msg.errorMessage})
 	}
 
 	if (data.msg.endRound==true){
@@ -399,9 +415,10 @@ socket.on('cureDiscovered', function (data) {
 				}
 						  }
 					 }
+			updatePlayerHands(data.msg.playerHandsUpdated)
 	}
 	else{
-	    alert(data.msg.errorMessage);
+	    messageAlert.newMessage({message:data.msg.errorMessage})
 	}
 
 	if (data.msg.endRound==true){
@@ -445,7 +462,7 @@ socket.on('passTurnChecked', function (data) {
         console.log("turn passed no more actions left")
         }
         else{
-        alert(data.msg.errorMessage);
+        messageAlert.newMessage({message:data.msg.errorMessage})
         }
 
         if (data.msg.endRound==true){
@@ -497,11 +514,12 @@ socket.on('governmentGrantChecked', function (data) {
             //alert("research station built with event card")
             locations[data.msg.location].addResearchStation();
             playersHand.removeCard({cardname:"Government_Grant"})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 
             // here goes logic to draw the building
         }
         else{
-            alert(data.msg.errorMessage);
+            messageAlert.newMessage({message:data.msg.errorMessage})
         }
     });
 
@@ -514,9 +532,10 @@ socket.on('oneQuietNightChecked', function (data) {
         if (check ==true){
             alert("next infect cities will be skipped")
             playersHand.removeCard({cardname:"One_Quiet_Night"})
+            updatePlayerHands(data.msg.playerHandsUpdated)
 	    }
 	    else{
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
     });
 
@@ -528,7 +547,7 @@ socket.on('resilientPopulationChecked', function (data) {
 
 	    }
 	    else{
-	        alert(data.msg.errorMessage);
+	        messageAlert.newMessage({message:data.msg.errorMessage})
 	    }
     });
 
