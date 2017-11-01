@@ -291,6 +291,7 @@ class GameBoard:
         result["actionsCount"] = actionsCount = playerObj.actions
 
         # check if valid move.
+
         if cardsCount < 8 and actionsCount > 0:
             result["validAction"] = True
         else:
@@ -1303,6 +1304,7 @@ class GameBoard:
         responseDict = {}
         validation = self.checkAction(playerId)  # validate its a legal player move.
         if validation["validAction"] == False:
+
             return validation
         playerObj = self.players[playerId]
         # set player actions count to 0
@@ -1310,6 +1312,7 @@ class GameBoard:
         responseDict["validAction"] = True
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
+      
         return responseDict
 
 

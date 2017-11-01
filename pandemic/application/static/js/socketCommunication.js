@@ -94,6 +94,7 @@ function endOfRound(info){
 
     console.log(info.infectionDiscarded)
 
+
     //update hands
 
     updatePlayerHands(info["playerHandsUpdated"])
@@ -443,7 +444,7 @@ socket.on('cardRemoved', function (data) {
         console.log(data.cardToRemove+" has been discarded from your hand")
         }
         else{
-        
+
         messageAlert.newMessage({message:"cannot discard this card"})
         }
 
