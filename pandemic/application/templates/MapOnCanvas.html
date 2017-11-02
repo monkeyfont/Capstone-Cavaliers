@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="static/css/game.css">
     <link rel="stylesheet" href="static/css/gamePlayerCards.css">
     <script>
-        function fade(){
-            $("#lobbyMessageBox").fadeToggle();
-        }
         function tuggleBox(){
             $('#messageBox').animate({width: 'toggle'});
         }
@@ -24,23 +21,20 @@
 
 
 
-    <button id = "showMessages" onclick="fade();setTimeout(tuggleBox, 500);">Show Message Board</button>
+    <button id = "showMessages" onclick="tuggleBox()">Show Message Board</button>
+
     <div id = "messageBox">
             <div id = "lobbyMessageHistory">
-
             </div>
-
             <div id="lobbyMessageBox">
                     <input class = "typeMessageHere" id="message_input" placeholder="">
                     <input class="three"id="message_button" type="button" value="Send">
             </div>
     </div>
-        <button id = "showHand" onclick="tugglehand()">Show Message Board</button>
+
+    <button id = "showHand" onclick="tugglehand()">Show Message Board</button>
     <div id="playerCards"></div>
     <h3 id="newMessage" style="display:none"></h3>
-
-
-
     <canvas id="myCanvas" width="1920" height="1080" style="display:none">
     </canvas>
 
