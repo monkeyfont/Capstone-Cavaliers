@@ -11,11 +11,15 @@ function endOfRound(info){
     //do some stuff
 
     if (info["gameLoss"]==true){ // game is over !!!!
+    //alert(info["gameLossReason"]);
+    var result= "Lost: "+info["gameLossReason"]
 
-    //insert logic into here to deal with a game over situation.
-
-
+    endScreen.activateEndGame({gameStatus:result})
     }
+
+
+
+
 
 
 
@@ -429,6 +433,9 @@ socket.on('cureDiscovered', function (data) {
 					 }
 			updatePlayerHands(data.msg.playerHandsUpdated)
 			updateMovesLeft(data.msg.playersActionsLeft);
+			if (data.msg.gameWon==true){ // game is over !!!!
+                endScreen.activateEndGame({gameStatus:"Won!"})
+                }
 	}
 	else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -550,7 +557,8 @@ socket.on('oneQuietNightChecked', function (data) {
         check=data.msg.validAction;
 
         if (check ==true){
-            alert("next infect cities will be skipped")
+
+            messageAlert.newMessage({message:"next infect cities will be skipped"})
             playersHand.removeCard({cardname:"One_Quiet_Night"})
             updatePlayerHands(data.msg.playerHandsUpdated)
 	    }

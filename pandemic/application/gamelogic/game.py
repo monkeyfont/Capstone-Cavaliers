@@ -433,7 +433,7 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
-        self.cities["LAGOS"].researchStation = 1
+        #self.cities["LAGOS"].researchStation = 1
         # just for testing on game page
         #self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
@@ -1251,6 +1251,7 @@ class GameBoard:
         responseDict["playersActionsLeft"] = self.getMovesLeft()
         responseDict["validAction"] = True
         responseDict["colourCured"] = colour
+        responseDict["gameWon"]=self.checkWin()
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
         return responseDict
