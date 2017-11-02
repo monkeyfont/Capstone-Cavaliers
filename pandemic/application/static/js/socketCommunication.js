@@ -94,10 +94,8 @@ function endOfRound(info){
 
     // INFECTION DISCARDED
 
-    console.log(info.infectionDiscarded)
-	  discardPile.changeCards(info.infectionDiscarded)
+	discardPile.changeCards(info.infectionDiscarded)
     updatePlayerHands(info["playerHandsUpdated"])
-
     socket.emit('roundOverDone')
 
 
@@ -167,6 +165,17 @@ function checkMove(city){
     socket.emit('checkMove', {cityName:city})
 
     };
+
+
+function updateMovesLeft(movesLeft){
+    for (var i=0;i<movesLeft.length;i++){
+			    var object= movesLeft[i]
+			    for (key in object){
+			        playerPortraits.alterPlayerMovesCount({playerName:key,newCount:object[key]})
+			    }
+			}
+}
+
 socket.on('checked', function (data) {
 
         check=data.msg.validAction;
@@ -186,6 +195,8 @@ socket.on('checked', function (data) {
 			playersHand.removeCard({cardname:data.cardName})
 			}
 			updatePlayerHands(data.msg.playerHandsUpdated)
+
+			updateMovesLeft(data.msg.playersActionsLeft);
 	    }
 	    else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -239,6 +250,7 @@ socket.on('researchBuildChecked', function (data) {
             locations[data.city].addResearchStation();
             playersHand.removeCard({cardname:data.cardName})
             updatePlayerHands(data.msg.playerHandsUpdated)
+            updateMovesLeft(data.msg.playersActionsLeft);
 	    }
 	    else{
             messageAlert.newMessage({message:data.msg.errorMessage})
@@ -283,6 +295,7 @@ socket.on('giveKnowledgeShared', function (data) {
 
             }
             updatePlayerHands(data.msg.playerHandsUpdated)
+            updateMovesLeft(data.msg.playersActionsLeft);
 	    }
 	    else{
 	        messageAlert.newMessage({message:data.msg.errorMessage})
@@ -328,6 +341,7 @@ socket.on('takeKnowledgeShared', function (data) {
                 playersHand.addCard({cardName:data.cardName})
             }
             updatePlayerHands(data.msg.playerHandsUpdated)
+            updateMovesLeft(data.msg.playersActionsLeft);
 	    }
 	    else{
 
@@ -359,6 +373,7 @@ socket.on('diseaseTreated', function (data) {
             var city=eval(data.city);
             //addResearchStation(city);
 			locations[data.city].disinfect({'colour':colour,'amount':data.msg.amount});
+			updateMovesLeft(data.msg.playersActionsLeft);
 	}
 	else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -413,6 +428,7 @@ socket.on('cureDiscovered', function (data) {
 						  }
 					 }
 			updatePlayerHands(data.msg.playerHandsUpdated)
+			updateMovesLeft(data.msg.playersActionsLeft);
 	}
 	else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})
@@ -463,6 +479,7 @@ socket.on('passTurnChecked', function (data) {
         check=data.msg.validAction;
         if (check == true){
         console.log("turn passed no more actions left")
+        updateMovesLeft(data.msg.playersActionsLeft);
         }
         else{
         messageAlert.newMessage({message:data.msg.errorMessage})
@@ -669,6 +686,7 @@ socket.on('InfectedCities',function(data){
             //{"amount":info["cubesUsed"][i][key]}
         }
     }
+        updateMovesLeft(data.playersActionsLeft)
 
 
        });
@@ -739,3 +757,11 @@ socket.on('gotInitialHands',function(data){
 
                 }
  });
+
+
+ socket.on('resetActions',function(data){
+    updateMovesLeft(data.msg.playersActionsLeft)
+ });
+
+
+
