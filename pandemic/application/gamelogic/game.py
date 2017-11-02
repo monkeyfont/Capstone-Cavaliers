@@ -606,7 +606,7 @@ class GameBoard:
             [{"city":cityStr, "colour":str, "path":[cityStr*], "amount":int}*]
 
         """
-        infectedCities = {} #TODO REMOVE WHEN FIXED
+        infectedCities = {}
         infectedCitiesNew = [] # list of city infected objects.
         if self.skipInfectCities:
             print"The infections for this round are getting skipped!"
@@ -614,8 +614,8 @@ class GameBoard:
             return infectedCities
         print"The infections for this round are not getting skipped!"
 
-
-        amountToDraw = 6 # TODO THIS NEEDS TO BE CHANGED WHEN WE DECIDE ON DRAW RATES FOR INFECTION LEVELS. (use a dict)
+        cardsPerPlayer = self.infectionRates[self.infectionLevel]
+        amountToDraw = len(self.players) * cardsPerPlayer
         for i in range(amountToDraw):
             print(i)
             # Draw the infection card from the top of the deck.

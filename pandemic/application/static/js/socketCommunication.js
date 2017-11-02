@@ -94,13 +94,8 @@ function endOfRound(info){
 
     // INFECTION DISCARDED
 
-    console.log(info.infectionDiscarded)
-
 	discardPile.changeCards(info.infectionDiscarded)
-    //update hands
-
     updatePlayerHands(info["playerHandsUpdated"])
-
     socket.emit('roundOverDone')
 
 
