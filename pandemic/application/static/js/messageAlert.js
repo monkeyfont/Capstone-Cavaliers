@@ -13,7 +13,7 @@ function messageAlert(options){
 	this.newMessage = function(options){
 		// messageAlert.newMessage({message:"heres a fake message"})
 		console.log("new message is: ",options.message)
-		this.size = options.size || this.size;
+		this.size = options.size || 80;
 		this.currentStage = 0;
 		this.showMessage = true;
 		this.currentMessage = options.message
@@ -44,18 +44,7 @@ function messageAlert(options){
 			this.context.fillStyle = "rgba(255,255,255,"+fade+")";//this.colour;
 
 			this.context.fillText(this.currentMessage,this.xPos-(textWidth/2),this.yPos);
-			
-			
-			// this.context.font = "22px Sans-serif"
-		// this.context.strokeStyle = 'black';//'green';
-		// this.context.lineWidth = 8;
-		// this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
-		// this.context.miterLimit=3;
-		// textWidth = this.context.measureText(this.id).width;
-		// this.context.strokeText(this.id,this.xPos-(textWidth/2),this.yPos-18);
-		// this.context.fillStyle = 'white';//this.colour;
-		// textWidth = this.context.measureText(this.id).width;
-		// this.context.fillText(this.id,this.xPos-(textWidth/2),this.yPos-18);
+
 			
 			
 			
