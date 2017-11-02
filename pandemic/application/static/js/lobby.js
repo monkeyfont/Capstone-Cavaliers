@@ -48,10 +48,6 @@ $("#showVideoPage").click(function(){
 $("#showActionsPage").click(function(){
         location.href = "/actions";
 });
-$("#showRules").click(function(){
-        location.href = "/rules";
-});
-
 
 
 socket.on('joinSecret', function () {
