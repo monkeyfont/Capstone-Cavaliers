@@ -83,6 +83,9 @@ function playerHand(){
 	}
 	
 	this.addCard = function (options){
+		if (players.players[thisPlayerName].playerType == "researcher"){
+				researcherHand[options.cardname] = options.cardname
+			}
 		//options = {cardname:cardName}
 		cardFront = allPossiblePlayerCards[options.cardName];
 			newPlayerCard = new playerCard({
