@@ -189,6 +189,12 @@ socket.on('checked', function (data) {
 			playersHand.removeCard({cardname:data.cardName})
 			}
 			updatePlayerHands(data.msg.playerHandsUpdated)
+			for (var i=0;i<data.msg.playersActionsLeft.length;i++){
+			    var object= data.msg.playersActionsLeft[i]
+			    for (key in object){
+			        playerPortraits.alterPlayerMovesCount({playerName:key,newCount:object[key]})
+			    }
+			}
 	    }
 	    else{
 	    messageAlert.newMessage({message:data.msg.errorMessage})

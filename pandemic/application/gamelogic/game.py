@@ -776,8 +776,10 @@ class GameBoard:
             playerObj.actions -= 1
             #print playerObj.actions
             endOfGameCheck = self.__endOfRound()
+            responseDict["playersActionsLeft"]=self.getMovesLeft()
             #print endOfGameCheck
             responseDict.update(endOfGameCheck)
+            print responseDict
             return responseDict
         else:
             print("PlayerID " + str(playerId) + " FAILED to move to move from  " + currentCityName + " to " + nextCityName)
@@ -1519,6 +1521,16 @@ class GameBoard:
 
         return researchLocations
 
+
+    def getMovesLeft(self):
+        actionsLeft = []
+        players = self.players
+        for playerK in players:
+            playerObj = players[playerK]
+            playerActions=playerObj.actions
+            actionsLeft.append({playerObj.name:playerActions})
+
+        return actionsLeft
 
     def getCures(self):
 
