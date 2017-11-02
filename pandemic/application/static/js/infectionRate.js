@@ -9,7 +9,7 @@ function infectionRate(options) {
 	this.xScale = options.xScale || 1;
 	this.yScale = options.yScale || 1;
 	this.infectionStage = 0;
-	this.rateArray = [2,2,2,3,3,4,4]
+	this.rateArray = [1,1,2,2,3,3,4]
 	
 	this.setStage = function(options){
 		this.infectionStage = options.infectionStage;

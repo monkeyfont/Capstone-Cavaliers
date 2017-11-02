@@ -124,11 +124,16 @@ def getInfections():
                 cubesUsed.append({colour: gameboard.cubesUsed[colour]})
             researchLocations=gameboard.getResearchStations()
             curesFound=gameboard.getCures()
+            discarded=[]
+
+            for card in gameboard.infectionDiscarded:
+                discarded.append({"cardName":card.name})
 
             emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,
                                    "outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed,
                                    "researchLocations":researchLocations,"curesFound":curesFound,
-                                   "playersActionsLeft":actionsLeft})
+                                   "playersActionsLeft":actionsLeft,
+                                   "infectionDiscarded":discarded})
 
 
 @socketio.on('updateHands')

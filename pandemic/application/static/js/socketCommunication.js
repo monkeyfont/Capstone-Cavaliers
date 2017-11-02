@@ -696,6 +696,8 @@ socket.on('InfectedCities',function(data){
     }
         updateMovesLeft(data.playersActionsLeft)
 
+        discardPile.changeCards(data.infectionDiscarded)
+
 
        });
 

@@ -270,6 +270,7 @@ class GameBoard:
         self.skipInfectCities = False #currently used for event card.
 
 
+
     def checkAction(self, playerId):
         """ 
         Check if player has too many cards (they must discard before being able to perform an action)
