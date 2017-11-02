@@ -41,8 +41,8 @@ function playerInitilization (){
 			ticksPerFrame: 16,
 			xPos:options.xPos,
 			yPos:options.yPos,
-			xScale:0.15,
-			yScale:0.15,
+			xScale:0.2,
+			yScale:0.2,
 			image: playerImage,
 			currentCity:options.currentCity			
 		});
