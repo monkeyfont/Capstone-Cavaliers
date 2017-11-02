@@ -34,10 +34,12 @@ function actionState(options){
 			console.log("wtf wtf wtf",this.playerInvolved,cityName)
 			PlayEventCard({cardName:"AirLift",player:this.playerInvolved,city:cityName})
 			return true
-		}else if (this.currentState == "ShuttleFlight "){
+		}else if (this.currentState == "ShuttleFlight"){
+			console.log("shutteling a flight")
 			shuttleFlight(cityName)
 			return true
 		}else if (this.currentState == "CharterFlight"  ){
+			console.log("chartering a flight")
 			charterFlight(cityName)
 			// cityName
 			return true
@@ -172,7 +174,7 @@ function actionState(options){
 			PassTurn()
 		}else if(this.currentState == "ShuttleFlight"){
 			//city Name
-			shuttleFlight()
+			// shuttleFlight()
 		}else if(this.currentState == "Take"){
 			// playerName
 			shareKnowledgeTake({playerName:this.playerInvolved})

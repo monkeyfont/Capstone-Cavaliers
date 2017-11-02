@@ -96,7 +96,7 @@ function endOfRound(info){
 
     console.log(info.infectionDiscarded)
 
-
+	discardPile.changeCards(info.infectionDiscarded)
     //update hands
 
     updatePlayerHands(info["playerHandsUpdated"])
@@ -208,16 +208,18 @@ function directFlight(city) {
 
 
 
-function charterFlight() {
-
-     socket.emit('checkCharterFlight', {destination:city})
+function charterFlight(options) {
+	console.log("chartering the flight socket",options)
+	city = options
+    socket.emit('checkCharterFlight', {destination:city})
 
 }
 
 
 
-function shuttleFlight() {
-
+function shuttleFlight(options) {
+	console.log("shuttelign the flight socket",options)
+	city = options
     socket.emit('checkShuttleFlight', {cityName:city})
 
 }
