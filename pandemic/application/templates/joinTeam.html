@@ -42,8 +42,13 @@
                             <tr>
                                 <td id="rightTableSideTwo"><input class="optionalRooms" type="radio" name="roomname" value="{{rooms}}"></td>
                                 <td id="leftTableSideTwo"class="tname">{{rooms}}</td>
-
-                                <td class="dif">{{allRooms[rooms].difficulty}}</td>
+                                {% if allRooms[rooms].difficulty == 0 %}
+                                <td class="dif">Normal</td>
+                                {% elif allRooms[rooms].difficulty == 1 %}
+                                <td class="dif">Hard</td>
+                                {% elif allRooms[rooms].difficulty == 2 %}
+                                <td class="dif">Legendary</td>
+                                {% endif %}
                                 <td class="npla">{{(allRooms[rooms].playerCount)}}</td>
                             </tr>
                         {% endfor %}
