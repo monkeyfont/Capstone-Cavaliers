@@ -24,19 +24,16 @@
         function gameName(e){
             $("#teamName").fadeToggle();
         }
-
+        function changeStyle(e){
+            document.getElementById("showRoleOptions").style.margin= "0px";
+            document.getElementById("messageBox").style.top = "35em";
+        }
     </script>
 </head>
-<body onload="fade();tuggleBox();">
+<body>
 
         <img id = "logo" src="static/images/pandemic.png" alt="Pandemic logo">
-    <div id = "messageBox">
-            <div id = "lobbyMessageHistory"></div>
-            <div id="lobbyMessageBox">
-                <input class = "typeMessageHere" id="message_input" placeholder="">
-                <input class="three"id="message_button" type="button" value="Send">
-            </div>
-    </div>
+
 
 <div id="playerSelection">
     <div id="showRoleOptions">
@@ -140,8 +137,8 @@
                 {% endif %}
                 {% endfor %}
             <div id="buttonsIntermission">
-                            <button onclick="fade();tuggleBox();gameName();setRole();" id="lockIn" type="button">Lock in your player Role!</button>
-                            <button onclick="fade();setTimeout(tuggleBox, 500);" id="showMessages" type="button">Message Bar</button>
+                            <button onclick="gameName();setRole();changeStyle();" id="lockIn" type="button">Lock in your player Role!</button>
+                            <!--<button onclick="fade();setTimeout(tuggleBox, 500);" id="showMessages" type="button">Message Bar</button>-->
                 </div>
 
     </div>
@@ -151,6 +148,13 @@
     </div>
 </div>
     <h1 id ='teamName' style="display: none;">Chat room for team {{ room }} </h1>
+    <div id = "messageBox">
+            <div id = "lobbyMessageHistory"></div>
+            <div id="lobbyMessageBox">
+                <input class = "typeMessageHere" id="message_input" placeholder="">
+                <input class="three"id="message_button" type="button" value="Send">
+            </div>
+    </div>
     <input id="gameStarter" type="button" value= "PLAY ">
 </body>
 </html>

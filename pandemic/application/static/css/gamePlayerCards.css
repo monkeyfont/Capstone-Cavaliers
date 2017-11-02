@@ -33,7 +33,7 @@
 
 
 .medic{
-    background-image: url("../images/PlayerPortraits/medic.png");
+    background-image: url("../images/PlayerPortraits/Medic.png");
     background-size: 2em;
     background-repeat: no-repeat;
     background-color: rgb(204,102,0);
@@ -44,7 +44,7 @@
 }
 
 .scientist {
-    background-image: url("../images/PlayerPortraits/scientist.png");
+    background-image: url("../images/PlayerPortraits/Scientist.png");
     background-size: 2em;
     background-repeat: no-repeat;
     background-color: rgba(102,255,255,0.8);
