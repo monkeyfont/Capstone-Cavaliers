@@ -607,8 +607,8 @@ socket.on('gamePlayerInitilization',function(data){
 	console.log("cityName",cityName)
 	players.addPlayer({playerName:data.playerName,playerType:data.playerType,xPos:city.xPos,yPos:city.yPos,currentCity:cityName});
 	console.log("playersName",players.players[data.playerName])
-	
-	playerPortraits.addPlayerPortrait({playerType:data.playerType});
+	// we need to add in here a line saying currentMoves:data.currentMoves
+	playerPortraits.addPlayerPortrait({playerName:data.playerName,playerType:data.playerType});
 
 });
 
