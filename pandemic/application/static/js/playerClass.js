@@ -66,5 +66,6 @@ function player(options) {
 		this.yPos, // y position for image on canvas
 		this.width*this.xScale, // width of image to use 
 		this.height*this.yScale); // height of image to use
+		
     };
 }	

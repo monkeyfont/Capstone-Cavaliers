@@ -168,6 +168,7 @@ function gameLoop(){
 	
 	discardPile.render();
 	eventCardViewer.render();
+	playerCityMessage.render()
 	endScreen.render();
 }
 
@@ -214,7 +215,13 @@ var deck = new sprite({
 
 	
 })
+playerCityMessage = new playerCityMessage({
+	xPos: 20,
+	yPos: 900,
+	context: canvas.getContext("2d")
+}
 
+)
 outbreakCount = new outbreakCounter({});
 playersHand = new playerHand();
 players = new playerInitilization();
