@@ -244,7 +244,7 @@ class GameBoard:
     def __init__(self, playerDict,difficulty=0,initialize = True):
 
         """ init def """
-        self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
+        self.infectionRates = [1,1,2,2,3,3,4] # how many infection cards are drawn at the end of every turn
         #just for now while testing the GameBoard init function
         self.cities = {}
         self.infectionDeck = []
@@ -489,7 +489,7 @@ class GameBoard:
         cardsPerPlayer = {1:6, 2:4, 3:3, 4:2}
         nPlayers = len(self.players)
         nCardsToDeal = cardsPerPlayer[nPlayers]
-        #shuffle(self.playerDeck)
+        shuffle(self.playerDeck)
         for id in self.players:
             playerHand = self.players[id].hand
             for i in range(nCardsToDeal):
@@ -545,7 +545,7 @@ class GameBoard:
         It gets the valid range for each epidemic, then randomly places them.
         """
         # create the epidemic card objects
-        amount = {0:4, 1:5, 2:6}
+        amount = {0:3, 1:4, 2:5}
         numEpidemics = amount[self.difficulty]
         epidemics = []
         for i in range(numEpidemics):
