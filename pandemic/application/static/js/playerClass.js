@@ -7,8 +7,8 @@ function player(options) {
 	this.image = options.image;
 	this.yPos = options.yPos || 0;
 	this.xPos = options.xPos || 0;
-	this.xScale = options.xScale || 1;
-	this.yScale = options.yScale || 1;
+	this.xScale = options.xScale || 1.2;
+	this.yScale = options.yScale || 1.2;
 	this.moveX = this.xPos;
 	this.moveY = this.yPos;
 	this.speed = options.speed || 10;
