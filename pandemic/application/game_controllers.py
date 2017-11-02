@@ -61,9 +61,9 @@ def game():
         currentLobby.gameStarted=True
         playerdict = currentLobby.players
         if roomname not in games:
-            gameobject = GameBoard(playerdict)
+            gameobject = GameBoard(playerdict,currentLobby.difficulty)
             gameobject.gameID = roomname
-            gameobject.difficulty=currentLobby.difficulty
+
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/home'></b>" + \

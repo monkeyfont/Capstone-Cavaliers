@@ -241,7 +241,7 @@ class Player:
 
 class GameBoard:
     """ Game class definition """
-    def __init__(self, playerDict, initialize = True):
+    def __init__(self, playerDict,difficulty,initialize = True):
 
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
@@ -262,7 +262,7 @@ class GameBoard:
         self.researchStationsBuilt=0
         self.gameID = 0
         self.gameID = "default"
-        self.difficulty = 0  # easy 0, medium 1, hard 2.
+        self.difficulty = difficulty  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
         self.initialized = 0
         if initialize: # set to false for testing!
