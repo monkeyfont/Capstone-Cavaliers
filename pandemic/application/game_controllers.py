@@ -369,14 +369,15 @@ def handleclick(msg):
         playerObject = playerDictionary[key]
         if playerObject.name == username:
             print(playerObject.name," wants to use the card", playerObject.location ," to move to ",cityToMove)
+            location=playerObject.location
 
-            response = gameObject.charterFlight(playerObject.id, playerObject.location, cityToMove)
+            response = gameObject.charterFlight(playerObject.id, location, cityToMove)
             # if response["validAction"] == True:
             #     emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove}, room=room)
             # else:
             #     emit('charterFlightChecked', {'playerName': username, 'msg': response, 'city': cityToMove})
             if response["validAction"]==True:
-                emit('checked', {'playerName':username,'msg':response,'city':cityToMove,'cardName':playerObject.location},room=room)
+                emit('checked', {'playerName':username,'msg':response,'city':cityToMove,'cardName':location},room=room)
             else:
                 emit('checked', {'playerName': username, 'msg': response, 'city': cityToMove})
 

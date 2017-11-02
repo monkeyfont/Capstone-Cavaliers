@@ -196,6 +196,7 @@ socket.on('checked', function (data) {
 			player.currentCity = data.city
 
             if (data.cardName){
+            //alert(data.cardName)
 			playersHand.removeCard({cardname:data.cardName})
 			}
 			updatePlayerHands(data.msg.playerHandsUpdated)
