@@ -12,9 +12,17 @@ function portraitInitilization(options){
 	this.xPos = 2190 
 	this.yPos = 20
 	this.playerPortraits = {}
+	
+	this.alterPlayerMovesCount = function(options){
+		//options = {playerName:"player",newCount:x}
+		this.playerPortraits[options.playerName].alterMovesCount({newCount:options.newCount})
+		
+	}
+	
 	this.addPlayerPortrait = function(options){
-		this.playerPortraits[options.playerType]=new portrait({
+		this.playerPortraits[options.playerName]=new portrait({
 			id:"playerViewImage",
+			currentMoves:options.currentMoves,
 			xPos:this.xPos-(420*0.4),
 			yPos:this.yPos,
 			xScale:0.4,
@@ -30,6 +38,10 @@ function portraitInitilization(options){
 	this.render = function(){
 		for( i in this.playerPortraits){
 			this.playerPortraits[i].render();
+			
+			
+			
+			pos = Object.keys(this.playerPortraits).indexOf(i)
 		}
 		
 	}
