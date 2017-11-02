@@ -66,6 +66,7 @@ def game():
         if roomname not in games:
             gameobject = GameBoard(playerdict)
             gameobject.gameID = roomname
+
             gameobject.difficulty=currentLobby.difficulty
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
@@ -713,7 +714,12 @@ def lobby():
                 lobby=Lobby(str(session['roomname']))
                 lobby.privacy=request.form['privacy']
                 difficulty = request.form["difficulty"]
-                lobby.difficulty=difficulty
+                if difficulty=="Normal":
+                    lobby.difficulty=0
+                elif difficulty=="Hard":
+                    lobby.difficulty=1
+                else:
+                    lobby.difficulty=2
 
 
                 print(lobby.difficulty, " is the diffculty")
