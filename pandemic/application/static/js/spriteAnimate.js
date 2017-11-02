@@ -168,7 +168,8 @@ function gameLoop(){
 	
 	discardPile.render();
 	eventCardViewer.render();
-	
+	playerCityMessage.render()
+	endScreen.render();
 }
 
 // locations["ATLANTA"].infect({});
@@ -214,7 +215,13 @@ var deck = new sprite({
 
 	
 })
+playerCityMessage = new playerCityMessage({
+	xPos: 20,
+	yPos: 900,
+	context: canvas.getContext("2d")
+}
 
+)
 outbreakCount = new outbreakCounter({});
 playersHand = new playerHand();
 players = new playerInitilization();
@@ -222,6 +229,11 @@ playerPortraits = new portraitInitilization({});
 infectionsMeterDisplay= new infectionMeter({});
 outbreakCount = new outbreakCounter({});
 infectRate = new infectionRate({});
+endScreen = new endScreen({
+	context: canvas.getContext("2d"),
+	width: optimalScreenWidth,
+	height: optimalScreenHeight
+})
 
 // card,
 spriteList = [deck];

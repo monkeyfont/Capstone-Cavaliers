@@ -241,7 +241,7 @@ class Player:
 
 class GameBoard:
     """ Game class definition """
-    def __init__(self, playerDict, initialize = True):
+    def __init__(self, playerDict,difficulty=0,initialize = True):
 
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
@@ -262,7 +262,7 @@ class GameBoard:
         self.researchStationsBuilt=0
         self.gameID = 0
         self.gameID = "default"
-        self.difficulty = 0  # easy 0, medium 1, hard 2.
+        self.difficulty = difficulty  # easy 0, medium 1, hard 2.
         self.visibility = "private"  # TODO this should be lobby based instead of GameBoard obj.
         self.initialized = 0
         if initialize: # set to false for testing!
@@ -433,7 +433,7 @@ class GameBoard:
         ## !!!!! just test with player 1 at the moment!
         #self.players[1].location = ("ATLANTA")
         self.cities["ATLANTA"].researchStation = 1
-        self.cities["LAGOS"].researchStation = 1
+        #self.cities["LAGOS"].researchStation = 1
         # just for testing on game page
         #self.cities["SEOUL"].researchStation = 1
         self.infectCitiesStage()
@@ -776,6 +776,7 @@ class GameBoard:
             playerObj.actions -= 1
             #print playerObj.actions
             endOfGameCheck = self.__endOfRound()
+            responseDict["playersActionsLeft"]=self.getMovesLeft()
             #print endOfGameCheck
             responseDict.update(endOfGameCheck)
             return responseDict
@@ -820,6 +821,7 @@ class GameBoard:
             responseDict["medicTreatments"] = self.medicCureAfterMove(targetPlayerObj, targetCityObj)
             # remove the action from the DISPATCHER
             dispatcherObj.actions -= 1
+            responseDict["playersActionsLeft"] = self.getMovesLeft()
             endOfGameCheck = self.__endOfRound()
             responseDict.update(endOfGameCheck)
             return responseDict
@@ -882,6 +884,7 @@ class GameBoard:
                 targetPlayerObj.location = targetCity
                 responseDict["validAction"] = True
                 playerObj.actions -= 1
+                responseDict["playersActionsLeft"] = self.getMovesLeft()
                 # check if the medics secondary power removes any infections.
                 responseDict["medicTreatments"] = self.medicCureAfterMove(targetPlayerObj, cityObj)
                 endOfGameCheck = self.__endOfRound()
@@ -912,6 +915,7 @@ class GameBoard:
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 playerObj.actions -= 1
+                responseDict["playersActionsLeft"] = self.getMovesLeft()
                 # check if the medics secondary power removes any infections.
                 responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[nextCityName])
                 print("player has successfully moved from" + currentLocation + " to " + playerObj.location)
@@ -947,6 +951,7 @@ class GameBoard:
                     playerHand.remove(card)
                     self.playerDiscarded.append(card)
                     playerObj.actions -= 1
+                    responseDict["playersActionsLeft"] = self.getMovesLeft()
                     # check if the medics secondary power removes any infections.
                     responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, self.cities[destinationCity])
                     print('player ' + str(playerId) + ' has successfully chartered flight from ' + currentLocation + ' to ' + destinationCity)
@@ -979,6 +984,7 @@ class GameBoard:
             # check if the medics secondary power removes any infections.
             responseDict["medicTreatments"] = self.medicCureAfterMove(playerObj, destCityObj)
             playerObj.actions -= 1
+            responseDict["playersActionsLeft"] = self.getMovesLeft()
             print('player ' + str(playerId) + ' has successfully shuttleFlight\'d from ' + currentCityName + ' to ' + destinationCity)
             responseDict["validAction"] = True
             endOfGameCheck = self.__endOfRound()
@@ -1031,6 +1037,7 @@ class GameBoard:
                 # Fly the user to the destination city.
                 playerObj.location = destinationCity
                 playerObj.actions -= 1
+                responseDict["playersActionsLeft"] = self.getMovesLeft()
                 playerHand.remove(card)
                 self.playerDiscarded.append(card)
                 responseDict["validAction"] = True
@@ -1060,6 +1067,7 @@ class GameBoard:
         if playerObj.role == "operationsExpert":
             curCityObj.researchStation = 1
             playerObj.actions -= 1
+            responseDict["playersActionsLeft"] = self.getMovesLeft()
             print('player ' + str(playerId) + ' has successfully built a research station at ' + currentLocation + ' using the researcher ability.')
             responseDict["validAction"] = True
             endOfGameCheck = self.__endOfRound()
@@ -1122,6 +1130,7 @@ class GameBoard:
                 targetPlayerHand.remove(card)
                 playerHand.append(card)
                 playerObj.actions -= 1
+                responseDict["playersActionsLeft"] = self.getMovesLeft()
                 print('player ' + str(playerId) + ' used shareKnowledge (take) with ' + str(targetPlayerId) + ' for city ' + targetCity)
                 responseDict["validAction"] = True
                 endOfGameCheck = self.__endOfRound()
@@ -1161,6 +1170,7 @@ class GameBoard:
                 playerHand.remove(card)
                 targetPlayerHand.append(card)
                 playerObj.actions -= 1
+                responseDict["playersActionsLeft"] = self.getMovesLeft()
                 print('player ' + str(playerId) + ' used shareKnowledge (give) with ' + str(targetPlayerId) + ' for city ' + targetCity)
                 responseDict["validAction"] = True
                 endOfGameCheck = self.__endOfRound()
@@ -1238,8 +1248,10 @@ class GameBoard:
         self.cures[colour] = 1
         print('player ' + str(playerId) + ' has discovered a cure for : ' + colour)
         playerObj.actions -= 1
+        responseDict["playersActionsLeft"] = self.getMovesLeft()
         responseDict["validAction"] = True
         responseDict["colourCured"] = colour
+        responseDict["gameWon"]=self.checkWin()
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
         return responseDict
@@ -1287,6 +1299,7 @@ class GameBoard:
             responseDict["amount"] = amount
             responseDict["colour"] = colour
             playerObj.actions -= 1
+            responseDict["playersActionsLeft"] = self.getMovesLeft()
             responseDict["validAction"] = True
             responseDict["colourTreated"] = colour
             endOfGameCheck = self.__endOfRound()
@@ -1309,6 +1322,7 @@ class GameBoard:
         playerObj = self.players[playerId]
         # set player actions count to 0
         playerObj.actions=0
+        responseDict["playersActionsLeft"] = self.getMovesLeft()
         responseDict["validAction"] = True
         endOfGameCheck = self.__endOfRound()
         responseDict.update(endOfGameCheck)
@@ -1519,6 +1533,16 @@ class GameBoard:
 
         return researchLocations
 
+
+    def getMovesLeft(self):
+        actionsLeft = []
+        players = self.players
+        for playerK in players:
+            playerObj = players[playerK]
+            playerActions=playerObj.actions
+            actionsLeft.append({playerObj.name:playerActions})
+
+        return actionsLeft
 
     def getCures(self):
 

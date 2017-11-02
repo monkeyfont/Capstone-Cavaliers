@@ -64,10 +64,8 @@ def game():
         currentLobby.gameStarted=True
         playerdict = currentLobby.players
         if roomname not in games:
-            gameobject = GameBoard(playerdict)
+            gameobject = GameBoard(playerdict,currentLobby.difficulty)
             gameobject.gameID = roomname
-
-            gameobject.difficulty=currentLobby.difficulty
             games[roomname] = gameobject
         return (render_template("MapOnCanvas.html"))
     return "You are not logged in <br><a href = '/home'></b>" + \
@@ -110,6 +108,12 @@ def getInfections():
     roomname = session["roomname"]
     gameboard = games[roomname]
     username = str(session["username"])
+    actionsLeft = []
+    players = gameboard.players
+    for playerK in players:
+        playerObj = players[playerK]
+        playerActions = playerObj.actions
+        actionsLeft.append({playerObj.name: playerActions})
     for player in gameboard.players:
         playerObj = gameboard.players[player]
         playerName = playerObj.name
@@ -125,7 +129,8 @@ def getInfections():
 
             emit('InfectedCities',{"infected":citiesInfected,"infectLevel":infectionLevel,
                                    "outbreakLevel":outbreakLevel,"cubesUsed":cubesUsed,
-                                   "researchLocations":researchLocations,"curesFound":curesFound})
+                                   "researchLocations":researchLocations,"curesFound":curesFound,
+                                   "playersActionsLeft":actionsLeft})
 
 
 @socketio.on('updateHands')
@@ -274,6 +279,16 @@ def roundOverDone():
 
     gameObject = games[roomName]
     gameObject.resetPlayerActions()
+    actionsLeft = []
+    players = gameObject.players
+    for playerK in players:
+        playerObj = players[playerK]
+        playerActions = playerObj.actions
+        actionsLeft.append({playerObj.name: playerActions})
+
+    emit('resetActions', {'msg':{'playersActionsLeft':actionsLeft}}, room=roomName)
+
+
 
 @socketio.on('discardCard')
 def HandleDiscardCard(msg):
