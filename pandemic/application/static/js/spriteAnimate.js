@@ -281,10 +281,10 @@ messageAlert = new messageAlert ({
 
 // locations.SANFRANCISCO.addResearchStation();
 
-locations.ATLANTA.infect({colour:"red"})
-locations.ATLANTA.infect({colour:"blue"})
-locations.ATLANTA.infect({colour:"yellow"})
-locations.ATLANTA.infect({colour:"black"})
+// locations.ATLANTA.infect({colour:"red"})
+// locations.ATLANTA.infect({colour:"blue"})
+// locations.ATLANTA.infect({colour:"yellow"})
+// locations.ATLANTA.infect({colour:"black"})
 // locations.ATLANTA.addResearchStation();
 
 
