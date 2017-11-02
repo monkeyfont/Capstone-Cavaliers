@@ -241,7 +241,7 @@ class Player:
 
 class GameBoard:
     """ Game class definition """
-    def __init__(self, playerDict,difficulty,initialize = True):
+    def __init__(self, playerDict,difficulty=0,initialize = True):
 
         """ init def """
         self.infectionRates = [2,2,2,3,3,4,4] # how many infection cards are drawn at the end of every turn
