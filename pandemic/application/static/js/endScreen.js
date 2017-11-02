@@ -33,9 +33,9 @@ function endScreen(options){
 			
 			
 			
-			this.context.font = "120px Sans-serif"
+			this.context.font = "80px Sans-serif"
 			this.context.strokeStyle = "rgb(0,0,0)";//'green';
-			this.context.lineWidth = this.size/6;
+			this.context.lineWidth = 6;
 			this.context.lineJoin="round"; //Experiment with "miter" & "bevel" & "round" for the effect you want!
 			this.context.miterLimit=3;
 			textWidth = this.context.measureText(this.endMessage).width;

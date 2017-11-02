@@ -1,13 +1,14 @@
 #messageBox{
-margin-left: 20%;
-    margin-right: 20%;
+    margin-left:20%;
+    margin-right:30%;
+    width:60%;
+    z-index:2;
     height: 30%;
-    top: 30em;
-    position: fixed;
+    top: 75em;
+    position: absolute;
     display: block;
     background-color: rgba(0,0,0,0.8);
     margin-top: 4%;
-    width: 60%;
 }
 #logo{
     display:block;
@@ -27,16 +28,16 @@ margin-left: 20%;
     display:block;
     background-color:rgba(250,250,250,0.8);
     color:black;
-    position:fixed;
-    width:30%;
+    position:absolute;
+    width:100%;
 }
 #message_input{
     background-color:none;
-    width:50%;
+    width:90%;
     border:0px;
     padding:0px;
     display:block;
-    position:fixed;
+    position:absolute;
     float:left;
 }
 #message_button{
@@ -45,9 +46,9 @@ margin-left: 20%;
     border:0px;
     padding:0px;
     display:block;
-    position:fixed;
+    position:absolute;
     float:right;
-    margin-left: 50%;
+    margin-left: 90%;
     color:white;
 
 }
@@ -123,6 +124,9 @@ button{
 }
 #showRoleOptions h2{
     text-transform:uppercase;
+}
+#showRoleOptions{
+    margin-bottom:30%;
 }
 input[type=radio]{
     display:none;

@@ -67,6 +67,7 @@
 
         //$("#showRoleOptions").hide();
         document.getElementById("showRoleOptions").innerHTML = "<h2>You are now the "+data.msg+"</h2>";
+
         roleSet= true;
 
 
@@ -97,8 +98,8 @@
 
     function setRole(){
 
-     var role= $('input[name=role]:checked', '#myForm').val()
-     socket.emit('setRole', {roleChoice:role})
+        var role= $('input[name=role]:checked', '#myForm').val()
+        socket.emit('setRole', {roleChoice:role})
 
 
     }
