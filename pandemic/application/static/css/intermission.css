@@ -1,14 +1,12 @@
 #messageBox{
-    margin-left:20%;
-    margin-right:30%;
+    margin-left:10%;
     width:60%;
     z-index:2;
     height: 30%;
-    top: 75em;
     position: absolute;
     display: block;
     background-color: rgba(0,0,0,0.8);
-    margin-top: 4%;
+    margin-top: 6%;
 }
 #logo{
     display:block;
@@ -125,9 +123,7 @@ button{
 #showRoleOptions h2{
     text-transform:uppercase;
 }
-#showRoleOptions{
-    margin-bottom:30%;
-}
+
 input[type=radio]{
     display:none;
     width: 2em;

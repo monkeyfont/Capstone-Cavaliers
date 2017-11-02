@@ -24,8 +24,11 @@
             $("#teamName").fadeToggle();
         }
         function changeStyle(e){
-            document.getElementById("showRoleOptions").style.margin= "0px";
-            document.getElementById("messageBox").style.top = "35em";
+            <!--document.getElementById("showRoleOptions").style.margin= "0px";-->
+
+            document.getElementById("teamName").style.zIndex = "1";
+
+            document.getElementById("messageBox").style.zIndex = "0";
         }
     </script>
 </head>
@@ -142,18 +145,19 @@
 
     </div>
                 </form>
-
-
-    </div>
-</div>
-    <h1 id ='teamName' style="display: none;">Chat room for team {{ room }} </h1>
-    <div id = "messageBox">
+            <div id = "messageBox">
             <div id = "lobbyMessageHistory"></div>
             <div id="lobbyMessageBox">
                 <input class = "typeMessageHere" id="message_input" placeholder="">
                 <input class="three"id="message_button" type="button" value="Send">
             </div>
     </div>
+    <h1 id ='teamName' style="display: none;">Chat room for team {{ room }} </h1>
+
+
+    </div>
+</div>
+
     <input id="gameStarter" type="button" value= "PLAY ">
 </body>
 </html>
