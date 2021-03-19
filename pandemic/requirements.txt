@@ -1,6 +1,6 @@
 Flask==0.12.2
 Flask-SocketIO==2.9.1
-Jinja2==2.9.6
+Jinja2==2.11.3
 python-engineio==1.7.0
 python-socketio==1.8.0
 PyYAML==3.12
