@@ -5,7 +5,7 @@ python-engineio==1.7.0
 python-socketio==1.8.0
 PyYAML==3.12
 requests==2.17.3
-rsa==3.4.2
+rsa==4.7
 urllib3==1.21.1
 Werkzeug==0.12.2
 eventlet==0.21.0
